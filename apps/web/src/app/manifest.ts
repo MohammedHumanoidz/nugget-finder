@@ -4,8 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
 	return {
 		name: "nugget-finder",
 		short_name: "nugget-finder",
-		description:
-			"my pwa app",
+		description: "my pwa app",
 		start_url: "/new",
 		display: "standalone",
 		background_color: "#ffffff",
