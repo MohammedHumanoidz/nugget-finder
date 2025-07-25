@@ -8,3 +8,297 @@ datasource db {
   provider = "postgres"
   url      = env("DATABASE_URL")
 }
+
+enum CatalystType {
+  TECHNOLOGY_BREAKTHROUGH
+  REGULATORY_CHANGE
+  MARKET_SHIFT
+  SOCIAL_TREND
+  ECONOMIC_FACTOR
+}
+
+enum MarketMaturityLevel {
+  EARLY_STAGES
+  GROWTH_STAGES
+  MATURE_STAGES
+}
+
+enum MarketConcentrationLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum GrowthScale {
+  SMALL
+  MEDIUM
+  LARGE
+}
+
+model WhyNow {
+  id String @id @default(uuid())
+  title String
+  description String
+  trendStrength Int // 1-10 scale
+  catalystType CatalystType
+  timingUrgency Int // 1-10 scale
+  supportingData Json // Array of data points
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  dailyIdeas DailyIdea[]
+}
+
+model IdeaScore {
+  id                String    @id @default(uuid())
+  totalScore        Int
+  dailyIdea         DailyIdea?
+  problemSeverity   Int
+  founderMarketFit  Int
+  technicalFeasibility Int
+  monetizationPotential Int
+  urgencyScore      Int
+  marketTimingScore Int
+  executionDifficulty Int
+  moatStrength      Int
+  regulatoryRisk    Int
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model MarketOpportunity {
+  id String @id @default(uuid())
+  customerSegments CustomerSegments[]
+  marketOpportunityScore Int
+  ValidationStrength Int
+  marketValidationSignals MarketValidationSignals[]
+  totalMarketSize Int
+  reachableMarketSize Int
+  realisticMarketSize Int
+  growthRate Int
+  adoptionRate Int
+  marketMaturityLevel MarketMaturityLevel
+  marketAnalysisSummary String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  dailyIdea DailyIdea?
+}
+
+model MarketValidationSignals {
+  id String @id @default(uuid())
+  name String
+  description String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  marketOpportunityId String
+  marketOpportunity MarketOpportunity @relation(fields: [marketOpportunityId], references: [id])
+}
+
+model MarketCompetition {
+  id String @id @default(uuid())
+  marketConcentrationLevel MarketConcentrationLevel
+  marketConcentrationJustification String
+  directCompetitors Json // Array of objects: { name: String, justification: String, strengths: String[3], weaknesses: String[3] }
+  indirectCompetitors Json // Array of objects: { name: String, justification: String, strengths: String[3], weaknesses: String[3] }
+  competitorFailurePoints String[]
+  unfairAdvantage String[]
+  moat String[]
+  competitivePositioningScore Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  dailyIdeaId String @unique
+  dailyIdea DailyIdea @relation(fields: [dailyIdeaId], references: [id])
+}
+
+model CustomerSegments {
+  id String @id @default(uuid())
+  name String
+  description String
+  growthScale GrowthScale
+  growthScaleJustification String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  marketOpportunityId String
+  marketOpportunity MarketOpportunity @relation(fields: [marketOpportunityId], references: [id])
+}
+
+model MarketGap {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  impact      String
+  target      String
+  opportunity String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  dailyIdeaId String @unique
+  dailyIdea DailyIdea @relation(fields: [dailyIdeaId], references: [id])
+}
+
+model CompetitiveAdvantage {
+  id             String   @id @default(uuid())
+  title          String
+  description    String
+  sustainability String
+  impact         String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  dailyIdeaId String @unique
+  dailyIdea DailyIdea @relation(fields: [dailyIdeaId], references: [id])
+}
+
+model StrategicPositioning {
+  id                 String   @id @default(uuid())
+  name               String
+  targetSegment      String
+  valueProposition   String
+  keyDifferentiators String[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  dailyIdeaId String @unique
+  dailyIdea DailyIdea @relation(fields: [dailyIdeaId], references: [id])
+}
+
+model MonetizationStrategy {
+  id                   String                 @id @default(uuid())
+  primaryModel         String
+  pricingStrategy      String
+  businessScore        Float
+  confidence           Int
+  revenueModelValidation String // Validation signals for revenue model
+  pricingSensitivity   String // Market price sensitivity analysis
+  revenueStreams       RevenueStream[]
+  keyMetrics           KeyMetrics?
+  financialProjections FinancialProjection[]
+  dailyIdea            DailyIdea?
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+}
+
+model RevenueStream {
+  id                     String               @id @default(uuid())
+  name                   String
+  description            String
+  percentage             Int
+  monetizationStrategyId String
+  monetizationStrategy   MonetizationStrategy @relation(fields: [monetizationStrategyId], references: [id])
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+}
+
+model KeyMetrics {
+  id                       String                @id @default(uuid())
+  ltv                      Int
+  ltvDescription           String
+  cac                      Int
+  cacDescription           String
+  ltvCacRatio              Float
+  ltvCacRatioDescription   String
+  paybackPeriod            Int
+  paybackPeriodDescription String
+  runway                   Int
+  runwayDescription        String
+  breakEvenPoint           String
+  breakEvenPointDescription String
+  monetizationStrategyId   String?               @unique
+  monetizationStrategy     MonetizationStrategy? @relation(fields: [monetizationStrategyId], references: [id])
+  createdAt                DateTime              @default(now())
+  updatedAt                DateTime              @updatedAt
+}
+
+model FinancialProjection {
+  id                     String               @id @default(uuid())
+  year                   Int
+  revenue                Float
+  costs                  Float
+  netMargin              Float
+  revenueGrowth          Float
+  monetizationStrategyId String
+  monetizationStrategy   MonetizationStrategy @relation(fields: [monetizationStrategyId], references: [id])
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+}
+
+model ExecutionPlan {
+  id String @id @default(uuid())
+  mvpDescription String
+  keyMilestones Json // [{ milestone: String, timeframe: String, resources: String }]
+  resourceRequirements String
+  teamRequirements String[]
+  riskFactors String[]
+  technicalRoadmap String
+  goToMarketStrategy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  dailyIdeaId String @unique
+  dailyIdea DailyIdea @relation(fields: [dailyIdeaId], references: [id])
+}
+
+model TractionSignals {
+  id String @id @default(uuid())
+  waitlistCount Int?
+  socialMentions Int?
+  searchVolume Int?
+  competitorFunding Float?
+  patentActivity Int?
+  regulatoryChanges String[]
+  mediaAttention Int?
+  expertEndorsements String[]
+  earlyAdopterSignals String[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  dailyIdeaId String @unique
+  dailyIdea DailyIdea @relation(fields: [dailyIdeaId], references: [id])
+}
+
+model FrameworkFit {
+  id String @id @default(uuid())
+  jobsToBeDone String[]
+  blueOceanFactors Json // { eliminate: String[], reduce: String[], raise: String[], create: String[] }
+  leanCanvasScore Int
+  designThinkingStage String
+  innovationDilemmaFit String
+  crossingChasmStage String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  dailyIdeaId String @unique
+  dailyIdea DailyIdea @relation(fields: [dailyIdeaId], references: [id])
+}
+
+model DailyIdea {
+  id                 String       @id @default(uuid())
+  title              String
+  description        String
+  executiveSummary   String
+  problemSolution    String // Fixed typo
+  problemStatement   String
+  innovationLevel    Int // Fixed typo
+  timeToMarket      Int
+  confidenceScore   Int
+  narrativeHook     String // SEO-friendly story angle
+  targetKeywords    String[] // SEO keywords
+  urgencyLevel      Int // 1-10 scale for market timing pressure
+  executionComplexity Int // 1-10 scale for implementation difficulty
+  tags              String[]
+  
+  // Relations
+  ideaScoreId        String?      @unique
+  ideaScore          IdeaScore?   @relation(fields: [ideaScoreId], references: [id])
+  marketOpportunityId String?      @unique
+  marketOpportunity MarketOpportunity? @relation(fields: [marketOpportunityId], references: [id])
+  monetizationStrategyId String? @unique
+  monetizationStrategy MonetizationStrategy? @relation(fields: [monetizationStrategyId], references: [id])
+  whyNowId           String
+  whyNow             WhyNow       @relation(fields: [whyNowId], references: [id])
+  
+  // New relations
+  marketCompetition MarketCompetition?
+  marketGap MarketGap?
+  competitiveAdvantage CompetitiveAdvantage?
+  strategicPositioning StrategicPositioning?
+  executionPlan ExecutionPlan?
+  tractionSignals TractionSignals?
+  frameworkFit FrameworkFit?
+  
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+}
