@@ -1,0 +1,26 @@
+// Better-T-Stack configuration file
+// safe to delete
+
+{
+  "$schema": "https://better-t-stack.dev/schema.json",
+  "version": "2.27.1",
+  "createdAt": "2025-07-25T15:49:46.266Z",
+  "database": "postgres",
+  "orm": "prisma",
+  "backend": "elysia",
+  "runtime": "bun",
+  "frontend": [
+    "next"
+  ],
+  "addons": [
+    "biome",
+    "pwa",
+    "turborepo"
+  ],
+  "examples": [],
+  "auth": true,
+  "packageManager": "bun",
+  "dbSetup": "neon",
+  "api": "trpc",
+  "webDeploy": "none"
+}
