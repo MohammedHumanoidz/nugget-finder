@@ -34,6 +34,54 @@ interface NuggetData {
 
 // Transform database response to NuggetPage format
 const transformDbToNugget = (dbIdea: any): NuggetData => {
+	// Handle whyNow - it's an object with supportingData array, not an array itself
+	const getWhyNowPoints = () => {
+		if (dbIdea.whyNow?.supportingData && Array.isArray(dbIdea.whyNow.supportingData)) {
+			return dbIdea.whyNow.supportingData;
+		}
+		if (dbIdea.whyNow?.description) {
+			return [dbIdea.whyNow.description];
+		}
+		return [
+			"Market timing is optimal",
+			"Technology enablers are mature", 
+			"Customer pain points are intensifying"
+		];
+	};
+
+	// Handle execution plan - it's null in the response, so we need fallback
+	const getExecutionPlan = () => {
+		if (dbIdea.executionPlan?.phases && Array.isArray(dbIdea.executionPlan.phases)) {
+			return dbIdea.executionPlan.phases.map((phase: any) => phase.description || phase.title);
+		}
+		return [
+			"MVP Development and Initial Market Testing",
+			"Customer Acquisition and Product Refinement",
+			"Scale Operations and Market Expansion",
+		];
+	};
+
+	// Handle competitive advantage
+	const getAdvantage = () => {
+		if (dbIdea.competitiveAdvantage?.description) {
+			return dbIdea.competitiveAdvantage.description;
+		}
+		if (dbIdea.marketCompetition?.unfairAdvantage && Array.isArray(dbIdea.marketCompetition.unfairAdvantage)) {
+			return dbIdea.marketCompetition.unfairAdvantage[0] || "First-to-market advantage";
+		}
+		return "First-to-market advantage";
+	};
+
+	// Handle rivals
+	const getRivals = () => {
+		if (dbIdea.marketCompetition?.directCompetitors && Array.isArray(dbIdea.marketCompetition.directCompetitors)) {
+			return dbIdea.marketCompetition.directCompetitors
+				.slice(0, 3)
+				.map((comp: any) => comp.name);
+		}
+		return ["TechCorp", "StartupX"];
+	};
+
 	return {
 		title: dbIdea.title || "Untitled Startup Nugget",
 		summary:
@@ -46,28 +94,16 @@ const transformDbToNugget = (dbIdea: any): NuggetData => {
 			dbIdea.description ||
 			"Detailed analysis of the startup opportunity",
 		assay: {
-			opportunity: dbIdea.ideaScore?.opportunityScore || 85,
-			feasibility: dbIdea.ideaScore?.feasibilityScore || 78,
-			defensibility: dbIdea.ideaScore?.competitiveAdvantageScore || 72,
+			opportunity: dbIdea.ideaScore?.problemSeverity || 85,
+			feasibility: dbIdea.ideaScore?.technicalFeasibility || 78,
+			defensibility: dbIdea.ideaScore?.moatStrength || 72,
 		},
-		whyNow: dbIdea.whyNow?.map(
-			(item: any) => item.reason || item.description || item.title,
-		) || [
-			"Market timing is optimal",
-			"Technology enablers are mature",
-			"Customer pain points are intensifying",
-		],
+		whyNow: getWhyNowPoints(),
 		marketGap:
 			dbIdea.marketGap?.description ||
-			dbIdea.marketGap?.gapDescription ||
+			dbIdea.marketGap?.opportunity ||
 			"Identified market gap with significant opportunity",
-		plan: dbIdea.executionPlan?.phases?.map(
-			(phase: any) => phase.description || phase.title,
-		) || [
-			"MVP Development and Initial Market Testing",
-			"Customer Acquisition and Product Refinement",
-			"Scale Operations and Market Expansion",
-		],
+		plan: getExecutionPlan(),
 		valuation: {
 			cac: dbIdea.monetizationStrategy?.keyMetrics?.cac
 				? `$${dbIdea.monetizationStrategy.keyMetrics.cac}`
@@ -80,26 +116,15 @@ const transformDbToNugget = (dbIdea: any): NuggetData => {
 				: "10:1",
 			projectedRevenue: dbIdea.monetizationStrategy?.financialProjections?.[0]
 				?.revenue
-				? `$${dbIdea.monetizationStrategy.financialProjections[0].revenue}k`
+				? `$${Math.round(dbIdea.monetizationStrategy.financialProjections[0].revenue / 1000)}K`
 				: "$50K",
 		},
 		meta: {
-			claimType: dbIdea.marketOpportunity?.marketType || "B2B SaaS",
-			target:
-				dbIdea.marketOpportunity?.customerSegments?.[0]?.name ||
-				dbIdea.strategicPositioning?.targetSegment ||
-				"SMB Market",
+			claimType: dbIdea.strategicPositioning?.name || "B2B SaaS",
+			target: dbIdea.strategicPositioning?.targetSegment || "SMB Market",
 			strength: dbIdea.ideaScore?.totalScore || 78,
-			rivals: dbIdea.marketCompetition?.directCompetitors
-				?.slice(0, 3)
-				.map((comp: any) => comp.name || comp.company) || [
-				"TechCorp",
-				"StartupX",
-			],
-			advantage:
-				dbIdea.competitiveAdvantage?.description ||
-				dbIdea.competitiveAdvantage?.uniqueValue ||
-				"First-to-market advantage",
+			rivals: getRivals(),
+			advantage: getAdvantage(),
 		},
 	};
 };
@@ -556,15 +581,15 @@ export default function NuggetPage() {
 									</Button>
 								</div>
 								<div className="mt-3 flex justify-center gap-2 text-sm">
-									<Button className="text-muted-foreground hover:text-foreground">
+									<Button variant={"outline"}>
 										Show me risks
 									</Button>
 									<span className="text-muted-foreground">•</span>
-									<Button className="text-muted-foreground hover:text-foreground">
+									<Button variant={"outline"}>
 										Competitive analysis
 									</Button>
 									<span className="text-muted-foreground">•</span>
-									<Button className="text-muted-foreground hover:text-foreground">
+									<Button variant={"outline"}>
 										Market size
 									</Button>
 								</div>
