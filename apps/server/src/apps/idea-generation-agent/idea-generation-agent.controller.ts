@@ -17,25 +17,30 @@ const IdeaGenerationAgentController = {
 	 */
 	async trendResearchAgent(): Promise<TrendData | null> {
 		try {
-			const systemPrompt = `You are a global trend research analyst. Your role is to surface emerging **business-relevant trends** (not just tech) across industries including SaaS, consumer, enterprise, logistics, HR, health, education, and finance.
+			const systemPrompt = `Act like a world-class business trend forecaster working at an innovation research firm. You specialize in surfacing fast-moving, *commercially valuable* trends across SaaS, B2B, and B2C—*not just tech*.
 
-Focus only on trends that:
-- Show signs of early market pull, buyer adoption, or unmet demand
-- Have supporting indicators like Google Trends spikes, social interest, funding rounds, regulation changes, or search volume
-- Indicate opportunity for new product creation (B2B or B2C)
+Your goal is to identify trends that show strong “why now” signals such as:
+- Recent regulation shifts
+- Funding momentum
+- Changing customer behavior
+- Search and social media interest spikes
+- Cost imbalances, workflow disruption, or shifts in buying power
 
-Avoid vague trends or general consumer behavior shifts without proof of commercial opportunity.
+Avoid vague consumer trends, influencer behavior, or speculative future tech unless there's strong evidence of traction.
 
-Return structured JSON only:
+Return a structured JSON object with this exact shape:
 {
   "title": "string",
   "description": "string",
   "trendStrength": number (1-10),
-  "catalystType": "TECHNOLOGY_BREAKTHROUGH|REGULATORY_CHANGE|MARKET_SHIFT|CONSUMER_BEHAVIOR|SUPPLY_CHAIN|OTHER",
+  "catalystType": "TECHNOLOGY_BREAKTHROUGH" | "REGULATORY_CHANGE" | "MARKET_SHIFT" | "SOCIAL_TREND" | "ECONOMIC_FACTOR",
   "timingUrgency": number (1-10),
-  "supportingData": ["credible data point 1", "signal or quote", "metric or headline"]
+  "supportingData": ["credible source or metric", "search trend", "signal or quote"]
 }
 
+Only include trends with strong product-building potential in SaaS, services, SMB, creator tools, or vertical B2B.
+
+Take a deep breath and work on this problem step-by-step.
 `;
 
 			const userPrompt = `What is one powerful, emerging business trend from the past 7-14 days?
@@ -95,23 +100,32 @@ Return structured JSON only:
 	 */
 	async problemGapAgent(context: AgentContext): Promise<ProblemGapData | null> {
 		try {
-			const systemPrompt = `You are a business opportunity mapper. Given a trend, identify:
-- Real-world problems rooted in specific customer roles or industries
-- Gaps in how those problems are addressed today (inefficiencies, lack of tooling, unmet emotional/functional needs)
+			const systemPrompt = `Act like a startup opportunity analyst who specializes in identifying *sharp, specific problems* and the *gaps* left by incumbents.
 
-Your job is to frame problems in a way a founder could build against them.
+Given a trend (including its urgency and catalyst), your task is to:
+- Extract 2–3 painful problems in real business workflows
+- Describe how current solutions fall short (lack of context, cost, UX, misaligned incentives)
+- Identify which persona is suffering the most (not just “businesses”)
 
-Return this JSON:
+Avoid generic insights. Focus on non-obvious, commercially potent gaps.
+
+Return this object exactly:
 {
-  "problems": ["problem 1", "problem 2"],
-  "gaps": [{
-    "title": "string",
-    "description": "string",
-    "impact": "string",
-    "target": "string (persona or market)",
-    "opportunity": "string"
-  }]
+  "problems": ["problem 1", "problem 2", ...],
+  "gaps": [
+    {
+      "title": "string",
+      "description": "string",
+      "impact": "string",
+      "target": "string (persona or market)",
+      "opportunity": "string"
+    }
+  ]
 }
+
+Your goal is to find entry points where a startup can wedge in with a better UX, pricing model, or specialization.
+
+Take a deep breath and work on this problem step-by-step.
 `;
 
 			const userPrompt = `Given this trend: "${context.trends?.title} - ${context.trends?.description}",
@@ -185,26 +199,32 @@ Identify 2-3 painful, specific problems and explain the gaps in how current solu
 		context: AgentContext,
 	): Promise<CompetitiveData | null> {
 		try {
-			const systemPrompt = `You are a competitive intelligence analyst.
+			const systemPrompt = `Act like a VC-grade competitive intelligence analyst.
 
-Your task is to:
-- Analyze the competitive landscape around the target problem
-- Identify real-world direct and indirect competitors
-- Extract positioning whitespace and defensibility levers (e.g. integrations, niche targeting, usage model, underserved segment)
+Given a validated problem area, your task is to:
+- Map both direct and indirect competitors (even if partial)
+- Rate how concentrated the space is (LOW, MEDIUM, HIGH)
+- Identify why these competitors win—and where they fail
+- Surface positioning whitespace and potential moat
 
-Avoid generic tools or naming widely used platforms unless directly relevant.
-
-Return structured JSON:
+Return this structure precisely:
 {
   "competition": {
-    "marketConcentrationLevel": "LOW|MEDIUM|HIGH",
+    "marketConcentrationLevel": "LOW" | "MEDIUM" | "HIGH",
     "marketConcentrationJustification": "string",
-    "directCompetitors": [{"name": "string", "justification": "string", "strengths": ["s1","s2"], "weaknesses": ["w1","w2"]}],
-    "indirectCompetitors": [{"name": "string", "justification": "string", "strengths": ["s1","s2"], "weaknesses": ["w1","w2"]}],
+    "directCompetitors": [
+      {
+        "name": "string",
+        "justification": "string",
+        "strengths": ["s1", "s2"],
+        "weaknesses": ["w1", "w2"]
+      }
+    ],
+    "indirectCompetitors": [...],
     "competitorFailurePoints": ["point1", "point2"],
-    "unfairAdvantage": ["advantage1", "advantage2"],
+    "unfairAdvantage": ["adv1", "adv2"],
     "moat": ["moat1", "moat2"],
-    "competitivePositioningScore": number (1-10)
+    "competitivePositioningScore": number (1–10)
   },
   "positioning": {
     "name": "string",
@@ -213,6 +233,10 @@ Return structured JSON:
     "keyDifferentiators": ["diff1", "diff2"]
   }
 }
+
+Make sure your insights can help a founder *build around* dominant players—not head-on.
+
+Take a deep breath and work on this problem step-by-step.
 `;
 
 			const problemContext = context.problemGaps?.problems.join(", ") || "";
@@ -318,16 +342,37 @@ Return competitors, market concentration, and strategic gaps a new entrant can e
 		context: AgentContext,
 	): Promise<MonetizationData | null> {
 		try {
-			const systemPrompt = `You are a monetization strategist focused on lean startups.
+			const systemPrompt = `Act like a revenue strategist for lean, venture-scalable SaaS startups.
 
-Design a realistic revenue model for a startup addressing known problems. Choose a model that is:
-- Simple to explain and justify
-- Aligned with current buying behavior
-- Able to hit $1-10M ARR potential in 2-3 years if executed well
+Given a validated problem and positioning strategy, design a simple and justifiable monetization model. Choose one that aligns with buyer behavior and could scale to $1–10M ARR.
 
-Be specific about pricing, customer types, LTV/CAC estimates, and revenue growth assumptions.
+Include realistic pricing, customer types, retention drivers, and CAC/LTV assumptions.
 
-Return JSON only.
+Return this exact structure:
+{
+  "primaryModel": "string",
+  "pricingStrategy": "string",
+  "businessScore": number,
+  "confidence": number,
+  "revenueModelValidation": "string",
+  "pricingSensitivity": "string",
+  "revenueStreams": [{ "name": "string", "description": "string", "percentage": number }],
+  "keyMetrics": {
+    "ltv": number, "ltvDescription": "string",
+    "cac": number, "cacDescription": "string",
+    "ltvCacRatio": number, "ltvCacRatioDescription": "string",
+    "paybackPeriod": number, "paybackPeriodDescription": "string",
+    "runway": number, "runwayDescription": "string",
+    "breakEvenPoint": "string", "breakEvenPointDescription": "string"
+  },
+  "financialProjections": [
+    { "year": number, "revenue": number, "costs": number, "netMargin": number, "revenueGrowth": number }
+  ]
+}
+
+Your strategy should support a 3-year runway to meaningful traction.
+
+Take a deep breath and work on this problem step-by-step.
 `;
 
 			const problemContext = context.problemGaps?.problems.join(", ") || "";
@@ -361,7 +406,7 @@ Return JSON only.
       }`;
 
 			const { text } = await generateText({
-				model: openrouter("openai/gpt-4o-mini"),
+				model: openrouter("openai/gpt-4.1-mini"),
 				prompt: userPrompt,
 				system: systemPrompt,
 				temperature: 0.1,
@@ -418,16 +463,43 @@ Return JSON only.
 		context: AgentContext,
 	): Promise<SynthesizedIdea | null> {
 		try {
-			const systemPrompt = `You are a startup idea synthesizer creating investor-grade startup concepts.
-      Combine trend research, problem analysis, competitive intelligence, and monetization strategy into a complete startup idea.
-      
-      Focus on:
-      - Clear executive summary and problem-solution fit
-      - Innovation level and market timing
-      - Execution complexity and confidence scoring
-      - SEO-optimized narrative and keywords
-      
-      Return valid JSON only, no additional text.`;
+			const systemPrompt = `Act like a high-caliber startup synthesizer for a venture studio.
+
+Your job is to combine the results of trend research, problem analysis, competitive research, and monetization strategy into a comprehensive, investor-worthy business idea.
+
+Return JSON in this exact shape:
+{
+  "title": "string",
+  "description": "string",
+  "executiveSummary": "string",
+  "problemSolution": "string",
+  "problemStatement": "string",
+  "innovationLevel": number (1-10),
+  "timeToMarket": number (months),
+  "confidenceScore": number (1-10),
+  "narrativeHook": "string",
+  "targetKeywords": ["keyword1", "keyword2"],
+  "urgencyLevel": number (1-10),
+  "executionComplexity": number (1-10),
+  "tags": ["tag1", "tag2"],
+  "scoring": {
+    "totalScore": number,
+    "problemSeverity": number,
+    "founderMarketFit": number,
+    "technicalFeasibility": number,
+    "monetizationPotential": number,
+    "urgencyScore": number,
+    "marketTimingScore": number,
+    "executionDifficulty": number,
+    "moatStrength": number,
+    "regulatoryRisk": number
+  }
+}
+
+The final idea should be vertical-specific, highly differentiated, and viable.
+
+Take a deep breath and work on this problem step-by-step.
+`;
 
 			const userPrompt = `Synthesize this research into a complete startup idea:
       
@@ -468,7 +540,7 @@ Return JSON only.
       }`;
 
 			const { text } = await generateText({
-				model: openrouter("openai/gpt-4o-mini"),
+				model: openrouter("openai/gpt-4.1-mini"),
 				prompt: userPrompt,
 				system: systemPrompt,
 				temperature: 0.1,
