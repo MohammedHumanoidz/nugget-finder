@@ -20,36 +20,32 @@ const IdeaGenerationAgentController = {
 	 */
 	async trendResearchAgent(context: AgentContext): Promise<TrendData | null> {
 		try {
-			const systemPrompt = `You are a world-class, unbiased trend forecaster and global intelligence analyst. Your mission: Identify *one* powerful, undeniable emerging trend or significant development that represents a major shift in technology, society, economy, or regulation.
+			const systemPrompt = `Alright, trend wizard, listen up. Your job is to find *one* seriously impactful, undeniable trend or major global event from the last few days that's shaking things up. Think big shifts in tech, how society works, money matters, or new rules.
 
-			Your goal is to surface macro-level shifts that will fundamentally change how people live, work, or interact. Think like a top-tier journalist or researcher presenting a profound insight into "what's happening in the world."
+			Your mission: pinpoint something genuinely profound. This isn't about fleeting news; it's about spotting the real currents changing our world.
 			
-			**Crucially, this trend MUST be validated by high-engagement, human-driven discussion, not just news headlines or passing fads.** Prioritize signals from:
-				- **Reddit/Twitter:** Look for highly upvoted threads, heavily commented posts, and viral discussions that indicate *sustained, genuine community interest and frustration/excitement* around a topic. This filters out low-quality or AI-generated 'slop'.
-				- **Developer forums, niche communities, specialized blogs:** Evidence of active problem-solving or deep technical discussion.
+			**Crucially, this trend MUST be backed by genuine human buzz – think red-hot Reddit threads, viral Twitter discussions, or lively debates in niche forums. We want real people talking about real things, not AI-generated fluff or boring press releases.**
 			
-			**DO NOT filter for product ideas or specific business models (SaaS, B2B, B2C) at this stage.** Your focus is purely on the existence, significance, and driving forces of the trend itself. This trend *will* generate problems, but that's for a later agent to identify.
+			**IMPORTANT: Do NOT, repeat, DO NOT, try to find a product idea or business model yet.** Just tell us what the big, interesting thing is. We'll figure out how to make money from it later. Focus on the 'what' and 'why' of the trend itself.
 			
 			Return a structured JSON object with this exact shape:
 			{
-			  "title": "string (A concise, impactful title for the global trend, e.g., 'The Surging Demand for Decentralized Identity Solutions')",
-			  "description": "string (A clear, objective, and compelling narrative explaining the macro trend, its origin, and its broad implications. Crucially, reference how this trend is manifesting in *high-engagement online communities* (e.g., 'Discussions on Reddit's /r/privacy are exploding, with users detailing frustration over...'). Do NOT hint at solutions or specific startup ideas. Focus on the 'what' and 'why' of the trend itself.)",
+			  "title": "string (A punchy, honest title for the global trend – no corporate jargon, just straight talk. e.g., 'The World Just Got More Expensive to Live In: Housing Crisis Deepens Globally')",
+			  "description": "string (A clear, engaging story about this big trend. Explain its origins and broad impact, like you're telling it to a friend over coffee. Show *how* you know it's a real trend by referencing those high-engagement online communities. No startup pitches here, just the pure, unadulterated truth of the trend.)",
 			  "trendStrength": number (1-10),
 			  "catalystType": "TECHNOLOGY_BREAKTHROUGH" | "REGULATORY_CHANGE" | "MARKET_SHIFT" | "SOCIAL_TREND" | "ECONOMIC_FACTOR",
 			  "timingUrgency": number (1-10),
-			  "supportingData": ["credible, high-level source or metric (e.g., 'Spike in 'digital identity' mentions on Hacker News')", "specific example of high-engagement social discussion (e.g., 'A Reddit thread on data breaches hit 5,000 comments in 24 hours')", "major news event or policy change (if relevant and confirmed by social buzz)"]
+			  "supportingData": ["specific evidence from Reddit/Twitter/forums (e.g., 'Reddit r/HousingCrisis exploding with 10k comments on rising rents')", "a key news event or policy that triggered significant discussion", "a solid, broad metric if available and relevant"]
 			}
 			
-			Focus on undeniable, impactful shifts, validated by real human interaction, not just ephemeral headlines. Let's understand the world through its actual conversations.`;
-			// Build context-aware prompt to avoid repetitive ideas
-			let contextualPrompt = "What is one powerful, globally impactful emerging trend or significant development that is generating high engagement and sustained discussion in online communities like Reddit, Twitter, or specialized forums or even the news and blogs? Focus on shifts with broad implications across technology, society, economy, or regulation.";
+			Cut the fancy words. Focus on the raw, undeniable shifts, validated by actual human conversation. Let's see the world as it truly is, not as a LinkedIn post would portray it.`;// Build context-aware prompt to avoid repetitive ideas
 			
-			if (context.previousIdeas && context.previousIdeas.length > 0) {
-				const previousTitles = context.previousIdeas.map(idea => idea.title).join('", "');
-				contextualPrompt += `\n\nIMPORTANT: Avoid generating trends similar to these previously analyzed ones: "${previousTitles}". Focus on discovering entirely different trend categories or novel developments.`;
-			}
+			const userPrompt = `What is one powerful, globally impactful emerging trend or significant development that is generating high engagement and sustained discussion in online communities (Reddit, Twitter, forums) or through notable news/blogs? Focus on shifts with broad implications across technology, society, economy, or regulation.
+
+			Previously Generated Ideas:
+			${context.previousIdeas && context.previousIdeas.length > 0 ? context.previousIdeas.map(idea => `- Title: "${idea.title}"\n  Description: "${idea.description}"`).join('\n') : '- None to consider.'}
 			
-			const userPrompt = contextualPrompt;
+			Ensure the new trend is genuinely fresh and distinct from those listed. No LinkedIn vibes.`;
 			// LOG: Perplexity API request
 			debugLogger.logPerplexityRequest("TrendResearchAgent", userPrompt, systemPrompt, {
 				reasoning_effort: "high",
@@ -174,12 +170,17 @@ Extract the key trend information and format it as valid JSON. Return ONLY the J
 	 */
 	async problemGapAgent(context: AgentContext): Promise<ProblemGapData | null> {
 		try {
-			const systemPrompt = `You are a savvy business strategist and *real-world problem finder*. Given a significant, high-level trend (which might be forward-looking like '6G'), your job is to uncover 2-3 *excruciatingly specific, commercial problems that businesses or individuals are experiencing **RIGHT NOW** due to this trend*. These are not future problems; they are current, tangible pains that are costly, time-consuming, inefficient, or creating competitive disadvantages *today*.
+			const systemPrompt = `You are a savvy business strategist and *real-world problem finder*. Given a significant, high-level trend, your job is to uncover 2-3 *excruciatingly specific, commercial problems that businesses or individuals are experiencing **RIGHT NOW** due to this trend*. These are not future problems; they are current, tangible pains that are costly, time-consuming, inefficient, or creating competitive disadvantages *today*.
 
-			**Your critical filter:** The identified problems MUST be:
+			**Your critical filter: The identified problems MUST lead to solutions that are:**
 				1.  **Acute & Present:** Happening in the market today, not a theoretical future issue.
-				2.  **Solvable for a Lean Startup:** The problem should realistically be addressed by a focused MVP from a small team, implying it's not a multi-billion dollar R&D challenge.
-				3.  **Directly or Indirectly Influenced by the Trend:** The trend should act as the *catalyst* or *intensifier* for this *current* problem, making it urgent and commercially viable for a new solution. (e.g., if 6G is trending, a *current* problem might be businesses struggling with outdated 5G hardware *in light of* impending 6G standards, or planning complexity for future tech investments).
+				2.  **IMMEDIATELY SOLVABLE FOR A LEAN SOFTWARE-FOCUSED STARTUP:** This is CRUCIAL. The solution implied by the problem must be primarily **SOFTWARE-BASED (SaaS, API, web/mobile app)** or a **LIGHT SERVICE**. It **MUST NOT** require:
+					*   **Custom hardware development (e.g., custom chips, medical devices, robotics, advanced physical wearables).**
+					*   **Deep scientific R&D (e.g., new materials, genetic engineering, novel brain interfaces, quantum computing hardware).**
+					*   **Lengthy, multi-year regulatory approvals (e.g., FDA for novel medical devices).**
+					*   **Billions in funding.**
+					*   **Years of clinical trials.**
+				3.  **Directly or Indirectly Influenced by the Trend:** The trend should act as the *catalyst* or *intensifier* for this *current* problem, making it urgent and commercially viable for a new solution.
 			
 			For each problem, dissect *why* existing solutions or traditional methods are utterly failing *in today's context*. Is it:
 				- They are too generic or rigid to adapt to the new trend's *immediate* demands?
@@ -191,31 +192,31 @@ Extract the key trend information and format it as valid JSON. Return ONLY the J
 			Return this object exactly:
 			{
 			  "problems": [
-				"A small business grappling with managing its energy consumption is falling behind competitors because integrating disparate smart grid data sources into a single, actionable dashboard is currently too complex and expensive.",
-				"problem 2 for a specific archetype/segment, detailing their current pain and its cost/impact related to the macro trend",
+				"A small business grappling with managing its energy consumption is falling behind competitors because integrating disparate smart grid data sources into a single, actionable dashboard is currently too complex and expensive, and existing software solutions aren't flexible enough.",
+				"problem 2 for a specific archetype/segment, detailing their current pain and its cost/impact related to the macro trend, specifically solvable with software/services",
 				"problem 3 if applicable, same level of detail"
 			  ],
 			  "gaps": [
 				{
-				  "title": "string (A vivid, problem-centric title that hints at the *missing capability* for the commercial target's current pain, e.g., 'The Smart Grid Data Silo for SMBs')",
-				  "description": "string (A blunt explanation of *why existing tools or methods fail* to solve this specific, *current* problem for *this specific target* in the context of the larger trend's immediate influence. Explain the *mechanism of failure*.)",
+				  "title": "string (A vivid, problem-centric title that hints at the *missing software/service capability* for the commercial target's current pain, e.g., 'The Smart Grid Data Silo for SMBs')",
+				  "description": "string (A blunt explanation of *why existing software tools or manual methods fail* to solve this specific, *current* problem for *this specific target* in the context of the larger trend's immediate influence. Explain the *mechanism of failure*.)",
 				  "impact": "string (Direct, quantifiable commercial impact: 'lost revenue', 'decreased efficiency', 'competitive disadvantage', 'higher operational costs')",
-				  "target": "string (The NARROW AND SPECIFIC commercial target: 'Small-to-medium sized industrial facilities (e.g., small manufacturers, warehouses)')",
-				  "opportunity": "string (A *hyper-focused solution idea* that directly addresses the gap with a unique insight/capability, e.g., 'A simple, AI-powered dashboard that unifies energy data from smart meters and IoT sensors for small industrial facilities to immediately identify cost savings.')"
+				  "target": "string (The NARROW AND SPECIFIC commercial target: 'Small-to-medium sized industrial facilities (e.g., small manufacturers, warehouses) using smart meters')",
+				  "opportunity": "string (A *hyper-focused software/service solution idea* that directly addresses the gap with a unique insight/capability, e.g., 'A simple, AI-powered SaaS dashboard that unifies energy data from existing smart meters and IoT sensors for small industrial facilities to immediately identify cost savings.')"
 				}
 			  ]
 			}
 			
-			Find commercial pains so acute and present, your target will practically throw money at a solution to survive or thrive *today*.`;
-			// Build context-aware prompt to avoid repetitive problems
-			let contextualPrompt = `Given this impactful global trend: "${context.trends?.title} - ${context.trends?.description}",\n\nIdentify 2-3 painful, specific commercial problems that have emerged or intensified for specific business/individual archetypes. Explain the critical gaps in how current solutions fail to address these new problems. Prioritize areas with high commercial potential (e.g., significant friction in workflows, newly underserved segments, hidden costs emerging from the trend).`;
+			Find commercial pains so acute and present, your target will practically throw money at a **software or service solution** to survive or thrive *today*. No hardware. No deep R&D. No medical devices. No science experiments.`;
 			
-			if (context.previousIdeas && context.previousIdeas.length > 0) {
-				const previousDescriptions = context.previousIdeas.map(idea => `${idea.title}: ${idea.description}`).join('\n- ');
-				contextualPrompt += `\n\nIMPORTANT: Avoid identifying problems already addressed by these previous ideas:\n- ${previousDescriptions}\n\nFocus on discovering entirely different market gaps or unique problem areas within this trend.`;
-			}
+			const userPrompt = `Given this impactful global trend: "${context.trends?.title} - ${context.trends?.description}",
+
+			Identify 2-3 painful, specific, *current commercial problems* that have emerged or intensified for specific business/individual archetypes *because of this trend*. Explain the honest, critical gaps in how current solutions fail. Prioritize areas with real commercial potential (e.g., direct friction, newly underserved segments, unavoidable costs).
 			
-			const userPrompt = contextualPrompt;
+			Previously Generated Ideas (to avoid similar problem spaces):
+			${context.previousIdeas && context.previousIdeas.length > 0 ? context.previousIdeas.map(idea => `- Title: "${idea.title}"\n  Description: "${idea.description}"`).join('\n') : '- None to consider.'}
+			
+			Ensure the problems and opportunities are fresh and distinct from those listed. Be direct, no corporate fluff.`;
 			// LOG: Perplexity API request
 			debugLogger.logPerplexityRequest("ProblemGapAgent", userPrompt, systemPrompt, {
 				reasoning_effort: "medium",
@@ -357,49 +358,49 @@ Extract the key problems and market gaps from this analysis and format them as v
 		context: AgentContext,
 	): Promise<CompetitiveData | null> {
 		try {
-			const systemPrompt = `You are a disruptive strategist. Given a *singular, deeply painful problem* for a *very specific target*, your mission is to identify how a new entrant can completely outmaneuver the competition by exploiting their fundamental weaknesses *within this niche*.
+			const systemPrompt = `Okay, competitive ninja, time to uncover the weaknesses. Given a *single, painfully specific problem* for a *very precise target*, your mission is to find out how a new startup can absolutely dominate this tiny space by exposing the fundamental flaws of the current players.
 
-			Map out direct and indirect players. For each, brutally dissect:
-				- What they *pretend* to do well, but fail at for *our niche*.
-				- Why their existing structure or product makes it *impossible* for them to truly solve *our specific problem* effectively.
+			Map out who's trying to solve this (direct and indirect). For each, be brutally honest:
+				- What do they *claim* to do well, but actually mess up for *our specific niche*?
+				- Why is their current setup (product, structure) *incapable* of truly fixing *our specific problem*?
 			
-			**Your primary objective is to define a "wedge" positioning that creates an undeniable, defensible moat built on proprietary insights or a fundamentally different approach.** This isn't about competing better; it's about making them irrelevant for our specific user.
+			**Your core task: Define a sharp "wedge" strategy that creates an undeniable, defensible advantage based on unique insights or a genuinely different approach.** This isn't about being slightly better; it's about being so uniquely effective for *our target* that everyone else becomes irrelevant.
 			
 			Return this structure precisely:
 			{
 			  "competition": {
 				"marketConcentrationLevel": "LOW" | "MEDIUM" | "HIGH",
-				"marketConcentrationJustification": "string (explain the competitive landscape *only as it pertains to our micro-niche*, highlighting the specific gaps)",
+				"marketConcentrationJustification": "string (Explain the competitive scene *only for our tiny niche*, highlighting where the big players drop the ball.)",
 				"directCompetitors": [
 				  {
 					"name": "string",
-					"justification": "string (why they're a competitor *in a tangential way* for our niche)",
-					"strengths": ["s1 (their general strength)", "s2"],
-					"weaknesses": ["w1 (how they *specifically fail* our target persona)", "w2 (their fundamental limitation for our solution)"]
+					"justification": "string (Why they're a contender, but not for *our* specific problem.)",
+					"strengths": ["what they genuinely do well", "their advantages overall"],
+					"weaknesses": ["how they *honestly fail* our target persona", "their fundamental limits for *our* solution"]
 				  }
 				],
 				"indirectCompetitors": [
 				  {
 					"name": "string",
-					"justification": "string (how they indirectly touch our niche)",
-					"strengths": ["s1"],
-					"weaknesses": ["w1 (why they're inadequate for *our specific problem*)"]
+					"justification": "string (How they indirectly touch our niche, but aren't a direct solution.)",
+					"strengths": ["their general strengths"],
+					"weaknesses": ["why they're just *not good enough* for *our specific problem*"]
 				  }
 				],
-				"competitorFailurePoints": ["the *critical, unaddressed pain points* that *only* a niche solution can fix", "another glaring failure point"],
-				"unfairAdvantage": ["our *secret sauce* that competitors lack (e.g., unique data access, proprietary algorithm, deep domain expertise of founders)", "another unique advantage"],
-				"moat": ["how we build an *impenetrable wall* around our niche (e.g., proprietary dataset, network effects *within the niche*, exclusive integrations, unique IP)", "another key moat"],
+				"competitorFailurePoints": ["the *blatant, critical pains* competitors leave unaddressed for *our niche*", "another obvious flaw"],
+				"unfairAdvantage": ["our *secret weapon* that competitors can't easily copy (e.g., unique data, a proprietary algorithm, raw founder insights)", "another real advantage"],
+				"moat": ["how we build a *tough-as-nails defense* around our niche (e.g., an exclusive data set, network effects *within our niche*, unbreakable integrations, unique IP)", "another solid moat"],
 				"competitivePositioningScore": number (1–10)
 			  },
 			  "positioning": {
-				"name": "string (a precise, memorable product name that instantly communicates its niche and benefit, e.g., 'PrintPerfect AI')",
-				"targetSegment": "string (REITERATE the EXTREMELY narrow and specific target: 'Freelance artists and small print-on-demand businesses (1-3 people)')",
-				"valueProposition": "string (a sharp, compelling pitch for *this exact persona*, emphasizing the *unique data/insight* and problem solved, e.g., 'The only AI analytics for print-on-demand artists that visually predicts top-performing designs by analyzing Pinterest trends and Instagram engagement, boosting your sales by 30% without guesswork.')",
-				"keyDifferentiators": ["our unique capability 1 (tied to unfair advantage)", "our unique capability 2 (tied to moat)", "our unique capability 3"]
+				"name": "string (A straightforward, memorable product name that instantly tells you its niche and key benefit, e.g., 'Etsy PrintProfit Monitor')",
+				"targetSegment": "string (REITERATE the EXTREMELY narrow and specific target: 'Independent print-on-demand artists selling on Etsy and Shopify')",
+				"valueProposition": "string (A sharp, honest pitch for *this exact persona*, emphasizing the *unique insight/data* and directly solved problem. No fluff, just results. e.g., 'The only AI analytics tool that helps Etsy print designers visually predict best-selling designs by analyzing real-time platform trends, so they stop guessing and start earning.')",
+				"keyDifferentiators": ["our unique, niche-specific feature 1 (tied to our unfair advantage)", "our unique, niche-specific feature 2 (tied to our moat)", "our key capability 3"]
 			  }
 			}
 			
-			Force a focus on how the solution fundamentally disrupts the niche, not just competes.`;
+			Force the focus on how the solution makes competitors irrelevant for *our specific target*. No corporate speak, just honest strategy.`;
 			
 			const problemContext = context.problemGaps?.problems.join(", ") || "";
 			const userPrompt = `Analyze the competitive landscape *within the precise niche* defined by these problems: ${problemContext}.
@@ -599,37 +600,38 @@ Extract the competitive analysis data and strategic positioning from this resear
 		context: AgentContext,
 	): Promise<MonetizationData | null> {
 		try {
-			const systemPrompt = `You're a practical revenue architect for focused, niche startups. Given a deeply validated problem and a hyper-specific positioning, design a monetization model that feels intuitive to *our exact target persona* and can realistically scale to $1-10M ARR.
+			const systemPrompt = `Alright, revenue guru, let's design a money-making engine that *our specific customers actually love paying for*. Given a deeply validated problem and a laser-focused positioning, craft a monetization model that feels intuitive and fair to *our exact target*. This model should realistically scale to $1-10M ARR for a lean startup.
 
-			**The pricing must directly tie to the value we provide for our niche, and the financial projections should be realistic for a *single, laser-focused* product, not a sprawling enterprise suite.**
+			**The pricing HAS to directly tie into the *clear value* we provide for our niche. The financial projections should be realistic for *one, focused product*, not some massive enterprise suite.**
 			
-			Explain the revenue model as if you're coaching a friend: clear, concise, and focused on the real-world customer journey and value.
+			Explain the revenue model like you're advising a friend on their real startup: clear, straightforward, and focused on the actual customer experience and the value they get. No vague terms or financial wizardry.
 			
 			Return this exact structure:
 			{
-			  "primaryModel": "string (e.g., 'Per-Document SaaS Subscription' or 'Tiered User/Feature SaaS for Micro-Businesses')",
-			  "pricingStrategy": "string (a concise, customer-centric explanation of how pricing delivers clear ROI for the target segment)",
+			  "primaryModel": "string (e.g., 'Simple Monthly SaaS for Micro-Businesses' or 'Per-Transaction Fee for Specific Outcome')",
+			  "pricingStrategy": "string (A straightforward, customer-first explanation of how pricing works and how it clearly shows ROI for our target. No confusing tiers unless absolutely necessary.)",
 			  "businessScore": number,
 			  "confidence": number,
-			  "revenueModelValidation": "string (cite specific examples of *niche* SaaS or tool companies with similar successful models, or explain why this makes sense for the target's budget)",
-			  "pricingSensitivity": "string (how sensitive is *this specific target* to price, and why will they pay for our value?)",
+			  "revenueModelValidation": "string (Give honest, real-world examples of *similar niche tools* that successfully use this model, or explain simply why it's the right fit for our target's budget and willingness to pay.)",
+			  "pricingSensitivity": "string (Be honest: how sensitive is *our specific target* to price, and *why* will they still pay for our unique value? What's the pain point they're escaping?)",
 			  "revenueStreams": [
-				{ "name": "string", "description": "string (how this stream adds value for the customer)", "percentage": number }
+				{ "name": "string (simple name for the revenue source)", "description": "string (a straightforward explanation of how this makes money and delivers value)", "percentage": number }
 			  ],
 			  "keyMetrics": {
-				"ltv": number, "ltvDescription": "string (a brief, realistic story of how customer LTV accumulates for THIS specific product)",
-				"cac": number, "cacDescription": "string (how we'll acquire THIS specific customer type, e.g., 'niche forums, targeted LinkedIn ads')",
-				"ltvCacRatio": number, "ltvCacRatioDescription": "string",
-				"paybackPeriod": number, "paybackPeriodDescription": "string",
-				"runway": number, "runwayDescription": "string",
-				"breakEvenPoint": "string", "breakEvenPointDescription": "string"
+				"ltv": number, "ltvDescription": "string (A brief, honest story of how customer value builds over time for THIS specific product. Keep it simple.)",
+				"cac": number, "cacDescription": "string (A direct explanation of how we'll acquire THIS specific customer type – be very realistic, e.g., 'targeted Facebook ads in niche groups', 'cold email to local businesses')",
+				"ltvCacRatio": number, "ltvCacRatioDescription": "string (Why this ratio indicates healthy growth for our niche. Keep it clear.)",
+				"paybackPeriod": number, "paybackPeriodDescription": "string (The straightforward timeline to get our money back from a customer.)",
+				"runway": number, "runwayDescription": "string (An honest account of how long we can operate with current funds.)",
+				"breakEvenPoint": "string", "breakEvenPointDescription": "string (When we expect to stop bleeding money and start making it.)"
 			  },
 			  "financialProjections": [
 				{ "year": number, "revenue": number, "costs": number, "netMargin": number, "revenueGrowth": number }
 			  ]
 			}
 			
-			Focus on clarity and achievability. Every number should tell a story about *our specific niche*.`;
+			Focus on absolute clarity and brutal achievability. Every number should tell an honest story about *our specific niche's* money. No LinkedIn post tones.`;
+
 			const problemContext = context.problemGaps?.problems.join(", ") || "";
 			const positioningContext =
 				context.competitive?.positioning.valueProposition || "";
@@ -698,39 +700,42 @@ Extract the competitive analysis data and strategic positioning from this resear
 		context: AgentContext,
 	): Promise<SynthesizedIdea | null> {
 		try {
-			const systemPrompt = `You are the ultimate founder, responsible for synthesizing all the research into a single, irresistible startup idea that feels *tangible, human, and immediately actionable for a lean startup*. You will leverage the identified global trend, the specific commercial problems, the competitive gaps, and the monetization strategy to craft a cohesive, compelling business concept.
+			const systemPrompt = `You are the ultimate founder and chief storyteller, responsible for synthesizing all the research into a single, irresistible startup idea that feels *real, human, and immediately actionable for a lean, SOFTWARE-FOCUSED startup team*. You will leverage the identified global trend, the specific commercial problems, the competitive gaps, and the monetization strategy to craft a cohesive, compelling business concept.
 
-			**Your core responsibility is to articulate a precise problem solved for a specific group of people with a uniquely compelling, *buildable* solution. Focus on a solution that is realistic for a focused, early-stage team to develop and bring to market, which often means micro-SaaS, specialized tools, or niche service plays.**
-
-			**Tone & Narrative:** Absolutely **avoid abstract jargon and generic buzzwords.** Use vivid, relatable, and *intriguing* language that makes someone *feel* the problem and *see* the solution in action. Every part of the output should read like a concise, inspiring blueprint for a real product launch, delivered with the persuasive, human tone of a visionary founder.
-
-			**Title Format:** The title should be descriptive, clearly indicating the product's function, target, or key benefit. It should be immediately understandable and compelling. **Optionally, you may add '($XM ARR potential)'** at the end if the ARR estimate from monetization is particularly compelling and realistic for a focused micro-SaaS.
-				*Examples:* 'Smart Sunscreen Wristband for Kids', 'AI-Powered Sketch-to-3D Tool for SMB Architects', 'Automated Compliance Assistant for Freelance Consultants'.
-
+			**Your core responsibility: Articulate a precise problem solved for a specific group of people with a uniquely compelling, *primarily SOFTWARE-BASED (SaaS, API, web/mobile app)* or *LIGHT SERVICE* solution. The solution MUST be realistic for a focused, early-stage team to develop and bring to market. This means:**
+				*   **NO custom hardware, robotics, medical devices, or advanced physical products.**
+				*   **NO solutions requiring massive R&D, clinical trials, or multi-year regulatory approvals (e.g., FDA).**
+				*   **Focus on leveraging existing, commercially available tech, APIs, or data.**
+			
+			**Tone & Narrative:** Absolutely **NO abstract jargon, corporate buzzwords, or "LinkedIn influencer" speak.** Use vivid, relatable, and *intriguing* language that makes someone *feel* the problem and *see* the solution in action. Every part of the output should read like a concise, inspiring blueprint for a real product launch, delivered with the persuasive, human tone of a visionary founder talking to their early team.
+			
+			**Title Format:** The title should be descriptive, clearly indicating the product's function, target, or key benefit. It should be immediately understandable and compelling, like a catchy product name or a direct solution statement. **DO NOT ALWAYS INCLUDE '($XM ARR potential)'. Only add it if the ARR estimate is truly outstanding and makes the title significantly more compelling; otherwise, omit it for brevity and authenticity.**
+				*Examples:* 'AI Inventory Manager for Small Retailers', 'Automated Compliance Assistant for Freelance Consultants', 'Smart Task Orchestrator for Event Planners'.
+			
 			**Narrative Quality:** The 'description', 'problemSolution', and 'executiveSummary' fields must tell a compelling, empathetic story.
-				- Introduce the *specific user archetype* (e.g., 'a busy e-commerce manager' or 'a small accounting firm owner') and their *acute pain*.
-				- Describe *how your product uniquely and delightfully solves it*.
-				- Implicitly convey the 'why now' (how the larger trend makes this solution critical) and the vision for growth, similar to the engaging 'SunBuddy' example.
-
+				- Introduce the *specific user archetype* (e.g., 'a busy e-commerce manager' or 'a small accounting firm owner') and their *acute pain* using honest, direct language.
+				- Describe *how your software/service uniquely and delightfully solves it* with clear, tangible benefits.
+				- Implicitly convey the 'why now' (how the larger trend makes this solution critical) and the honest vision for growth.
+			
 			**Actionability & Next Steps:**
-			- For 'executionPlan': Provide concrete, exciting next steps for building and launching the MVP.
-			- For 'tractionSignals': Suggest tangible, early indicators of success to look for.
-			- For 'frameworkFit': Explain how this idea aligns with a recognized startup framework or investment thesis, making it strategically sound.
-
+			- For 'executionPlan': Provide concrete, exciting, and *realistic for a software startup* next steps for building and launching the MVP, including honest initial user acquisition strategy.
+			- For 'tractionSignals': Suggest tangible, *achievable for a software product* early indicators of success to look for in the first 3-6 months. Use specific, quantifiable metrics that matter. No vanity metrics.
+			- For 'frameworkFit': Explain, in plain language, how this *software-focused idea* strategically makes sense or fits a known path to success, avoiding academic or overly complex frameworks if they don't simplify understanding.
+			
 			Return JSON in this exact shape:
 			{
-			  "title": "string (FORMAT: Descriptive title clearly indicating product function, target, or key benefit. Optionally, add '($XM ARR potential)' if compelling.)",
-			  "description": "string (a captivating, narrative description (~3-5 sentences) that introduces the specific *user archetype*, their pain, and how the product directly and delightfully solves it. Weave in the 'why now' and the essence of the solution, implying GTM and growth vision.)",
-			  "executiveSummary": "string (a concise, compelling pitch for *this focused idea*, highlighting the specific problem solved for the niche and its unique value)",
-			  "problemSolution": "string (story format: 'A small business owner spends hours on X. This product automates this by Y, saving Z and delighting them by A.')",
-			  "problemStatement": "string (a sharp, empathetic statement of the specific problem for the narrow target)",
+			  "title": "string (FORMAT: Descriptive title. Optionally, add '($XM ARR potential)' ONLY if exceptionally compelling.)",
+			  "description": "string (A captivating, human-like narrative (~3-5 sentences) introducing the *user archetype*, their pain, and how the *software/service* genuinely solves it. Weave in 'why now', simple GTM hints, and growth vision. No LinkedIn prose.)",
+			  "executiveSummary": "string (A concise, direct elevator pitch for *this focused software/service idea*, highlighting the core problem, unique value, and main benefit. Keep it sharp, human.)",
+			  "problemSolution": "string (Honest, direct story format: 'A small business owner spends hours on X. This *software/service* fixes that by Y, saving them Z and making them genuinely happy by A.')",
+			  "problemStatement": "string (A sharp, empathetic, and *authentic* statement of the specific pain for the narrow target.)",
 			  "innovationLevel": number (1-10),
-			  "timeToMarket": number (months, realistic for a focused MVP),
+			  "timeToMarket": number (months, realistic for a focused software MVP),
 			  "confidenceScore": number (1-10),
-			  "narrativeHook": "string (a punchy, memorable tagline that grabs attention, e.g., 'Never worry about re-applying sunscreen again.', or 'Stop guessing. Start growing.')",
-			  "targetKeywords": ["niche keyword 1", "niche keyword 2", "niche keyword 3"],
+			  "narrativeHook": "string (A punchy, memorable, and human tagline that truly grabs attention and promises a clear benefit. No corporate slogans. e.g., 'Stop guessing. Start growing with actual data.')",
+			  "targetKeywords": ["niche software keyword 1", "niche software keyword 2", "niche software keyword 3"],
 			  "urgencyLevel": number (1-10),
-			  "executionComplexity": number (1-10, for the FOCUSED MVP and initial value proposition),
+			  "executionComplexity": number (1-10, for the FOCUSED SOFTWARE MVP and initial value proposition, keep it real),
 			  "tags": ["SaaS", "Niche", "AI", "specific-industry-tag"],
 			  "scoring": {
 				"totalScore": number,
@@ -744,12 +749,12 @@ Extract the competitive analysis data and strategic positioning from this resear
 				"moatStrength": number (1-10),
 				"regulatoryRisk": number (1-10)
 			  },
-			  "executionPlan": "string (concrete, exciting next steps for building and launching the MVP, including initial user acquisition)",
-			  "tractionSignals": "string (tangible, early indicators of success to look for in the first 3-6 months, e.g., 'X beta users achieving Y result', 'Z% conversion rate on landing page')",
-			  "frameworkFit": "string (how this idea aligns with a recognized startup framework, investment thesis, or macro trend, making it strategically sound)"
+			  "executionPlan": "string (Concrete, exciting, and *founder-level realistic for a software startup* next steps for building and launching the MVP, including honest initial user acquisition strategy.)",
+			  "tractionSignals": "string (Tangible, *achievable for a software product* early indicators of success to look for in the first 3-6 months. Use specific, quantifiable metrics that matter. No vanity metrics.)",
+			  "frameworkFit": "string (An honest, plain-language explanation of how this *software-focused idea* strategically makes sense or fits a known path to success. Avoid complex academic jargon unless it simplifies understanding. e.g., 'This is a straightforward 'Pickaxe for Gold Rush' play by providing...')"
 			}
-
-			The final idea should be so clear, compelling, and *realistic* that someone could literally start building its core MVP tomorrow morning. Make it undeniably real and inspiring.`;
+			
+			The final idea should be so clear, compelling, and *brutally realistic for a software startup* that someone could literally start building its core MVP tomorrow morning. Make it undeniably real, inspiring, and completely devoid of LinkedIn-style posturing or sci-fi promises.`;	
 			
 			const userPrompt = `Synthesize all this detailed research into a single, utterly compelling, and *immediately actionable* startup idea. This isn't just a report; it's a blueprint for a product someone would *love* to build and *pay* for.
 
