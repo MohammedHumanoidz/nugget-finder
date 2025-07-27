@@ -256,7 +256,7 @@ export const agentRouter = router({
 	// Test individual agents (for debugging)
 	testTrendResearch: publicProcedure.mutation(async () => {
 		try {
-			const trends = await IdeaGenerationAgentController.trendResearchAgent();
+			const trends = await IdeaGenerationAgentController.trendResearchAgent({});
 			return {
 				success: !!trends,
 				data: trends,

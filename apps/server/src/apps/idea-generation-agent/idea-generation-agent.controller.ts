@@ -18,27 +18,38 @@ const IdeaGenerationAgentController = {
 	 * TrendResearchAgent - Discover emerging AI/tech trends with market timing signals
 	 * Uses Perplexity Deep Research for comprehensive trend analysis
 	 */
-	async trendResearchAgent(): Promise<TrendData | null> {
+	async trendResearchAgent(context: AgentContext): Promise<TrendData | null> {
 		try {
-			const systemPrompt = `You are a world-class, unbiased trend forecaster and global news analyst. Your mission: Identify *one* powerful, undeniable emerging trend or significant development from the past 7-14 days that represents a major shift in technology, society, economy, or regulation.
+			const systemPrompt = `You are a world-class, unbiased trend forecaster and global intelligence analyst. Your mission: Identify *one* powerful, undeniable emerging trend or significant development that represents a major shift in technology, society, economy, or regulation.
 
 			Your goal is to surface macro-level shifts that will fundamentally change how people live, work, or interact. Think like a top-tier journalist or researcher presenting a profound insight into "what's happening in the world."
+			
+			**Crucially, this trend MUST be validated by high-engagement, human-driven discussion, not just news headlines or passing fads.** Prioritize signals from:
+				- **Reddit/Twitter:** Look for highly upvoted threads, heavily commented posts, and viral discussions that indicate *sustained, genuine community interest and frustration/excitement* around a topic. This filters out low-quality or AI-generated 'slop'.
+				- **Developer forums, niche communities, specialized blogs:** Evidence of active problem-solving or deep technical discussion.
 			
 			**DO NOT filter for product ideas or specific business models (SaaS, B2B, B2C) at this stage.** Your focus is purely on the existence, significance, and driving forces of the trend itself. This trend *will* generate problems, but that's for a later agent to identify.
 			
 			Return a structured JSON object with this exact shape:
 			{
-			  "title": "string (A concise, impactful title for the global trend, e.g., 'The Global Surge in Remote Work Infrastructure Investment')",
-			  "description": "string (A clear, objective, and compelling narrative explaining the macro trend, its origin, and its broad implications. Do NOT hint at solutions or specific startup ideas. Focus on the 'what' and 'why' of the trend itself.)",
+			  "title": "string (A concise, impactful title for the global trend, e.g., 'The Surging Demand for Decentralized Identity Solutions')",
+			  "description": "string (A clear, objective, and compelling narrative explaining the macro trend, its origin, and its broad implications. Crucially, reference how this trend is manifesting in *high-engagement online communities* (e.g., 'Discussions on Reddit's /r/privacy are exploding, with users detailing frustration over...'). Do NOT hint at solutions or specific startup ideas. Focus on the 'what' and 'why' of the trend itself.)",
 			  "trendStrength": number (1-10),
 			  "catalystType": "TECHNOLOGY_BREAKTHROUGH" | "REGULATORY_CHANGE" | "MARKET_SHIFT" | "SOCIAL_TREND" | "ECONOMIC_FACTOR",
 			  "timingUrgency": number (1-10),
-			  "supportingData": ["credible, high-level source or metric (e.g., 'IMF projects 15% increase in global digital infrastructure spending')", "major news event or policy change", "broad behavioral shift metric"]
+			  "supportingData": ["credible, high-level source or metric (e.g., 'Spike in 'digital identity' mentions on Hacker News')", "specific example of high-engagement social discussion (e.g., 'A Reddit thread on data breaches hit 5,000 comments in 24 hours')", "major news event or policy change (if relevant and confirmed by social buzz)"]
 			}
 			
-			Focus on undeniable, impactful shifts, not micro-niches or specific product categories. Let's understand the world first.`;
-
-			const userPrompt = "What is one powerful, globally impactful emerging trend or significant development from the past 7-14 days? Focus on shifts with broad implications across technology, society, economy, or regulation.";
+			Focus on undeniable, impactful shifts, validated by real human interaction, not just ephemeral headlines. Let's understand the world through its actual conversations.`;
+			// Build context-aware prompt to avoid repetitive ideas
+			let contextualPrompt = "What is one powerful, globally impactful emerging trend or significant development that is generating high engagement and sustained discussion in online communities like Reddit, Twitter, or specialized forums or even the news and blogs? Focus on shifts with broad implications across technology, society, economy, or regulation.";
+			
+			if (context.previousIdeas && context.previousIdeas.length > 0) {
+				const previousTitles = context.previousIdeas.map(idea => idea.title).join('", "');
+				contextualPrompt += `\n\nIMPORTANT: Avoid generating trends similar to these previously analyzed ones: "${previousTitles}". Focus on discovering entirely different trend categories or novel developments.`;
+			}
+			
+			const userPrompt = contextualPrompt;
 			// LOG: Perplexity API request
 			debugLogger.logPerplexityRequest("TrendResearchAgent", userPrompt, systemPrompt, {
 				reasoning_effort: "high",
@@ -163,40 +174,48 @@ Extract the key trend information and format it as valid JSON. Return ONLY the J
 	 */
 	async problemGapAgent(context: AgentContext): Promise<ProblemGapData | null> {
 		try {
-			const systemPrompt = `You are a savvy business strategist who excels at identifying specific, painful commercial problems directly spawned by major global trends. Given a significant, high-level trend, your job is to uncover 2-3 *excruciatingly specific, real-world problems* that a *defined group of businesses or individuals* are now facing *because of this trend*.
+			const systemPrompt = `You are a savvy business strategist and *real-world problem finder*. Given a significant, high-level trend (which might be forward-looking like '6G'), your job is to uncover 2-3 *excruciatingly specific, commercial problems that businesses or individuals are experiencing **RIGHT NOW** due to this trend*. These are not future problems; they are current, tangible pains that are costly, time-consuming, inefficient, or creating competitive disadvantages *today*.
 
-			These aren't just annoyances; they're costly, time-consuming, efficiency-draining, or compliance-critical headaches.
+			**Your critical filter:** The identified problems MUST be:
+				1.  **Acute & Present:** Happening in the market today, not a theoretical future issue.
+				2.  **Solvable for a Lean Startup:** The problem should realistically be addressed by a focused MVP from a small team, implying it's not a multi-billion dollar R&D challenge.
+				3.  **Directly or Indirectly Influenced by the Trend:** The trend should act as the *catalyst* or *intensifier* for this *current* problem, making it urgent and commercially viable for a new solution. (e.g., if 6G is trending, a *current* problem might be businesses struggling with outdated 5G hardware *in light of* impending 6G standards, or planning complexity for future tech investments).
 			
-			For each problem, dissect *why* existing solutions or traditional methods are now utterly failing. Is it:
-				- They are too generic or rigid to adapt to the new trend's demands?
-				- They create more friction or cost in the new environment?
-				- They completely miss a critical new need created by the trend?
+			For each problem, dissect *why* existing solutions or traditional methods are utterly failing *in today's context*. Is it:
+				- They are too generic or rigid to adapt to the new trend's *immediate* demands?
+				- They create more friction or cost *now* in the evolving environment?
+				- They completely miss a critical *current* need created by the trend's influence?
 			
-			**Crucially, describe the persona affected as a specific archetype or segment (e.g., 'small and medium-sized architecture firms' or 'online course creators reliant on social media traffic') and detail their frustration with tangible, quantifiable examples where possible.** The gaps should highlight a *clear, solvable commercial opportunity* that directly stems from the macro trend.
+			**Describe the persona affected as a specific archetype or segment (e.g., 'small and medium-sized architecture firms' or 'online course creators reliant on social media traffic') and detail their frustration with tangible, quantifiable examples where possible.** The gaps should highlight a *clear, solvable commercial opportunity* that directly stems from the macro trend's *current* impact.
 			
 			Return this object exactly:
 			{
 			  "problems": [
-				"Small and medium-sized architecture firms are losing bids because they can't quickly generate high-fidelity 3D renders from 2D blueprints, a new client expectation driven by advancements in generative AI visualization tools.",
-				"problem 2 for a specific archetype/segment, detailing their pain and its cost/impact related to the macro trend",
+				"A small business grappling with managing its energy consumption is falling behind competitors because integrating disparate smart grid data sources into a single, actionable dashboard is currently too complex and expensive.",
+				"problem 2 for a specific archetype/segment, detailing their current pain and its cost/impact related to the macro trend",
 				"problem 3 if applicable, same level of detail"
 			  ],
 			  "gaps": [
 				{
-				  "title": "string (A vivid, problem-centric title that hints at the *missing capability* for the commercial target, e.g., 'The AI Rendering Bottleneck for SMB Architects')",
-				  "description": "string (A blunt explanation of *why existing tools or methods fail* to solve this specific problem for *this specific target* in the context of the larger trend. Explain the *mechanism of failure*.)",
-				  "impact": "string (Direct, quantifiable commercial impact: 'lost revenue', 'decreased efficiency', 'competitive disadvantage')",
-				  "target": "string (The NARROW AND SPECIFIC commercial target: 'SMB architecture firms (1-10 architects)')",
-				  "opportunity": "string (A *hyper-focused solution idea* that directly addresses the gap, e.g., 'Automated 2D-to-3D architectural rendering service powered by new generative AI APIs')"
+				  "title": "string (A vivid, problem-centric title that hints at the *missing capability* for the commercial target's current pain, e.g., 'The Smart Grid Data Silo for SMBs')",
+				  "description": "string (A blunt explanation of *why existing tools or methods fail* to solve this specific, *current* problem for *this specific target* in the context of the larger trend's immediate influence. Explain the *mechanism of failure*.)",
+				  "impact": "string (Direct, quantifiable commercial impact: 'lost revenue', 'decreased efficiency', 'competitive disadvantage', 'higher operational costs')",
+				  "target": "string (The NARROW AND SPECIFIC commercial target: 'Small-to-medium sized industrial facilities (e.g., small manufacturers, warehouses)')",
+				  "opportunity": "string (A *hyper-focused solution idea* that directly addresses the gap with a unique insight/capability, e.g., 'A simple, AI-powered dashboard that unifies energy data from smart meters and IoT sensors for small industrial facilities to immediately identify cost savings.')"
 				}
 			  ]
 			}
 			
-			Find commercial pains so acute, your target will practically throw money at the solution to survive or thrive in the new environment.`;
-
-			const userPrompt = `Given this impactful global trend: "${context.trends?.title} - ${context.trends?.description}",
-
-			Identify 2-3 painful, specific commercial problems that have emerged or intensified for specific business/individual archetypes. Explain the critical gaps in how current solutions fail to address these new problems. Prioritize areas with high commercial potential (e.g., significant friction in workflows, newly underserved segments, hidden costs emerging from the trend).`;
+			Find commercial pains so acute and present, your target will practically throw money at a solution to survive or thrive *today*.`;
+			// Build context-aware prompt to avoid repetitive problems
+			let contextualPrompt = `Given this impactful global trend: "${context.trends?.title} - ${context.trends?.description}",\n\nIdentify 2-3 painful, specific commercial problems that have emerged or intensified for specific business/individual archetypes. Explain the critical gaps in how current solutions fail to address these new problems. Prioritize areas with high commercial potential (e.g., significant friction in workflows, newly underserved segments, hidden costs emerging from the trend).`;
+			
+			if (context.previousIdeas && context.previousIdeas.length > 0) {
+				const previousDescriptions = context.previousIdeas.map(idea => `${idea.title}: ${idea.description}`).join('\n- ');
+				contextualPrompt += `\n\nIMPORTANT: Avoid identifying problems already addressed by these previous ideas:\n- ${previousDescriptions}\n\nFocus on discovering entirely different market gaps or unique problem areas within this trend.`;
+			}
+			
+			const userPrompt = contextualPrompt;
 			// LOG: Perplexity API request
 			debugLogger.logPerplexityRequest("ProblemGapAgent", userPrompt, systemPrompt, {
 				reasoning_effort: "medium",
@@ -835,10 +854,21 @@ Extract the competitive analysis data and strategic positioning from this resear
 				previousIdeas: previousIdeas
 			});
 
+			// Create lightweight summary for context
+			const previousIdeaSummaries = previousIdeas.map(idea => ({
+				title: idea.title,
+				description: idea.description
+			}));
+
+			// Initialize agent context
+			const agentContext: AgentContext = { 
+				previousIdeas: previousIdeaSummaries 
+			};
+
 			// 1. Research trends
 			console.log("📈 Researching trends...");
 			debugLogger.info("📈 Starting trend research...");
-			const trends = await this.trendResearchAgent();
+			const trends = await this.trendResearchAgent(agentContext);
 			if (!trends) {
 				debugLogger.logError("generateDailyIdea", new Error("Failed to research trends"), { step: "trendResearch" });
 				throw new Error("Failed to research trends");
@@ -848,7 +878,9 @@ Extract the competitive analysis data and strategic positioning from this resear
 			// 2. Identify problems and gaps
 			console.log("🎯 Analyzing problems and gaps...");
 			debugLogger.info("🎯 Starting problem gap analysis...", { trendsContext: trends });
-			const problemGaps = await this.problemGapAgent({ trends, previousIdeas });
+			// Update context with trends
+			agentContext.trends = trends;
+			const problemGaps = await this.problemGapAgent(agentContext);
 			if (!problemGaps) {
 				debugLogger.logError("generateDailyIdea", new Error("Failed to analyze problems"), { step: "problemGapAnalysis", trends });
 				throw new Error("Failed to analyze problems");
@@ -858,11 +890,9 @@ Extract the competitive analysis data and strategic positioning from this resear
 			// 3. Research competitive landscape
 			console.log("🏆 Researching competition...");
 			debugLogger.info("🏆 Starting competitive intelligence...", { trends, problemGaps });
-			const competitive = await this.competitiveIntelligenceAgent({
-				trends,
-				problemGaps,
-				previousIdeas,
-			});
+			// Update context with problem gaps
+			agentContext.problemGaps = problemGaps;
+			const competitive = await this.competitiveIntelligenceAgent(agentContext);
 			if (!competitive) {
 				debugLogger.logError("generateDailyIdea", new Error("Failed to research competition"), { step: "competitiveIntelligence", trends, problemGaps });
 				throw new Error("Failed to research competition");
@@ -871,23 +901,16 @@ Extract the competitive analysis data and strategic positioning from this resear
 
 			// 4. Design monetization strategy
 			console.log("💰 Designing monetization...");
-			const monetization = await this.monetizationAgent({
-				trends,
-				problemGaps,
-				competitive,
-				previousIdeas,
-			});
+			// Update context with competitive data
+			agentContext.competitive = competitive;
+			const monetization = await this.monetizationAgent(agentContext);
 			if (!monetization) throw new Error("Failed to design monetization");
 
 			// 5. Synthesize final idea
 			console.log("🧠 Synthesizing idea...");
-			const idea = await this.ideaSynthesisAgent({
-				trends,
-				problemGaps,
-				competitive,
-				monetization,
-				previousIdeas,
-			});
+			// Update context with monetization data
+			agentContext.monetization = monetization;
+			const idea = await this.ideaSynthesisAgent(agentContext);
 			if (!idea) throw new Error("Failed to synthesize idea");
 
 			// 6. Save to database

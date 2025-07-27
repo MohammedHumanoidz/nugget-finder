@@ -245,9 +245,9 @@ export async function parsePerplexityResponse<T = any>(
 		console.log("✅ Content is already valid JSON, using directly");
 		const result = parseStructuredResponse<T>(content, fallbackData);
 		
-		if (result.success && result.data && expectedFields.length > 0) {
+		if (result.success && result.data && expectedFields.length > 0 && typeof result.data === 'object' && result.data !== null) {
 			// Validate that expected fields are present
-			const missingFields = expectedFields.filter(field => !(field in result.data!));
+			const missingFields = expectedFields.filter(field => !(field in (result.data as Record<string, any>)));
 			
 			if (missingFields.length > 0) {
 				console.log(`⚠️ Missing required fields: ${missingFields.join(', ')}`);
@@ -271,9 +271,9 @@ export async function parsePerplexityResponse<T = any>(
 		
 		const result = parseStructuredResponse<T>(structuredContent, fallbackData);
 		
-		if (result.success && result.data && expectedFields.length > 0) {
+		if (result.success && result.data && expectedFields.length > 0 && typeof result.data === 'object' && result.data !== null) {
 			// Validate that expected fields are present
-			const missingFields = expectedFields.filter(field => !(field in result.data!));
+			const missingFields = expectedFields.filter(field => !(field in (result.data as Record<string, any>)));
 			
 			if (missingFields.length > 0) {
 				console.log(`⚠️ Missing required fields: ${missingFields.join(', ')}`);
@@ -311,9 +311,9 @@ export function parseLLMResponse<T = any>(
 ): ParseResult<T> {
 	const result = parseStructuredResponse<T>(content, fallbackData);
 	
-	if (result.success && result.data && expectedFields.length > 0) {
+	if (result.success && result.data && expectedFields.length > 0 && typeof result.data === 'object' && result.data !== null) {
 		// Validate that expected fields are present
-		const missingFields = expectedFields.filter(field => !(field in result.data!));
+		const missingFields = expectedFields.filter(field => !(field in (result.data as Record<string, any>)));
 		
 		if (missingFields.length > 0) {
 			return {
