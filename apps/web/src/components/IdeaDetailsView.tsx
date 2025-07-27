@@ -31,7 +31,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
     return (
       <ul className="space-y-1 pl-4">
         {items.map((item, index) => (
-          <li key={index} className="text-muted-foreground text-sm">• {item}</li>
+          <li key={index.toString()} className="text-muted-foreground text-sm">• {item}</li>
         ))}
       </ul>
     );
@@ -197,7 +197,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
 
                   <TabsContent value="direct" className="space-y-3">
                     {idea.marketCompetition.directCompetitors.map((competitor: DirectCompetitor, index: number) => (
-                      <div key={index} className="bg-muted/30 border-l-4 border-border p-4 rounded-lg">
+                      <div key={index.toString()} className="bg-muted/30 border-l-4 border-border p-4 rounded-lg">
                         <h5 className="text-foreground font-semibold mb-2">• {competitor.name}</h5>
                         <p className="text-muted-foreground text-sm mb-2">{competitor.justification}</p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -220,7 +220,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
 
                   <TabsContent value="indirect" className="space-y-3">
                     {idea.marketCompetition.indirectCompetitors.map((competitor: IndirectCompetitor, index: number) => (
-                      <div key={index} className="bg-muted/30 border-l-4 border-border p-4 rounded-lg">
+                      <div key={index.toString()} className="bg-muted/30 border-l-4 border-border p-4 rounded-lg">
                         <h5 className="text-foreground font-semibold mb-2">• {competitor.name}</h5>
                         <p className="text-muted-foreground text-sm mb-2">{competitor.justification}</p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -289,7 +289,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
                     <h4 className="text-foreground font-semibold mb-3">Revenue Streams:</h4>
                     <div className="space-y-3">
                       {idea.monetizationStrategy.revenueStreams.map((stream, index) => (
-                        <div key={index} className="bg-muted/50 border border-border p-3 rounded-lg">
+                        <div key={index.toString()} className="bg-muted/50 border border-border p-3 rounded-lg">
                           <div className="flex justify-between items-center">
                             <div>
                               <strong className="text-green-600">• {stream.name} ({stream.percentage}%)</strong>
@@ -391,7 +391,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
                     <h4 className="text-foreground font-semibold mb-2">Tags:</h4>
                     <div className="flex gap-2 flex-wrap">
                       {idea.tags.map((tag, index) => (
-                        <span key={index} className="bg-muted text-primary border border-border px-3 py-1 rounded-full text-sm font-medium">
+                        <span key={index.toString()} className="bg-muted text-primary border border-border px-3 py-1 rounded-full text-sm font-medium">
                           {tag}
                         </span>
                       ))}

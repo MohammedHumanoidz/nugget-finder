@@ -31,7 +31,7 @@ const AnimatedHowItWorks = () => {
   const BeamAnimation = ({ index }: { index: number }) => (
     <div className="hidden md:flex items-center justify-center w-24 relative" style={{ height: '100%', alignSelf: 'center' }}>
       {/* Static beam base - positioned at middle of cards */}
-      <div className="w-full h-0.5 bg-border absolute top-1/2 transform -translate-y-1/2"></div>
+      <div className="w-full h-0.5 bg-border absolute top-1/2 transform -translate-y-1/2"/>
       
       {/* Animated flowing beam */}
       <motion.div
@@ -44,7 +44,7 @@ const AnimatedHowItWorks = () => {
         transition={{
           duration: 2,
           delay: index * 0.3,
-          repeat: Infinity,
+          repeat: Number.POSITIVE_INFINITY,
           repeatDelay: 1,
           ease: "easeInOut"
         }}
@@ -61,7 +61,7 @@ const AnimatedHowItWorks = () => {
         transition={{
           duration: 2,
           delay: index * 0.3 + 0.5,
-          repeat: Infinity,
+          repeat: Number.POSITIVE_INFINITY,
           repeatDelay: 1,
           ease: "easeOut"
         }}
@@ -78,7 +78,7 @@ const AnimatedHowItWorks = () => {
         transition={{
           duration: 0.6,
           delay: index * 0.3 + 1,
-          repeat: Infinity,
+          repeat: Number.POSITIVE_INFINITY,
           repeatDelay: 1.4,
           ease: "easeOut"
         }}
@@ -207,7 +207,7 @@ const AnimatedHowItWorks = () => {
                     transition={{
                       duration: 1.5,
                       delay: index * 0.5,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       repeatDelay: 1.5,
                       ease: "easeInOut"
                     }}
@@ -224,7 +224,7 @@ const AnimatedHowItWorks = () => {
                     transition={{
                       duration: 0.6,
                       delay: index * 0.5 + 0.7,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       repeatDelay: 1.4,
                       ease: "easeOut"
                     }}

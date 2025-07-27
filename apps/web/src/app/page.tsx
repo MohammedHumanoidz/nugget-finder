@@ -5,10 +5,12 @@ import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
-import { Moon, CheckCircle, TrendingUp } from 'lucide-react';
+import { CheckCircle, TrendingUp } from 'lucide-react';
 import { trpc } from '@/utils/trpc';
 import AnimatedHowItWorks from '@/components/AnimatedHowItWorks';
-import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts';
+import Navbar from '@/components/Navbar';
+import StatsCards from '@/components/StatsCards';
+import IdeaScoreBreakdown from '@/components/IdeaScoreBreakdown';
 
 // Client component using tRPC and React Query
 export default function Page() {
@@ -43,54 +45,6 @@ export default function Page() {
   const marketOpportunities = dailyIdeas.length;
   const activeUsers = 0; // Hardcoded as requested
 
-  // Prepare radar chart data for featured nugget
-  const radarChartData = featuredNugget ? [
-    { 
-      subject: 'Problem Severity', 
-      value: featuredNugget.ideaScore?.problemSeverity || 8,
-      fullMark: 10 
-    },
-    { 
-      subject: 'Founder Fit', 
-      value: featuredNugget.ideaScore?.founderMarketFit || 8,
-      fullMark: 10 
-    },
-    { 
-      subject: 'Tech Feasibility', 
-      value: featuredNugget.ideaScore?.technicalFeasibility || 7,
-      fullMark: 10 
-    },
-    { 
-      subject: 'Monetization', 
-      value: featuredNugget.ideaScore?.monetizationPotential || 8,
-      fullMark: 10 
-    },
-    { 
-      subject: 'Urgency Score', 
-      value: featuredNugget.ideaScore?.urgencyScore || 9,
-      fullMark: 10 
-    },
-    { 
-      subject: 'Market Timing', 
-      value: featuredNugget.ideaScore?.marketTimingScore || 8,
-      fullMark: 10 
-    },
-    { 
-      subject: 'Execution Ease', 
-      value: 10 - (featuredNugget.ideaScore?.executionDifficulty || 7), // Invert for better visualization
-      fullMark: 10 
-    },
-    { 
-      subject: 'Moat Strength', 
-      value: featuredNugget.ideaScore?.moatStrength || 6,
-      fullMark: 10 
-    },
-    { 
-      subject: 'Low Reg Risk', 
-      value: 10 - (featuredNugget.ideaScore?.regulatoryRisk || 5), // Invert for better visualization
-      fullMark: 10 
-    }
-  ] : [];
 
   // Loading state
   if (isLoading) {
@@ -120,35 +74,13 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Top Navigation */}
-      <nav className="border-b border-border px-4 py-3">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-xl">⛏️</span>
-            <span className="font-semibold text-lg">NuggetFinder.io</span>
-          </div>
-          
-          <div className="hidden md:flex items-center gap-6">
-            <Link href="/" className="text-muted-foreground hover:text-foreground">Home</Link>
-            <Link href="/trends" className="text-muted-foreground hover:text-foreground">Trends</Link>
-            <Link href="/pricing" className="text-muted-foreground hover:text-foreground">Pricing</Link>
-          </div>
-          
-          <div className="flex items-center gap-3">
-            <Link href="/signin" className="text-muted-foreground hover:text-foreground">Sign in</Link>
-            <Button>Sign up</Button>
-            <Button variant="ghost" size="icon">
-              <Moon className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero Section - Nuggets Mined Today */}
       <section className="max-w-7xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">🆕 NUGGETS MINED TODAY 🌟</h1>
-          <div className="w-24 h-1 bg-primary mx-auto"></div>
+          <div className="w-24 h-1 bg-primary mx-auto"/>
         </div>
 
         {featuredNugget && (
@@ -156,10 +88,8 @@ export default function Page() {
             <CardHeader>
               <CardTitle className="text-2xl">{featuredNugget.title}</CardTitle>
               <div className="flex flex-wrap gap-2 mt-4">
-                <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-medium">✅ Perfect Timing</span>
-                <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">✅ Unfair Advantage</span>
-                <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium">✅ Product Ready</span>
-                <span className="bg-gray-600 text-white px-3 py-1 rounded-full text-sm font-medium">+17 More</span>
+                <span className="bg-green-600/10 border border-green-600 text-foreground px-3 py-1 rounded-full text-sm font-medium">✅ Unfair Advantage</span>
+                <span className="bg-purple-600/10 border border-purple-600 text-foreground px-3 py-1 rounded-full text-sm font-medium">✅ Product Ready</span>
               </div>
             </CardHeader>
             
@@ -169,108 +99,10 @@ export default function Page() {
               </p>
 
               {/* Score Metrics */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <Card className="p-4 text-center">
-                  <div className="font-bold text-2xl">{featuredNugget.ideaScore?.problemSeverity || 9}</div>
-                  <div className="text-sm text-muted-foreground">Opportunity</div>
-                  <div className="text-xs text-green-600">(Exceptional)</div>
-                  <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                    <div 
-                      className="bg-green-400 h-2 rounded-full" 
-                      style={{ width: `${(featuredNugget.ideaScore?.problemSeverity || 9) * 10}%` }}
-                    ></div>
-                  </div>
-                </Card>
-                
-                <Card className="p-4 text-center">
-                  <div className="font-bold text-2xl">{featuredNugget.ideaScore?.problemSeverity || 9}</div>
-                  <div className="text-sm text-muted-foreground">Problem</div>
-                  <div className="text-xs text-red-600">(Severe Pain)</div>
-                  <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                    <div 
-                      className="bg-red-400 h-2 rounded-full" 
-                      style={{ width: `${(featuredNugget.ideaScore?.problemSeverity || 9) * 10}%` }}
-                    ></div>
-                  </div>
-                </Card>
-                
-                <Card className="p-4 text-center">
-                  <div className="font-bold text-2xl">{featuredNugget.ideaScore?.technicalFeasibility || 6}</div>
-                  <div className="text-sm text-muted-foreground">Feasibility</div>
-                  <div className="text-xs text-orange-600">(Challenging)</div>
-                  <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                    <div 
-                      className="bg-orange-400 h-2 rounded-full" 
-                      style={{ width: `${(featuredNugget.ideaScore?.technicalFeasibility || 6) * 10}%` }}
-                    ></div>
-                  </div>
-                </Card>
-                
-                <Card className="p-4 text-center">
-                  <div className="font-bold text-2xl">{featuredNugget.ideaScore?.marketTimingScore || 9}</div>
-                  <div className="text-sm text-muted-foreground">Why Now</div>
-                  <div className="text-xs text-green-600">(Perfect Timing)</div>
-                  <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                    <div 
-                      className="bg-green-400 h-2 rounded-full" 
-                      style={{ width: `${(featuredNugget.ideaScore?.marketTimingScore || 9) * 10}%` }}
-                    ></div>
-                  </div>
-                </Card>
-              </div>
+              <StatsCards idea={featuredNugget} />
 
-              {/* Radar Chart Section */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">📊 IDEA SCORE RADAR CHART</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center mb-4">
-                    <div className="text-2xl font-bold">Overall Idea Score: {featuredNugget.ideaScore?.totalScore || 73}/100</div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>Problem Severity: {featuredNugget.ideaScore?.problemSeverity || 8}</div>
-                    <div>Urgency Score: {featuredNugget.ideaScore?.urgencyScore || 9}</div>
-                    <div>Founder Fit: {featuredNugget.ideaScore?.founderMarketFit || 8}</div>
-                    <div>Market Timing: {featuredNugget.ideaScore?.marketTimingScore || 8}</div>
-                    <div>Tech Feasibility: {featuredNugget.ideaScore?.technicalFeasibility || 7}</div>
-                    <div>Execution Difficulty: {featuredNugget.ideaScore?.executionDifficulty || 7}</div>
-                    <div>Monetization Potential: {featuredNugget.ideaScore?.monetizationPotential || 8}</div>
-                    <div>Moat Strength: {featuredNugget.ideaScore?.moatStrength || 6}</div>
-                    <div>Regulatory Risk: {featuredNugget.ideaScore?.regulatoryRisk || 5}</div>
-                  </div>
-                  
-                  {/* Actual Radar Chart */}
-                  <div className="mt-6 h-80">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <RadarChart data={radarChartData}>
-                        <PolarGrid gridType="polygon" stroke="#374151" />
-                        <PolarAngleAxis 
-                          dataKey="subject" 
-                          tick={{ fontSize: 11, fill: 'currentColor' }}
-                          className="text-muted-foreground"
-                        />
-                        <PolarRadiusAxis 
-                          angle={90} 
-                          domain={[0, 10]} 
-                          tick={{ fontSize: 10, fill: 'currentColor' }}
-                          className="text-muted-foreground"
-                        />
-                        <Radar
-                          name="Idea Score"
-                          dataKey="value"
-                          stroke="#ea580c"
-                          fill="#ea580c"
-                          fillOpacity={0.3}
-                          strokeWidth={2}
-                          dot={{ r: 4, fill: "#ea580c" }}
-                        />
-                      </RadarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </CardContent>
-              </Card>
+              {/* Idea Score Breakdown Section */}
+              <IdeaScoreBreakdown idea={featuredNugget} />
             </CardContent>
             
             <CardFooter>
