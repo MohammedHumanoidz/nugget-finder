@@ -311,7 +311,7 @@ export default function HomePage() {
   );
 
   // Get previous ideas for cards listing
-  const { data: ideasResponse } = useQuery({
+  const { data: ideasResponse, isLoading: isLoadingIdeas } = useQuery({
     ...trpc.agents.getDailyIdeas.queryOptions({ limit: 10, offset: 0 }),
     enabled: true,
   });
@@ -380,6 +380,19 @@ export default function HomePage() {
             {isLoading ? "Generating..." : "Generate New Nugget"}
           </Button>
         </div>
+
+		{
+			isLoadingIdeas && (
+				<div className="space-y-6">
+					<h2 className="font-bold text-2xl">Generating New Nugget...</h2>
+					<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+						{[1, 2, 3].map((i) => (
+							<LoadingSkeleton key={i} className="h-5 w-16" />
+						))}
+					</div>
+				</div>
+			)
+		}
 
         {/* Previous Nuggets Section */}
         {ideas.length > 0 && (
