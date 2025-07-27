@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+"use client";
+
+import { useState } from 'react';
 import type { IdeaDetailsViewProps, DirectCompetitor, IndirectCompetitor } from '@/types/idea-details';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
@@ -67,23 +69,6 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-background sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-xl">💡</span>
-              <span className="font-semibold text-lg text-foreground">NuggetFinder.io</span>
-            </div>
-            <nav className="flex items-center gap-6 text-sm">
-              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Prospect</a>
-              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Claims</a>
-              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Vault</a>
-              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Account</a>
-            </nav>
-          </div>
-        </div>
-      </header>
 
       {/* Back Navigation */}
       <div className="max-w-7xl mx-auto px-4 py-4">

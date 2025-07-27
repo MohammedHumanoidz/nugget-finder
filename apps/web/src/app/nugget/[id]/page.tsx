@@ -1,49 +1,26 @@
 /** biome-ignore-all lint/a11y/useValidAnchor: <explanation> */
-"use client";
-import { useQuery } from "@tanstack/react-query";
-import { trpc } from "@/utils/trpc";
 import IdeaDetailsView from "@/components/IdeaDetailsView";
 import Navbar from "@/components/Navbar";
+import ClientFallback from "@/components/ClientFallback";
 import type { IdeaDetailsViewProps } from "@/types/idea-details";
+import { notFound } from "next/navigation";
+import { getIdeaById, generateStaticParams } from "@/lib/server-api";
 
-export default function NuggetDetailPage({ params }: { params: { id: string } }) {
-  // Get specific idea by ID
-  const { data: idea, isLoading } = useQuery({
-    ...trpc.agents.getIdeaById.queryOptions({ id: params.id }),
-  });
+// Export generateStaticParams for static generation
+export { generateStaticParams };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 80px)' }}>
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"/>
-            <p className="mt-4 text-muted-foreground">Loading nugget details...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+// Server component with SSR
+export default async function NuggetDetailPage({ params }: { params: { id: string } }) {
+  // Fetch data server-side with caching
+  const idea = await getIdeaById(params.id);
 
   if (!idea) {
+    // Try client-side fallback before showing 404
+    console.log('No server data for nugget, using client fallback');
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
-        <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 80px)' }}>
-          <div className="text-center">
-            <h1 className="text-4xl font-bold mb-4">Nugget Not Found</h1>
-            <p className="text-lg text-muted-foreground mb-8">
-              The nugget you're looking for doesn't exist or has been removed.
-            </p>
-            <a 
-              href="/" 
-              className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-            >
-              Back to Home
-            </a>
-          </div>
-        </div>
+        <ClientFallback type="nugget" nuggetId={params.id} />
       </div>
     );
   }

@@ -1,28 +1,30 @@
-'use client';
-
-import React from 'react';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { CheckCircle, TrendingUp } from 'lucide-react';
-import { trpc } from '@/utils/trpc';
 import AnimatedHowItWorks from '@/components/AnimatedHowItWorks';
 import Navbar from '@/components/Navbar';
 import StatsCards from '@/components/StatsCards';
 import IdeaScoreBreakdown from '@/components/IdeaScoreBreakdown';
+import ClientFallback from '@/components/ClientFallback';
+import { getDailyIdeas } from '@/lib/server-api';
 
-// Client component using tRPC and React Query
-export default function Page() {
-  // Fetch all daily ideas with their relationships using tRPC
-  const { data: ideasResponse, isLoading, error } = useQuery({
-    ...trpc.agents.getDailyIdeas.queryOptions({
-      limit: 50,
-      offset: 0
-    }),
-  });
-
+// Server component with SSR
+export default async function Page() {
+  // Fetch data server-side with caching
+  const ideasResponse = await getDailyIdeas();
   const dailyIdeas = ideasResponse?.ideas || [];
+
+  // If no data from server-side, use client fallback
+  if (!dailyIdeas || dailyIdeas.length === 0) {
+    console.log('No server data, using client fallback');
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <ClientFallback type="home" />
+      </div>
+    );
+  }
   
   // Get featured nugget (latest idea)
   const featuredNugget = dailyIdeas[0];
@@ -44,33 +46,6 @@ export default function Page() {
   
   const marketOpportunities = dailyIdeas.length;
   const activeUsers = 0; // Hardcoded as requested
-
-
-  // Loading state
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-4xl mb-4">⛏️</div>
-          <div className="text-xl font-semibold">Loading NuggetFinder.io...</div>
-          <div className="text-muted-foreground">Mining fresh startup opportunities...</div>
-        </div>
-      </div>
-    );
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-4xl mb-4">⚠️</div>
-          <div className="text-xl font-semibold">Failed to load nuggets</div>
-          <div className="text-muted-foreground">Please try refreshing the page</div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background">
