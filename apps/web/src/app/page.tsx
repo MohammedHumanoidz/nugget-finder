@@ -1,510 +1,811 @@
-/** biome-ignore-all lint/a11y/useValidAnchor: <explanation> */
-"use client";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
-import { trpc } from "@/utils/trpc";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+'use client';
 
-interface NuggetData {
-  title: string;
-  summary: string;
-  badges: string[];
-  brief: string;
-  assay: {
-    opportunity: number;
-    feasibility: number;
-    defensibility: number;
-    totalScore: number;
-    problemSeverity: number;
-    technicalFeasibility: number;
-    monetizationPotential: number;
-    moatStrength: number;
-  };
-  whyNow: {
-    title: string;
-    description: string;
-    trendStrength: number;
-    catalystType: string;
-    supportingData: string[];
-  };
-  marketGap: {
-    title: string;
-    description: string;
-    impact: string;
-    target: string;
-    opportunity: string;
-  };
-  plan: string[];
-  valuation: {
-    cac: string;
-    ltv: string;
-    yieldRatio: string;
-    projectedRevenue: string;
-    paybackPeriod: number;
-    runway: number;
-    breakEvenPoint: string;
-  };
-  financialProjections: Array<{
-    year: number;
-    revenue: number;
-    costs: number;
-    netMargin: number;
-    revenueGrowth: number;
-  }>;
-  revenueStreams: Array<{
-    name: string;
-    description: string;
-    percentage: number;
-  }>;
-  competition: {
-    marketConcentrationLevel: string;
-    marketConcentrationJustification: string;
-    directCompetitors: Array<{
-      name: string;
-      justification: string;
-      strengths: string[];
-      weaknesses: string[];
-    }>;
-    indirectCompetitors: Array<{
-      name: string;
-      justification: string;
-      strengths?: string[];
-      weaknesses?: string[];
-    }>;
-    competitorFailurePoints: string[];
-    unfairAdvantage: string[];
-    moat: string[];
-    competitivePositioningScore: number;
-  };
-  positioning: {
-    name: string;
-    targetSegment: string;
-    valueProposition: string;
-    keyDifferentiators: string[];
-  };
-  meta: {
-    claimType: string;
-    target: string;
-    strength: number;
-    rivals: string[];
-    advantage: string;
-    urgencyLevel: number;
-    executionComplexity: number;
-    innovationLevel: number;
-    timeToMarket: number;
-    confidenceScore: number;
-  };
-}
+import React from 'react';
+import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
+import { Moon, CheckCircle, TrendingUp } from 'lucide-react';
+import { trpc } from '@/utils/trpc';
+import AnimatedHowItWorks from '@/components/AnimatedHowItWorks';
+import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts';
 
-// Transform database response to NuggetPage format
-const transformDbToNugget = (dbIdea: any): NuggetData => {
-  // Handle execution plan - it's null in the response, so we need fallback
-  const getExecutionPlan = () => {
-    if (
-      dbIdea.executionPlan?.phases &&
-      Array.isArray(dbIdea.executionPlan.phases)
-    ) {
-      return dbIdea.executionPlan.phases.map(
-        (phase: any) => phase.description || phase.title
-      );
-    }
-    return [
-      "MVP Development and Initial Market Testing",
-      "Customer Acquisition and Product Refinement",
-      "Scale Operations and Market Expansion",
-    ];
-  };
-
-  // Handle competitive advantage
-  const getAdvantage = () => {
-    if (dbIdea.competitiveAdvantage?.description) {
-      return dbIdea.competitiveAdvantage.description;
-    }
-    if (
-      dbIdea.marketCompetition?.unfairAdvantage &&
-      Array.isArray(dbIdea.marketCompetition.unfairAdvantage)
-    ) {
-      return (
-        dbIdea.marketCompetition.unfairAdvantage[0] ||
-        "First-to-market advantage"
-      );
-    }
-    return "First-to-market advantage";
-  };
-
-  // Handle rivals
-  const getRivals = () => {
-    if (
-      dbIdea.marketCompetition?.directCompetitors &&
-      Array.isArray(dbIdea.marketCompetition.directCompetitors)
-    ) {
-      return dbIdea.marketCompetition.directCompetitors
-        .slice(0, 3)
-        .map((comp: any) => comp.name);
-    }
-    return ["TechCorp", "StartupX"];
-  };
-
-  return {
-    title: dbIdea.title || "Untitled Startup Nugget",
-    summary:
-      dbIdea.executiveSummary ||
-      dbIdea.description ||
-      "AI-generated startup opportunity",
-    badges: ["High Purity", "Prime Claim", "Ready to Mine", "Assayed"],
-    brief:
-      dbIdea.problemSolution ||
-      dbIdea.description ||
-      "Detailed analysis of the startup opportunity",
-    assay: {
-      opportunity: dbIdea.ideaScore?.problemSeverity || 85,
-      feasibility: dbIdea.ideaScore?.technicalFeasibility || 78,
-      defensibility: dbIdea.ideaScore?.moatStrength || 72,
-      totalScore: dbIdea.ideaScore?.totalScore || 77,
-      problemSeverity: dbIdea.ideaScore?.problemSeverity || 85,
-      technicalFeasibility: dbIdea.ideaScore?.technicalFeasibility || 78,
-      monetizationPotential: dbIdea.ideaScore?.monetizationPotential || 82,
-      moatStrength: dbIdea.ideaScore?.moatStrength || 72,
-    },
-    whyNow: {
-      title: dbIdea.whyNow?.title || "Market Timing",
-      description:
-        dbIdea.whyNow?.description ||
-        "Market conditions are optimal for this opportunity",
-      trendStrength: dbIdea.whyNow?.trendStrength || 8,
-      catalystType: dbIdea.whyNow?.catalystType || "TECHNOLOGY_BREAKTHROUGH",
-      supportingData: dbIdea.whyNow?.supportingData || [
-        "Market timing is optimal",
-        "Technology enablers are mature",
-        "Customer pain points are intensifying",
-      ],
-    },
-    marketGap: {
-      title: dbIdea.marketGap?.title || "Market Opportunity",
-      description:
-        dbIdea.marketGap?.description ||
-        "Identified market gap with significant opportunity",
-      impact: dbIdea.marketGap?.impact || "High impact on target market",
-      target: dbIdea.marketGap?.target || "Target market segment",
-      opportunity: dbIdea.marketGap?.opportunity || "Large market opportunity",
-    },
-    plan: getExecutionPlan(),
-    valuation: {
-      cac: dbIdea.monetizationStrategy?.keyMetrics?.cac
-        ? `$${dbIdea.monetizationStrategy.keyMetrics.cac}`
-        : "$120",
-      ltv: dbIdea.monetizationStrategy?.keyMetrics?.ltv
-        ? `$${dbIdea.monetizationStrategy.keyMetrics.ltv}`
-        : "$1,200",
-      yieldRatio: dbIdea.monetizationStrategy?.keyMetrics?.ltvCacRatio
-        ? `${dbIdea.monetizationStrategy.keyMetrics.ltvCacRatio}:1`
-        : "10:1",
-      projectedRevenue: dbIdea.monetizationStrategy?.financialProjections?.[0]
-        ?.revenue
-        ? `$${Math.round(
-            dbIdea.monetizationStrategy.financialProjections[0].revenue / 1000
-          )}K`
-        : "$50K",
-      paybackPeriod:
-        dbIdea.monetizationStrategy?.keyMetrics?.paybackPeriod || 3,
-      runway: dbIdea.monetizationStrategy?.keyMetrics?.runway || 36,
-      breakEvenPoint:
-        dbIdea.monetizationStrategy?.keyMetrics?.breakEvenPoint || "Month 24",
-    },
-    financialProjections: dbIdea.monetizationStrategy?.financialProjections || [
-      {
-        year: 1,
-        revenue: 1200000,
-        costs: 1800000,
-        netMargin: -0.4,
-        revenueGrowth: 0,
-      },
-      {
-        year: 2,
-        revenue: 4800000,
-        costs: 3600000,
-        netMargin: 0.25,
-        revenueGrowth: 3,
-      },
-      {
-        year: 3,
-        revenue: 10000000,
-        costs: 7000000,
-        netMargin: 0.3,
-        revenueGrowth: 2.08,
-      },
-    ],
-    revenueStreams: dbIdea.monetizationStrategy?.revenueStreams || [
-      {
-        name: "Subscription Fees",
-        description: "Monthly recurring revenue",
-        percentage: 75,
-      },
-      {
-        name: "Transaction Fees",
-        description: "Per-transaction fees",
-        percentage: 20,
-      },
-      {
-        name: "Professional Services",
-        description: "Implementation and support",
-        percentage: 5,
-      },
-    ],
-    competition: {
-      marketConcentrationLevel:
-        dbIdea.marketCompetition?.marketConcentrationLevel || "MEDIUM",
-      marketConcentrationJustification:
-        dbIdea.marketCompetition?.marketConcentrationJustification ||
-        "Moderate market concentration",
-      directCompetitors: dbIdea.marketCompetition?.directCompetitors || [],
-      indirectCompetitors: dbIdea.marketCompetition?.indirectCompetitors || [],
-      competitorFailurePoints:
-        dbIdea.marketCompetition?.competitorFailurePoints || [],
-      unfairAdvantage: dbIdea.marketCompetition?.unfairAdvantage || [],
-      moat: dbIdea.marketCompetition?.moat || [],
-      competitivePositioningScore:
-        dbIdea.marketCompetition?.competitivePositioningScore || 7,
-    },
-    positioning: {
-      name: dbIdea.strategicPositioning?.name || "Market Position",
-      targetSegment:
-        dbIdea.strategicPositioning?.targetSegment || "Target Market",
-      valueProposition:
-        dbIdea.strategicPositioning?.valueProposition || "Value proposition",
-      keyDifferentiators: dbIdea.strategicPositioning?.keyDifferentiators || [],
-    },
-    meta: {
-      claimType: dbIdea.strategicPositioning?.name || "B2B SaaS",
-      target: dbIdea.strategicPositioning?.targetSegment || "SMB Market",
-      strength: dbIdea.ideaScore?.totalScore || 78,
-      rivals: getRivals(),
-      advantage: getAdvantage(),
-      urgencyLevel: dbIdea.urgencyLevel || 8,
-      executionComplexity: dbIdea.executionComplexity || 7,
-      innovationLevel: dbIdea.innovationLevel || 8,
-      timeToMarket: dbIdea.timeToMarket || 9,
-      confidenceScore: dbIdea.confidenceScore || 8,
-    },
-  };
-};
-
-const LoadingSkeleton = ({ className }: { className?: string }) => (
-  <div className={`animate-pulse rounded bg-muted ${className}`} />
-);
-
-
-export default function HomePage() {
-  const router = useRouter();
-  
-  // Generate daily idea mutation
-  const generateIdeaMutation = useMutation(
-    trpc.agents.generateDailyIdea.mutationOptions({
-      onSuccess: (data) => {
-        // Navigate to the new nugget detail page
-        if (data?.ideaId) {
-          router.push(`/nugget/${data.ideaId}`);
-        }
-      }
-    })
-  );
-
-  // Get previous ideas for cards listing
-  const { data: ideasResponse, isLoading: isLoadingIdeas } = useQuery({
-    ...trpc.agents.getDailyIdeas.queryOptions({ limit: 10, offset: 0 }),
-    enabled: true,
+// Client component using tRPC and React Query
+export default function Page() {
+  // Fetch all daily ideas with their relationships using tRPC
+  const { data: ideasResponse, isLoading, error } = useQuery({
+    ...trpc.agents.getDailyIdeas.queryOptions({
+      limit: 50,
+      offset: 0
+    }),
   });
 
-  const ideas = ideasResponse?.ideas || [];
-  const isLoading = generateIdeaMutation.isPending;
+  const dailyIdeas = ideasResponse?.ideas || [];
+  
+  // Get featured nugget (latest idea)
+  const featuredNugget = dailyIdeas[0];
+  
+  // Get other nuggets for the grid
+  const otherNuggets = dailyIdeas.slice(1, 7); // Take up to 6 other ideas
+  
+  // Calculate market intelligence metrics
+  const aiTrendsTracked = dailyIdeas.reduce((sum: number, idea: any) => {
+    return sum + (idea.problemGaps?.problems?.length || 0);
+  }, 0);
+  
+  const signalsAnalyzed = dailyIdeas.reduce((sum: number, idea: any) => {
+    const whyNowData = idea.whyNow?.supportingData?.length || 0;
+    const revenueStreams = idea.monetizationStrategy?.revenueStreams?.length || 0;
+    const financialProjections = idea.monetizationStrategy?.financialProjections?.length || 0;
+    return sum + whyNowData + revenueStreams + financialProjections;
+  }, 0);
+  
+  const marketOpportunities = dailyIdeas.length;
+  const activeUsers = 0; // Hardcoded as requested
 
-  const handleGenerateIdea = () => {
-    generateIdeaMutation.mutate({});
-  };
+  // Prepare radar chart data for featured nugget
+  const radarChartData = featuredNugget ? [
+    { 
+      subject: 'Problem Severity', 
+      value: featuredNugget.ideaScore?.problemSeverity || 8,
+      fullMark: 10 
+    },
+    { 
+      subject: 'Founder Fit', 
+      value: featuredNugget.ideaScore?.founderMarketFit || 8,
+      fullMark: 10 
+    },
+    { 
+      subject: 'Tech Feasibility', 
+      value: featuredNugget.ideaScore?.technicalFeasibility || 7,
+      fullMark: 10 
+    },
+    { 
+      subject: 'Monetization', 
+      value: featuredNugget.ideaScore?.monetizationPotential || 8,
+      fullMark: 10 
+    },
+    { 
+      subject: 'Urgency Score', 
+      value: featuredNugget.ideaScore?.urgencyScore || 9,
+      fullMark: 10 
+    },
+    { 
+      subject: 'Market Timing', 
+      value: featuredNugget.ideaScore?.marketTimingScore || 8,
+      fullMark: 10 
+    },
+    { 
+      subject: 'Execution Ease', 
+      value: 10 - (featuredNugget.ideaScore?.executionDifficulty || 7), // Invert for better visualization
+      fullMark: 10 
+    },
+    { 
+      subject: 'Moat Strength', 
+      value: featuredNugget.ideaScore?.moatStrength || 6,
+      fullMark: 10 
+    },
+    { 
+      subject: 'Low Reg Risk', 
+      value: 10 - (featuredNugget.ideaScore?.regulatoryRisk || 5), // Invert for better visualization
+      fullMark: 10 
+    }
+  ] : [];
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-4xl mb-4">⛏️</div>
+          <div className="text-xl font-semibold">Loading NuggetFinder.io...</div>
+          <div className="text-muted-foreground">Mining fresh startup opportunities...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-4xl mb-4">⚠️</div>
+          <div className="text-xl font-semibold">Failed to load nuggets</div>
+          <div className="text-muted-foreground">Please try refreshing the page</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
       {/* Top Navigation */}
-      <nav className="border-border border-b">
-        <div className="mx-auto max-w-7xl px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-xl">⛏️</span>
-              <span className="font-semibold text-lg">NuggetFinder.io</span>
-            </div>
-            <div className="flex items-center gap-6 text-sm">
-              <a
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Prospect
-              </a>
-              <a
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Claims
-              </a>
-              <a
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Vault
-              </a>
-              <a
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Account
-              </a>
-            </div>
+      <nav className="border-b border-border px-4 py-3">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-xl">⛏️</span>
+            <span className="font-semibold text-lg">NuggetFinder.io</span>
+          </div>
+          
+          <div className="hidden md:flex items-center gap-6">
+            <Link href="/" className="text-muted-foreground hover:text-foreground">Home</Link>
+            <Link href="/trends" className="text-muted-foreground hover:text-foreground">Trends</Link>
+            <Link href="/pricing" className="text-muted-foreground hover:text-foreground">Pricing</Link>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <Link href="/signin" className="text-muted-foreground hover:text-foreground">Sign in</Link>
+            <Button>Sign up</Button>
+            <Button variant="ghost" size="icon">
+              <Moon className="h-4 w-4" />
+            </Button>
           </div>
         </div>
       </nav>
 
-      <div className="mx-auto max-w-7xl px-4 py-8">
-        {/* Hero Section */}
-        <div className="py-16 text-center">
-          <h1 className="mb-4 font-bold text-4xl">
-            Discover Your Next Startup Nugget
-          </h1>
-          <p className="mb-8 text-lg text-muted-foreground">
-            AI-powered startup idea discovery and validation
-          </p>
-          <Button
-            onClick={handleGenerateIdea}
-            disabled={isLoading}
-            className="rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
-          >
-            {isLoading ? "Generating..." : "Generate New Nugget"}
-          </Button>
+      {/* Hero Section - Nuggets Mined Today */}
+      <section className="max-w-7xl mx-auto px-4 py-12">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold mb-4">🆕 NUGGETS MINED TODAY 🌟</h1>
+          <div className="w-24 h-1 bg-primary mx-auto"></div>
         </div>
 
-		{
-			isLoadingIdeas && (
-				<div className="space-y-6">
-					<h2 className="font-bold text-2xl">Generating New Nugget...</h2>
-					<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-						{[1, 2, 3].map((i) => (
-							<LoadingSkeleton key={i} className="h-5 w-16" />
-						))}
-					</div>
-				</div>
-			)
-		}
-
-        {/* Previous Nuggets Section */}
-        {ideas.length > 0 && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="font-bold text-2xl">Previous Nuggets</h2>
-              <p className="text-muted-foreground text-sm">{ideas.length} nuggets mined</p>
-            </div>
+        {featuredNugget && (
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="text-2xl">{featuredNugget.title}</CardTitle>
+              <div className="flex flex-wrap gap-2 mt-4">
+                <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-medium">✅ Perfect Timing</span>
+                <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">✅ Unfair Advantage</span>
+                <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium">✅ Product Ready</span>
+                <span className="bg-gray-600 text-white px-3 py-1 rounded-full text-sm font-medium">+17 More</span>
+              </div>
+            </CardHeader>
             
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {ideas.map((idea) => {
-                const nuggetData = transformDbToNugget(idea);
-                return (
-                  <Link key={idea.id} href={`/nugget/${idea.id}`}>
-                    <div className="group cursor-pointer rounded-lg border bg-card p-6 transition-all duration-200 hover:border-primary hover:shadow-lg">
-                      {/* Badges */}
-                      <div className="mb-4 flex gap-2">
-                        <span className="rounded-full bg-primary/10 px-2 py-1 text-primary text-xs">
-                          💎 High Purity
-                        </span>
-                        <span className="rounded-full bg-destructive/10 px-2 py-1 text-destructive text-xs">
-                          🔥 Prime
-                        </span>
-                      </div>
-
-                      {/* Title & Summary */}
-                      <h3 className="mb-2 font-semibold text-lg transition-colors group-hover:text-primary">
-                        {nuggetData.title}
-                      </h3>
-                      <p className="line-clamp-3 mb-4 text-sm text-muted-foreground">
-                        {nuggetData.summary}
-                      </p>
-
-                      {/* Metrics */}
-                      <div className="mb-4 grid grid-cols-3 gap-3">
-                        <div className="text-center">
-                          <div className="font-bold text-lg">{nuggetData.assay.opportunity}%</div>
-                          <div className="text-muted-foreground text-xs">Opportunity</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="font-bold text-lg">{nuggetData.assay.feasibility}%</div>
-                          <div className="text-muted-foreground text-xs">Feasibility</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="font-bold text-lg">{nuggetData.assay.totalScore}</div>
-                          <div className="text-muted-foreground text-xs">Total Score</div>
-                        </div>
-                      </div>
-
-                      {/* Score Bar */}
-                      <div className="mb-4">
-                        <div className="mb-1 flex justify-between text-sm">
-                          <span className="text-muted-foreground">Overall Score</span>
-                          <span className="font-medium">{nuggetData.assay.totalScore}/100</span>
-                        </div>
-                        <div className="h-2 w-full rounded-full bg-secondary">
-                          <div
-                            className="h-2 rounded-full bg-primary transition-all duration-300"
-                            style={{ width: `${nuggetData.assay.totalScore}%` }}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Meta Info */}
-                      <div className="flex justify-between text-xs text-muted-foreground">
-                        <span>{nuggetData.positioning.targetSegment}</span>
-                        <span>{nuggetData.whyNow.catalystType.replace(/_/g, ' ')}</span>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {ideas.length === 0 && !isLoading && (
-          <div className="py-16 text-center">
-            <div className="mx-auto max-w-md">
-              <div className="mb-4 text-4xl">⛏️</div>
-              <h3 className="mb-2 font-semibold text-lg">No Nuggets Yet</h3>
-              <p className="text-muted-foreground text-sm">
-                Start your prospecting journey by generating your first startup nugget.
+            <CardContent className="space-y-6">
+              <p className="text-muted-foreground text-lg leading-relaxed">
+                {featuredNugget.description}
               </p>
-            </div>
-          </div>
-        )}
 
-        {isLoading && (
-          <div className="space-y-6">
-            <h2 className="font-bold text-2xl">Generating New Nugget...</h2>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="rounded-lg border bg-card p-6">
-                  <div className="mb-4 flex gap-2">
-                    <LoadingSkeleton className="h-5 w-16" />
-                    <LoadingSkeleton className="h-5 w-12" />
+              {/* Score Metrics */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <Card className="p-4 text-center">
+                  <div className="font-bold text-2xl">{featuredNugget.ideaScore?.problemSeverity || 9}</div>
+                  <div className="text-sm text-muted-foreground">Opportunity</div>
+                  <div className="text-xs text-green-600">(Exceptional)</div>
+                  <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                    <div 
+                      className="bg-green-400 h-2 rounded-full" 
+                      style={{ width: `${(featuredNugget.ideaScore?.problemSeverity || 9) * 10}%` }}
+                    ></div>
                   </div>
-                  <LoadingSkeleton className="mb-2 h-6 w-3/4" />
-                  <LoadingSkeleton className="mb-4 h-12 w-full" />
-                  <div className="mb-4 grid grid-cols-3 gap-3">
-                    <LoadingSkeleton className="h-8" />
-                    <LoadingSkeleton className="h-8" />
-                    <LoadingSkeleton className="h-8" />
+                </Card>
+                
+                <Card className="p-4 text-center">
+                  <div className="font-bold text-2xl">{featuredNugget.ideaScore?.problemSeverity || 9}</div>
+                  <div className="text-sm text-muted-foreground">Problem</div>
+                  <div className="text-xs text-red-600">(Severe Pain)</div>
+                  <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                    <div 
+                      className="bg-red-400 h-2 rounded-full" 
+                      style={{ width: `${(featuredNugget.ideaScore?.problemSeverity || 9) * 10}%` }}
+                    ></div>
                   </div>
-                  <LoadingSkeleton className="h-2 w-full" />
-                </div>
-              ))}
+                </Card>
+                
+                <Card className="p-4 text-center">
+                  <div className="font-bold text-2xl">{featuredNugget.ideaScore?.technicalFeasibility || 6}</div>
+                  <div className="text-sm text-muted-foreground">Feasibility</div>
+                  <div className="text-xs text-orange-600">(Challenging)</div>
+                  <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                    <div 
+                      className="bg-orange-400 h-2 rounded-full" 
+                      style={{ width: `${(featuredNugget.ideaScore?.technicalFeasibility || 6) * 10}%` }}
+                    ></div>
+                  </div>
+                </Card>
+                
+                <Card className="p-4 text-center">
+                  <div className="font-bold text-2xl">{featuredNugget.ideaScore?.marketTimingScore || 9}</div>
+                  <div className="text-sm text-muted-foreground">Why Now</div>
+                  <div className="text-xs text-green-600">(Perfect Timing)</div>
+                  <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                    <div 
+                      className="bg-green-400 h-2 rounded-full" 
+                      style={{ width: `${(featuredNugget.ideaScore?.marketTimingScore || 9) * 10}%` }}
+                    ></div>
+                  </div>
+                </Card>
+              </div>
+
+              {/* Radar Chart Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">📊 IDEA SCORE RADAR CHART</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center mb-4">
+                    <div className="text-2xl font-bold">Overall Idea Score: {featuredNugget.ideaScore?.totalScore || 73}/100</div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>Problem Severity: {featuredNugget.ideaScore?.problemSeverity || 8}</div>
+                    <div>Urgency Score: {featuredNugget.ideaScore?.urgencyScore || 9}</div>
+                    <div>Founder Fit: {featuredNugget.ideaScore?.founderMarketFit || 8}</div>
+                    <div>Market Timing: {featuredNugget.ideaScore?.marketTimingScore || 8}</div>
+                    <div>Tech Feasibility: {featuredNugget.ideaScore?.technicalFeasibility || 7}</div>
+                    <div>Execution Difficulty: {featuredNugget.ideaScore?.executionDifficulty || 7}</div>
+                    <div>Monetization Potential: {featuredNugget.ideaScore?.monetizationPotential || 8}</div>
+                    <div>Moat Strength: {featuredNugget.ideaScore?.moatStrength || 6}</div>
+                    <div>Regulatory Risk: {featuredNugget.ideaScore?.regulatoryRisk || 5}</div>
+                  </div>
+                  
+                  {/* Actual Radar Chart */}
+                  <div className="mt-6 h-80">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RadarChart data={radarChartData}>
+                        <PolarGrid gridType="polygon" stroke="#374151" />
+                        <PolarAngleAxis 
+                          dataKey="subject" 
+                          tick={{ fontSize: 11, fill: 'currentColor' }}
+                          className="text-muted-foreground"
+                        />
+                        <PolarRadiusAxis 
+                          angle={90} 
+                          domain={[0, 10]} 
+                          tick={{ fontSize: 10, fill: 'currentColor' }}
+                          className="text-muted-foreground"
+                        />
+                        <Radar
+                          name="Idea Score"
+                          dataKey="value"
+                          stroke="#ea580c"
+                          fill="#ea580c"
+                          fillOpacity={0.3}
+                          strokeWidth={2}
+                          dot={{ r: 4, fill: "#ea580c" }}
+                        />
+                      </RadarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+            </CardContent>
+            
+            <CardFooter>
+              <Button asChild className="w-full">
+                <Link href={`/nugget/${featuredNugget.id}`}>Read Full Analysis →</Link>
+              </Button>
+            </CardFooter>
+          </Card>
+        )}
+      </section>
+
+      {/* Market Intelligence Section */}
+      <section className="max-w-7xl mx-auto px-4 py-12">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold mb-2">Market Intelligence</h2>
+          <p className="text-muted-foreground">Real-time data powering our AI-driven trend analysis platform</p>
+          <div className="w-24 h-1 bg-primary mx-auto mt-4"></div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>AI Trends Tracked</CardTitle>
+              <CardDescription>
+                Our AI system has identified and structured {aiTrendsTracked} unique market signals.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center">
+                <div className="text-4xl font-bold text-primary">{aiTrendsTracked}</div>
+                <div className="text-muted-foreground">Structured Problems</div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Signals Analyzed</CardTitle>
+              <CardDescription>
+                We've processed {signalsAnalyzed} raw signals from multiple problems from various Reddit, Twitter, Hacker News, and industry forums.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center">
+                <div className="text-4xl font-bold text-primary">{signalsAnalyzed}</div>
+                <div className="text-muted-foreground">Data Points Processed</div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Market Opportunities</CardTitle>
+              <CardDescription>
+                {marketOpportunities} detailed business reports have been generated and published
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center">
+                <div className="text-4xl font-bold text-primary">{marketOpportunities}</div>
+                <div className="text-muted-foreground">Detailed Reports</div>
+                <div className="text-sm text-muted-foreground mt-2">Active Users: {activeUsers}</div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* Choose Your Path (Pricing) Section */}
+      <section className="max-w-7xl mx-auto px-4 py-12">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold mb-2">Choose Your Path</h2>
+          <p className="text-muted-foreground">Flexible options for every innovator. Start free, grow fast.</p>
+          <div className="w-24 h-1 bg-primary mx-auto mt-4"></div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Free</CardTitle>
+              <CardDescription>[Best for exploring]</CardDescription>
+              <div className="text-3xl font-bold">FREE</div>
+              <p className="text-sm text-muted-foreground">Basic access for individuals.</p>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  5 ideas/day
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  Limited trend searches
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  No historical data access
+                </li>
+              </ul>
+            </CardContent>
+            <CardFooter>
+              <Button variant="outline" className="w-full">Get Started</Button>
+            </CardFooter>
+          </Card>
+
+          <Card className="border-orange-500 border-2 relative">
+            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+              <span className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-medium">Most popular</span>
+            </div>
+            <CardHeader>
+              <CardTitle>Starter</CardTitle>
+              <CardDescription>[Most popular]</CardDescription>
+              <div className="text-3xl font-bold">$29/mo</div>
+              <p className="text-sm text-muted-foreground">For individuals.</p>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  5 ideas/day
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  50 trend searches/month
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  7-day historical data access
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  3 idea claims/month
+                </li>
+              </ul>
+            </CardContent>
+            <CardFooter>
+              <Button className="w-full">Sign Up</Button>
+            </CardFooter>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Pro</CardTitle>
+              <CardDescription>[For power users]</CardDescription>
+              <div className="text-3xl font-bold">$79/mo</div>
+              <p className="text-sm text-muted-foreground">For users.</p>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  10 ideas/day
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  Unlimited trend searches
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  Full historical idea database
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  10 idea claims/month
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  Community signals dashboard
+                </li>
+              </ul>
+            </CardContent>
+            <CardFooter>
+              <Button className="w-full">Sign Up</Button>
+            </CardFooter>
+          </Card>
+        </div>
+      </section>
+
+      {/* Community Signals Section */}
+      <section className="max-w-7xl mx-auto px-4 py-12">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold mb-2">Community Signals</h2>
+          <p className="text-muted-foreground">See how the conversation is growing across platforms.</p>
+          <div className="w-24 h-1 bg-primary mx-auto mt-4"/>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-orange-600 rounded-full flex items-center justify-center text-white font-bold">R</div>
+                Reddit
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">12,800</div>
+              <div className="text-muted-foreground">Members</div>
+              <div className="text-lg font-semibold mt-2">4.2</div>
+              <div className="text-muted-foreground">Engagement</div>
+              <div className="mt-4 space-y-1 text-sm">
+                <div>#aiagents</div>
+                <div>#automation</div>
+                <div>#startups</div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">F</div>
+                Facebook
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">9,500</div>
+              <div className="text-muted-foreground">Members</div>
+              <div className="text-lg font-semibold mt-2">3.8</div>
+              <div className="text-muted-foreground">Engagement</div>
+              <div className="mt-4 space-y-1 text-sm">
+                <div>#smb</div>
+                <div>#growth</div>
+                <div>#community</div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center text-white font-bold">Y</div>
+                YouTube
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">15,300</div>
+              <div className="text-muted-foreground">Members</div>
+              <div className="text-lg font-semibold mt-2">5.1</div>
+              <div className="text-muted-foreground">Engagement</div>
+              <div className="mt-4 space-y-1 text-sm">
+                <div>#tutorials</div>
+                <div>#ai</div>
+                <div>#reviews</div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center text-white font-bold">O</div>
+                Other
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">4,200</div>
+              <div className="text-muted-foreground">Members</div>
+              <div className="text-lg font-semibold mt-2">2.9</div>
+              <div className="text-muted-foreground">Engagement</div>
+              <div className="mt-4 space-y-1 text-sm">
+                <div>#discord</div>
+                <div>#forums</div>
+                <div>#slack</div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* Trending Topics Section */}
+      <section className="max-w-7xl mx-auto px-4 py-12">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold mb-2">Trending Topics</h2>
+          <p className="text-muted-foreground">Explore the fastest-growing AI domains right now.</p>
+          <div className="w-24 h-1 bg-primary mx-auto mt-4"></div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>AI Agents</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-xl font-bold">5,400</span>
+                <span className="text-green-600 font-semibold">+22%</span>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">
+                Rapidly growing use of autonomous AI agents in business workflows.
+              </p>
+              {/* Sparkline placeholder */}
+              <div className="h-8 bg-muted rounded flex items-center justify-center">
+                <TrendingUp className="h-4 w-4 text-green-600" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Healthcare AI</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-xl font-bold">2,900</span>
+                <span className="text-green-600 font-semibold">+18%</span>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">
+                AI-driven diagnostics and patient management are on the rise.
+              </p>
+              {/* Sparkline placeholder */}
+              <div className="h-8 bg-muted rounded flex items-center justify-center">
+                <TrendingUp className="h-4 w-4 text-green-600" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Fintech AI</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-xl font-bold">3,200</span>
+                <span className="text-green-600 font-semibold">+15%</span>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">
+                AI is transforming financial services and risk management.
+              </p>
+              {/* Sparkline placeholder */}
+              <div className="h-8 bg-muted rounded flex items-center justify-center">
+                <TrendingUp className="h-4 w-4 text-green-600" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Robotics</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-xl font-bold">2,100</span>
+                <span className="text-green-600 font-semibold">+12%</span>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">
+                Robotics and automation are on the rise, adoption in industry.
+              </p>
+              {/* Sparkline placeholder */}
+              <div className="h-8 bg-muted rounded flex items-center justify-center">
+                <TrendingUp className="h-4 w-4 text-green-600" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="text-center mt-8">
+          <Button variant="outline">See all trends</Button>
+        </div>
+      </section>
+
+      {/* Community Momentum Section */}
+      <section className="max-w-7xl mx-auto px-4 py-12">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold mb-2">Community Momentum</h2>
+          <p className="text-muted-foreground">Join a thriving network of innovators, founders, and AI enthusiasts across the globe.</p>
+          <div className="w-24 h-1 bg-primary mx-auto mt-4"></div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">AK</div>
+                Twitter
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-1 text-sm">
+                <div className="font-semibold">Alice Kim</div>
+                <div className="text-muted-foreground">AI Researcher</div>
+                <div className="text-muted-foreground">San Francisco, CA</div>
+              </div>
+              <div className="mt-4">
+                <div className="font-semibold">12,400 members</div>
+                <div className="text-green-600 text-sm">+12% growth this month</div>
+              </div>
+              <blockquote className="mt-4 text-sm italic">
+                "The best place to discover new AI trends!"
+              </blockquote>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <div className="w-10 h-10 bg-blue-700 rounded-full flex items-center justify-center text-white font-bold">BL</div>
+                LinkedIn
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-1 text-sm">
+                <div className="font-semibold">Bob Lee</div>
+                <div className="text-muted-foreground">Startup Founder</div>
+                <div className="text-muted-foreground">London, UK</div>
+              </div>
+              <div className="mt-4">
+                <div className="font-semibold">9,800 members</div>
+                <div className="text-green-600 text-sm">+9% growth this month</div>
+              </div>
+              <blockquote className="mt-4 text-sm italic">
+                "Helped me connect with top founders and investors."
+              </blockquote>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">CS</div>
+                Product Hunt
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-1 text-sm">
+                <div className="font-semibold">Carol Smith</div>
+                <div className="text-muted-foreground">Product Manager</div>
+                <div className="text-muted-foreground">Berlin, DE</div>
+              </div>
+              <div className="mt-4">
+                <div className="font-semibold">7,200 members</div>
+                <div className="text-green-600 text-sm">+15% growth this month</div>
+              </div>
+              <blockquote className="mt-4 text-sm italic">
+                "A must-follow for anyone in the AI space."
+              </blockquote>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">DP</div>
+                Global Community
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-1 text-sm">
+                <div className="font-semibold">Dave Patel</div>
+                <div className="text-muted-foreground">Community Lead</div>
+                <div className="text-muted-foreground">Bangalore, IN</div>
+              </div>
+              <div className="mt-4">
+                <div className="font-semibold">15,600 members</div>
+                <div className="text-green-600 text-sm">+11% growth this month</div>
+              </div>
+              <blockquote className="mt-4 text-sm italic">
+                "The global AI community is thriving here!"
+              </blockquote>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="text-center mt-8">
+          <Button>Join the Community</Button>
+        </div>
+      </section>
+
+      {/* How It Works Section - Animated */}
+      <AnimatedHowItWorks />
+
+      {/* Mine Other Nuggets Section */}
+      <section className="max-w-7xl mx-auto px-4 py-12">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold mb-4">⛏️ MINE OTHER NUGGETS 💡</h2>
+          <div className="w-24 h-1 bg-primary mx-auto"></div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {otherNuggets.map((nugget: any) => (
+            <Card key={nugget.id} className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <CardTitle className="text-lg line-clamp-2">{nugget.title || "Nugget Title"}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="line-clamp-3">
+                  {nugget.description || "Short description of this startup opportunity and its market potential."}
+                </CardDescription>
+              </CardContent>
+              <CardFooter>
+                <Button variant="ghost" asChild className="w-full">
+                  <Link href={`/nugget/${nugget.id}`}>View Idea →</Link>
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+          
+          {/* Fill remaining slots if we have fewer than 6 nuggets */}
+          {Array.from({ length: Math.max(0, 6 - otherNuggets.length) }).map((_, index) => (
+            <Card key={`placeholder-${index}`} className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <CardTitle className="text-lg">Nugget Title {otherNuggets.length + index + 1}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="line-clamp-3">
+                  Short description of this startup opportunity and its market potential.
+                </CardDescription>
+              </CardContent>
+              <CardFooter>
+                <Button variant="ghost" className="w-full" disabled>View Idea →</Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+
+        <div className="text-center mt-8">
+          <Button variant="outline">Browse more ideas →</Button>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-border bg-muted/30 py-8">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="text-sm text-muted-foreground">
+              © 2025 NuggetFinder. All rights reserved.
+            </div>
+            <div className="flex gap-6 text-sm">
+              <Link href="/about" className="text-muted-foreground hover:text-foreground">About</Link>
+              <Link href="/contact" className="text-muted-foreground hover:text-foreground">Contact</Link>
+              <Link href="/privacy" className="text-muted-foreground hover:text-foreground">Privacy</Link>
+              <Link href="/terms" className="text-muted-foreground hover:text-foreground">Terms</Link>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      </footer>
     </div>
   );
 }
