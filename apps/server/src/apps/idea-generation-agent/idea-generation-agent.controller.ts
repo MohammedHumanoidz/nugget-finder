@@ -701,17 +701,22 @@ Extract the competitive analysis data and strategic positioning from this resear
 			const systemPrompt = `You are the ultimate founder, responsible for synthesizing all the research into a single, irresistible startup idea that feels *tangible, human, and immediately actionable for a lean startup*. You will leverage the identified global trend, the specific commercial problems, the competitive gaps, and the monetization strategy to craft a cohesive, compelling business concept.
 
 			**Your core responsibility is to articulate a precise problem solved for a specific group of people with a uniquely compelling, *buildable* solution. Focus on a solution that is realistic for a focused, early-stage team to develop and bring to market, which often means micro-SaaS, specialized tools, or niche service plays.**
-			
+
+			**Tone & Narrative:** Absolutely **avoid abstract jargon and generic buzzwords.** Use vivid, relatable, and *intriguing* language that makes someone *feel* the problem and *see* the solution in action. Every part of the output should read like a concise, inspiring blueprint for a real product launch, delivered with the persuasive, human tone of a visionary founder.
+
 			**Title Format:** The title should be descriptive, clearly indicating the product's function, target, or key benefit. It should be immediately understandable and compelling. **Optionally, you may add '($XM ARR potential)'** at the end if the ARR estimate from monetization is particularly compelling and realistic for a focused micro-SaaS.
 				*Examples:* 'Smart Sunscreen Wristband for Kids', 'AI-Powered Sketch-to-3D Tool for SMB Architects', 'Automated Compliance Assistant for Freelance Consultants'.
-			
+
 			**Narrative Quality:** The 'description', 'problemSolution', and 'executiveSummary' fields must tell a compelling, empathetic story.
 				- Introduce the *specific user archetype* (e.g., 'a busy e-commerce manager' or 'a small accounting firm owner') and their *acute pain*.
 				- Describe *how your product uniquely and delightfully solves it*.
 				- Implicitly convey the 'why now' (how the larger trend makes this solution critical) and the vision for growth, similar to the engaging 'SunBuddy' example.
-			
-			**Language:** Absolutely **avoid abstract jargon and generic buzzwords.** Use vivid, relatable language that makes someone *feel* the problem and *see* the solution in action. This output should read like a concise, inspiring blueprint for a real product launch, not a theoretical academic exercise or a vague VC pitch.
-			
+
+			**Actionability & Next Steps:**
+			- For 'executionPlan': Provide concrete, exciting next steps for building and launching the MVP.
+			- For 'tractionSignals': Suggest tangible, early indicators of success to look for.
+			- For 'frameworkFit': Explain how this idea aligns with a recognized startup framework or investment thesis, making it strategically sound.
+
 			Return JSON in this exact shape:
 			{
 			  "title": "string (FORMAT: Descriptive title clearly indicating product function, target, or key benefit. Optionally, add '($XM ARR potential)' if compelling.)",
@@ -738,9 +743,12 @@ Extract the competitive analysis data and strategic positioning from this resear
 				"executionDifficulty": number (1-10),
 				"moatStrength": number (1-10),
 				"regulatoryRisk": number (1-10)
-			  }
+			  },
+			  "executionPlan": "string (concrete, exciting next steps for building and launching the MVP, including initial user acquisition)",
+			  "tractionSignals": "string (tangible, early indicators of success to look for in the first 3-6 months, e.g., 'X beta users achieving Y result', 'Z% conversion rate on landing page')",
+			  "frameworkFit": "string (how this idea aligns with a recognized startup framework, investment thesis, or macro trend, making it strategically sound)"
 			}
-			
+
 			The final idea should be so clear, compelling, and *realistic* that someone could literally start building its core MVP tomorrow morning. Make it undeniably real and inspiring.`;
 			
 			const userPrompt = `Synthesize all this detailed research into a single, utterly compelling, and *immediately actionable* startup idea. This isn't just a report; it's a blueprint for a product someone would *love* to build and *pay* for.
@@ -788,7 +796,10 @@ Extract the competitive analysis data and strategic positioning from this resear
 				"executionDifficulty": number (1-10),
 				"moatStrength": number (1-10),
 				"regulatoryRisk": number (1-10)
-			  }
+			  },
+			  "executionPlan": "string (Concrete, exciting next steps for building and launching the MVP, including initial user acquisition and validation strategy. Make it sound like a founder's immediate checklist.)",
+			  "tractionSignals": "string (Tangible, early indicators of success to look for in the first 3-6 months. Examples: 'achieving 50 beta sign-ups with 20% daily active users', 'converting 10% of free trial users to paid plans', 'receiving 10 unsolicited testimonials.', 'securing 3 pilot customers who renew.')",
+			  "frameworkFit": "string (How this idea aligns with a recognized startup framework, investment thesis, or macro trend, making it strategically sound. For example, 'This aligns with the 'Pickaxe for Gold Rush' framework by providing tools for X in the booming Y market,' or 'This is a classic 'Unbundling the Enterprise Suite' play for Z segment.')"
 			}
 			`;
 			const { text } = await generateText({
@@ -831,7 +842,10 @@ Extract the competitive analysis data and strategic positioning from this resear
 					executionDifficulty: 6,
 					moatStrength: 7,
 					regulatoryRisk: 2
-				}
+				},
+				executionPlan: "Build MVP with Zapier-like visual workflow builder, integrate 5 core SMB tools (QuickBooks, Shopify, MailChimp, Slack, Google Workspace), launch beta with 50 SMBs through direct outreach, iterate based on feedback, and scale through content marketing targeting SMB pain points.",
+				tractionSignals: "Achieve 100 beta sign-ups with 40% weekly active usage, convert 15% of free trial users to $99/month paid plans, receive 25 unsolicited testimonials highlighting time savings, and secure 10 pilot customers who renew after 3-month trials.",
+				frameworkFit: "This aligns with the 'Picks and Shovels' framework by providing essential automation tools for the booming SMB digital transformation market, positioned as a 'Unbundling Zapier for SMBs' play that focuses on ease-of-use over enterprise complexity."
 			};
 		}
 	},
@@ -947,6 +961,28 @@ Extract the competitive analysis data and strategic positioning from this resear
 				competitive.positioning,
 				dailyIdea.id,
 			);
+
+			// Create new related entities for execution plan, traction signals, and framework fit
+			if (idea.executionPlan) {
+				await IdeaGenerationAgentService.createExecutionPlan(
+					idea.executionPlan,
+					dailyIdea.id,
+				);
+			}
+
+			if (idea.tractionSignals) {
+				await IdeaGenerationAgentService.createTractionSignals(
+					idea.tractionSignals,
+					dailyIdea.id,
+				);
+			}
+
+			if (idea.frameworkFit) {
+				await IdeaGenerationAgentService.createFrameworkFit(
+					idea.frameworkFit,
+					dailyIdea.id,
+				);
+			}
 
 			console.log("✅ Daily idea generated successfully:", dailyIdea.id);
 			return dailyIdea.id;

@@ -103,6 +103,9 @@ export interface SynthesizedIdea {
 		moatStrength: number;
 		regulatoryRisk: number;
 	};
+	executionPlan?: string; // Narrative summary of concrete next steps
+	tractionSignals?: string; // Examples of early validation/traction to look for
+	frameworkFit?: string; // How this idea fits into broader strategic frameworks or trends
 }
 
 export interface AgentContext {

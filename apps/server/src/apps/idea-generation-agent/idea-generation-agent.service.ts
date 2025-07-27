@@ -152,6 +152,44 @@ export const IdeaGenerationAgentService = {
 		});
 	},
 
+	async createExecutionPlan(executionPlan: string, dailyIdeaId: string) {
+		return await prisma.executionPlan.create({
+			data: {
+				mvpDescription: executionPlan,
+				keyMilestones: [], // Default to empty array
+				resourceRequirements: "TBD", // Default placeholder
+				teamRequirements: [], // Default to empty array
+				riskFactors: [], // Default to empty array
+				technicalRoadmap: "TBD", // Default placeholder
+				goToMarketStrategy: "TBD", // Default placeholder
+				dailyIdeaId,
+			},
+		});
+	},
+
+	async createTractionSignals(tractionSignals: string, dailyIdeaId: string) {
+		return await prisma.tractionSignals.create({
+			data: {
+				earlyAdopterSignals: [tractionSignals], // Put the string summary in the array
+				dailyIdeaId,
+			},
+		});
+	},
+
+	async createFrameworkFit(frameworkFit: string, dailyIdeaId: string) {
+		return await prisma.frameworkFit.create({
+			data: {
+				jobsToBeDone: [], // Default to empty array
+				blueOceanFactors: {}, // Default to empty object
+				leanCanvasScore: 7, // Default reasonable score
+				designThinkingStage: "TBD", // Default placeholder
+				innovationDilemmaFit: frameworkFit, // Put the string summary here
+				crossingChasmStage: "TBD", // Default placeholder
+				dailyIdeaId,
+			},
+		});
+	},
+
 	async createDailyIdea(
 		ideaData: SynthesizedIdea,
 		whyNowId: string,
