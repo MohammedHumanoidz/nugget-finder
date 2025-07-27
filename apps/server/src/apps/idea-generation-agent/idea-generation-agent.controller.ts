@@ -26,6 +26,8 @@ const IdeaGenerationAgentController = {
 			
 			**Crucially, this trend MUST be backed by genuine human buzz – think red-hot Reddit threads, viral Twitter discussions, or lively debates in niche forums. We want real people talking about real things, not AI-generated fluff or boring press releases.**
 			
+			**ABSOLUTELY CRITICAL FOR DIVERSITY:** The trend you identify **MUST be entirely different in its core theme, industry focus, and problem category from any of the 'Previously Generated Ideas' provided.** If past ideas were about 'compliance', 'decentralized social', or 'neurotech', then find something completely unrelated, like 'sustainable agriculture innovations', 'future of education', or 'local commerce revival'. Aim for a truly novel domain.
+			
 			**IMPORTANT: Do NOT, repeat, DO NOT, try to find a product idea or business model yet.** Just tell us what the big, interesting thing is. We'll figure out how to make money from it later. Focus on the 'what' and 'why' of the trend itself.
 			
 			Return a structured JSON object with this exact shape:
@@ -38,14 +40,14 @@ const IdeaGenerationAgentController = {
 			  "supportingData": ["specific evidence from Reddit/Twitter/forums (e.g., 'Reddit r/HousingCrisis exploding with 10k comments on rising rents')", "a key news event or policy that triggered significant discussion", "a solid, broad metric if available and relevant"]
 			}
 			
-			Cut the fancy words. Focus on the raw, undeniable shifts, validated by actual human conversation. Let's see the world as it truly is, not as a LinkedIn post would portray it.`;// Build context-aware prompt to avoid repetitive ideas
+			Cut the fancy words. Focus on the raw, undeniable shifts, validated by actual human conversation. Let's see the world as it truly is, not as a LinkedIn post would portray it.`;
 			
 			const userPrompt = `What is one powerful, globally impactful emerging trend or significant development that is generating high engagement and sustained discussion in online communities (Reddit, Twitter, forums) or through notable news/blogs? Focus on shifts with broad implications across technology, society, economy, or regulation.
 
-			Previously Generated Ideas:
+			Previously Generated Ideas (MUST find a trend completely unrelated in theme, industry, or problem category to these):
 			${context.previousIdeas && context.previousIdeas.length > 0 ? context.previousIdeas.map(idea => `- Title: "${idea.title}"\n  Description: "${idea.description}"`).join('\n') : '- None to consider.'}
 			
-			Ensure the new trend is genuinely fresh and distinct from those listed. No LinkedIn vibes.`;
+			Ensure the new trend is genuinely fresh and distinct from any of the themes or industries represented by the ideas listed. No LinkedIn vibes. Give me something that genuinely feels *new*.`;
 			// LOG: Perplexity API request
 			debugLogger.logPerplexityRequest("TrendResearchAgent", userPrompt, systemPrompt, {
 				reasoning_effort: "high",
@@ -181,6 +183,7 @@ Extract the key trend information and format it as valid JSON. Return ONLY the J
 					*   **Billions in funding.**
 					*   **Years of clinical trials.**
 				3.  **Directly or Indirectly Influenced by the Trend:** The trend should act as the *catalyst* or *intensifier* for this *current* problem, making it urgent and commercially viable for a new solution.
+				4.  **GENUINELY NOVEL:** The problems and implied solutions should feel *new* and *different*, building on the trend in a way that avoids previous idea categories.
 			
 			For each problem, dissect *why* existing solutions or traditional methods are utterly failing *in today's context*. Is it:
 				- They are too generic or rigid to adapt to the new trend's *immediate* demands?
