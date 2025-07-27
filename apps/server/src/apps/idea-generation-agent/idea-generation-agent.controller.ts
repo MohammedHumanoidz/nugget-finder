@@ -9,6 +9,9 @@ import type {
 	TrendData,
 } from "@/types/apps/idea-generation-agent";
 import { openrouter, perplexity } from "@/utils/configs/ai.config";
+import { parsePerplexityResponse } from "@/utils/json-parser";
+import { debugLogger } from "@/utils/logger";
+
 
 const IdeaGenerationAgentController = {
 	/**
@@ -47,6 +50,12 @@ Take a deep breath and work on this problem step-by-step.
       Focus on trends with real commercial momentum — buyer pull, unmet demand, pricing inefficiencies, or shifts in consumer/business behavior. Must be actionable for SaaS/B2B/B2C founders.
 `;
 
+			// LOG: Perplexity API request
+			debugLogger.logPerplexityRequest("TrendResearchAgent", userPrompt, systemPrompt, {
+				reasoning_effort: "high",
+				model: "sonar-deep-research"
+			});
+
 			const response = await perplexity(
 				userPrompt,
 				systemPrompt,
@@ -54,28 +63,93 @@ Take a deep breath and work on this problem step-by-step.
 				"sonar-deep-research",
 			);
 
+			// LOG: Perplexity API response (FULL)
+			debugLogger.logPerplexityResponse("TrendResearchAgent", response);
+
 			if (!response?.choices?.[0]?.message?.content) {
+				debugLogger.logError("TrendResearchAgent", new Error("No response from Perplexity"), { response });
 				throw new Error("No response from Perplexity");
 			}
 
 			const content = response.choices[0].message.content;
-			console.log("Perplexity response content:", content);
+			console.log("🔍 Perplexity raw response length:", content.length);
+			console.log("🔍 Response preview:", `${content.substring(0, 200)}...`);
 
-			// Check if content starts with HTML tags (common error response format)
-			if (content.trim().startsWith('<')) {
-				throw new Error("Received HTML response instead of JSON from Perplexity API");
+			// LOG: Content analysis (is it JSON or needs structuring)
+			const isAlreadyJson = content.trim().startsWith('{') && content.trim().endsWith('}');
+			debugLogger.logContentAnalysis("TrendResearchAgent", content, isAlreadyJson);
+
+			// LLM structuring function for when content is not already JSON
+			const structureWithLLM = async (content: string): Promise<string> => {
+				const structuringPrompt = `You are a data structuring expert. Convert the following business trend research into the exact JSON structure requested.
+
+REQUIRED JSON STRUCTURE:
+{
+  "title": "string",
+  "description": "string", 
+  "trendStrength": number (1-10),
+  "catalystType": "TECHNOLOGY_BREAKTHROUGH" | "REGULATORY_CHANGE" | "MARKET_SHIFT" | "SOCIAL_TREND" | "ECONOMIC_FACTOR",
+  "timingUrgency": number (1-10),
+  "supportingData": ["data point 1", "data point 2", "data point 3"]
+}
+
+RESEARCH CONTENT TO CONVERT:
+${content}
+
+Extract the key trend information and format it as valid JSON. Return ONLY the JSON object, no additional text.`;
+
+				// LOG: LLM structuring request
+				debugLogger.logLLMStructuring("TrendResearchAgent", structuringPrompt, content);
+
+				const { text: structuredJson } = await generateText({
+					model: openrouter("openai/gpt-4o-mini"),
+					prompt: structuringPrompt,
+					temperature: 0.1,
+					maxTokens: 800,
+				});
+
+				// LOG: LLM structuring response
+				debugLogger.logLLMStructuringResponse("TrendResearchAgent", structuredJson);
+
+				return structuredJson;
+			};
+
+			const parseResult = await parsePerplexityResponse<TrendData>(
+				content,
+				structureWithLLM,
+				['title', 'description'], // Required fields
+			);
+			
+			// LOG: Parsing attempt and result
+			debugLogger.logParsingAttempt("TrendResearchAgent", content, parseResult);
+			
+			if (!parseResult.success) {
+				console.error("❌ Failed to parse trend data:", parseResult.error);
+				debugLogger.logError("TrendResearchAgent", new Error(`Failed to parse Perplexity response: ${parseResult.error}`), {
+					parseResult,
+					originalContent: content
+				});
+				throw new Error(`Failed to parse Perplexity response: ${parseResult.error}`);
 			}
 
-			try {
-				const trendData = JSON.parse(content) as TrendData;
-				return trendData;
-			} catch (parseError) {
-				console.error("JSON parse error:", parseError);
-				console.error("Raw content:", content);
-				throw new Error("Failed to parse JSON response from Perplexity");
-			}
+			const trendData = parseResult.data as TrendData;
+			
+			console.log("✅ Successfully structured trend data:", {
+				title: trendData.title,
+				trendStrength: trendData.trendStrength,
+				catalystType: trendData.catalystType
+			});
+
+			// LOG: Final agent result
+			debugLogger.logAgentResult("TrendResearchAgent", trendData, true);
+
+			return trendData;
 		} catch (error) {
 			console.error("TrendResearchAgent error:", error);
+			debugLogger.logError("TrendResearchAgent", error as Error, { 
+				agent: "TrendResearchAgent",
+				fallbackUsed: true 
+			});
 			
 			// Return mock data as fallback for development/testing
 			console.log("🔄 Using fallback mock trend data for development");
@@ -133,6 +207,13 @@ Take a deep breath and work on this problem step-by-step.
 Identify 2-3 painful, specific problems and explain the gaps in how current solutions fail. Prioritize areas with commercial potential (e.g. friction in workflows, outdated tooling, underserved personas, invisible costs).
 `;
 
+			// LOG: Perplexity API request
+			debugLogger.logPerplexityRequest("ProblemGapAgent", userPrompt, systemPrompt, {
+				reasoning_effort: "medium",
+				model: "sonar",
+				context: context.trends
+			});
+
 			const response = await perplexity(
 				userPrompt,
 				systemPrompt,
@@ -140,28 +221,96 @@ Identify 2-3 painful, specific problems and explain the gaps in how current solu
 				"sonar",
 			);
 
+			// LOG: Perplexity API response (FULL)
+			debugLogger.logPerplexityResponse("ProblemGapAgent", response);
+
 			if (!response?.choices?.[0]?.message?.content) {
+				debugLogger.logError("ProblemGapAgent", new Error("No response from Perplexity"), { response });
 				throw new Error("No response from Perplexity");
 			}
 
 			const content = response.choices[0].message.content;
-			console.log("ProblemGap response content:", content);
+			console.log("🔍 ProblemGap raw response length:", content.length);
+			console.log("🔍 Response preview:", `${content.substring(0, 200)}...`);
 
-			// Check if content starts with HTML tags
-			if (content.trim().startsWith('<')) {
-				throw new Error("Received HTML response instead of JSON from Perplexity API");
+			// LOG: Content analysis (is it JSON or needs structuring)
+			const isAlreadyJson = content.trim().startsWith('{') && content.trim().endsWith('}');
+			debugLogger.logContentAnalysis("ProblemGapAgent", content, isAlreadyJson);
+
+			// LLM structuring function for when content is not already JSON
+			const structureWithLLM = async (content: string): Promise<string> => {
+				const structuringPrompt = `You are a data structuring expert. Convert the following business problem and gap analysis into the exact JSON structure requested.
+
+REQUIRED JSON STRUCTURE:
+{
+  "problems": ["problem 1", "problem 2", "problem 3"],
+  "gaps": [
+    {
+      "title": "string",
+      "description": "string",
+      "impact": "string",
+      "target": "string (persona or market)",
+      "opportunity": "string"
+    }
+  ]
+}
+
+RESEARCH CONTENT TO CONVERT:
+${content}
+
+Extract the key problems and market gaps from this analysis and format them as valid JSON. Return ONLY the JSON object, no additional text.`;
+
+				// LOG: LLM structuring request
+				debugLogger.logLLMStructuring("ProblemGapAgent", structuringPrompt, content);
+
+				const { text: structuredJson } = await generateText({
+					model: openrouter("openai/gpt-4o-mini"),
+					prompt: structuringPrompt,
+					temperature: 0.1,
+					maxTokens: 800,
+				});
+
+				// LOG: LLM structuring response
+				debugLogger.logLLMStructuringResponse("ProblemGapAgent", structuredJson);
+
+				return structuredJson;
+			};
+
+			const parseResult = await parsePerplexityResponse<ProblemGapData>(
+				content,
+				structureWithLLM,
+				['problems', 'gaps'], // Required fields
+			);
+			
+			// LOG: Parsing attempt and result
+			debugLogger.logParsingAttempt("ProblemGapAgent", content, parseResult);
+			
+			if (!parseResult.success) {
+				console.error("❌ Failed to parse problem gap data:", parseResult.error);
+				debugLogger.logError("ProblemGapAgent", new Error(`Failed to parse Perplexity response: ${parseResult.error}`), {
+					parseResult,
+					originalContent: content
+				});
+				throw new Error(`Failed to parse Perplexity response: ${parseResult.error}`);
 			}
 
-			try {
-				const problemGapData = JSON.parse(content) as ProblemGapData;
-				return problemGapData;
-			} catch (parseError) {
-				console.error("ProblemGap JSON parse error:", parseError);
-				console.error("Raw content:", content);
-				throw new Error("Failed to parse JSON response from Perplexity");
-			}
+			const problemGapData = parseResult.data as ProblemGapData;
+			
+			console.log("✅ Successfully structured problem gap data:", {
+				problemCount: problemGapData.problems?.length || 0,
+				gapCount: problemGapData.gaps?.length || 0
+			});
+
+			// LOG: Final agent result
+			debugLogger.logAgentResult("ProblemGapAgent", problemGapData, true);
+
+			return problemGapData;
 		} catch (error) {
 			console.error("ProblemGapAgent error:", error);
+			debugLogger.logError("ProblemGapAgent", error as Error, { 
+				agent: "ProblemGapAgent",
+				fallbackUsed: true 
+			});
 			
 			// Return mock data as fallback for development/testing
 			console.log("🔄 Using fallback mock problem gap data for development");
@@ -245,6 +394,13 @@ Take a deep breath and work on this problem step-by-step.
 Return competitors, market concentration, and strategic gaps a new entrant can exploit. Focus on defensibility, differentiation, and whitespace.
 `;
 
+			// LOG: Perplexity API request
+			debugLogger.logPerplexityRequest("CompetitiveIntelligenceAgent", userPrompt, systemPrompt, {
+				reasoning_effort: "medium",
+				model: "sonar-pro",
+				context: context.problemGaps
+			});
+
 			const response = await perplexity(
 				userPrompt,
 				systemPrompt,
@@ -252,28 +408,117 @@ Return competitors, market concentration, and strategic gaps a new entrant can e
 				"sonar-pro",
 			);
 
+			// LOG: Perplexity API response (FULL)
+			debugLogger.logPerplexityResponse("CompetitiveIntelligenceAgent", response);
+
 			if (!response?.choices?.[0]?.message?.content) {
+				debugLogger.logError("CompetitiveIntelligenceAgent", new Error("No response from Perplexity"), { response });
 				throw new Error("No response from Perplexity");
 			}
 
 			const content = response.choices[0].message.content;
-			console.log("Competitive Intelligence response content:", content);
+			console.log("🔍 Competitive Intelligence raw response length:", content.length);
+			console.log("🔍 Response preview:", `${content.substring(0, 200)}...`);
 
-			// Check if content starts with HTML tags
-			if (content.trim().startsWith('<')) {
-				throw new Error("Received HTML response instead of JSON from Perplexity API");
+			// LOG: Content analysis (is it JSON or needs structuring)
+			const isAlreadyJson = content.trim().startsWith('{') && content.trim().endsWith('}');
+			debugLogger.logContentAnalysis("CompetitiveIntelligenceAgent", content, isAlreadyJson);
+
+			// LLM structuring function for when content is not already JSON
+			const structureWithLLM = async (content: string): Promise<string> => {
+				const structuringPrompt = `You are a data structuring expert. Convert the following competitive intelligence research into the exact JSON structure requested.
+
+REQUIRED JSON STRUCTURE:
+{
+  "competition": {
+    "marketConcentrationLevel": "LOW" | "MEDIUM" | "HIGH",
+    "marketConcentrationJustification": "string",
+    "directCompetitors": [
+      {
+        "name": "string",
+        "justification": "string",
+        "strengths": ["s1", "s2"],
+        "weaknesses": ["w1", "w2"]
+      }
+    ],
+    "indirectCompetitors": [
+      {
+        "name": "string",
+        "justification": "string",
+        "strengths": ["s1", "s2"],
+        "weaknesses": ["w1", "w2"]
+      }
+    ],
+    "competitorFailurePoints": ["point1", "point2"],
+    "unfairAdvantage": ["adv1", "adv2"],
+    "moat": ["moat1", "moat2"],
+    "competitivePositioningScore": "number (1-10)"
+  },
+  "positioning": {
+    "name": "string",
+    "targetSegment": "string",
+    "valueProposition": "string",
+    "keyDifferentiators": ["diff1", "diff2"]
+  }
+}
+
+RESEARCH CONTENT TO CONVERT:
+${content}
+
+Extract the competitive analysis data and strategic positioning from this research and format them as valid JSON. Return ONLY the JSON object, no additional text.`;
+
+				// LOG: LLM structuring request
+				debugLogger.logLLMStructuring("CompetitiveIntelligenceAgent", structuringPrompt, content);
+
+				const { text: structuredJson } = await generateText({
+					model: openrouter("openai/gpt-4o-mini"),
+					prompt: structuringPrompt,
+					temperature: 0.1,
+					maxTokens: 1000,
+				});
+
+				// LOG: LLM structuring response
+				debugLogger.logLLMStructuringResponse("CompetitiveIntelligenceAgent", structuredJson);
+
+				return structuredJson;
+			};
+
+			const parseResult = await parsePerplexityResponse<CompetitiveData>(
+				content,
+				structureWithLLM,
+				['competition', 'positioning'], // Required fields
+			);
+			
+			// LOG: Parsing attempt and result
+			debugLogger.logParsingAttempt("CompetitiveIntelligenceAgent", content, parseResult);
+			
+			if (!parseResult.success) {
+				console.error("❌ Failed to parse competitive data:", parseResult.error);
+				debugLogger.logError("CompetitiveIntelligenceAgent", new Error(`Failed to parse Perplexity response: ${parseResult.error}`), {
+					parseResult,
+					originalContent: content
+				});
+				throw new Error(`Failed to parse Perplexity response: ${parseResult.error}`);
 			}
 
-			try {
-				const competitiveData = JSON.parse(content) as CompetitiveData;
-				return competitiveData;
-			} catch (parseError) {
-				console.error("Competitive Intelligence JSON parse error:", parseError);
-				console.error("Raw content:", content);
-				throw new Error("Failed to parse JSON response from Perplexity");
-			}
+			const competitiveData = parseResult.data as CompetitiveData;
+			
+			console.log("✅ Successfully structured competitive data:", {
+				marketConcentration: competitiveData.competition?.marketConcentrationLevel,
+				directCompetitorCount: competitiveData.competition?.directCompetitors?.length || 0,
+				positioningName: competitiveData.positioning?.name
+			});
+
+			// LOG: Final agent result
+			debugLogger.logAgentResult("CompetitiveIntelligenceAgent", competitiveData, true);
+
+			return competitiveData;
 		} catch (error) {
 			console.error("CompetitiveIntelligenceAgent error:", error);
+			debugLogger.logError("CompetitiveIntelligenceAgent", error as Error, { 
+				agent: "CompetitiveIntelligenceAgent",
+				fallbackUsed: true 
+			});
 			
 			// Return mock data as fallback for development/testing
 			console.log("🔄 Using fallback mock competitive intelligence data for development");
@@ -590,28 +835,51 @@ Take a deep breath and work on this problem step-by-step.
 	async generateDailyIdea(): Promise<string | null> {
 		try {
 			console.log("🔍 Starting daily idea generation...");
+			debugLogger.info("🔍 Starting daily idea generation...", { 
+				timestamp: new Date().toISOString(),
+				sessionId: Date.now().toString()
+			});
 
 			// Get previous ideas for context
 			const previousIdeas = await IdeaGenerationAgentService.getDailyIdeas();
+			debugLogger.info("📚 Retrieved previous ideas for context", { 
+				previousIdeasCount: previousIdeas.length,
+				previousIdeas: previousIdeas
+			});
 
 			// 1. Research trends
 			console.log("📈 Researching trends...");
+			debugLogger.info("📈 Starting trend research...");
 			const trends = await this.trendResearchAgent();
-			if (!trends) throw new Error("Failed to research trends");
+			if (!trends) {
+				debugLogger.logError("generateDailyIdea", new Error("Failed to research trends"), { step: "trendResearch" });
+				throw new Error("Failed to research trends");
+			}
+			debugLogger.info("✅ Trend research completed", { trends });
 
 			// 2. Identify problems and gaps
 			console.log("🎯 Analyzing problems and gaps...");
+			debugLogger.info("🎯 Starting problem gap analysis...", { trendsContext: trends });
 			const problemGaps = await this.problemGapAgent({ trends, previousIdeas });
-			if (!problemGaps) throw new Error("Failed to analyze problems");
+			if (!problemGaps) {
+				debugLogger.logError("generateDailyIdea", new Error("Failed to analyze problems"), { step: "problemGapAnalysis", trends });
+				throw new Error("Failed to analyze problems");
+			}
+			debugLogger.info("✅ Problem gap analysis completed", { problemGaps });
 
 			// 3. Research competitive landscape
 			console.log("🏆 Researching competition...");
+			debugLogger.info("🏆 Starting competitive intelligence...", { trends, problemGaps });
 			const competitive = await this.competitiveIntelligenceAgent({
 				trends,
 				problemGaps,
 				previousIdeas,
 			});
-			if (!competitive) throw new Error("Failed to research competition");
+			if (!competitive) {
+				debugLogger.logError("generateDailyIdea", new Error("Failed to research competition"), { step: "competitiveIntelligence", trends, problemGaps });
+				throw new Error("Failed to research competition");
+			}
+			debugLogger.info("✅ Competitive intelligence completed", { competitive });
 
 			// 4. Design monetization strategy
 			console.log("💰 Designing monetization...");

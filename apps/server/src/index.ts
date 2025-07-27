@@ -32,6 +32,9 @@ const _app = new Elysia()
 		return res;
 	})
 	.get("/", () => "OK")
-	.listen(3000, () => {
+	.listen({
+		port: 3000,
+		idleTimeout: 255,
+	}, () => {
 		console.log("Server is running on http://localhost:3000");
 	});
