@@ -18,7 +18,9 @@
 		"db:generate": "turbo -F server db:generate",
 		"db:migrate": "turbo -F server db:migrate"
 	},
-	"dependencies": {},
+	"dependencies": {
+		"@daveyplate/better-auth-ui": "^2.1.2"
+	},
 	"devDependencies": {
 		"turbo": "^2.5.4",
 		"@biomejs/biome": "^2.0.0"

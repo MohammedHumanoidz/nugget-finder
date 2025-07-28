@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar';
 import StatsCards from '@/components/StatsCards';
 import IdeaScoreBreakdown from '@/components/IdeaScoreBreakdown';
 import ClientFallback from '@/components/ClientFallback';
+import { PricingPage } from '@/components/PricingPage';
 import { getDailyIdeas } from '@/lib/server-api';
 
 // Server component with SSR
@@ -147,113 +148,9 @@ export default async function Page() {
       </section>
 
       {/* Choose Your Path (Pricing) Section */}
-      <section className="max-w-7xl mx-auto px-4 py-12">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold mb-2">Choose Your Path</h2>
-          <p className="text-muted-foreground">Flexible options for every innovator. Start free, grow fast.</p>
-          <div className="w-24 h-1 bg-primary mx-auto mt-4"></div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Free</CardTitle>
-              <CardDescription>[Best for exploring]</CardDescription>
-              <div className="text-3xl font-bold">FREE</div>
-              <p className="text-sm text-muted-foreground">Basic access for individuals.</p>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2 text-sm">
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  5 ideas/day
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  Limited trend searches
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  No historical data access
-                </li>
-              </ul>
-            </CardContent>
-            <CardFooter>
-              <Button variant="outline" className="w-full">Get Started</Button>
-            </CardFooter>
-          </Card>
-
-          <Card className="border-orange-500 border-2 relative">
-            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-              <span className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-medium">Most popular</span>
-            </div>
-            <CardHeader>
-              <CardTitle>Starter</CardTitle>
-              <CardDescription>[Most popular]</CardDescription>
-              <div className="text-3xl font-bold">$29/mo</div>
-              <p className="text-sm text-muted-foreground">For individuals.</p>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2 text-sm">
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  5 ideas/day
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  50 trend searches/month
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  7-day historical data access
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  3 idea claims/month
-                </li>
-              </ul>
-            </CardContent>
-            <CardFooter>
-              <Button className="w-full">Sign Up</Button>
-            </CardFooter>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Pro</CardTitle>
-              <CardDescription>[For power users]</CardDescription>
-              <div className="text-3xl font-bold">$79/mo</div>
-              <p className="text-sm text-muted-foreground">For users.</p>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2 text-sm">
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  10 ideas/day
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  Unlimited trend searches
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  Full historical idea database
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  10 idea claims/month
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  Community signals dashboard
-                </li>
-              </ul>
-            </CardContent>
-            <CardFooter>
-              <Button className="w-full">Sign Up</Button>
-            </CardFooter>
-          </Card>
-        </div>
+      <section>
+        <PricingPage 
+        />
       </section>
 
       {/* Community Signals Section */}

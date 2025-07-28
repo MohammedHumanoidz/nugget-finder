@@ -58,7 +58,7 @@ export function SubscriptionManager({
     }
   };
 
-  const formatDate = (date?: Date) => {
+  const formatDate = (date?: string) => {
     if (!date) return "N/A";
     return new Date(date).toLocaleDateString("en-US", {
       year: "numeric",
@@ -288,7 +288,6 @@ export function SubscriptionManager({
         {allowPlanChanges && (
           <TabsContent value="plans">
             <PricingPage 
-              showFreeOption={false}
               highlightedPlanId={currentSubscription?.plan}
             />
           </TabsContent>

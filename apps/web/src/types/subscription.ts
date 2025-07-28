@@ -30,14 +30,14 @@ export interface UserSubscription {
   stripeCustomerId?: string;
   stripeSubscriptionId?: string;
   status: string;
-  periodStart?: Date;
-  periodEnd?: Date;
+  periodStart?: string;
+  periodEnd?: string;
   cancelAtPeriodEnd: boolean;
   seats?: number;
-  trialStart?: Date;
-  trialEnd?: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  trialStart?: string;
+  trialEnd?: string;
+  createdAt: string;
+  updatedAt: string;
   userId: string;
 }
 
@@ -47,8 +47,8 @@ export interface SubscriptionStatus {
   isTrialing: boolean;
   isCanceled: boolean;
   planName?: string;
-  periodEnd?: Date;
-  trialEnd?: Date;
+  periodEnd?: string;
+  trialEnd?: string;
   cancelAtPeriodEnd: boolean;
 }
 

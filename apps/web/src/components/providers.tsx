@@ -5,20 +5,35 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { queryClient } from "@/utils/trpc";
 import { ThemeProvider } from "./theme-provider";
 import { Toaster } from "./ui/sonner";
+import { useRouter } from "next/navigation";
+import { AuthUIProvider } from "@daveyplate/better-auth-ui";
+import { authClient } from "@/lib/auth-client";
+import Link from "next/link";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-	return (
-		<ThemeProvider
-			attribute="class"
-			defaultTheme="system"
-			enableSystem
-			disableTransitionOnChange
-		>
-			<QueryClientProvider client={queryClient}>
-				{children}
-				<ReactQueryDevtools />
-			</QueryClientProvider>
-			<Toaster richColors />
-		</ThemeProvider>
-	);
+  const router = useRouter();
+  return (
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <AuthUIProvider
+        authClient={authClient}
+        navigate={router.push}
+        replace={router.replace}
+        onSessionChange={() => {
+          router.refresh();
+        }}
+        Link={Link}
+      >
+        <QueryClientProvider client={queryClient}>
+          {children}
+          <ReactQueryDevtools />
+        </QueryClientProvider>
+        <Toaster richColors />
+      </AuthUIProvider>
+    </ThemeProvider>
+  );
 }

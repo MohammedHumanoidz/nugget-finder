@@ -8,15 +8,19 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Check, Star, Loader2 } from "lucide-react";
 import { useSubscription } from "@/hooks/useSubscription";
+import { authClient } from "@/lib/auth-client";
 import type { PricingPageProps, BillingPeriod } from "@/types/subscription";
 
 export function PricingPage({ 
-  showFreeOption = true, 
   highlightedPlanId,
   onPlanSelect 
 }: PricingPageProps) {
   const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>("monthly");
   const router = useRouter();
+  
+  // Get authentication status
+  const { data: session } = authClient.useSession();
+  const isAuthenticated = !!session?.user;
   
   const {
     plans,
@@ -30,6 +34,13 @@ export function PricingPage({
   const handlePlanSelect = (priceId: string) => {
     if (onPlanSelect) {
       onPlanSelect(priceId);
+      return;
+    }
+
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      // Redirect to login page
+      router.push("/auth/sign-in");
       return;
     }
 
@@ -83,45 +94,6 @@ export function PricingPage({
 
       {/* Pricing Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {/* Free Plan (if enabled) */}
-        {showFreeOption && (
-          <Card className="relative">
-            <CardHeader>
-              <CardTitle className="text-2xl">Free</CardTitle>
-              <CardDescription>Perfect for getting started</CardDescription>
-              <div className="text-3xl font-bold">
-                $0<span className="text-lg font-normal text-muted-foreground">/month</span>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-3">
-                <li className="flex items-center">
-                  <Check className="w-4 h-4 text-green-500 mr-2" />
-                  <span>3 ideas per day</span>
-                </li>
-                <li className="flex items-center">
-                  <Check className="w-4 h-4 text-green-500 mr-2" />
-                  <span>Basic market research</span>
-                </li>
-                <li className="flex items-center">
-                  <Check className="w-4 h-4 text-green-500 mr-2" />
-                  <span>Community support</span>
-                </li>
-              </ul>
-            </CardContent>
-            <CardFooter>
-              <Button 
-                className="w-full" 
-                variant="outline"
-                onClick={() => router.push("/dashboard")}
-              >
-                Get Started Free
-              </Button>
-            </CardFooter>
-          </Card>
-        )}
-
-        {/* Paid Plans */}
         {activePlans.map((plan) => {
           const pricing = billingPeriod === "monthly" ? plan.pricing.monthly : plan.pricing.yearly;
           const isCurrentPlan = currentSubscription?.plan === plan.productId;
@@ -182,12 +154,12 @@ export function PricingPage({
 
               <CardContent>
                 <ul className="space-y-3">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-start">
-                      <Check className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
+                    {plan.description.split("|").map((feature, index) => (
+                      <li key={index.toString()} className="flex items-start">
+                        <Check className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
                 </ul>
 
                 {/* Limits Display */}
@@ -227,7 +199,12 @@ export function PricingPage({
                     disabled={createCheckout.isLoading}
                   >
                     {createCheckout.isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                    {plan.trialDays ? `Start ${plan.trialDays}-Day Trial` : `Choose ${plan.name}`}
+                    {!isAuthenticated 
+                      ? "Sign Up to Get Started"
+                      : plan.trialDays 
+                        ? `Start ${plan.trialDays}-Day Trial` 
+                        : `Choose ${plan.name}`
+                    }
                   </Button>
                 )}
               </CardFooter>
