@@ -251,8 +251,8 @@ export function SubscriptionManager({
                       <div>
                         <h4 className="font-medium mb-2">Features</h4>
                         <ul className="space-y-1">
-                          {currentPlan.features.map((feature, index) => (
-                            <li key={index} className="flex items-center gap-2 text-sm">
+                          {currentPlan.description.split("|").map((feature, index) => (
+                            <li key={index.toString()} className="flex items-center gap-2 text-sm">
                               <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
                               {feature}
                             </li>

@@ -23,6 +23,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         authClient={authClient}
         navigate={router.push}
         replace={router.replace}
+        social={{
+          providers: ["google"],
+        }}
         onSessionChange={() => {
           router.refresh();
         }}
