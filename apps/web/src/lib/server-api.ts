@@ -93,6 +93,31 @@ export const getIdeaById = cache(async (id: string) => {
   }
 });
 
+// Cached function for semantic search
+export const semanticSearchIdeas = cache(async (query: string, limit: number = 12, offset: number = 0) => {
+  try {
+    console.log(`Attempting semantic search for: "${query}" via tRPC client...`);
+    const result = await serverTrpcClient.agents.semanticSearch.query({
+      query,
+      limit,
+      offset
+    });
+    console.log('Semantic search successful:', result);
+    return result;
+  } catch (error) {
+    console.error('Semantic search failed, trying fallback:', error);
+    
+    // Try fallback HTTP request
+    const fallbackResult = await fallbackFetch<{ ideas: any[]; hasMore: boolean }>('agents.semanticSearch', {
+      query,
+      limit,
+      offset
+    });
+    
+    return fallbackResult || { ideas: [], hasMore: false };
+  }
+});
+
 // Generate static params for better performance (optional)
 export async function generateStaticParams() {
   try {

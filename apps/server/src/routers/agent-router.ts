@@ -1,9 +1,9 @@
 // routers/agentRouter.ts
-import { z } from "zod";
 import IdeaGenerationAgentController from "@/apps/idea-generation-agent/idea-generation-agent.controller";
 import { IdeaGenerationAgentService } from "@/apps/idea-generation-agent/idea-generation-agent.service";
-import { protectedProcedure, publicProcedure, router } from "@/lib/trpc";
+import { publicProcedure, router } from "@/lib/trpc";
 import { prisma } from "@/utils/configs/db.config";
+import { z } from "zod";
 
 // Input validation schemas
 const generateIdeaSchema = z.object({

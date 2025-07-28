@@ -593,7 +593,9 @@ export default async function Page() {
         </div>
 
         <div className="text-center mt-8">
-          <Button variant="outline">Browse more ideas →</Button>
+          <Button variant="outline" asChild>
+            <Link href="/browse">Browse more ideas →</Link>
+          </Button>
         </div>
       </section>
 

@@ -13,7 +13,7 @@ export default function Navbar() {
         
         <div className="hidden md:flex items-center gap-6">
           <Link href="/" className="text-muted-foreground hover:text-foreground">Home</Link>
-          <Link href="/trends" className="text-muted-foreground hover:text-foreground">Trends</Link>
+          <Link href="/browse" className="text-muted-foreground hover:text-foreground">Browse</Link>
           <Link href="/pricing" className="text-muted-foreground hover:text-foreground">Pricing</Link>
         </div>
         
