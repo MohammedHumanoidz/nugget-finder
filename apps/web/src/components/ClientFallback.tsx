@@ -30,7 +30,7 @@ export default function ClientFallback({ type, nuggetId }: ClientFallbackProps) 
   });
 
   if (type === 'home') {
-    const dailyIdeas = ideasResponse?.ideas || [];
+    const dailyIdeas = (ideasResponse as any)?.ideas || [];
     const featuredNugget = dailyIdeas[0];
     const otherNuggets = dailyIdeas.slice(1, 7);
 

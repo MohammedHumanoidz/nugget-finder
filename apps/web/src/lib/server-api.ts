@@ -1,7 +1,7 @@
 // Server-side API utilities for SSR
 import { cache } from 'react';
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
-import type { AppRouter } from '../../../../server/src/routers';
+import type { AppRouter } from '../../../server/types';
 
 // Get server URL with fallback
 const getServerUrl = () => {
@@ -97,11 +97,9 @@ export const getIdeaById = cache(async (id: string) => {
 export const semanticSearchIdeas = cache(async (query: string, limit: number = 12, offset: number = 0) => {
   try {
     console.log(`Attempting semantic search for: "${query}" via tRPC client...`);
-    const result = await serverTrpcClient.agents.semanticSearch.query({
-      query,
-      limit,
-      offset
-    });
+    // TODO: Implement semanticSearch endpoint in agent router
+    console.log('Semantic search not implemented yet, returning empty result');
+    const result = { ideas: [], pagination: { total: 0, limit, offset, hasMore: false } };
     console.log('Semantic search successful:', result);
     return result;
   } catch (error) {

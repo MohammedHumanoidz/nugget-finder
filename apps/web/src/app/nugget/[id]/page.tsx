@@ -10,9 +10,12 @@ import { getIdeaById, generateStaticParams } from "@/lib/server-api";
 export { generateStaticParams };
 
 // Server component with SSR
-export default async function NuggetDetailPage({ params }: { params: { id: string } }) {
+export default async function NuggetDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  // Await params in Next.js 15
+  const { id } = await params;
+  
   // Fetch data server-side with caching
-  const idea = await getIdeaById(params.id);
+  const idea = await getIdeaById(id);
 
   if (!idea) {
     // Try client-side fallback before showing 404
@@ -20,7 +23,7 @@ export default async function NuggetDetailPage({ params }: { params: { id: strin
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
-        <ClientFallback type="nugget" nuggetId={params.id} />
+        <ClientFallback type="nugget" nuggetId={id} />
       </div>
     );
   }

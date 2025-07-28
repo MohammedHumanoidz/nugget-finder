@@ -1,5 +1,5 @@
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
-import type { PerplexityResponse } from "@/types/config/ai";
+import type { PerplexityResponse } from "../../types/config/ai";
 
 const openrouter = createOpenRouter({
 	apiKey: process.env.OPENROUTER_API_KEY,

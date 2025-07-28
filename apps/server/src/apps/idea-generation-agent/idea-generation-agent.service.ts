@@ -4,8 +4,8 @@ import type {
 	ProblemGapData,
 	SynthesizedIdea,
 	TrendData,
-} from "@/types/apps/idea-generation-agent";
-import { prisma } from "@/utils/configs/db.config";
+} from "../../types/apps/idea-generation-agent";
+import { prisma } from "../../utils/configs/db.config";
 
 export const IdeaGenerationAgentService = {
 	async getDailyIdeas() {

@@ -1,5 +1,5 @@
 import { generateText } from "ai";
-import { IdeaGenerationAgentService } from "@/apps/idea-generation-agent/idea-generation-agent.service";
+import { IdeaGenerationAgentService } from "./idea-generation-agent.service";
 import type {
 	AgentContext,
 	CompetitiveData,
@@ -7,10 +7,10 @@ import type {
 	ProblemGapData,
 	SynthesizedIdea,
 	TrendData,
-} from "@/types/apps/idea-generation-agent";
-import { openrouter, perplexity } from "@/utils/configs/ai.config";
-import { parsePerplexityResponse } from "@/utils/json-parser";
-import { debugLogger } from "@/utils/logger";
+} from "../../types/apps/idea-generation-agent";
+import { openrouter, perplexity } from "../../utils/configs/ai.config";
+import { parsePerplexityResponse } from "../../utils/json-parser";
+import { debugLogger } from "../../utils/logger";
 
 
 const IdeaGenerationAgentController = {
@@ -877,7 +877,7 @@ Extract the competitive analysis data and strategic positioning from this resear
 			});
 
 			// Create lightweight summary for context
-			const previousIdeaSummaries = previousIdeas.map(idea => ({
+			const previousIdeaSummaries = previousIdeas.map((idea: any) => ({
 				title: idea.title,
 				description: idea.description
 			}));
