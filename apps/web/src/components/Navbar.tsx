@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, UserAvatar } from "@daveyplate/better-auth-ui";
+import { SignedIn, SignedOut, UserAvatar, UserButton } from "@daveyplate/better-auth-ui";
 import { ModeToggle } from "@/components/mode-toggle";
 import Link from "next/link";
 
@@ -52,18 +52,12 @@ export default function Navbar() {
           </SignedOut>
           <SignedIn>
             <Link
-              href="/dashboard"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Dashboard
-            </Link>
-            <Link
               href="/subscription"
               className="text-muted-foreground hover:text-foreground"
             >
               Subscription
             </Link>
-            <UserAvatar />
+            <UserButton size={"icon"} />
           </SignedIn>
         </div>
       </div>

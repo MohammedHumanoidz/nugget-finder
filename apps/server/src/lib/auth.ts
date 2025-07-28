@@ -50,6 +50,7 @@ export const auth = betterAuth({
   trustedOrigins: [process.env.CORS_ORIGIN || ""],
   emailAndPassword: {
     enabled: true,
+	requireEmailVerification: false
   },
   plugins: [
     stripe({

@@ -120,7 +120,6 @@ export function PricingPage({
                 <div className="flex justify-between items-start">
                   <div>
                     <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                    <CardDescription>{plan.description}</CardDescription>
                   </div>
                   {isCurrentPlan && (
                     <Badge variant="secondary">Current Plan</Badge>
@@ -157,7 +156,7 @@ export function PricingPage({
                     {plan.description.split("|").map((feature, index) => (
                       <li key={index.toString()} className="flex items-start">
                         <Check className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                        <span>{feature}</span>
+                        <span className="text-sm text-muted-foreground">{feature}</span>
                       </li>
                     ))}
                 </ul>
