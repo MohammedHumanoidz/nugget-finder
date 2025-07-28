@@ -1,6 +1,7 @@
 // routers/appRouter.ts
 import { protectedProcedure, publicProcedure, router } from "../lib/trpc";
 import { agentRouter } from "./agent-router";
+import { subscriptionRouter } from "./subscription";
 
 export const appRouter = router({
 	// Health check
@@ -18,6 +19,9 @@ export const appRouter = router({
 
 	// Agent routes
 	agents: agentRouter,
+
+	// Subscription routes
+	subscription: subscriptionRouter,
 });
 
 export type AppRouter = typeof appRouter;

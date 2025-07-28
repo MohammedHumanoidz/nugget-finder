@@ -1,0 +1,36 @@
+model Subscription {
+  id                   String    @id @map("_id")
+  plan                 String
+  referenceId          String    @unique  // This will be the userId by default
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  status               String    @default("incomplete")
+  periodStart          DateTime?
+  periodEnd            DateTime?
+  cancelAtPeriodEnd    Boolean   @default(false)
+  seats                Int?
+  trialStart           DateTime?
+  trialEnd             DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  
+  // Keep your existing user relation
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+  
+  @@map("subscription")
+}
+
+model PaymentVerification {
+  id                String   @id @map("_id")
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id])
+  transactionNumber String   @unique
+  amount            Decimal
+  currency          String
+  status            String   @default("pending")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@map("paymentVerification")
+}
