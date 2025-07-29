@@ -88,17 +88,17 @@ export function parsePlanLimits(description: string): {
     if (lowerPart.includes('claims per month')) {
       const match = part.match(/(\d+|unlimited)\s+claims/i);
       if (match) {
-        claims = match[1] === 'unlimited' ? -1 : parseInt(match[1], 10);
+        claims = match[1] === 'unlimited' ? -1 : Number.parseInt(match[1], 10);
       }
     } else if (lowerPart.includes('saves per month')) {
       const match = part.match(/(\d+|unlimited)\s+saves/i);
       if (match) {
-        saves = match[1] === 'unlimited' ? -1 : parseInt(match[1], 10);
+        saves = match[1] === 'unlimited' ? -1 : Number.parseInt(match[1], 10);
       }
     } else if (lowerPart.includes('idea view per day')) {
       const match = part.match(/(\d+|unlimited)\s+idea view/i);
       if (match) {
-        views = match[1] === 'unlimited' ? -1 : parseInt(match[1], 10);
+        views = match[1] === 'unlimited' ? -1 : Number.parseInt(match[1], 10);
       }
     }
   }
@@ -211,8 +211,8 @@ export async function getSubscriptionStatus(userId: string): Promise<Subscriptio
 
     return {
       isActive,
-      isPaying,
-      isTrialing,
+      isPaying: isPaying || false,
+      isTrialing: isTrialing || false,
       isCanceled,
       planName: subscription.plan,
       periodEnd: subscription.periodEnd,
@@ -266,6 +266,7 @@ export async function upsertUserSubscription(
         seats: subscriptionData.seats,
         trialStart: subscriptionData.trialStart,
         trialEnd: subscriptionData.trialEnd,
+        id: subscriptionData.id || "",
       },
     });
 

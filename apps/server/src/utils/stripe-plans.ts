@@ -31,18 +31,18 @@ export async function fetchPlansFromStripe(): Promise<StripePlan[]> {
         ? products.data.find(p => p.id === price.product)
         : price.product;
 
-      if (!product || !product.active) continue;
+      if (!product || !(product as unknown as StripePlan).active) continue;
 
       plans.push({
         id: price.id,
         productId: product.id,
-        name: product.name,
-        description: product.description || "",
+        name: (product as unknown as StripePlan).name,
+        description: (product as unknown as StripePlan).description || "",
         price: price.unit_amount || 0,
         currency: price.currency,
-        interval: price.recurring?.interval || "month",
+        interval: price.recurring?.interval as "month" | "year" || "month",
         intervalCount: price.recurring?.interval_count || 1,
-        metadata: product.metadata as StripePlan["metadata"],
+        metadata: (product as unknown as StripePlan).metadata as StripePlan["metadata"],
         trialPeriodDays: price.recurring?.trial_period_days || undefined,
         active: price.active,
       });
@@ -91,7 +91,7 @@ export function formatPlansForFrontend(stripePlans: StripePlan[]): FormattedPlan
         for (const pair of limitPairs) {
           const [key, value] = pair.split(":").map(s => s.trim());
           if (key && value) {
-            limits[key] = parseInt(value, 10) || 0;
+            limits[key] = Number.parseInt(value, 10) || 0;
           }
         }
       }
@@ -168,7 +168,7 @@ export async function getPlanByPriceId(priceId: string): Promise<StripePlan | nu
       description: product.description || "",
       price: price.unit_amount || 0,
       currency: price.currency,
-      interval: price.recurring?.interval || "month",
+      interval: price.recurring?.interval as "month" | "year" || "month",
       intervalCount: price.recurring?.interval_count || 1,
       metadata: product.metadata as StripePlan["metadata"],
       trialPeriodDays: price.recurring?.trial_period_days || undefined,

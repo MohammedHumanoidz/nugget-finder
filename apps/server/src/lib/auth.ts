@@ -1,10 +1,9 @@
-import { stripeClient } from "@/utils/configs/stripe.config";
+import { stripeClient } from "../utils/configs/stripe.config";
 import { stripe } from "@better-auth/stripe";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from "../../prisma";
 import { fetchPlansFromStripe } from "../utils/stripe-plans";
-import { customSession } from "better-auth/plugins";
 
 // Cache for plans to avoid frequent Stripe API calls
 let cachedPlans: any[] = [];

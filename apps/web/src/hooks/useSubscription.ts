@@ -180,6 +180,7 @@ export function useSubscription(): UseSubscriptionReturn {
     refetchSubscription();
   };
 
+  //@ts-ignore
   return {
     // Data
     plans,
