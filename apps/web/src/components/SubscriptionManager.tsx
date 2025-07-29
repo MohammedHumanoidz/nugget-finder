@@ -21,7 +21,6 @@ import { SubscriptionNotifications } from "./SubscriptionNotifications";
 import type { SubscriptionManagerProps } from "@/types/subscription";
 
 export function SubscriptionManager({ 
-  showBillingHistory = true,
   allowPlanChanges = true 
 }: SubscriptionManagerProps) {
   const [activeTab, setActiveTab] = useState("overview");
@@ -79,7 +78,7 @@ export function SubscriptionManager({
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <SubscriptionNotifications />
+      {/* <SubscriptionNotifications /> */}
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold">Subscription Management</h1>
@@ -88,7 +87,7 @@ export function SubscriptionManager({
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="overview" className="gap-2">
             <User className="w-4 h-4" />
             Overview
@@ -97,12 +96,6 @@ export function SubscriptionManager({
             <TabsTrigger value="plans" className="gap-2">
               <Settings className="w-4 h-4" />
               Change Plan
-            </TabsTrigger>
-          )}
-          {showBillingHistory && (
-            <TabsTrigger value="billing" className="gap-2">
-              <CreditCard className="w-4 h-4" />
-              Billing
             </TabsTrigger>
           )}
         </TabsList>
@@ -273,7 +266,8 @@ export function SubscriptionManager({
               </CardHeader>
               <CardContent>
                 {(() => {
-                  const currentPlan = plans.find(plan => plan.productId === currentSubscription?.plan);
+                  const currentPlan = plans.find(plan => plan.pricing.monthly?.priceId === currentSubscription?.priceId || plan.pricing.yearly?.priceId === currentSubscription?.priceId);
+                  console.log({currentSubscription, plans, currentPlan});
                   if (!currentPlan) return <p className="text-muted-foreground">Plan details not available</p>;
 
                   return (
@@ -322,41 +316,6 @@ export function SubscriptionManager({
               showFreeOption={false}
               highlightedPlanId={getCurrentPlan()?.productId}
             />
-          </TabsContent>
-        )}
-
-        {/* Billing Tab */}
-        {showBillingHistory && (
-          <TabsContent value="billing">
-            <Card>
-              <CardHeader>
-                <CardTitle>Billing Management</CardTitle>
-                <CardDescription>
-                  Manage your payment methods, view invoices, and update billing information
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-8">
-                  <CreditCard className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground mb-4">
-                    Access your complete billing history and manage payment methods through Stripe's secure portal.
-                  </p>
-                  <Button
-                    onClick={handleBillingPortal}
-                    disabled={getBillingPortal.isLoading || !currentSubscription?.stripeCustomerId}
-                    className="gap-2"
-                  >
-                    {getBillingPortal.isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-                    <ExternalLink className="w-4 h-4" />
-                    Open Billing Portal
-                  </Button>
-                  
-                  {getBillingPortal.error && (
-                    <p className="text-sm text-red-600 mt-2">{getBillingPortal.error}</p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
           </TabsContent>
         )}
       </Tabs>

@@ -35,7 +35,6 @@ export default function SubscriptionPage() {
     <div className="min-h-screen bg-background">
       <Navbar />
       <SubscriptionManager 
-        showBillingHistory={true}
         allowPlanChanges={true}
       />
     </div>

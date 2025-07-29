@@ -27,6 +27,7 @@ export interface FormattedPlan {
 export interface BetterAuthSubscription {
   id: string;
   plan: string;
+  priceId: string;
   status: 'active' | 'trialing' | 'canceled' | 'incomplete' | 'past_due' | 'unpaid';
   periodStart?: string;
   periodEnd?: string;

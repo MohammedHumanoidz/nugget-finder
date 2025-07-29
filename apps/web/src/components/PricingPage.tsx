@@ -149,7 +149,7 @@ export function PricingPage({
                     <CardTitle className="text-2xl">{plan.name}</CardTitle>
                   </div>
                   {isCurrentPlan && (
-                    <Badge variant="secondary">Current Plan</Badge>
+                    <Badge variant="secondary" className="cursor-not-allowed">Current Plan</Badge>
                   )}
                 </div>
                 
@@ -211,7 +211,7 @@ export function PricingPage({
                 ) : subscriptionStatus?.isPaying && !subscriptionStatus.isCanceled ? (
                   <Button 
                     className="w-full" 
-                    variant="secondary"
+                    variant="default"
                     onClick={() => handlePlanSelect(pricing.priceId)}
                     disabled={upgradeSubscription.isLoading}
                   >

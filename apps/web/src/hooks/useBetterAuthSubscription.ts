@@ -51,16 +51,19 @@ export function useBetterAuthSubscription(): UseSubscriptionReturn {
     try {
       // Use Better Auth subscription.list() method
       const subscriptions = await authClient.subscription.list();
-      console.log("🔍 Subscription data:", subscriptions);
+      console.log("🔍 Raw subscription data from Better Auth:", subscriptions);
       
       // Get the active subscription (assuming user has only one)
-      const activeSubscription = Array.isArray(subscriptions) 
-        ? subscriptions.find((sub: BetterAuthSubscription) => 
+      const activeSubscription = Array.isArray(subscriptions.data) 
+        ? subscriptions.data.find((sub) => 
             sub.status === 'active' || sub.status === 'trialing' || sub.status === 'canceled'
           ) || null
         : null;
 
-      setCurrentSubscription(activeSubscription);
+      console.log("🎯 Selected active subscription:", activeSubscription);
+      console.log("📊 All subscription statuses:", Array.isArray(subscriptions) ? subscriptions.map(s => ({ status: s.status, plan: s.plan, id: s.id })) : 'Not an array');
+
+      setCurrentSubscription(activeSubscription as unknown as BetterAuthSubscription);
       setLastFetch(Date.now());
     } catch (error) {
       console.error("Error fetching subscription:", error);
@@ -73,6 +76,20 @@ export function useBetterAuthSubscription(): UseSubscriptionReturn {
   // Fetch subscription data on mount and when auth changes
   useEffect(() => {
     fetchSubscriptionData();
+  }, [fetchSubscriptionData]);
+
+  // Check for successful upgrade in URL and refresh data
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('upgrade') === 'success') {
+        console.log("🎉 Detected successful upgrade from URL, refreshing subscription data...");
+        // Force refresh subscription data after successful upgrade
+        setTimeout(() => {
+          fetchSubscriptionData();
+        }, 1000); // Give Stripe webhooks time to process
+      }
+    }
   }, [fetchSubscriptionData]);
 
   // Auto-refresh subscription data every 30 seconds if user is authenticated
@@ -110,6 +127,17 @@ export function useBetterAuthSubscription(): UseSubscriptionReturn {
     trialEnd: undefined, // Better Auth doesn't provide trial end directly
     cancelAtPeriodEnd: currentSubscription?.cancelAtPeriodEnd || false,
   } : undefined;
+
+  console.log("🔍 Subscription Status Derivation:", {
+    currentSubscription: currentSubscription ? {
+      status: currentSubscription.status,
+      plan: currentSubscription.plan,
+      stripeSubscriptionId: currentSubscription.stripeSubscriptionId,
+      cancelAtPeriodEnd: currentSubscription.cancelAtPeriodEnd
+    } : null,
+    subscriptionStatus,
+    freePlan: getFreePlan()?.name
+  });
 
   const isPaying = subscriptionStatus?.isPaying;
 
@@ -311,14 +339,31 @@ export function useBetterAuthSubscription(): UseSubscriptionReturn {
 
   // Get current effective plan (subscription plan or free plan)
   const getCurrentPlan = (): FormattedPlan | null => {
-    if (currentSubscription?.plan) {
+    console.log("🎯 getCurrentPlan called:", {
+      hasCurrentSubscription: !!currentSubscription,
+      subscriptionPlan: currentSubscription?.plan,
+      availablePlans: plans?.length || 0,
+      planPriceIds: plans?.flatMap(p => [p.pricing.monthly?.priceId, p.pricing.yearly?.priceId]).filter(Boolean)
+    });
+
+    if (currentSubscription?.priceId) {
       // Find the plan by price ID (Better Auth stores price ID as plan ID)
-      return plans?.find((plan: FormattedPlan) => 
-        plan.pricing.monthly?.priceId === currentSubscription.plan ||
-        plan.pricing.yearly?.priceId === currentSubscription.plan
+      const matchedPlan = plans?.find((plan: FormattedPlan) => 
+        plan.pricing.monthly?.priceId === currentSubscription.priceId ||
+        plan.pricing.yearly?.priceId === currentSubscription.priceId
       ) || null;
+      
+      console.log("🔍 Plan matching result:", {
+        searchingFor: currentSubscription.plan,
+        foundPlan: matchedPlan ? { name: matchedPlan.name, id: matchedPlan.id } : null
+      });
+      
+      return matchedPlan;
     }
-    return getFreePlan();
+    
+    const freePlan = getFreePlan();
+    console.log("🆓 Returning free plan:", freePlan ? { name: freePlan.name, id: freePlan.id } : null);
+    return freePlan;
   };
 
   const refetchAll = useCallback(() => {
