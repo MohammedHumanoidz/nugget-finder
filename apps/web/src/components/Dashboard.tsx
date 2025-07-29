@@ -44,20 +44,14 @@ import { useQuery } from "@tanstack/react-query";
 import { trpc } from "@/utils/trpc";
 import { authClient } from "@/lib/auth-client";
 
-// Mock data for the chart - in real app this would come from API
-const generateChartData = () => {
-  const days = Array.from({ length: 30 }, (_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - (29 - i));
-    return {
-      date: date.toISOString().split("T")[0],
-      day: date.getDate(),
-      saved: Math.floor(Math.random() * 5) + 1,
-      claimed: Math.floor(Math.random() * 3) + 1,
-    };
-  });
-  return days;
-};
+// Activity trends data interface
+interface ActivityTrendData {
+  date: string;
+  day: number;
+  saved: number;
+  claimed: number;
+  viewed: number;
+}
 export default function Dashboard() {
   const { data: session } = authClient.useSession();
   // Fetch user data
@@ -68,8 +62,13 @@ export default function Dashboard() {
   const { data: claimedIdeas } = useQuery(
     trpc.ideas.getClaimedIdeas.queryOptions()
   );
+  
+  // Fetch real activity trends data
+  const { data: activityTrends, isLoading: isLoadingTrends } = useQuery(
+    trpc.ideas.getActivityTrends.queryOptions()
+  );
 
-  const chartData = generateChartData();
+  const chartData: ActivityTrendData[] = activityTrends || [];
 
   // Calculate metrics
   const totalSaved = savedIdeas?.length || 0;
@@ -337,88 +336,131 @@ export default function Dashboard() {
               <CardHeader>
                 <CardTitle>Activity Trends</CardTitle>
                 <CardDescription>
-                  Your saved and claimed ideas over the past 30 days
+                  Your viewed, saved, and claimed ideas over the past 30 days
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={chartData}>
-                      <defs>
-                        <linearGradient
-                          id="colorSaved"
-                          x1="0"
-                          y1="0"
-                          x2="0"
-                          y2="1"
-                        >
-                          <stop
-                            offset="5%"
-                            stopColor="#3b82f6"
-                            stopOpacity={0.3}
-                          />
-                          <stop
-                            offset="95%"
-                            stopColor="#3b82f6"
-                            stopOpacity={0}
-                          />
-                        </linearGradient>
-                        <linearGradient
-                          id="colorClaimed"
-                          x1="0"
-                          y1="0"
-                          x2="0"
-                          y2="1"
-                        >
-                          <stop
-                            offset="5%"
-                            stopColor="#f97316"
-                            stopOpacity={0.3}
-                          />
-                          <stop
-                            offset="95%"
-                            stopColor="#f97316"
-                            stopOpacity={0}
-                          />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid
-                        strokeDasharray="3 3"
-                        className="opacity-30"
-                      />
-                      <XAxis
-                        dataKey="day"
-                        axisLine={false}
-                        tickLine={false}
-                        className="text-xs"
-                      />
-                      <YAxis
-                        axisLine={false}
-                        tickLine={false}
-                        className="text-xs"
-                      />
-                      <Tooltip />
-                      <Legend />
-                      <Area
-                        type="monotone"
-                        dataKey="saved"
-                        stroke="#3b82f6"
-                        strokeWidth={2}
-                        fillOpacity={1}
-                        fill="url(#colorSaved)"
-                        name="Saved Ideas"
-                      />
-                      <Area
-                        type="monotone"
-                        dataKey="claimed"
-                        stroke="#f97316"
-                        strokeWidth={2}
-                        fillOpacity={1}
-                        fill="url(#colorClaimed)"
-                        name="Claimed Ideas"
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
+                  {isLoadingTrends ? (
+                    <div className="flex items-center justify-center h-full">
+                      <div className="text-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4" />
+                        <p className="text-sm text-muted-foreground">Loading activity trends...</p>
+                      </div>
+                    </div>
+                  ) : chartData.length === 0 ? (
+                    <div className="flex items-center justify-center h-full">
+                      <div className="text-center">
+                        <p className="text-muted-foreground mb-2">No activity data yet</p>
+                        <p className="text-sm text-muted-foreground">Start saving and claiming ideas to see your trends!</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={chartData}>
+                        <defs>
+                          <linearGradient
+                            id="colorSaved"
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                          >
+                            <stop
+                              offset="5%"
+                              stopColor="#3b82f6"
+                              stopOpacity={0.3}
+                            />
+                            <stop
+                              offset="95%"
+                              stopColor="#3b82f6"
+                              stopOpacity={0}
+                            />
+                          </linearGradient>
+                          <linearGradient
+                            id="colorClaimed"
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                          >
+                            <stop
+                              offset="5%"
+                              stopColor="#f97316"
+                              stopOpacity={0.3}
+                            />
+                            <stop
+                              offset="95%"
+                              stopColor="#f97316"
+                              stopOpacity={0}
+                            />
+                          </linearGradient>
+                          <linearGradient
+                            id="colorViewed"
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                          >
+                            <stop
+                              offset="5%"
+                              stopColor="#22c55e"
+                              stopOpacity={0.3}
+                            />
+                            <stop
+                              offset="95%"
+                              stopColor="#22c55e"
+                              stopOpacity={0}
+                            />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid
+                          strokeDasharray="3 3"
+                          className="opacity-30"
+                        />
+                        <XAxis
+                          dataKey="day"
+                          axisLine={false}
+                          tickLine={false}
+                          className="text-xs"
+                        />
+                        <YAxis
+                          axisLine={false}
+                          tickLine={false}
+                          className="text-xs"
+                        />
+                        <Tooltip />
+                        <Legend />
+                        <Area
+                          type="monotone"
+                          dataKey="viewed"
+                          stroke="#22c55e"
+                          strokeWidth={2}
+                          fillOpacity={1}
+                          fill="url(#colorViewed)"
+                          name="Viewed Ideas"
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="saved"
+                          stroke="#3b82f6"
+                          strokeWidth={2}
+                          fillOpacity={1}
+                          fill="url(#colorSaved)"
+                          name="Saved Ideas"
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="claimed"
+                          stroke="#f97316"
+                          strokeWidth={2}
+                          fillOpacity={1}
+                          fill="url(#colorClaimed)"
+                          name="Claimed Ideas"
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  )}
                 </div>
               </CardContent>
             </Card>

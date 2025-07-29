@@ -321,6 +321,26 @@ export async function getUserClaimedIdeas(userId: string) {
 }
 
 /**
+ * Records that a user viewed an idea
+ */
+export async function recordIdeaView(userId: string, ideaId: string): Promise<void> {
+  try {
+    // Check if already viewed to avoid duplicates
+    const existingView = await prisma.viewedIdeas.findFirst({
+      where: { userId, ideaId },
+    });
+
+    if (!existingView) {
+      await prisma.viewedIdeas.create({
+        data: { userId, ideaId },
+      });
+    }
+  } catch (error) {
+    console.error("Error recording idea view:", error);
+  }
+}
+
+/**
  * Gets ideas filtered by user access (excludes claimed ideas by others)
  */
 export async function getIdeasForUser(userId: string, filters?: { limit?: number; offset?: number }) {
@@ -361,6 +381,11 @@ export async function getIdeasForUser(userId: string, filters?: { limit?: number
       take: limit,
       skip: offset,
     });
+
+    // Record views for each idea returned
+    for (const idea of ideas) {
+      await recordIdeaView(userId, idea.id);
+    }
 
     // Add user interaction flags
     return ideas.map(idea => ({

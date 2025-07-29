@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { protectedProcedure, router } from "../lib/trpc";
+import prisma from "../../prisma";
 import {
   getUserIdeaLimits,
   saveIdeaForUser,
@@ -81,5 +82,117 @@ export const ideasRouter = router({
   // Get user's claimed ideas
   getClaimedIdeas: protectedProcedure.query(async ({ ctx }) => {
     return await getUserClaimedIdeas(ctx.session.user.id);
+  }),
+
+  // Get activity trends for chart (30 days)
+  getActivityTrends: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session.user.id;
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    try {
+      // Get saved ideas over the past 30 days
+      const savedTrends = await prisma.savedIdeas.findMany({
+        where: {
+          userId,
+          createdAt: {
+            gte: thirtyDaysAgo,
+          },
+        },
+        select: {
+          createdAt: true,
+        },
+        orderBy: {
+          createdAt: 'asc',
+        },
+      });
+
+      // Get claimed ideas over the past 30 days
+      const claimedTrends = await prisma.claimedIdeas.findMany({
+        where: {
+          userId,
+          createdAt: {
+            gte: thirtyDaysAgo,
+          },
+        },
+        select: {
+          createdAt: true,
+        },
+        orderBy: {
+          createdAt: 'asc',
+        },
+      });
+
+      // Get viewed ideas over the past 30 days
+      const viewedTrends = await prisma.viewedIdeas.findMany({
+        where: {
+          userId,
+          createdAt: {
+            gte: thirtyDaysAgo,
+          },
+        },
+        select: {
+          createdAt: true,
+        },
+        orderBy: {
+          createdAt: 'asc',
+        },
+      });
+
+      // Create a map to group by date
+      const trendMap = new Map<string, { saved: number; claimed: number; viewed: number; date: string; day: number }>();
+
+      // Initialize all days in the past 30 days
+      for (let i = 29; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        const dateKey = date.toISOString().split('T')[0];
+        
+        trendMap.set(dateKey, {
+          date: dateKey,
+          day: date.getDate(),
+          saved: 0,
+          claimed: 0,
+          viewed: 0,
+        });
+      }
+
+      // Count saved ideas by date
+      savedTrends.forEach((save) => {
+        const dateKey = save.createdAt.toISOString().split('T')[0];
+        const existing = trendMap.get(dateKey);
+        if (existing) {
+          existing.saved += 1;
+        }
+      });
+
+      // Count claimed ideas by date
+      claimedTrends.forEach((claim) => {
+        const dateKey = claim.createdAt.toISOString().split('T')[0];
+        const existing = trendMap.get(dateKey);
+        if (existing) {
+          existing.claimed += 1;
+        }
+      });
+
+      // Count viewed ideas by date
+      viewedTrends.forEach((view) => {
+        const dateKey = view.createdAt.toISOString().split('T')[0];
+        const existing = trendMap.get(dateKey);
+        if (existing) {
+          existing.viewed += 1;
+        }
+      });
+
+      // Convert map to array and sort by date
+      const chartData = Array.from(trendMap.values()).sort((a, b) => 
+        new Date(a.date).getTime() - new Date(b.date).getTime()
+      );
+
+      return chartData;
+    } catch (error) {
+      console.error("Error getting activity trends:", error);
+      return [];
+    }
   }),
 });

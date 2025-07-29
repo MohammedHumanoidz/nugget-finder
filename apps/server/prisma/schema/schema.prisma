@@ -299,6 +299,7 @@ model DailyIdea {
   frameworkFit FrameworkFit?
   savedIdeas SavedIdeas[]
   claimedIdeas ClaimedIdeas?
+  viewedIdeas ViewedIdeas[]
   createdAt          DateTime     @default(now())
   updatedAt          DateTime     @updatedAt
 }
@@ -323,4 +324,16 @@ model ClaimedIdeas {
   updatedAt DateTime @updatedAt
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   idea DailyIdea @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+}
+
+model ViewedIdeas {
+  id String @id @default(uuid())
+  userId String
+  ideaId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  idea DailyIdea @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, ideaId])
 }

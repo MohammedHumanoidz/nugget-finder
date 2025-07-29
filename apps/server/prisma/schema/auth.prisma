@@ -20,6 +20,7 @@ model User {
   paymentVerification PaymentVerification?
   savedIdeas SavedIdeas[]
   claimedIdeas ClaimedIdeas[]
+  viewedIdeas ViewedIdeas[]
   @@unique([email])
   @@map("user")
 }

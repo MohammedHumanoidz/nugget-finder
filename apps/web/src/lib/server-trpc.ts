@@ -47,6 +47,10 @@ class ServerTRPCClient {
   async getUserLimits() {
     return this.makeRequest('ideas.getLimits');
   }
+
+  async getActivityTrends() {
+    return this.makeRequest('ideas.getActivityTrends');
+  }
 }
 
 export const serverTRPC = new ServerTRPCClient();
