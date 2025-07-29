@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Check, Star, Loader2 } from "lucide-react";
-import { useSubscription } from "@/hooks/useSubscription";
+import { useBetterAuthSubscription } from "@/hooks/useBetterAuthSubscription";
 import { authClient } from "@/lib/auth-client";
 import type { PricingPageProps, BillingPeriod } from "@/types/subscription";
 
@@ -27,11 +27,12 @@ export function PricingPage({
     currentSubscription,
     subscriptionStatus,
     isLoadingPlans,
-    createCheckout,
+    upgradeSubscription,
     formatPrice,
-  } = useSubscription();
+    getCurrentPlan,
+  } = useBetterAuthSubscription();
 
-  const handlePlanSelect = (priceId: string) => {
+  const handlePlanSelect = async (priceId: string) => {
     if (onPlanSelect) {
       onPlanSelect(priceId);
       return;
@@ -44,12 +45,23 @@ export function PricingPage({
       return;
     }
 
-    // Default checkout flow
-    createCheckout.mutate({
-      priceId,
-      successUrl: `${window.location.origin}/dashboard?subscription=success`,
-      cancelUrl: `${window.location.origin}/pricing?subscription=canceled`,
-      mode: "subscription",
+    // Find the plan by price ID to get the plan name
+    const selectedPlan = plans?.find(plan => 
+      plan.pricing.monthly?.priceId === priceId || 
+      plan.pricing.yearly?.priceId === priceId
+    );
+
+    if (!selectedPlan) {
+      console.error("Plan not found for price ID:", priceId);
+      return;
+    }
+
+    // Use Better Auth upgrade method
+    await upgradeSubscription.mutate({
+      plan: selectedPlan.productId, // Use product ID as plan identifier
+      subscriptionId: currentSubscription?.stripeSubscriptionId,
+      successUrl: `${window.location.origin}/subscription?upgrade=success`,
+      cancelUrl: `${window.location.origin}/pricing?upgrade=canceled`,
     });
   };
 
@@ -96,7 +108,8 @@ export function PricingPage({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {activePlans.map((plan) => {
           const pricing = billingPeriod === "monthly" ? plan.pricing.monthly : plan.pricing.yearly;
-          const isCurrentPlan = currentSubscription?.plan === plan.productId;
+          const currentPlan = getCurrentPlan();
+          const isCurrentPlan = currentPlan?.productId === plan.productId;
           const isHighlighted = highlightedPlanId === plan.id || plan.popular;
           
           if (!pricing) return null;
@@ -186,18 +199,18 @@ export function PricingPage({
                     className="w-full" 
                     variant="secondary"
                     onClick={() => handlePlanSelect(pricing.priceId)}
-                    disabled={createCheckout.isLoading}
+                    disabled={upgradeSubscription.isLoading}
                   >
-                    {createCheckout.isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                    {upgradeSubscription.isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Switch to {plan.name}
                   </Button>
                 ) : (
                   <Button 
                     className="w-full" 
                     onClick={() => handlePlanSelect(pricing.priceId)}
-                    disabled={createCheckout.isLoading}
+                    disabled={upgradeSubscription.isLoading}
                   >
-                    {createCheckout.isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                    {upgradeSubscription.isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     {!isAuthenticated 
                       ? "Sign Up to Get Started"
                       : plan.trialDays 
@@ -209,9 +222,9 @@ export function PricingPage({
               </CardFooter>
 
               {/* Error Display */}
-              {createCheckout.error && (
+              {upgradeSubscription.error && (
                 <div className="px-6 pb-4">
-                  <p className="text-sm text-red-600">{createCheckout.error}</p>
+                  <p className="text-sm text-red-600">{upgradeSubscription.error}</p>
                 </div>
               )}
             </Card>

@@ -15,8 +15,9 @@ import {
   Settings,
   User
 } from "lucide-react";
-import { useSubscription } from "@/hooks/useSubscription";
+import { useBetterAuthSubscription } from "@/hooks/useBetterAuthSubscription";
 import { PricingPage } from "./PricingPage";
+import { SubscriptionNotifications } from "./SubscriptionNotifications";
 import type { SubscriptionManagerProps } from "@/types/subscription";
 
 export function SubscriptionManager({ 
@@ -35,11 +36,13 @@ export function SubscriptionManager({
     restoreSubscription,
     getBillingPortal,
     formatPrice,
+    getCurrentPlan,
+    getFreePlan,
     refetchAll,
-  } = useSubscription();
+  } = useBetterAuthSubscription();
 
-  const handleBillingPortal = () => {
-    getBillingPortal.mutate({
+  const handleBillingPortal = async () => {
+    await getBillingPortal.mutate({
       returnUrl: window.location.href,
     });
   };
@@ -77,6 +80,7 @@ export function SubscriptionManager({
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
+      <SubscriptionNotifications />
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold">Subscription Management</h1>
@@ -128,14 +132,49 @@ export function SubscriptionManager({
               <CardDescription>Your current plan and billing information</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {!currentSubscription ? (
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground mb-4">You don't have an active subscription</p>
-                  <Button onClick={() => setActiveTab("plans")}>
-                    View Available Plans
-                  </Button>
-                </div>
-              ) : (
+              {(() => {
+                const currentPlan = getCurrentPlan();
+                
+                if (!currentSubscription && !currentPlan) {
+                  return (
+                    <div className="text-center py-8">
+                      <p className="text-muted-foreground mb-4">Loading subscription information...</p>
+                    </div>
+                  );
+                }
+
+                // Show free plan info if no paid subscription
+                if (!currentSubscription && currentPlan) {
+                  return (
+                    <div className="text-center py-8">
+                      <div className="mb-4">
+                        <h3 className="text-xl font-semibold mb-2">Free Plan</h3>
+                        <p className="text-muted-foreground">You're currently on the free plan</p>
+                      </div>
+                      
+                      {currentPlan.features.length > 0 && (
+                        <div className="mb-6">
+                          <h4 className="font-medium mb-3">Included Features:</h4>
+                          <ul className="space-y-2 text-sm max-w-md mx-auto">
+                            {currentPlan.features.map((feature, index) => (
+                              <li key={index} className="flex items-center gap-2">
+                                <div className="w-2 h-2 bg-green-500 rounded-full" />
+                                {feature}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      
+                      <Button onClick={() => setActiveTab("plans")}>
+                        Upgrade to Premium
+                      </Button>
+                    </div>
+                  );
+                }
+
+                // Show paid subscription details
+                return (
                 <>
                   {/* Plan Details */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -184,7 +223,7 @@ export function SubscriptionManager({
                           </p>
                           <Button
                             size="sm"
-                            onClick={() => restoreSubscription.mutate()}
+                            onClick={async () => await restoreSubscription.mutate()}
                             disabled={restoreSubscription.isLoading}
                           >
                             {restoreSubscription.isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
@@ -211,7 +250,7 @@ export function SubscriptionManager({
                     {subscriptionStatus?.isActive && !subscriptionStatus.cancelAtPeriodEnd && (
                       <Button
                         variant="destructive"
-                        onClick={() => cancelSubscription.mutate()}
+                        onClick={async () => await cancelSubscription.mutate()}
                         disabled={cancelSubscription.isLoading}
                       >
                         {cancelSubscription.isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
@@ -229,7 +268,8 @@ export function SubscriptionManager({
                     </div>
                   )}
                 </>
-              )}
+                );
+              })()}
             </CardContent>
           </Card>
 
@@ -288,7 +328,8 @@ export function SubscriptionManager({
         {allowPlanChanges && (
           <TabsContent value="plans">
             <PricingPage 
-              highlightedPlanId={currentSubscription?.plan}
+              showFreeOption={false}
+              highlightedPlanId={getCurrentPlan()?.productId}
             />
           </TabsContent>
         )}

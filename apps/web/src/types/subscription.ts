@@ -23,6 +23,22 @@ export interface FormattedPlan {
   active: boolean;
 }
 
+// Better Auth Stripe plugin subscription format
+export interface BetterAuthSubscription {
+  id: string;
+  plan: string;
+  status: 'active' | 'trialing' | 'canceled' | 'incomplete' | 'past_due' | 'unpaid';
+  periodStart?: string;
+  periodEnd?: string;
+  cancelAtPeriodEnd: boolean;
+  stripeSubscriptionId?: string;
+  stripeCustomerId?: string;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Legacy interface for backward compatibility
 export interface UserSubscription {
   id: string;
   plan: string;
@@ -81,10 +97,22 @@ export interface SubscriptionManagerProps {
   allowPlanChanges?: boolean;
 }
 
+// Better Auth specific types
+export interface BetterAuthUpgradeOptions {
+  plan: string;
+  subscriptionId?: string;
+  successUrl: string;
+  cancelUrl: string;
+}
+
+export interface BetterAuthCancelOptions {
+  returnUrl?: string;
+}
+
 export interface UseSubscriptionReturn {
   // Data
   plans: FormattedPlan[] | undefined;
-  currentSubscription: UserSubscription | null | undefined;
+  currentSubscription: BetterAuthSubscription | null | undefined;
   subscriptionStatus: SubscriptionStatus | undefined;
   isPaying: boolean | undefined;
   
@@ -92,28 +120,28 @@ export interface UseSubscriptionReturn {
   isLoadingPlans: boolean;
   isLoadingSubscription: boolean;
   isLoadingStatus: boolean;
-  
-  // Mutations
-  createCheckout: {
-    mutate: (input: CreateCheckoutSessionInput) => void;
+
+  // Better Auth Mutations
+  upgradeSubscription: {
+    mutate: (options: BetterAuthUpgradeOptions) => Promise<void>;
     isLoading: boolean;
     error: string | null;
   };
   
   cancelSubscription: {
-    mutate: () => void;
+    mutate: (options?: BetterAuthCancelOptions) => Promise<void>;
     isLoading: boolean;
     error: string | null;
   };
   
   restoreSubscription: {
-    mutate: () => void;
+    mutate: () => Promise<void>;
     isLoading: boolean;
     error: string | null;
   };
   
   getBillingPortal: {
-    mutate: (input: { returnUrl: string }) => void;
+    mutate: (options: { returnUrl: string }) => Promise<void>;
     isLoading: boolean;
     error: string | null;
   };
@@ -121,6 +149,8 @@ export interface UseSubscriptionReturn {
   // Utilities
   formatPrice: (amount: number, currency: string) => string;
   getPlanByPriceId: (priceId: string) => FormattedPlan | undefined;
+  getCurrentPlan: () => FormattedPlan | null;
+  getFreePlan: () => FormattedPlan | null;
   refetchAll: () => void;
 }
 
