@@ -1,11 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { X, Settings, User, Target, DollarSign, Clock } from "lucide-react";
+import { Settings, User, Target, DollarSign, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export interface PersonalizationData {
   skills: string;
@@ -58,43 +67,24 @@ export default function PersonalizationModal({
     return `$${value}`;
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm" 
-        onClick={onClose}
-      />
-      
-      {/* Modal */}
-      <div className="relative w-full max-w-2xl mx-4 bg-background border rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="w-7xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
               <Settings className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h2 className="text-xl font-semibold">Personalize Your Search</h2>
-              <p className="text-sm text-muted-foreground mt-1">
+              <DialogTitle>Personalize Your Search</DialogTitle>
+              <DialogDescription>
                 Help us find more relevant opportunities by telling us about your skills and goals
-              </p>
+              </DialogDescription>
             </div>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className="rounded-full w-8 h-8 p-0"
-          >
-            <X className="w-4 h-4" />
-          </Button>
-        </div>
+        </DialogHeader>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Skills Section */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
@@ -164,15 +154,13 @@ export default function PersonalizationModal({
               </Label>
             </div>
             <div className="px-3">
-              <input
-                type="range"
-                id="revenueGoal"
-                min="10000"
-                max="10000000"
-                step="10000"
-                value={formData.revenueGoal}
-                onChange={(e) => handleInputChange("revenueGoal", parseInt(e.target.value))}
-                className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer slider"
+              <Slider
+                value={[formData.revenueGoal]}
+                onValueChange={(value) => handleInputChange("revenueGoal", value[0])}
+                max={10000000}
+                min={10000}
+                step={10000}
+                className="w-full"
               />
               <div className="flex justify-between text-xs text-muted-foreground mt-2">
                 <span>$10K</span>
@@ -224,48 +212,24 @@ export default function PersonalizationModal({
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="flex gap-3 pt-4 border-t">
+          <DialogFooter>
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
-              className="flex-1"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="flex-1 bg-primary hover:bg-primary/90"
+              className="bg-primary hover:bg-primary/90"
             >
               <Settings className="w-4 h-4 mr-2" />
               Save Personalization
             </Button>
-          </div>
+          </DialogFooter>
         </form>
-      </div>
-
-      <style jsx>{`
-        .slider::-webkit-slider-thumb {
-          appearance: none;
-          height: 20px;
-          width: 20px;
-          background: hsl(var(--primary));
-          border-radius: 50%;
-          cursor: pointer;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        .slider::-moz-range-thumb {
-          height: 20px;
-          width: 20px;
-          background: hsl(var(--primary));
-          border-radius: 50%;
-          cursor: pointer;
-          border: none;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-      `}</style>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
