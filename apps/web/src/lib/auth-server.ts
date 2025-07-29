@@ -45,7 +45,7 @@ export async function getServerSession(): Promise<Session | null> {
     }
 
     return {
-      user: data.user,
+      user: data.user as User,
       token: sessionToken,
       expiresAt: new Date(data.expiresAt),
     };

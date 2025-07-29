@@ -4,6 +4,7 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from "../../prisma";
 import { fetchPlansFromStripe } from "../utils/stripe-plans";
+import { customSession } from "better-auth/plugins";
 
 // Cache for plans to avoid frequent Stripe API calls
 let cachedPlans: any[] = [];
@@ -111,6 +112,7 @@ export const auth = betterAuth({
         },
       },
     }),
+    // customSession(async ({user, session}) =>),
   ],
   socialProviders: {
 	google: {
