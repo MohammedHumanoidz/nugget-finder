@@ -4,6 +4,7 @@ import { agentRouter } from "./agent-router";
 import { subscriptionRouter } from "./subscription";
 import { debugRouter } from "./debug";
 import { ideasRouter } from "./ideas";
+import { semanticSearchRouter } from "./semantic-search";
 
 export const appRouter = router({
 	// Health check
@@ -27,6 +28,9 @@ export const appRouter = router({
 
 	// Ideas routes (save/claim functionality)
 	ideas: ideasRouter,
+
+	// Semantic search routes
+	search: semanticSearchRouter,
 
 	// Debug routes (remove in production)
 	debug: debugRouter,

@@ -10,6 +10,9 @@ import {
   Search,
   Send,
   Sparkles,
+  Settings,
+  Zap,
+  Badge,
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -25,6 +28,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDebounce } from "@/hooks/useDebounce";
 import { trpc, queryClient } from "@/utils/trpc";
+import PersonalizationModal, { type PersonalizationData } from "./PersonalizationModal";
 
 interface IdeaScore {
   totalScore?: number;
@@ -37,6 +41,7 @@ interface Idea {
   id: string;
   title: string;
   description: string;
+  narrativeHook: string;
   isSaved?: boolean;
   isClaimed?: boolean;
   isClaimedByOther?: boolean | null; // Changed to match server response
@@ -59,10 +64,22 @@ interface Limits {
   viewsRemaining: number;
 }
 
+interface SemanticSearchResult extends Idea {
+  relevanceScore: number;
+  personalizedScore: number;
+  matchHighlights: string[];
+  personalizationMatches: string[];
+}
+
 export default function BrowseClient() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
+  const [useSemanticSearch, setUseSemanticSearch] = useState(false);
+  const [showPersonalizationModal, setShowPersonalizationModal] = useState(false);
+  const [personalizationData, setPersonalizationData] = useState<PersonalizationData | null>(null);
+  const [semanticResults, setSemanticResults] = useState<SemanticSearchResult[]>([]);
+  const [isSemanticLoading, setIsSemanticLoading] = useState(false);
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const observerRef = useRef<IntersectionObserver>(null);
 
@@ -176,8 +193,8 @@ export default function BrowseClient() {
     initialPageParam: 0,
   });
 
-  // Combine all pages of ideas
-  const allIdeas = data?.pages.flat() || [];
+  // Combine all pages of ideas or use semantic results
+  const allIdeas = useSemanticSearch ? semanticResults : (data?.pages.flat() || []);
 
   // Handler functions
   const handleSaveIdea = (ideaId: string, isSaved: boolean) => {
@@ -227,18 +244,75 @@ export default function BrowseClient() {
     setIsSearching(false);
   }, []);
 
+  // Semantic search mutation
+  const semanticSearchMutation = useMutation(
+    trpc.search.search.mutationOptions({
+      onSuccess: (data: any) => {
+        setSemanticResults(data.results);
+        setIsSemanticLoading(false);
+      },
+      onError: (error: { message: string }) => {
+        toast.error(`Search failed: ${error.message}`);
+        setIsSemanticLoading(false);
+      },
+    })
+  );
+
   // Handle search submit
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      setIsSearching(true);
-      refetch();
+      if (useSemanticSearch) {
+        handleSemanticSearch();
+      } else {
+        setIsSearching(true);
+        refetch();
+      }
+    }
+  };
+
+  // Handle semantic search
+  const handleSemanticSearch = () => {
+    if (!searchQuery.trim()) return;
+    
+    setIsSemanticLoading(true);
+    semanticSearchMutation.mutate({
+      query: searchQuery,
+      personalization: personalizationData || undefined,
+      options: {
+        limit: 20,
+        threshold: 0.5,
+      },
+    });
+  };
+
+  // Handle personalization modal save
+  const handlePersonalizationSave = (data: PersonalizationData) => {
+    setPersonalizationData(data);
+    setShowPersonalizationModal(false);
+    
+    // Re-run semantic search if we have a query
+    if (searchQuery.trim() && useSemanticSearch) {
+      handleSemanticSearch();
+    }
+  };
+
+  // Toggle search mode
+  const toggleSearchMode = () => {
+    setUseSemanticSearch(!useSemanticSearch);
+    if (!useSemanticSearch && searchQuery.trim()) {
+      // Switching to semantic search with existing query
+      handleSemanticSearch();
     }
   };
 
   // Clear search
   const clearSearch = () => {
     setSearchQuery("");
+    setSemanticResults([]);
+    if (useSemanticSearch) {
+      setUseSemanticSearch(false);
+    }
     refetch();
   };
 
@@ -293,7 +367,7 @@ export default function BrowseClient() {
                   <Search className="h-5 w-5 flex-shrink-0 text-muted-foreground" />
                   <Input
                     type="text"
-                    placeholder="Describe your startup idea... (e.g., 'AI compliance software', 'healthcare automation')"
+                    placeholder={useSemanticSearch ? "Describe what you want to build... (AI-powered semantic search)" : "Describe your startup idea... (e.g., 'AI compliance software', 'healthcare automation')"}
                     value={searchQuery}
                     onChange={handleSearchChange}
                     className="h-auto min-h-[4rem] flex-1 border-0 bg-transparent p-4 text-lg placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
@@ -313,30 +387,70 @@ export default function BrowseClient() {
                     <Button
                       type="submit"
                       className="h-auto rounded-xl bg-primary px-6 py-3 font-medium text-primary-foreground hover:bg-primary/90"
-                      disabled={!searchQuery.trim() || isSearching}
+                      disabled={!searchQuery.trim() || isSearching || isSemanticLoading}
                     >
-                      {isSearching ? (
+                      {(isSearching || isSemanticLoading) ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
                       ) : (
                         <>
                           <Send className="mr-2 h-4 w-4" />
-                          Find Nuggets
+                          {useSemanticSearch ? "Semantic Search" : "Find Nuggets"}
                         </>
                       )}
                     </Button>
                   </div>
                 </div>
               </div>
-              {debouncedSearchQuery && (
-                <div className="mt-3 flex items-center gap-2 pl-4 text-sm text-muted-foreground">
-                  <Sparkles className="h-4 w-4" />
-                  <span>
-                    {isSearching
-                      ? "Searching with AI..."
-                      : `Found results for "${debouncedSearchQuery}"`}
-                  </span>
+              
+              {/* Search mode toggle and personalization */}
+              <div className="mt-3 flex items-center justify-between pl-4">
+                <div className="flex items-center gap-4">
+                  {(debouncedSearchQuery || searchQuery) && (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      {useSemanticSearch ? (
+                        <Badge className="h-4 w-4" />
+                      ) : (
+                        <Sparkles className="h-4 w-4" />
+                      )}
+                      <span>
+                        {isSemanticLoading
+                          ? "Performing semantic search..."
+                          : isSearching
+                          ? "Searching with AI..."
+                          : useSemanticSearch
+                          ? `Found ${semanticResults.length} semantic matches`
+                          : `Found results for "${debouncedSearchQuery || searchQuery}"`}
+                      </span>
+                    </div>
+                  )}
                 </div>
-              )}
+                
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant={useSemanticSearch ? "default" : "outline"}
+                    size="sm"
+                    onClick={toggleSearchMode}
+                    className="h-auto px-3 py-2 text-xs"
+                  >
+                    <Zap className="mr-2 h-3 w-3" />
+                    {useSemanticSearch ? "Semantic ON" : "Semantic OFF"}
+                  </Button>
+                  
+                  {useSemanticSearch && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowPersonalizationModal(true)}
+                      className="h-auto px-3 py-2 text-xs"
+                    >
+                      <Settings className="mr-2 h-3 w-3" />
+                      {personalizationData ? "Update Profile" : "Personalize"}
+                    </Button>
+                  )}
+                </div>
+              </div>
             </form>
           </div>
 
@@ -352,12 +466,14 @@ export default function BrowseClient() {
           )}
 
           {/* Loading State */}
-          {isLoading && (
+          {(isLoading || isSemanticLoading) && (
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
                 <Loader2 className="mx-auto mb-4 h-8 w-8 animate-spin" />
                 <p className="text-muted-foreground">
-                  {debouncedSearchQuery
+                  {isSemanticLoading
+                    ? "Performing semantic analysis..."
+                    : debouncedSearchQuery
                     ? "Searching ideas..."
                     : "Loading ideas..."}
                 </p>
@@ -383,128 +499,184 @@ export default function BrowseClient() {
 
           {/* No Results */}
           {!isLoading &&
+            !isSemanticLoading &&
             !error &&
             allIdeas.length === 0 &&
-            debouncedSearchQuery && (
+            (debouncedSearchQuery || searchQuery) && (
               <div className="py-12 text-center">
                 <div className="mb-4 text-4xl">🔍</div>
-                <h3 className="mb-2 text-lg font-semibold">No ideas found</h3>
+                <h3 className="mb-2 text-lg font-semibold">
+                  {useSemanticSearch ? "No semantic matches found" : "No ideas found"}
+                </h3>
                 <p className="mb-4 text-muted-foreground">
-                  Try a different search term or browse all ideas
+                  {useSemanticSearch 
+                    ? "Try adjusting your search terms or personalization settings"
+                    : "Try a different search term or browse all ideas"}
                 </p>
-                <Button onClick={clearSearch}>Browse All Ideas</Button>
+                <div className="flex gap-2 justify-center">
+                  <Button onClick={clearSearch}>Browse All Ideas</Button>
+                  {useSemanticSearch && (
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setShowPersonalizationModal(true)}
+                    >
+                      <Settings className="mr-2 h-4 w-4" />
+                      Adjust Personalization
+                    </Button>
+                  )}
+                </div>
               </div>
             )}
 
           {/* Ideas Grid */}
-          {!isLoading && allIdeas.length > 0 && (
+          {!isLoading && !isSemanticLoading && allIdeas.length > 0 && (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {allIdeas.map((idea: Idea, index) => (
-                <Card
-                  key={`${idea.id}-${index}`}
-                  className="flex h-full flex-col transition-shadow hover:shadow-lg"
-                  ref={index === allIdeas.length - 1 ? lastIdeaRef : undefined}
-                >
-                  <CardHeader className="flex-1">
-                    <div className="mb-2 flex items-start justify-between gap-2">
-                      <CardTitle className="line-clamp-2 flex-1 text-lg">
-                        {idea.title || "Untitled Idea"}
-                      </CardTitle>
-                      {idea.ideaScore?.totalScore && (
-                        <div
-                          className={`text-sm font-semibold ${getScoreColor(idea.ideaScore.totalScore)}`}
-                        >
-                          {idea.ideaScore.totalScore}/100
+              {allIdeas.map((idea: Idea | SemanticSearchResult, index) => {
+                const semanticResult = useSemanticSearch ? idea as SemanticSearchResult : null;
+                const baseIdea = idea as Idea;
+                
+                return (
+                  <Card
+                    key={`${baseIdea.id}-${index}`}
+                    className={`flex h-full flex-col transition-shadow hover:shadow-lg ${
+                      semanticResult ? 'border-primary/20' : ''
+                    }`}
+                    ref={index === allIdeas.length - 1 && !useSemanticSearch ? lastIdeaRef : undefined}
+                  >
+                    <CardHeader className="flex-1">
+                      <div className="mb-2 flex items-start justify-between gap-2">
+                        <CardTitle className="line-clamp-2 flex-1 text-lg">
+                          {baseIdea.title || "Untitled Idea"}
+                        </CardTitle>
+                        <div className="flex items-center gap-2">
+                          {semanticResult && (
+                            <div className="text-xs font-medium text-primary">
+                              {semanticResult.personalizedScore}% match
+                            </div>
+                          )}
+                          {baseIdea.ideaScore?.totalScore && (
+                            <div
+                              className={`text-sm font-semibold ${getScoreColor(baseIdea.ideaScore.totalScore)}`}
+                            >
+                              {baseIdea.ideaScore.totalScore}/100
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      
+                      {/* Personalization badges */}
+                      {semanticResult?.personalizationMatches && semanticResult.personalizationMatches.length > 0 && (
+                        <div className="mb-2 flex flex-wrap gap-1">
+                          {semanticResult.personalizationMatches.slice(0, 2).map((match, i) => (
+                            <span 
+                              key={i.toString()} 
+                              className="rounded-full bg-primary/10 px-2 py-1 text-xs text-primary"
+                            >
+                              {match}
+                            </span>
+                          ))}
                         </div>
                       )}
-                    </div>
-                    {idea.ideaScore && (
-                      <div className="flex gap-2 text-xs text-muted-foreground">
-                        <span>
-                          Problem: {idea.ideaScore.problemSeverity || 0}
-                        </span>
-                        <span>•</span>
-                        <span>
-                          Feasibility:{" "}
-                          {idea.ideaScore.technicalFeasibility || 0}
-                        </span>
-                        <span>•</span>
-                        <span>
-                          Timing: {idea.ideaScore.marketTimingScore || 0}
-                        </span>
-                      </div>
-                    )}
-                  </CardHeader>
+                      
+                      {baseIdea.ideaScore && (
+                        <div className="flex gap-2 text-xs text-muted-foreground">
+                          <span>
+                            Problem: {baseIdea.ideaScore.problemSeverity || 0}
+                          </span>
+                          <span>•</span>
+                          <span>
+                            Feasibility:{" "}
+                            {baseIdea.ideaScore.technicalFeasibility || 0}
+                          </span>
+                          <span>•</span>
+                          <span>
+                            Timing: {baseIdea.ideaScore.marketTimingScore || 0}
+                          </span>
+                        </div>
+                      )}
+                    </CardHeader>
 
-                  <CardContent className="flex-1">
-                    <p className="line-clamp-3 text-muted-foreground">
-                      {idea.description ||
-                        "No description available for this startup opportunity."}
-                    </p>
-                  </CardContent>
+                    <CardContent className="flex-1">
+                      <p className="line-clamp-3 text-muted-foreground">
+                        {baseIdea.narrativeHook ||
+                          "No description available for this startup opportunity."}
+                      </p>
+                      
+                      {/* Relevance indicator for semantic search */}
+                      {semanticResult && (
+                        <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
+                          <Badge className="h-3 w-3" />
+                          <span>Relevance: {semanticResult.relevanceScore}%</span>
+                          {personalizationData && (
+                            <span>• Personalized: {semanticResult.personalizedScore}%</span>
+                          )}
+                        </div>
+                      )}
+                    </CardContent>
 
-                  <CardFooter className="flex flex-col gap-2">
-                    <div className="flex w-full gap-2">
-                      {/* Save Button */}
-                      <Button
-                        variant={idea.isSaved ? "default" : "outline"}
-                        size="sm"
-                        onClick={() =>
-                          handleSaveIdea(idea.id, idea.isSaved || false)
-                        }
-                        disabled={!limits?.canSave && !idea.isSaved}
-                        className="flex-1"
-                      >
-                        {idea.isSaved ? (
-                          <>
-                            <BookmarkCheck className="mr-2 h-4 w-4" />
-                            Saved
-                          </>
-                        ) : (
-                          <>
-                            <Bookmark className="mr-2 h-4 w-4" />
-                            Save
-                          </>
-                        )}
-                      </Button>
-
-                      {/* Claim Button */}
-                      {idea.isClaimedByOther ? (
+                    <CardFooter className="flex flex-col gap-2">
+                      <div className="flex w-full gap-2">
+                        {/* Save Button */}
                         <Button
-                          variant="outline"
-                          size="sm"
-                          disabled
-                          className="flex-1"
-                        >
-                          <Lock className="mr-2 h-4 w-4" />
-                          Claimed
-                        </Button>
-                      ) : (
-                        <Button
-                          variant={idea.isClaimed ? "destructive" : "default"}
+                          variant={baseIdea.isSaved ? "default" : "outline"}
                           size="sm"
                           onClick={() =>
-                            handleClaimIdea(idea.id, idea.isClaimed || false)
+                            handleSaveIdea(baseIdea.id, baseIdea.isSaved || false)
                           }
-                          disabled={!limits?.canClaim && !idea.isClaimed}
+                          disabled={!limits?.canSave && !baseIdea.isSaved}
                           className="flex-1"
-                          title={
-                            !limits?.canClaim && !idea.isClaimed
-                              ? "Upgrade for more access or unclaim idea"
-                              : ""
-                          }
                         >
-                          {idea.isClaimed ? "Unclaim" : "Claim"}
+                          {baseIdea.isSaved ? (
+                            <>
+                              <BookmarkCheck className="mr-2 h-4 w-4" />
+                              Saved
+                            </>
+                          ) : (
+                            <>
+                              <Bookmark className="mr-2 h-4 w-4" />
+                              Save
+                            </>
+                          )}
                         </Button>
-                      )}
-                    </div>
 
-                    <Button asChild variant="outline" className="w-full">
-                      <Link href={`/nugget/${idea.id}`}>View Details →</Link>
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))}
+                        {/* Claim Button */}
+                        {baseIdea.isClaimedByOther ? (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled
+                            className="flex-1"
+                          >
+                            <Lock className="mr-2 h-4 w-4" />
+                            Claimed
+                          </Button>
+                        ) : (
+                          <Button
+                            variant={baseIdea.isClaimed ? "destructive" : "default"}
+                            size="sm"
+                            onClick={() =>
+                              handleClaimIdea(baseIdea.id, baseIdea.isClaimed || false)
+                            }
+                            disabled={!limits?.canClaim && !baseIdea.isClaimed}
+                            className="flex-1"
+                            title={
+                              !limits?.canClaim && !baseIdea.isClaimed
+                                ? "Upgrade for more access or unclaim idea"
+                                : ""
+                            }
+                          >
+                            {baseIdea.isClaimed ? "Unclaim" : "Claim"}
+                          </Button>
+                        )}
+                      </div>
+
+                      <Button asChild variant="outline" className="w-full">
+                        <Link href={`/nugget/${baseIdea.id}`}>View Details →</Link>
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                );
+              })}
             </div>
           )}
 
@@ -571,7 +743,7 @@ export default function BrowseClient() {
 
                     <CardContent className="flex-1">
                       <p className="line-clamp-3 text-muted-foreground">
-                        {idea.description ||
+                        {idea.narrativeHook ||
                           "No description available for this startup opportunity."}
                       </p>
                     </CardContent>
@@ -665,7 +837,7 @@ export default function BrowseClient() {
 
                     <CardContent className="flex-1">
                       <p className="line-clamp-3 text-muted-foreground">
-                        {idea.description ||
+                        {idea.narrativeHook ||
                           "No description available for this startup opportunity."}
                       </p>
                     </CardContent>
@@ -714,6 +886,14 @@ export default function BrowseClient() {
           )}
         </TabsContent>
       </Tabs>
+      
+      {/* Personalization Modal */}
+      <PersonalizationModal
+        isOpen={showPersonalizationModal}
+        onClose={() => setShowPersonalizationModal(false)}
+        onSave={handlePersonalizationSave}
+        initialData={personalizationData || undefined}
+      />
     </div>
   );
 }

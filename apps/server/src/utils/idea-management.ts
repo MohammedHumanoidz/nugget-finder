@@ -390,6 +390,7 @@ export async function getIdeasForUser(userId: string, filters?: { limit?: number
     // Add user interaction flags
     return ideas.map(idea => ({
       ...idea,
+      narrativeHook: idea.narrativeHook,
       isSaved: idea.savedIdeas.length > 0,
       isClaimed: idea.claimedIdeas?.userId === userId,
       isClaimedByOther: idea.claimedIdeas && idea.claimedIdeas.userId !== userId,
