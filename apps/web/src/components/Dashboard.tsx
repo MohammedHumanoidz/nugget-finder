@@ -68,7 +68,26 @@ export default function Dashboard() {
     trpc.ideas.getActivityTrends.queryOptions()
   );
 
-  const chartData: ActivityTrendData[] = activityTrends || [];
+  // Generate default chart data if no trends exist
+  const generateDefaultChartData = (): ActivityTrendData[] => {
+    const defaultData: ActivityTrendData[] = [];
+    for (let i = 29; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      defaultData.push({
+        date: date.toISOString().split('T')[0],
+        day: date.getDate(),
+        saved: 0,
+        claimed: 0,
+        viewed: 0,
+      });
+    }
+    return defaultData;
+  };
+
+  const chartData: ActivityTrendData[] = activityTrends && activityTrends.length > 0 
+    ? activityTrends 
+    : generateDefaultChartData();
 
   // Calculate metrics
   const totalSaved = savedIdeas?.length || 0;
@@ -346,13 +365,6 @@ export default function Dashboard() {
                       <div className="text-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4" />
                         <p className="text-sm text-muted-foreground">Loading activity trends...</p>
-                      </div>
-                    </div>
-                  ) : chartData.length === 0 ? (
-                    <div className="flex items-center justify-center h-full">
-                      <div className="text-center">
-                        <p className="text-muted-foreground mb-2">No activity data yet</p>
-                        <p className="text-sm text-muted-foreground">Start saving and claiming ideas to see your trends!</p>
                       </div>
                     </div>
                   ) : (
