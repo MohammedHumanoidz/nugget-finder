@@ -69,6 +69,34 @@ export const subscriptionRouter = router({
     }
   }),
 
+  // Protected procedure to verify a plan exists in Better Auth
+  verifyPlan: protectedProcedure
+    .input(z.object({ planId: z.string() }))
+    .query(async ({ input }) => {
+      try {
+        // Get the Better Auth instance and check if plan exists
+        const stripePlans = await getAvailablePlans();
+        const planExists = stripePlans.some(plan => 
+          plan.pricing.monthly?.priceId === input.planId ||
+          plan.pricing.yearly?.priceId === input.planId
+        );
+        
+        console.log(`🔍 Plan verification for ${input.planId}:`, planExists);
+        console.log("Available plan IDs:", stripePlans.flatMap(p => [
+          p.pricing.monthly?.priceId, 
+          p.pricing.yearly?.priceId
+        ]).filter(Boolean));
+        
+        return { exists: planExists, planId: input.planId };
+      } catch (error) {
+        console.error("❌ Plan verification error:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to verify plan",
+        });
+      }
+    }),
+
   // Protected procedure to create checkout session
   createCheckoutSession: protectedProcedure
     .input(

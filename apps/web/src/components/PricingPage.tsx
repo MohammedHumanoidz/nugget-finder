@@ -56,13 +56,27 @@ export function PricingPage({
       return;
     }
 
+    // Debug logging
+    console.log("Attempting to upgrade subscription:", {
+      priceId,
+      selectedPlan: selectedPlan.name,
+      productId: selectedPlan.productId,
+      currentSubscriptionId: currentSubscription?.stripeSubscriptionId
+    });
+
     // Use Better Auth upgrade method
-    await upgradeSubscription.mutate({
-      plan: selectedPlan.productId, // Use product ID as plan identifier
-      subscriptionId: currentSubscription?.stripeSubscriptionId,
+    const upgradeOptions: any = {
+      plan: priceId, // Use price ID as plan identifier (Better Auth expects price ID)
       successUrl: `${window.location.origin}/subscription?upgrade=success`,
       cancelUrl: `${window.location.origin}/pricing?upgrade=canceled`,
-    });
+    };
+
+    // Only include subscriptionId if user has an existing subscription
+    if (currentSubscription?.stripeSubscriptionId) {
+      upgradeOptions.subscriptionId = currentSubscription.stripeSubscriptionId;
+    }
+
+    await upgradeSubscription.mutate(upgradeOptions);
   };
 
   if (isLoadingPlans) {
@@ -110,7 +124,7 @@ export function PricingPage({
           const pricing = billingPeriod === "monthly" ? plan.pricing.monthly : plan.pricing.yearly;
           const currentPlan = getCurrentPlan();
           const isCurrentPlan = currentPlan?.productId === plan.productId;
-          const isHighlighted = highlightedPlanId === plan.id || plan.popular;
+          const isHighlighted = highlightedPlanId === plan.productId || plan.popular;
           
           if (!pricing) return null;
 

@@ -8,7 +8,7 @@ import { getPlanByProductId } from "./stripe-plans";
 export async function isUserPaying(userId: string): Promise<boolean> {
   try {
     const subscription = await prisma.subscription.findUnique({
-      where: { userId },
+      where: { referenceId: userId },
     });
 
     if (!subscription) return false;
@@ -27,7 +27,7 @@ export async function isUserPaying(userId: string): Promise<boolean> {
 export async function getUserSubscription(userId: string): Promise<UserSubscription | null> {
   try {
     const subscription = await prisma.subscription.findUnique({
-      where: { userId },
+      where: { referenceId: userId },
     });
 
     if (!subscription) return null;
@@ -47,7 +47,7 @@ export async function getUserSubscription(userId: string): Promise<UserSubscript
       trialEnd: subscription.trialEnd || undefined,
       createdAt: subscription.createdAt,
       updatedAt: subscription.updatedAt,
-      userId: subscription.userId,
+      userId: subscription.referenceId,
     };
   } catch (error) {
     console.error("Error getting user subscription:", error);
@@ -165,7 +165,7 @@ export async function upsertUserSubscription(
 ): Promise<UserSubscription> {
   try {
     const subscription = await prisma.subscription.upsert({
-      where: { userId },
+      where: { referenceId: userId },
       update: {
         plan: subscriptionData.plan || "",
         stripeCustomerId: subscriptionData.stripeCustomerId,
@@ -180,7 +180,7 @@ export async function upsertUserSubscription(
         updatedAt: new Date(),
       },
       create: {
-        userId,
+        referenceId: userId,
         plan: subscriptionData.plan || "",
         referenceId: subscriptionData.referenceId || userId,
         stripeCustomerId: subscriptionData.stripeCustomerId,
@@ -210,7 +210,7 @@ export async function upsertUserSubscription(
       trialEnd: subscription.trialEnd || undefined,
       createdAt: subscription.createdAt,
       updatedAt: subscription.updatedAt,
-      userId: subscription.userId,
+      userId: subscription.referenceId,
     };
   } catch (error) {
     console.error("Error upserting user subscription:", error);
@@ -224,7 +224,7 @@ export async function upsertUserSubscription(
 export async function deleteUserSubscription(userId: string): Promise<boolean> {
   try {
     await prisma.subscription.delete({
-      where: { userId },
+      where: { referenceId: userId },
     });
     return true;
   } catch (error) {

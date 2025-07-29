@@ -1,7 +1,7 @@
 model Subscription {
   id                   String    @id @map("_id")
   plan                 String
-  referenceId          String    @unique  // This will be the userId by default
+  referenceId          String    @unique  // Better Auth uses this as the userId
   stripeCustomerId     String?
   stripeSubscriptionId String?
   status               String    @default("incomplete")
@@ -14,9 +14,8 @@ model Subscription {
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
   
-  // Keep your existing user relation
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id])
+  // Better Auth compatible user relation using referenceId
+  user User @relation(fields: [referenceId], references: [id])
   
   @@map("subscription")
 }

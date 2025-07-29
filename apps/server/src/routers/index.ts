@@ -2,6 +2,7 @@
 import { protectedProcedure, publicProcedure, router } from "../lib/trpc";
 import { agentRouter } from "./agent-router";
 import { subscriptionRouter } from "./subscription";
+import { debugRouter } from "./debug";
 
 export const appRouter = router({
 	// Health check
@@ -22,6 +23,9 @@ export const appRouter = router({
 
 	// Subscription routes
 	subscription: subscriptionRouter,
+
+	// Debug routes (remove in production)
+	debug: debugRouter,
 });
 
 export type AppRouter = typeof appRouter;

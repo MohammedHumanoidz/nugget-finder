@@ -6,6 +6,8 @@ import type { StripePlan, FormattedPlan } from "../types/subscription";
  */
 export async function fetchPlansFromStripe(): Promise<StripePlan[]> {
   try {
+    console.log("🔍 Fetching plans from Stripe...");
+    
     // Fetch all active products
     const products = await stripeClient.products.list({
       active: true,
@@ -18,6 +20,9 @@ export async function fetchPlansFromStripe(): Promise<StripePlan[]> {
       type: "recurring",
       expand: ["data.product"],
     });
+
+    console.log(`📦 Found ${products.data.length} products and ${prices.data.length} prices`);
+    console.log("💰 Price IDs:", prices.data.map(p => p.id));
 
     const plans: StripePlan[] = [];
 

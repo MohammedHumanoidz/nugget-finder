@@ -35,11 +35,10 @@ export function SubscriptionManager({
     cancelSubscription,
     restoreSubscription,
     getBillingPortal,
-    formatPrice,
     getCurrentPlan,
-    getFreePlan,
-    refetchAll,
   } = useBetterAuthSubscription();
+
+  console.log({currentSubscription});
 
   const handleBillingPortal = async () => {
     await getBillingPortal.mutate({
@@ -86,14 +85,6 @@ export function SubscriptionManager({
           <h1 className="text-3xl font-bold">Subscription Management</h1>
           <p className="text-muted-foreground">Manage your subscription and billing settings</p>
         </div>
-        <Button 
-          variant="outline" 
-          onClick={refetchAll}
-          className="gap-2"
-        >
-          <RefreshCw className="w-4 h-4" />
-          Refresh
-        </Button>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -157,7 +148,7 @@ export function SubscriptionManager({
                           <h4 className="font-medium mb-3">Included Features:</h4>
                           <ul className="space-y-2 text-sm max-w-md mx-auto">
                             {currentPlan.features.map((feature, index) => (
-                              <li key={index} className="flex items-center gap-2">
+                              <li key={index.toString()} className="flex items-center gap-2">
                                 <div className="w-2 h-2 bg-green-500 rounded-full" />
                                 {feature}
                               </li>
@@ -180,13 +171,13 @@ export function SubscriptionManager({
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <h4 className="font-medium mb-2">Plan</h4>
-                      <p className="text-2xl font-bold">{currentSubscription.plan}</p>
+                      <p className="text-2xl font-bold">{getCurrentPlan()?.name || currentSubscription?.plan}</p>
                     </div>
                     <div>
                       <h4 className="font-medium mb-2">Status</h4>
                       <div className="flex items-center gap-2">
-                        <Badge variant={getStatusBadgeVariant(currentSubscription.status)}>
-                          {currentSubscription.status}
+                        <Badge variant={getStatusBadgeVariant(currentSubscription?.status)}>
+                          {currentSubscription?.status}
                         </Badge>
                         {subscriptionStatus?.isTrialing && (
                           <span className="text-sm text-muted-foreground">
@@ -198,13 +189,13 @@ export function SubscriptionManager({
                   </div>
 
                   {/* Billing Period */}
-                  {currentSubscription.periodStart && currentSubscription.periodEnd && (
+                  {currentSubscription?.periodStart && currentSubscription?.periodEnd && (
                     <div>
                       <h4 className="font-medium mb-2">Billing Period</h4>
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4 text-muted-foreground" />
                         <span>
-                          {formatDate(currentSubscription.periodStart)} - {formatDate(currentSubscription.periodEnd)}
+                          {formatDate(currentSubscription?.periodStart)} - {formatDate(currentSubscription?.periodEnd)}
                         </span>
                       </div>
                     </div>

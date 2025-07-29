@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { authClient } from "@/lib/auth-client";
-import { trpc } from "@/utils/trpc";
+import { trpc, queryClient } from "@/utils/trpc";
 import { formatErrorForDisplay, parseSubscriptionError } from "@/utils/subscription-errors";
 import type { 
   UseSubscriptionReturn, 
@@ -51,6 +51,7 @@ export function useBetterAuthSubscription(): UseSubscriptionReturn {
     try {
       // Use Better Auth subscription.list() method
       const subscriptions = await authClient.subscription.list();
+      console.log("🔍 Subscription data:", subscriptions);
       
       // Get the active subscription (assuming user has only one)
       const activeSubscription = Array.isArray(subscriptions) 
@@ -80,10 +81,10 @@ export function useBetterAuthSubscription(): UseSubscriptionReturn {
 
     const interval = setInterval(() => {
       const timeSinceLastFetch = Date.now() - lastFetch;
-      if (timeSinceLastFetch > 30000) { // 30 seconds
+      if (timeSinceLastFetch > 300000) { // 5 minutes
         fetchSubscriptionData();
       }
-    }, 30000);
+    }, 300000);
 
     return () => clearInterval(interval);
   }, [isAuthenticated, lastFetch, fetchSubscriptionData]);
@@ -124,23 +125,84 @@ export function useBetterAuthSubscription(): UseSubscriptionReturn {
       setUpgradeError(null);
       
       try {
-        await authClient.subscription.upgrade({
+        // First, verify the plan exists in our frontend data
+        const selectedPlan = getPlanByPriceId(options.plan);
+        if (!selectedPlan) {
+          throw new Error(`Plan with price ID ${options.plan} not found in available plans`);
+        }
+
+        console.log("✅ Plan found:", selectedPlan.name);
+
+        // Debug: Let's check what Better Auth sees
+        console.log("🔍 Current subscription state:", {
+          currentSubscription,
+          hasStripeId: !!currentSubscription?.stripeSubscriptionId,
+          subscriptionStatus: currentSubscription?.status,
+        });
+
+        // Let's also check what the Better Auth subscription.list() returns right before upgrade
+        try {
+          const currentSubscriptions = await authClient.subscription.list();
+          console.log("🔍 Current subscriptions from Better Auth:", currentSubscriptions);
+        } catch (listError) {
+          console.error("❌ Error fetching current subscriptions:", listError);
+        }
+        console.log("🚀 Calling Better Auth upgrade with:", {
           plan: options.plan,
-          subscriptionId: options.subscriptionId || currentSubscription?.stripeSubscriptionId,
+          hasExistingSubscription: !!currentSubscription?.stripeSubscriptionId,
           successUrl: options.successUrl,
           cancelUrl: options.cancelUrl,
         });
+
+        console.log("📋 Available plans for comparison:", plans?.map(p => ({
+          productId: p.productId,
+          name: p.name,
+          monthlyPriceId: p.pricing.monthly?.priceId,
+          yearlyPriceId: p.pricing.yearly?.priceId
+        })));
+
+        // For new users without subscriptions, don't pass subscriptionId
+        const upgradeParams = {
+          plan: options.plan,
+          successUrl: options.successUrl,
+          cancelUrl: options.cancelUrl,
+          ...(currentSubscription?.stripeSubscriptionId && {
+            subscriptionId: currentSubscription.stripeSubscriptionId
+          })
+        };
+
+        if (currentSubscription?.stripeSubscriptionId) {
+          console.log("🔄 Upgrading existing subscription:", currentSubscription.stripeSubscriptionId);
+        } else {
+          console.log("🆕 Creating new subscription");
+        }
+
+        console.log("📋 Final upgrade params:", upgradeParams);
+
+        try {
+          console.log("🚀 About to call authClient.subscription.upgrade...");
+          const upgradeResult = await authClient.subscription.upgrade(upgradeParams);
+          console.log("✅ Subscription upgrade successful, result:", upgradeResult);
+        } catch (upgradeError) {
+          console.error("❌ Better Auth upgrade failed:", upgradeError);
+          console.error("❌ Upgrade error details:", {
+            message: upgradeError instanceof Error ? upgradeError.message : String(upgradeError),
+            cause: upgradeError instanceof Error ? upgradeError.cause : undefined,
+            stack: upgradeError instanceof Error ? upgradeError.stack : undefined,
+          });
+          throw upgradeError;
+        }
         
         // Refresh subscription data after successful upgrade
         await fetchSubscriptionData();
       } catch (error: unknown) {
-        console.error("Error upgrading subscription:", error);
+        console.error("❌ Error upgrading subscription:", error);
         const formattedError = formatErrorForDisplay(error);
         setUpgradeError(formattedError);
         
-        // Optional: Implement retry logic for retryable errors
+        // Log detailed error information
         const parsedError = parseSubscriptionError(error);
-        console.log("Parsed error:", parsedError);
+        console.log("🔍 Parsed error details:", parsedError);
       } finally {
         setUpgradeLoading(false);
       }
@@ -250,8 +312,11 @@ export function useBetterAuthSubscription(): UseSubscriptionReturn {
   // Get current effective plan (subscription plan or free plan)
   const getCurrentPlan = (): FormattedPlan | null => {
     if (currentSubscription?.plan) {
-      // Find the plan by product ID
-      return plans?.find((plan: FormattedPlan) => plan.productId === currentSubscription.plan) || null;
+      // Find the plan by price ID (Better Auth stores price ID as plan ID)
+      return plans?.find((plan: FormattedPlan) => 
+        plan.pricing.monthly?.priceId === currentSubscription.plan ||
+        plan.pricing.yearly?.priceId === currentSubscription.plan
+      ) || null;
     }
     return getFreePlan();
   };
