@@ -9,9 +9,7 @@ import {
   Lock,
   Search,
   Send,
-  Sparkles,
   Settings,
-  Zap,
   Badge,
 } from "lucide-react";
 import Link from "next/link";
@@ -75,7 +73,6 @@ export default function BrowseClient() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
-  const [useSemanticSearch, setUseSemanticSearch] = useState(false);
   const [showPersonalizationModal, setShowPersonalizationModal] = useState(false);
   const [personalizationData, setPersonalizationData] = useState<PersonalizationData | null>(null);
   const [semanticResults, setSemanticResults] = useState<SemanticSearchResult[]>([]);
@@ -193,8 +190,8 @@ export default function BrowseClient() {
     initialPageParam: 0,
   });
 
-  // Combine all pages of ideas or use semantic results
-  const allIdeas = useSemanticSearch ? semanticResults : (data?.pages.flat() || []);
+  // Use semantic results when available (when user has searched), otherwise show regular paginated results
+  const allIdeas = (searchQuery.trim() && semanticResults.length > 0) ? semanticResults : (data?.pages.flat() || []);
 
   // Handler functions
   const handleSaveIdea = (ideaId: string, isSaved: boolean) => {
@@ -235,7 +232,7 @@ export default function BrowseClient() {
     const value = e.target.value;
     setSearchQuery(value);
     if (value.trim() !== debouncedSearchQuery.trim()) {
-      setIsSearching(true);
+      setIsSemanticLoading(true);
     }
   };
 
@@ -262,29 +259,36 @@ export default function BrowseClient() {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      if (useSemanticSearch) {
-        handleSemanticSearch();
-      } else {
-        setIsSearching(true);
-        refetch();
-      }
+      handleSemanticSearch();
     }
   };
 
   // Handle semantic search
-  const handleSemanticSearch = () => {
-    if (!searchQuery.trim()) return;
+  const handleSemanticSearch = useCallback(() => {
+    const currentQuery = debouncedSearchQuery || searchQuery;
+    if (!currentQuery.trim()) return;
     
     setIsSemanticLoading(true);
     semanticSearchMutation.mutate({
-      query: searchQuery,
+      query: currentQuery,
       personalization: personalizationData || undefined,
       options: {
         limit: 20,
-        threshold: 0.5,
+        threshold: 0.15,
       },
     });
-  };
+  }, [debouncedSearchQuery, searchQuery, personalizationData, semanticSearchMutation]);
+
+  // Trigger semantic search when debounced query changes
+  useEffect(() => {
+    if (debouncedSearchQuery.trim()) {
+      handleSemanticSearch();
+    } else {
+      // Clear semantic results when query is empty
+      setSemanticResults([]);
+      setIsSemanticLoading(false);
+    }
+  }, [debouncedSearchQuery, handleSemanticSearch]);
 
   // Handle personalization modal save
   const handlePersonalizationSave = (data: PersonalizationData) => {
@@ -292,16 +296,7 @@ export default function BrowseClient() {
     setShowPersonalizationModal(false);
     
     // Re-run semantic search if we have a query
-    if (searchQuery.trim() && useSemanticSearch) {
-      handleSemanticSearch();
-    }
-  };
-
-  // Toggle search mode
-  const toggleSearchMode = () => {
-    setUseSemanticSearch(!useSemanticSearch);
-    if (!useSemanticSearch && searchQuery.trim()) {
-      // Switching to semantic search with existing query
+    if (searchQuery.trim()) {
       handleSemanticSearch();
     }
   };
@@ -310,9 +305,7 @@ export default function BrowseClient() {
   const clearSearch = () => {
     setSearchQuery("");
     setSemanticResults([]);
-    if (useSemanticSearch) {
-      setUseSemanticSearch(false);
-    }
+    // When clearing, show all ideas through regular query
     refetch();
   };
 
@@ -367,7 +360,7 @@ export default function BrowseClient() {
                   <Search className="h-5 w-5 flex-shrink-0 text-muted-foreground" />
                   <Input
                     type="text"
-                    placeholder={useSemanticSearch ? "Describe what you want to build... (AI-powered semantic search)" : "Describe your startup idea... (e.g., 'AI compliance software', 'healthcare automation')"}
+                    placeholder="Describe what you want to build... (AI-powered semantic search)"
                     value={searchQuery}
                     onChange={handleSearchChange}
                     className="h-auto min-h-[4rem] flex-1 border-0 bg-transparent p-4 text-lg placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
@@ -394,7 +387,7 @@ export default function BrowseClient() {
                       ) : (
                         <>
                           <Send className="mr-2 h-4 w-4" />
-                          {useSemanticSearch ? "Semantic Search" : "Find Nuggets"}
+                          Find Nuggets
                         </>
                       )}
                     </Button>
@@ -402,24 +395,18 @@ export default function BrowseClient() {
                 </div>
               </div>
               
-              {/* Search mode toggle and personalization */}
+              {/* Search status and personalization */}
               <div className="mt-3 flex items-center justify-between pl-4">
                 <div className="flex items-center gap-4">
                   {(debouncedSearchQuery || searchQuery) && (
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      {useSemanticSearch ? (
-                        <Badge className="h-4 w-4" />
-                      ) : (
-                        <Sparkles className="h-4 w-4" />
-                      )}
+                      <Badge className="h-4 w-4" />
                       <span>
                         {isSemanticLoading
                           ? "Performing semantic search..."
-                          : isSearching
-                          ? "Searching with AI..."
-                          : useSemanticSearch
+                          : searchQuery.trim() && semanticResults.length > 0
                           ? `Found ${semanticResults.length} semantic matches`
-                          : `Found results for "${debouncedSearchQuery || searchQuery}"`}
+                          : "AI-powered semantic search"}
                       </span>
                     </div>
                   )}
@@ -428,27 +415,14 @@ export default function BrowseClient() {
                 <div className="flex items-center gap-2">
                   <Button
                     type="button"
-                    variant={useSemanticSearch ? "default" : "outline"}
+                    variant="outline"
                     size="sm"
-                    onClick={toggleSearchMode}
+                    onClick={() => setShowPersonalizationModal(true)}
                     className="h-auto px-3 py-2 text-xs"
                   >
-                    <Zap className="mr-2 h-3 w-3" />
-                    {useSemanticSearch ? "Semantic ON" : "Semantic OFF"}
+                    <Settings className="mr-2 h-3 w-3" />
+                    {personalizationData ? "Update Profile" : "Personalize Search"}
                   </Button>
-                  
-                  {useSemanticSearch && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setShowPersonalizationModal(true)}
-                      className="h-auto px-3 py-2 text-xs"
-                    >
-                      <Settings className="mr-2 h-3 w-3" />
-                      {personalizationData ? "Update Profile" : "Personalize"}
-                    </Button>
-                  )}
                 </div>
               </div>
             </form>
@@ -506,24 +480,20 @@ export default function BrowseClient() {
               <div className="py-12 text-center">
                 <div className="mb-4 text-4xl">🔍</div>
                 <h3 className="mb-2 text-lg font-semibold">
-                  {useSemanticSearch ? "No semantic matches found" : "No ideas found"}
+                  No semantic matches found
                 </h3>
                 <p className="mb-4 text-muted-foreground">
-                  {useSemanticSearch 
-                    ? "Try adjusting your search terms or personalization settings"
-                    : "Try a different search term or browse all ideas"}
+                  Try adjusting your search terms or personalization settings
                 </p>
                 <div className="flex gap-2 justify-center">
                   <Button onClick={clearSearch}>Browse All Ideas</Button>
-                  {useSemanticSearch && (
-                    <Button 
-                      variant="outline" 
-                      onClick={() => setShowPersonalizationModal(true)}
-                    >
-                      <Settings className="mr-2 h-4 w-4" />
-                      Adjust Personalization
-                    </Button>
-                  )}
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowPersonalizationModal(true)}
+                  >
+                    <Settings className="mr-2 h-4 w-4" />
+                    Adjust Personalization
+                  </Button>
                 </div>
               </div>
             )}
@@ -532,7 +502,7 @@ export default function BrowseClient() {
           {!isLoading && !isSemanticLoading && allIdeas.length > 0 && (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {allIdeas.map((idea: Idea | SemanticSearchResult, index) => {
-                const semanticResult = useSemanticSearch ? idea as SemanticSearchResult : null;
+                const semanticResult = (searchQuery.trim() && semanticResults.length > 0) ? idea as SemanticSearchResult : null;
                 const baseIdea = idea as Idea;
                 
                 return (
@@ -541,7 +511,7 @@ export default function BrowseClient() {
                     className={`flex h-full flex-col transition-shadow hover:shadow-lg ${
                       semanticResult ? 'border-primary/20' : ''
                     }`}
-                    ref={index === allIdeas.length - 1 && !useSemanticSearch ? lastIdeaRef : undefined}
+                    ref={index === allIdeas.length - 1 && (!searchQuery.trim() || semanticResults.length === 0) ? lastIdeaRef : undefined}
                   >
                     <CardHeader className="flex-1">
                       <div className="mb-2 flex items-start justify-between gap-2">

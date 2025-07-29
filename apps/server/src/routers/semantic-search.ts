@@ -20,9 +20,9 @@ const semanticSearchSchema = z.object({
   }).optional(),
   options: z.object({
     limit: z.number().min(1).max(50).optional().default(20),
-    threshold: z.number().min(0).max(1).optional().default(0.5),
+    threshold: z.number().min(0).max(1).optional().default(0.15),
     strict: z.boolean().optional().default(false),
-  }).optional().default(() => ({ limit: 20, threshold: 0.5, strict: false })),
+  }).optional().default(() => ({ limit: 20, threshold: 0.15, strict: false })),
 });
 
 // Global search engine instance (in production, consider caching)
@@ -69,6 +69,7 @@ export const semanticSearchRouter = router({
           // Include personalization matches for badges
           personalizationMatches: getPersonalizationMatches(result, personalization),
         }));
+
 
         return {
           results: transformedResults,
