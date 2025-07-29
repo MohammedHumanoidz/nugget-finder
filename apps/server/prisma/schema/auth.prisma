@@ -7,10 +7,19 @@ model User {
   createdAt        DateTime
   updatedAt        DateTime
   stripeCustomerId String?   // Add this field for the Stripe plugin
+  claimLimit       Int       @default(0)  // Number of claims allowed
+  claimsUsed       Int       @default(0)  // Number of claims used
+  saveLimit        Int       @default(0)  // Number of saves allowed (-1 for unlimited)
+  savesUsed        Int       @default(0)  // Number of saves used
+  viewLimit        Int       @default(1)  // Number of views per day (-1 for unlimited)
+  viewsUsed        Int       @default(0)  // Number of views used today
+  lastViewReset    DateTime? // Last time view count was reset
   sessions         Session[]
   accounts         Account[]
   subscription     Subscription?
   paymentVerification PaymentVerification?
+  savedIdeas SavedIdeas[]
+  claimedIdeas ClaimedIdeas[]
   @@unique([email])
   @@map("user")
 }

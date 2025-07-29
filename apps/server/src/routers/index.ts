@@ -3,6 +3,7 @@ import { protectedProcedure, publicProcedure, router } from "../lib/trpc";
 import { agentRouter } from "./agent-router";
 import { subscriptionRouter } from "./subscription";
 import { debugRouter } from "./debug";
+import { ideasRouter } from "./ideas";
 
 export const appRouter = router({
 	// Health check
@@ -23,6 +24,9 @@ export const appRouter = router({
 
 	// Subscription routes
 	subscription: subscriptionRouter,
+
+	// Ideas routes (save/claim functionality)
+	ideas: ideasRouter,
 
 	// Debug routes (remove in production)
 	debug: debugRouter,

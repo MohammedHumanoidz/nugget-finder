@@ -1,4 +1,9 @@
-import { SignedIn, SignedOut, UserAvatar, UserButton } from "@daveyplate/better-auth-ui";
+import {
+  SignedIn,
+  SignedOut,
+  UserAvatar,
+  UserButton,
+} from "@daveyplate/better-auth-ui";
 import { ModeToggle } from "@/components/mode-toggle";
 import Link from "next/link";
 
@@ -32,6 +37,22 @@ export default function Navbar() {
           >
             Pricing
           </Link>
+          <SignedIn>
+            <Link
+              href="/saved-ideas"
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Saved Ideas
+            </Link>
+          </SignedIn>
+          <SignedIn>
+            <Link
+              href="/claimed-ideas"
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Claimed Ideas
+            </Link>
+          </SignedIn>
         </div>
 
         <div className="flex items-center gap-3">
@@ -52,10 +73,10 @@ export default function Navbar() {
           </SignedOut>
           <SignedIn>
             <Link
-              href="/subscription"
+              href="/dashboard"
               className="text-muted-foreground hover:text-foreground"
             >
-              Subscription
+              Dashboard
             </Link>
             <UserButton size={"icon"} />
           </SignedIn>

@@ -279,7 +279,6 @@ model DailyIdea {
   urgencyLevel      Int // 1-10 scale for market timing pressure
   executionComplexity Int // 1-10 scale for implementation difficulty
   tags              String[]
-  
   // Relations
   ideaScoreId        String?      @unique
   ideaScore          IdeaScore?   @relation(fields: [ideaScoreId], references: [id])
@@ -298,7 +297,30 @@ model DailyIdea {
   executionPlan ExecutionPlan?
   tractionSignals TractionSignals?
   frameworkFit FrameworkFit?
-  
+  savedIdeas SavedIdeas[]
+  claimedIdeas ClaimedIdeas?
   createdAt          DateTime     @default(now())
   updatedAt          DateTime     @updatedAt
+}
+
+model SavedIdeas {
+  id String @id @default(uuid())
+  userId String
+  ideaId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  idea DailyIdea @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, ideaId])
+}
+
+model ClaimedIdeas {
+  id String @id @default(uuid())
+  userId String
+  ideaId String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  idea DailyIdea @relation(fields: [ideaId], references: [id], onDelete: Cascade)
 }

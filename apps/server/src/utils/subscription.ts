@@ -69,6 +69,81 @@ export async function getUserCurrentPlan(userId: string): Promise<string | null>
 }
 
 /**
+ * Parses plan description string to extract limits
+ * Example: "10 Claims Per Month | unlimited Idea View Per Day | unlimited Saves Per Month"
+ */
+export function parsePlanLimits(description: string): {
+  claims: number;
+  saves: number;
+  views: number;
+} {
+  const parts = description.split('|').map(p => p.trim());
+  let claims = 0;
+  let saves = 0;
+  let views = 1;
+
+  for (const part of parts) {
+    const lowerPart = part.toLowerCase();
+    
+    if (lowerPart.includes('claims per month')) {
+      const match = part.match(/(\d+|unlimited)\s+claims/i);
+      if (match) {
+        claims = match[1] === 'unlimited' ? -1 : parseInt(match[1], 10);
+      }
+    } else if (lowerPart.includes('saves per month')) {
+      const match = part.match(/(\d+|unlimited)\s+saves/i);
+      if (match) {
+        saves = match[1] === 'unlimited' ? -1 : parseInt(match[1], 10);
+      }
+    } else if (lowerPart.includes('idea view per day')) {
+      const match = part.match(/(\d+|unlimited)\s+idea view/i);
+      if (match) {
+        views = match[1] === 'unlimited' ? -1 : parseInt(match[1], 10);
+      }
+    }
+  }
+
+  return { claims, saves, views };
+}
+
+/**
+ * Updates user limits based on their subscription
+ */
+export async function updateUserLimitsFromPlan(userId: string): Promise<void> {
+  try {
+    const subscription = await getUserSubscription(userId);
+    
+    let claims = 0;
+    let saves = 0;
+    let views = 1;
+    
+    if (subscription && ["active", "trialing"].includes(subscription.status)) {
+      // Get plan details
+      const planDetails = await getPlanByProductId(subscription.plan);
+      
+      if (planDetails && planDetails.description) {
+        const limits = parsePlanLimits(planDetails.description);
+        claims = limits.claims;
+        saves = limits.saves;
+        views = limits.views;
+      }
+    }
+
+    // Update user limits
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        claimLimit: claims,
+        saveLimit: saves,
+        viewLimit: views,
+      },
+    });
+  } catch (error) {
+    console.error("Error updating user limits from plan:", error);
+  }
+}
+
+/**
  * Gets subscription limits for a user based on their plan
  */
 export async function getSubscriptionLimits(userId: string): Promise<SubscriptionLimits> {
@@ -182,7 +257,6 @@ export async function upsertUserSubscription(
       create: {
         referenceId: userId,
         plan: subscriptionData.plan || "",
-        referenceId: subscriptionData.referenceId || userId,
         stripeCustomerId: subscriptionData.stripeCustomerId,
         stripeSubscriptionId: subscriptionData.stripeSubscriptionId,
         status: subscriptionData.status || "incomplete",
@@ -194,6 +268,11 @@ export async function upsertUserSubscription(
         trialEnd: subscriptionData.trialEnd,
       },
     });
+
+    // Update user limits when subscription changes
+    if (["active", "trialing"].includes(subscription.status)) {
+      await updateUserLimitsFromPlan(userId);
+    }
 
     return {
       id: subscription.id,
