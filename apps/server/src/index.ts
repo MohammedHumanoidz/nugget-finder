@@ -5,6 +5,7 @@ import { Elysia } from "elysia";
 import { auth } from "./lib/auth";
 import { createContext } from "./lib/context";
 import { appRouter } from "./routers/index";
+import "./trigger/daily-idea-generation"; // Initialize Trigger.dev jobs
 
 const _app = new Elysia()
 	.use(

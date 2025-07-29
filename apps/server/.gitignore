@@ -54,3 +54,4 @@ next-env.d.ts
 # prisma
 prisma/generated/
 prisma/schema/migrations/
+.trigger
