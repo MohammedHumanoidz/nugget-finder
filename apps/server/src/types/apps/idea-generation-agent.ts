@@ -106,6 +106,15 @@ export interface SynthesizedIdea {
 	executionPlan?: string; // Narrative summary of concrete next steps
 	tractionSignals?: string; // Examples of early validation/traction to look for
 	frameworkFit?: string; // How this idea fits into broader strategic frameworks or trends
+	whatToBuild?: WhatToBuildData; // Technical implementation guide
+}
+
+export interface WhatToBuildData {
+	platformDescription: string;
+	coreFeaturesSummary: string[];
+	userInterfaces: string[];
+	keyIntegrations: string[];
+	pricingStrategyBuildRecommendation: string;
 }
 
 export interface AgentContext {
@@ -113,5 +122,6 @@ export interface AgentContext {
 	problemGaps?: ProblemGapData;
 	competitive?: CompetitiveData;
 	monetization?: MonetizationData;
+	whatToBuild?: WhatToBuildData;
 	previousIdeas?: any[];
 }

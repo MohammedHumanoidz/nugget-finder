@@ -126,6 +126,7 @@ export const agentRouter = router({
 							executionPlan: true,
 							tractionSignals: true,
 							frameworkFit: true,
+							whatToBuild: true,
 						},
 						orderBy: {
 							createdAt: "desc",
@@ -181,6 +182,7 @@ export const agentRouter = router({
 						executionPlan: true,
 						tractionSignals: true,
 						frameworkFit: true,
+						whatToBuild: true,
 					},
 				});
 

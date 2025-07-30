@@ -115,6 +115,73 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
               </div>
             </div>
 
+            {/* Here's What You Should Build */}
+            {idea.whatToBuild && (
+              <div className="bg-card border border-border rounded-lg shadow-sm overflow-hidden">
+                <h3 className="bg-muted/50 text-foreground border-b border-border px-6 py-4 text-lg font-semibold">🔧 Here's What You Should Build</h3>
+                <div className="p-6 space-y-6">
+                  {/* Platform Description */}
+                  <div>
+                    <h4 className="text-foreground font-semibold mb-2">Platform Overview:</h4>
+                    <p className="text-muted-foreground">{idea.whatToBuild.platformDescription}</p>
+                  </div>
+
+                  {/* Core Features */}
+                  {idea.whatToBuild.coreFeaturesSummary && idea.whatToBuild.coreFeaturesSummary.length > 0 && (
+                    <div>
+                      <h4 className="text-foreground font-semibold mb-3">Core Features for MVP:</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {idea.whatToBuild.coreFeaturesSummary.map((feature, index) => (
+                          <div key={index.toString()} className="bg-muted/50 border border-border p-3 rounded-lg flex items-start gap-3">
+                            <div className="bg-primary/10 text-primary px-2 py-1 rounded text-xs font-semibold min-w-fit">
+                              #{index + 1}
+                            </div>
+                            <span className="text-muted-foreground text-sm">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* User Interfaces */}
+                  {idea.whatToBuild.userInterfaces && idea.whatToBuild.userInterfaces.length > 0 && (
+                    <div>
+                      <h4 className="text-foreground font-semibold mb-3">Recommended User Interfaces:</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {idea.whatToBuild.userInterfaces.map((ui, index) => (
+                          <span key={index.toString()} className="bg-blue-100 border border-blue-300 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+                            🖥️ {ui}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Key Integrations */}
+                  {idea.whatToBuild.keyIntegrations && idea.whatToBuild.keyIntegrations.length > 0 && (
+                    <div>
+                      <h4 className="text-foreground font-semibold mb-3">Essential Third-Party Integrations:</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {idea.whatToBuild.keyIntegrations.map((integration, index) => (
+                          <span key={index.toString()} className="bg-green-100 border border-green-300 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                            🔗 {integration}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Pricing Implementation */}
+                  <div className="bg-orange-50 border border-orange-200 p-4 rounded-lg">
+                    <h4 className="text-foreground font-semibold mb-2 flex items-center gap-2">
+                      💳 Technical Pricing Implementation:
+                    </h4>
+                    <p className="text-muted-foreground text-sm">{idea.whatToBuild.pricingStrategyBuildRecommendation}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* The Claim (Why Now?) */}
             <div className="bg-card border border-border rounded-lg shadow-sm overflow-hidden">
               <h3 className="bg-muted/50 text-foreground border-b border-border px-6 py-4 text-lg font-semibold">🌟 The Claim (Why Now?)</h3>

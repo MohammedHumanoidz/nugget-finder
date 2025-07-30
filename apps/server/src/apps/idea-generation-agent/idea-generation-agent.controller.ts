@@ -11,6 +11,7 @@ import type {
 import { openrouter, perplexity } from "../../utils/configs/ai.config";
 import { parsePerplexityResponse } from "../../utils/json-parser";
 import { debugLogger } from "../../utils/logger";
+import { prisma } from "../../utils/configs/db.config";
 
 const IdeaGenerationAgentController = {
   /**
@@ -797,7 +798,10 @@ Extract the competitive analysis data and strategic positioning from this resear
         maxTokens: 1000,
       });
 
-      const monetizationData = JSON.parse(text) as MonetizationData;
+      // Clean the response to remove markdown code blocks if present
+      const cleanedText = text.replace(/```json\s*|```\s*$/g, '').trim();
+
+      const monetizationData = JSON.parse(cleanedText) as MonetizationData;
       return monetizationData;
     } catch (error) {
       console.error("MonetizationAgent error:", error);
@@ -871,6 +875,98 @@ Extract the competitive analysis data and strategic positioning from this resear
             revenueGrowth: 150,
           },
         ],
+      };
+    }
+  },
+
+  /**
+   * WhatToBuildAgent - Generate detailed technical implementation guide
+   * Uses OpenRouter GPT-4o-mini for structured technical specification generation
+   */
+  async whatToBuildAgent(
+    context: AgentContext
+  ): Promise<import("../../types/apps/idea-generation-agent").WhatToBuildData | null> {
+    try {
+      const systemPrompt = `You are a senior full-stack architect and product strategist with deep expertise in translating business ideas into concrete, actionable technical implementations. Your job is to create a detailed technical implementation guide that a development team can immediately act upon.
+
+**Your mission:** Transform the validated business idea into specific, buildable technical requirements that prioritize SOFTWARE-FIRST solutions (SaaS, APIs, web/mobile apps) with clear integration points and realistic feature scope.
+
+**Critical Guidelines:**
+1. **SOFTWARE-FOCUSED:** Prioritize SaaS platforms, APIs, web/mobile applications, and service-based solutions. Avoid hardware dependencies.
+2. **MVP-READY:** Focus on core features that can be built and launched within 3-6 months by a small team.
+3. **INTEGRATION-SMART:** Recommend battle-tested third-party services and APIs to accelerate development.
+4. **USER-CENTRIC:** Design interfaces that directly serve the identified target persona's workflow.
+5. **MONETIZATION-ALIGNED:** Ensure the technical architecture supports the revenue model effectively.
+
+Return this exact JSON structure:
+{
+  "platformDescription": "string (A detailed, technical description of what this platform IS - its core architecture, main purpose, and how users will interact with it. Example: 'A cloud-based SaaS dashboard that aggregates energy consumption data from IoT sensors and smart meters, providing real-time analytics and cost optimization recommendations for small industrial facilities through a web-based interface with mobile companion app.')",
+  "coreFeaturesSummary": ["Specific, buildable feature 1 that directly addresses the core problem", "Feature 2 that enables key user workflow", "Feature 3 that supports monetization model", "Feature 4-6 as needed for MVP completeness"],
+  "userInterfaces": ["Interface 1 designed for primary user type", "Interface 2 for secondary stakeholders if applicable", "Interface 3 for admin/management functions"],
+  "keyIntegrations": ["Integration 1 with established service provider", "Integration 2 for core functionality", "Integration 3 for payment/monetization", "Integration 4-5 for enhanced capabilities"],
+  "pricingStrategyBuildRecommendation": "string (Technical implementation of the pricing model - how billing works, what triggers charges, subscription management, freemium gates, etc. Example: 'Implement tiered SaaS pricing with Stripe subscription management: Free tier limited to 5 sensors, Pro tier at $49/month for unlimited sensors with advanced analytics, Enterprise tier with custom pricing for API access and white-label options.')"
+}
+
+Focus on creating a blueprint that feels immediately actionable - specific enough that a CTO could start building tomorrow, but strategic enough to scale beyond the MVP.`;
+
+      const ideaContext = context.monetization ? 
+        `Business Idea: ${context.competitive?.positioning?.valueProposition || 'Not specified'}
+         Target Market: ${context.competitive?.positioning?.targetSegment || 'Not specified'}
+         Revenue Model: ${context.monetization.primaryModel}
+         Key Problems Solved: ${context.problemGaps?.problems?.join(', ') || 'Not specified'}` :
+        'Context not fully available';
+
+      const userPrompt = `Create a comprehensive technical implementation guide for this validated business opportunity:
+
+${ideaContext}
+
+Design a software-first platform that:
+1. Directly solves the identified user problems through intuitive interfaces
+2. Integrates seamlessly with existing tools in the target market
+3. Supports the planned monetization strategy through its technical architecture
+4. Can be built and launched by a focused development team within 6 months
+5. Scales efficiently as the user base grows
+
+Focus on specificity - provide exact feature descriptions, precise integration recommendations, and clear technical approaches that eliminate guesswork for the development team.`;
+
+      const { text } = await generateText({
+        model: openrouter("openai/gpt-4o-mini"),
+        prompt: userPrompt,
+        system: systemPrompt,
+        temperature: 0.1,
+        maxTokens: 1200,
+      });
+
+      const whatToBuildData = JSON.parse(text) as import("../../types/apps/idea-generation-agent").WhatToBuildData;
+      return whatToBuildData;
+    } catch (error) {
+      console.error("WhatToBuildAgent error:", error);
+
+      // Return mock data as fallback for development/testing
+      console.log("🔄 Using fallback mock WhatToBuild data for development");
+      return {
+        platformDescription: "A cloud-based SaaS automation platform with web dashboard and mobile companion app, featuring drag-and-drop workflow builder, real-time monitoring, and AI-powered optimization suggestions for small business operations.",
+        coreFeaturesSummary: [
+          "Visual workflow builder with pre-built business templates",
+          "Real-time business data integration dashboard",
+          "AI-powered automation recommendations engine",
+          "Mobile app for workflow monitoring and approvals",
+          "Team collaboration and notification system",
+          "Analytics and ROI tracking for automated processes"
+        ],
+        userInterfaces: [
+          "Business Owner Dashboard - Main workflow management interface",
+          "Team Member Mobile App - Task execution and approvals",
+          "Admin Panel - User management and billing controls"
+        ],
+        keyIntegrations: [
+          "Stripe for subscription billing and payment processing",
+          "Zapier/Make API for extended workflow capabilities",
+          "QuickBooks/Xero for financial data integration",
+          "Slack/Microsoft Teams for team notifications",
+          "Google Workspace/Office 365 for document automation"
+        ],
+        pricingStrategyBuildRecommendation: "Implement freemium SaaS model with Stripe: Free tier (3 workflows, basic templates), Starter tier $29/month (unlimited workflows, advanced templates), Pro tier $99/month (AI suggestions, team collaboration, analytics), Enterprise tier $299/month (custom integrations, white-label, priority support)"
       };
     }
   },
@@ -965,6 +1061,7 @@ Extract the competitive analysis data and strategic positioning from this resear
 			${context.previousIdeas && context.previousIdeas.length > 0 ? context.previousIdeas.map((idea) => `- Title: "${idea.title}"\n  Description: "${idea.description}"`).join("\n") : "- None to consider."}
 
 			`; // Added previous ideas to the user prompt for synthesis
+
       const { text } = await generateText({
         model: openrouter("openai/gpt-4o-mini"),
         prompt: userPrompt,
@@ -974,6 +1071,12 @@ Extract the competitive analysis data and strategic positioning from this resear
       });
 
       const synthesizedIdea = JSON.parse(text) as SynthesizedIdea;
+      
+      // Add WhatToBuild data if available in context
+      if (context.whatToBuild) {
+        synthesizedIdea.whatToBuild = context.whatToBuild;
+      }
+
       return synthesizedIdea;
     } catch (error) {
       console.error("IdeaSynthesisAgent error:", error);
@@ -1115,14 +1218,21 @@ Extract the competitive analysis data and strategic positioning from this resear
       const monetization = await this.monetizationAgent(agentContext);
       if (!monetization) throw new Error("Failed to design monetization");
 
-      // 5. Synthesize final idea
-      console.log("🧠 Synthesizing idea...");
+      // 5. Generate technical implementation guide
+      console.log("🔧 Generating technical implementation guide...");
       // Update context with monetization data
       agentContext.monetization = monetization;
+      const whatToBuild = await this.whatToBuildAgent(agentContext);
+      if (!whatToBuild) throw new Error("Failed to generate technical guide");
+
+      // 6. Synthesize final idea
+      console.log("🧠 Synthesizing idea...");
+      // Update context with whatToBuild data
+      agentContext.whatToBuild = whatToBuild;
       const idea = await this.ideaSynthesisAgent(agentContext);
       if (!idea) throw new Error("Failed to synthesize idea");
 
-      // 6. Save to database
+      // 7. Save to database
       console.log("💾 Saving to database...");
       const whyNow = await IdeaGenerationAgentService.createWhyNow(trends);
       const ideaScore = await IdeaGenerationAgentService.createIdeaScore(
@@ -1133,12 +1243,63 @@ Extract the competitive analysis data and strategic positioning from this resear
           monetization
         );
 
-      const dailyIdea = await IdeaGenerationAgentService.createDailyIdea(
-        idea,
-        whyNow.id,
-        ideaScore.id,
-        monetizationStrategy.id
-      );
+      // Handle the circular dependency between DailyIdea and WhatToBuild using transaction
+      let dailyIdea: any;
+
+      if (whatToBuild) {
+        // Use a transaction to handle the circular dependency
+        dailyIdea = await prisma.$transaction(async (tx) => {
+          // First create DailyIdea without whatToBuildId
+          const createdIdea = await tx.dailyIdea.create({
+            data: {
+              title: idea.title,
+              description: idea.description,
+              executiveSummary: idea.executiveSummary,
+              problemSolution: idea.problemSolution,
+              problemStatement: idea.problemStatement,
+              innovationLevel: idea.innovationLevel,
+              timeToMarket: idea.timeToMarket,
+              confidenceScore: idea.confidenceScore,
+              narrativeHook: idea.narrativeHook,
+              targetKeywords: idea.targetKeywords,
+              urgencyLevel: idea.urgencyLevel,
+              executionComplexity: idea.executionComplexity,
+              tags: idea.tags,
+              whyNowId: whyNow.id,
+              ideaScoreId: ideaScore.id,
+              monetizationStrategyId: monetizationStrategy.id,
+            },
+          });
+
+          // Then create WhatToBuild with the actual DailyIdea ID
+          const createdWhatToBuild = await tx.whatToBuild.create({
+            data: {
+              platformDescription: whatToBuild.platformDescription,
+              coreFeaturesSummary: whatToBuild.coreFeaturesSummary,
+              userInterfaces: whatToBuild.userInterfaces,
+              keyIntegrations: whatToBuild.keyIntegrations,
+              pricingStrategyBuildRecommendation: whatToBuild.pricingStrategyBuildRecommendation,
+              dailyIdeaId: createdIdea.id,
+            },
+          });
+
+          // Finally update DailyIdea to include the whatToBuildId
+          const updatedIdea = await tx.dailyIdea.update({
+            where: { id: createdIdea.id },
+            data: { whatToBuildId: createdWhatToBuild.id },
+          });
+
+          return updatedIdea;
+        });
+      } else {
+        // Create DailyIdea without WhatToBuild
+        dailyIdea = await IdeaGenerationAgentService.createDailyIdea(
+          idea,
+          whyNow.id,
+          ideaScore.id,
+          monetizationStrategy.id
+        );
+      }
 
       // Create related entities
       if (problemGaps.gaps.length > 0) {

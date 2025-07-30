@@ -160,6 +160,17 @@ export interface FrameworkFit {
   updatedAt: Date;
 }
 
+export interface WhatToBuild {
+  id: string;
+  platformDescription: string;
+  coreFeaturesSummary: string[];
+  userInterfaces: string[];
+  keyIntegrations: string[];
+  pricingStrategyBuildRecommendation: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 // Main component prop type
 export interface IdeaDetailsViewProps {
   idea: SynthesizedIdea & {
@@ -172,5 +183,6 @@ export interface IdeaDetailsViewProps {
     executionPlan: ExecutionPlan;
     tractionSignals: TractionSignals;
     frameworkFit: FrameworkFit;
+    whatToBuild?: WhatToBuild;
   };
 }

@@ -264,6 +264,25 @@ model FrameworkFit {
   dailyIdea DailyIdea @relation(fields: [dailyIdeaId], references: [id])
 }
 
+model WhatToBuild {
+  id                    String              @id @default(uuid())
+  // A concise description of what the platform is, like "A Marketplace for Pet Food with a dashbaoard that has both seller and buyer portal (make sure its a bit more detailed than this)"
+  platformDescription   String
+  // High-level features to build, e.g., "User dashboards with order tracking", "Product listing and search", "Secure payment gateway integration"
+  coreFeaturesSummary   String[]
+  // Recommended user interfaces/dashboards, e.g., "Admin Dashboard", "User Profile Page", "Vendor Dashboard"
+  userInterfaces        String[]
+  // Recommended key third-party integrations, e.g., "Stripe for payments", "SendGrid for emails", "AWS S3 for file storage"
+  keyIntegrations       String[]
+  // Recommended pricing strategy directly tied to the build, e.g., "SaaS monthly subscription with Basic, Pro, and Enterprise tiers"
+  pricingStrategyBuildRecommendation String
+  dailyIdea             DailyIdea?          @relation(fields: [dailyIdeaId], references: [id])
+  dailyIdeaId           String              @unique
+
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+}
+
 model DailyIdea {
   id                 String       @id @default(uuid())
   title              String
@@ -288,7 +307,8 @@ model DailyIdea {
   monetizationStrategy MonetizationStrategy? @relation(fields: [monetizationStrategyId], references: [id])
   whyNowId           String
   whyNow             WhyNow       @relation(fields: [whyNowId], references: [id])
-  
+  whatToBuildId String? @unique
+  whatToBuild WhatToBuild?
   // New relations
   marketCompetition MarketCompetition?
   marketGap MarketGap?

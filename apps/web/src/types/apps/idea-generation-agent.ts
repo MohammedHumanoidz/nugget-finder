@@ -29,6 +29,15 @@ export interface SynthesizedIdea {
   executionPlan?: string;
   tractionSignals?: string;
   frameworkFit?: string;
+  whatToBuild?: WhatToBuildData;
+}
+
+export interface WhatToBuildData {
+  platformDescription: string;
+  coreFeaturesSummary: string[];
+  userInterfaces: string[];
+  keyIntegrations: string[];
+  pricingStrategyBuildRecommendation: string;
 }
 
 export interface TrendData {

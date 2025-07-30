@@ -1,0 +1,476 @@
+
+Trigger.dev (3.3.17)
+------------------------------------------------------
+Key: Version | Task | Run
+------------------------------------------------------
+○ Building background worker…
+○ Background worker ready [node] -> 20250730.3
+○ Jul 30, 21:50:13.883 ->  20250730.3 | daily-idea-generator | run_pb8k1e9scmucwo46tca8z.1
+○ Jul 30, 21:50:14.582 run_pb8k1e9scmucwo46tca8z.1 🚀 Starting daily idea generation job { timestamp: '2025-07-30T18:50:14.579Z', targetCount: 4 }
+○ Jul 30, 21:50:14.583 run_pb8k1e9scmucwo46tca8z.1 💡 Generating idea 1/4...
+○ Jul 30, 21:50:14.584 run_pb8k1e9scmucwo46tca8z.1 🔍 Starting daily idea generation...
+○ Jul 30, 21:50:14.586 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:50:14.584] [32minfo[39m: 🔍 Starting daily idea generation...
+
+○ Jul 30, 21:50:17.016 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:50:17.011] [32minfo[39m: 📚 Retrieved previous ideas for context
+📈 Researching trends...[2025-07-30 21:50:17.014] [32minfo[39m: 📈 Starting trend research...
+[2025-07-30 21:50:17.016] [32minfo[39m: 🔍 TrendResearchAgent - Perplexity API Request
+
+○ Jul 30, 21:50:17.018 run_pb8k1e9scmucwo46tca8z.1 🔍 Perplexity API request: {
+  model: 'sonar-deep-research',
+  reasoning_effort: 'high',
+  messageCount: 2,
+  systemPromptLength: 2784,
+  userPromptLength: 693
+}
+○ Jul 30, 21:52:33.146 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:52:33.145] [32minfo[39m: 📥 TrendResearchAgent - Perplexity API Response (FULL)
+
+○ Jul 30, 21:52:33.147 run_pb8k1e9scmucwo46tca8z.1 🔍 Perplexity raw response length: 8959🔍 Response preview: <think>
+Okay, let's tackle this query. The user wants a significant global trend from the last few days that's causing a stir online, especially in places like Reddit, Twitter, or forums. It needs to ...
+○ Jul 30, 21:52:33.148 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:52:33.147] [32minfo[39m: 🔍 TrendResearchAgent - Content Analysis
+
+○ Jul 30, 21:52:33.148 run_pb8k1e9scmucwo46tca8z.1 🔍 Checking if Perplexity response is already JSON...
+○ Jul 30, 21:52:33.149 run_pb8k1e9scmucwo46tca8z.1 🔄 Content is not JSON, using LLM to structure...
+○ Jul 30, 21:52:33.150 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:52:33.149] [32minfo[39m: 🔄 TrendResearchAgent - LLM Structuring Request
+
+○ Jul 30, 21:52:37.459 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:52:37.458] [32minfo[39m: 📤 TrendResearchAgent - LLM Structuring Response (FULL)
+
+○ Jul 30, 21:52:37.461 run_pb8k1e9scmucwo46tca8z.1 🔍 LLM structured response: ```json
+{
+  "title": "Brain-Computer Interfaces Enter Mainstream Reality: Neuralink’s Breakthrough Sparks Global Conversation",
+  "description": "Neuralink's recent human trials, particularly the case of Audrey Crews, a paralyzed patient who demonstrated the ability to write her name through thought...
+○ Jul 30, 21:52:37.464 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:52:37.462] [32minfo[39m: 🔧 TrendResearchAgent - Parsing Attempt
+
+○ Jul 30, 21:52:37.466 run_pb8k1e9scmucwo46tca8z.1 ✅ Successfully structured trend data: {
+  title: 'Brain-Computer Interfaces Enter Mainstream Reality: Neuralink’s Breakthrough Sparks Global Conversation',
+  trendStrength: 9,
+  catalystType: 'TECHNOLOGY_BREAKTHROUGH'
+}
+○ Jul 30, 21:52:37.467 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:52:37.466] [32minfo[39m: ✅ TrendResearchAgent - Final Result
+
+○ Jul 30, 21:52:37.468 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:52:37.467] [32minfo[39m: ✅ Trend research completed
+🎯 Analyzing problems and gaps...
+○ Jul 30, 21:52:37.469 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:52:37.468] [32minfo[39m: 🎯 Starting problem gap analysis...
+
+○ Jul 30, 21:52:37.471 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:52:37.470] [32minfo[39m: 🔍 ProblemGapAgent - Perplexity API Request
+
+○ Jul 30, 21:52:37.472 run_pb8k1e9scmucwo46tca8z.1 🔍 Perplexity API request: {
+  model: 'sonar',
+  reasoning_effort: 'medium',
+  messageCount: 2,
+  systemPromptLength: 5144,
+  userPromptLength: 1184
+}
+○ Jul 30, 21:52:49.899 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:52:49.899] [32minfo[39m: 📥 ProblemGapAgent - Perplexity API Response (FULL)
+
+○ Jul 30, 21:52:49.900 run_pb8k1e9scmucwo46tca8z.1 🔍 ProblemGap raw response length: 4861🔍 Response preview: {
+  "problems": [
+    "Specialized neurotechnology startups and rehabilitation clinics struggle with providing personalized, real-time brain-computer interface (BCI) training and adaptation software f...[2025-07-30 21:52:49.899] [32minfo[39m: 🔍 ProblemGapAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...
+○ Jul 30, 21:52:49.900 run_pb8k1e9scmucwo46tca8z.1 ✅ Content is already valid JSON, using directly
+○ Jul 30, 21:52:49.900 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:52:49.900] [32minfo[39m: 🔧 ProblemGapAgent - Parsing Attempt
+
+○ Jul 30, 21:52:49.900 run_pb8k1e9scmucwo46tca8z.1 ✅ Successfully structured problem gap data: { problemCount: 3, gapCount: 3 }
+○ Jul 30, 21:52:49.901 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:52:49.901] [32minfo[39m: ✅ ProblemGapAgent - Final Result
+
+○ Jul 30, 21:52:49.901 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:52:49.901] [32minfo[39m: ✅ Problem gap analysis completed
+
+○ Jul 30, 21:52:49.901 run_pb8k1e9scmucwo46tca8z.1 🏆 Researching competition...
+○ Jul 30, 21:52:49.901 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:52:49.901] [32minfo[39m: 🏆 Starting competitive intelligence...
+
+○ Jul 30, 21:52:49.902 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:52:49.902] [32minfo[39m: 🔍 CompetitiveIntelligenceAgent - Perplexity API Request
+
+○ Jul 30, 21:52:49.902 run_pb8k1e9scmucwo46tca8z.1 🔍 Perplexity API request: {
+  model: 'sonar-pro',
+  reasoning_effort: 'medium',
+  messageCount: 2,
+  systemPromptLength: 3402,
+  userPromptLength: 1772
+}
+○ Jul 30, 21:53:28.073 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:53:28.072] [32minfo[39m: 📥 CompetitiveIntelligenceAgent - Perplexity API Response (FULL)
+
+○ Jul 30, 21:53:28.074 run_pb8k1e9scmucwo46tca8z.1 🔍 Competitive Intelligence raw response length: 6403
+○ Jul 30, 21:53:28.075 run_pb8k1e9scmucwo46tca8z.1 🔍 Response preview: {
+  "competition": {
+    "marketConcentrationLevel": "LOW",
+    "marketConcentrationJustification": "In this micro-niche—real-time, adaptive BCI training software for personalized rehab, plug-and-play...
+○ Jul 30, 21:53:28.075 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:53:28.074] [32minfo[39m: 🔍 CompetitiveIntelligenceAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...
+○ Jul 30, 21:53:28.075 run_pb8k1e9scmucwo46tca8z.1 ✅ Content is already valid JSON, using directly
+○ Jul 30, 21:53:28.076 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:53:28.075] [32minfo[39m: 🔧 CompetitiveIntelligenceAgent - Parsing Attempt
+
+○ Jul 30, 21:53:28.076 run_pb8k1e9scmucwo46tca8z.1 ✅ Successfully structured competitive data: {
+  marketConcentration: 'LOW',
+  directCompetitorCount: 2,
+  positioningName: 'NeuroRapid Adaptive Middleware'
+}[2025-07-30 21:53:28.076] [32minfo[39m: ✅ CompetitiveIntelligenceAgent - Final Result
+
+○ Jul 30, 21:53:28.076 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:53:28.076] [32minfo[39m: ✅ Competitive intelligence completed
+💰 Designing monetization...
+○ Jul 30, 21:53:44.314 run_pb8k1e9scmucwo46tca8z.1 🔧 Generating technical implementation guide...
+○ Jul 30, 21:53:53.783 run_pb8k1e9scmucwo46tca8z.1 🧠 Synthesizing idea...
+○ Jul 30, 21:54:17.072 run_pb8k1e9scmucwo46tca8z.1 💾 Saving to database...
+○ Jul 30, 21:54:30.318 run_pb8k1e9scmucwo46tca8z.1 ✅ Daily idea generated successfully: 74400e47-8ea6-4632-a4d6-d17fda31e388
+○ Jul 30, 21:54:30.319 run_pb8k1e9scmucwo46tca8z.1 ✅ Idea 1 generated successfully { ideaId: '74400e47-8ea6-4632-a4d6-d17fda31e388' }
+○ Jul 30, 21:54:30.321 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:54:30.320] [32minfo[39m: Daily idea generation successful
+⏳ Waiting 10 seconds before next generation...
+○ Jul 30, 21:54:40.323 run_pb8k1e9scmucwo46tca8z.1 💡 Generating idea 2/4...
+○ Jul 30, 21:54:40.323 run_pb8k1e9scmucwo46tca8z.1 🔍 Starting daily idea generation...[2025-07-30 21:54:40.323] [32minfo[39m: 🔍 Starting daily idea generation...
+
+○ Jul 30, 21:54:49.577 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:54:49.576] [32minfo[39m: 📚 Retrieved previous ideas for context
+
+○ Jul 30, 21:54:49.578 run_pb8k1e9scmucwo46tca8z.1 📈 Researching trends...[2025-07-30 21:54:49.578] [32minfo[39m: 📈 Starting trend research...
+
+○ Jul 30, 21:54:49.579 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:54:49.578] [32minfo[39m: 🔍 TrendResearchAgent - Perplexity API Request
+
+○ Jul 30, 21:54:49.580 run_pb8k1e9scmucwo46tca8z.1 🔍 Perplexity API request: {
+  model: 'sonar-deep-research',
+  reasoning_effort: 'high',
+  messageCount: 2,
+  systemPromptLength: 2784,
+  userPromptLength: 1548
+}
+○ Jul 30, 21:58:39.684 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:58:39.681] [32minfo[39m: 📥 TrendResearchAgent - Perplexity API Response (FULL)
+
+○ Jul 30, 21:58:39.685 run_pb8k1e9scmucwo46tca8z.1 🔍 Perplexity raw response length: 29675🔍 Response preview: <think>
+The user is asking me to identify one powerful, globally impactful emerging trend that is generating high engagement in online communities. They want me to focus on something that has broad im...
+○ Jul 30, 21:58:39.686 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:58:39.684] [32minfo[39m: 🔍 TrendResearchAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...🔄 Content is not JSON, using LLM to structure...
+○ Jul 30, 21:58:39.687 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:58:39.686] [32minfo[39m: 🔄 TrendResearchAgent - LLM Structuring Request
+
+○ Jul 30, 21:58:57.583 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:58:57.582] [32minfo[39m: 📤 TrendResearchAgent - LLM Structuring Response (FULL)
+
+○ Jul 30, 21:58:57.584 run_pb8k1e9scmucwo46tca8z.1 🔍 LLM structured response: ```json
+{
+  "title": "People Are Building Their Own Internet: The Mesh Networking Revolution Goes Mainstream",
+  "description": "A grassroots movement is quietly exploding across communities worldwide as people build decentralized mesh networks using affordable LoRa radio technology, primarily throu...
+○ Jul 30, 21:58:57.585 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:58:57.584] [32minfo[39m: 🔧 TrendResearchAgent - Parsing Attempt
+
+○ Jul 30, 21:58:57.585 run_pb8k1e9scmucwo46tca8z.1 ✅ Successfully structured trend data: {
+  title: 'People Are Building Their Own Internet: The Mesh Networking Revolution Goes Mainstream',
+  trendStrength: 8,
+  catalystType: 'TECHNOLOGY_BREAKTHROUGH'
+}[2025-07-30 21:58:57.585] [32minfo[39m: ✅ TrendResearchAgent - Final Result
+
+○ Jul 30, 21:58:57.586 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:58:57.585] [32minfo[39m: ✅ Trend research completed
+🎯 Analyzing problems and gaps...[2025-07-30 21:58:57.585] [32minfo[39m: 🎯 Starting problem gap analysis...
+
+○ Jul 30, 21:58:57.586 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:58:57.586] [32minfo[39m: 🔍 ProblemGapAgent - Perplexity API Request
+
+○ Jul 30, 21:58:57.586 run_pb8k1e9scmucwo46tca8z.1 🔍 Perplexity API request: {
+  model: 'sonar',
+  reasoning_effort: 'medium',
+  messageCount: 2,
+  systemPromptLength: 5144,
+  userPromptLength: 2674
+}
+○ Jul 30, 21:59:15.981 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:59:15.980] [32minfo[39m: 📥 ProblemGapAgent - Perplexity API Response (FULL)
+
+○ Jul 30, 21:59:15.982 run_pb8k1e9scmucwo46tca8z.1 🔍 ProblemGap raw response length: 4570🔍 Response preview: {
+  "problems": [
+    "Hobbyist and community leaders organizing decentralized LoRa mesh networks for emergency communication struggle to effectively monitor network health and node connectivity in re...[2025-07-30 21:59:15.981] [32minfo[39m: 🔍 ProblemGapAgent - Content Analysis
+
+○ Jul 30, 21:59:15.982 run_pb8k1e9scmucwo46tca8z.1 🔍 Checking if Perplexity response is already JSON...✅ Content is already valid JSON, using directly
+○ Jul 30, 21:59:15.983 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:59:15.982] [32minfo[39m: 🔧 ProblemGapAgent - Parsing Attempt
+✅ Successfully structured problem gap data: { problemCount: 3, gapCount: 3 }
+○ Jul 30, 21:59:15.984 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:59:15.983] [32minfo[39m: ✅ ProblemGapAgent - Final Result
+[2025-07-30 21:59:15.983] [32minfo[39m: ✅ Problem gap analysis completed
+🏆 Researching competition...
+○ Jul 30, 21:59:15.985 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:59:15.984] [32minfo[39m: 🏆 Starting competitive intelligence...
+
+○ Jul 30, 21:59:15.985 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:59:15.984] [32minfo[39m: 🔍 CompetitiveIntelligenceAgent - Perplexity API Request
+🔍 Perplexity API request: {
+  model: 'sonar-pro',
+  reasoning_effort: 'medium',
+  messageCount: 2,
+  systemPromptLength: 3402,
+  userPromptLength: 1482
+}
+○ Jul 30, 21:59:45.501 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:59:45.500] [32minfo[39m: 📥 CompetitiveIntelligenceAgent - Perplexity API Response (FULL)
+
+○ Jul 30, 21:59:45.502 run_pb8k1e9scmucwo46tca8z.1 🔍 Competitive Intelligence raw response length: 7305🔍 Response preview: {
+  "competition": {
+    "marketConcentrationLevel": "LOW",
+    "marketConcentrationJustification": "Within the tightly defined niche—grassroots hobby groups, local community leaders, and adventure op...
+○ Jul 30, 21:59:45.504 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:59:45.502] [32minfo[39m: 🔍 CompetitiveIntelligenceAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...✅ Content is already valid JSON, using directly
+○ Jul 30, 21:59:45.505 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:59:45.503] [32minfo[39m: 🔧 CompetitiveIntelligenceAgent - Parsing Attempt
+✅ Successfully structured competitive data: {
+  marketConcentration: 'LOW',
+  directCompetitorCount: 3,
+  positioningName: 'MeshPulse Network Guardian'
+}
+○ Jul 30, 21:59:45.506 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 21:59:45.505] [32minfo[39m: ✅ CompetitiveIntelligenceAgent - Final Result
+[2025-07-30 21:59:45.506] [32minfo[39m: ✅ Competitive intelligence completed
+💰 Designing monetization...
+○ Jul 30, 22:00:04.985 run_pb8k1e9scmucwo46tca8z.1 🔧 Generating technical implementation guide...
+○ Jul 30, 22:00:16.697 run_pb8k1e9scmucwo46tca8z.1 🧠 Synthesizing idea...
+○ Jul 30, 22:00:40.568 run_pb8k1e9scmucwo46tca8z.1 💾 Saving to database...
+○ Jul 30, 22:00:57.402 run_pb8k1e9scmucwo46tca8z.1 ✅ Daily idea generated successfully: 482041d3-918d-41d1-9bf3-235cd1154dda
+○ Jul 30, 22:00:57.404 run_pb8k1e9scmucwo46tca8z.1 ✅ Idea 2 generated successfully { ideaId: '482041d3-918d-41d1-9bf3-235cd1154dda' }
+○ Jul 30, 22:00:57.404 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:00:57.403] [32minfo[39m: Daily idea generation successful
+⏳ Waiting 10 seconds before next generation...
+○ Jul 30, 22:01:07.405 run_pb8k1e9scmucwo46tca8z.1 💡 Generating idea 3/4...
+○ Jul 30, 22:01:07.406 run_pb8k1e9scmucwo46tca8z.1 🔍 Starting daily idea generation...[2025-07-30 22:01:07.406] [32minfo[39m: 🔍 Starting daily idea generation...
+
+○ Jul 30, 22:01:21.872 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:01:21.869] [32minfo[39m: 📚 Retrieved previous ideas for context
+
+○ Jul 30, 22:01:21.873 run_pb8k1e9scmucwo46tca8z.1 📈 Researching trends...[2025-07-30 22:01:21.872] [32minfo[39m: 📈 Starting trend research...
+[2025-07-30 22:01:21.872] [32minfo[39m: 🔍 TrendResearchAgent - Perplexity API Request
+🔍 Perplexity API request: {
+  model: 'sonar-deep-research',
+  reasoning_effort: 'high',
+  messageCount: 2,
+  systemPromptLength: 2784,
+  userPromptLength: 2467
+}
+○ Jul 30, 22:01:22.981 run_pb8k1e9scmucwo46tca8z.1 TypeError: fetch failed
+    at node:internal/deps/undici/undici:13510:13
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at perplexity (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/utils/configs/ai.config.ts:43:20)
+    at Object.trendResearchAgent (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:62:24)
+    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:1164:22)
+    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
+    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
+    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
+    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16) {
+  [cause]: AggregateError: 
+      at internalConnectMultiple (node:net:1139:18)
+      at internalConnectMultiple (node:net:1215:5)
+      at Timeout.internalConnectMultipleTimeout (node:net:1741:5)
+      at listOnTimeout (node:internal/timers:590:11)
+      at processTimers (node:internal/timers:523:7) {
+    code: 'ETIMEDOUT',
+    [errors]: [ [Error], [Error], [Error], [Error] ]
+  }
+}
+○ Jul 30, 22:01:22.981 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:01:22.980] [32minfo[39m: 📥 TrendResearchAgent - Perplexity API Response (FULL)
+
+○ Jul 30, 22:01:22.997 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:01:22.996] [31merror[39m: ❌ TrendResearchAgent - Error
+
+○ Jul 30, 22:01:22.997 run_pb8k1e9scmucwo46tca8z.1 TrendResearchAgent error: Error: No response from Perplexity
+    at Object.trendResearchAgent (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:78:15)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:1164:22)
+    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
+    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
+    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
+    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
+    at TaskExecutor.execute (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:87:20)
+○ Jul 30, 22:01:22.998 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:01:22.997] [31merror[39m: ❌ TrendResearchAgent - Error
+🔄 Using fallback mock trend data for development
+○ Jul 30, 22:01:22.998 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:01:22.998] [32minfo[39m: ✅ Trend research completed
+🎯 Analyzing problems and gaps...
+○ Jul 30, 22:01:22.999 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:01:22.998] [32minfo[39m: 🎯 Starting problem gap analysis...
+
+○ Jul 30, 22:01:22.999 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:01:22.999] [32minfo[39m: 🔍 ProblemGapAgent - Perplexity API Request
+🔍 Perplexity API request: {
+  model: 'sonar',
+  reasoning_effort: 'medium',
+  messageCount: 2,
+  systemPromptLength: 5144,
+  userPromptLength: 2919
+}
+○ Jul 30, 22:01:23.515 run_pb8k1e9scmucwo46tca8z.1 TypeError: fetch failed
+    at node:internal/deps/undici/undici:13510:13
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at perplexity (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/utils/configs/ai.config.ts:43:20)
+    at Object.problemGapAgent (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:269:24)
+    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:1182:27)
+    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
+    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
+    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
+    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16) {
+  [cause]: AggregateError: 
+      at internalConnectMultiple (node:net:1139:18)
+      at internalConnectMultiple (node:net:1215:5)
+      at Timeout.internalConnectMultipleTimeout (node:net:1741:5)
+      at listOnTimeout (node:internal/timers:590:11)
+      at processTimers (node:internal/timers:523:7) {
+    code: 'ETIMEDOUT',
+    [errors]: [ [Error], [Error], [Error], [Error] ]
+  }
+}
+○ Jul 30, 22:01:23.515 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:01:23.515] [32minfo[39m: 📥 ProblemGapAgent - Perplexity API Response (FULL)
+
+○ Jul 30, 22:01:23.516 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:01:23.516] [31merror[39m: ❌ ProblemGapAgent - Error
+
+○ Jul 30, 22:01:23.517 run_pb8k1e9scmucwo46tca8z.1 ProblemGapAgent error: Error: No response from Perplexity
+    at Object.problemGapAgent (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:285:15)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:1182:27)
+    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
+    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
+    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
+    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
+    at TaskExecutor.execute (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:87:20)
+○ Jul 30, 22:01:23.518 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:01:23.517] [31merror[39m: ❌ ProblemGapAgent - Error
+🔄 Using fallback mock problem gap data for development[2025-07-30 22:01:23.517] [32minfo[39m: ✅ Problem gap analysis completed
+🏆 Researching competition...
+○ Jul 30, 22:01:23.518 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:01:23.518] [32minfo[39m: 🏆 Starting competitive intelligence...
+
+○ Jul 30, 22:01:23.519 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:01:23.518] [32minfo[39m: 🔍 CompetitiveIntelligenceAgent - Perplexity API Request
+🔍 Perplexity API request: {
+  model: 'sonar-pro',
+  reasoning_effort: 'medium',
+  messageCount: 2,
+  systemPromptLength: 3402,
+  userPromptLength: 771
+}
+○ Jul 30, 22:01:55.559 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:01:55.557] [32minfo[39m: 📥 CompetitiveIntelligenceAgent - Perplexity API Response (FULL)
+
+○ Jul 30, 22:01:55.560 run_pb8k1e9scmucwo46tca8z.1 🔍 Competitive Intelligence raw response length: 6947🔍 Response preview: {
+  "competition": {
+    "marketConcentrationLevel": "MEDIUM",
+    "marketConcentrationJustification": "The SMB business automation niche is crowded with both broad-suite tools (like NetSuite, Salesfo...
+○ Jul 30, 22:01:55.560 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:01:55.560] [32minfo[39m: 🔍 CompetitiveIntelligenceAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...
+○ Jul 30, 22:01:55.561 run_pb8k1e9scmucwo46tca8z.1 ✅ Content is already valid JSON, using directly
+○ Jul 30, 22:01:55.562 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:01:55.561] [32minfo[39m: 🔧 CompetitiveIntelligenceAgent - Parsing Attempt
+
+○ Jul 30, 22:01:55.562 run_pb8k1e9scmucwo46tca8z.1 ✅ Successfully structured competitive data: {
+  marketConcentration: 'MEDIUM',
+  directCompetitorCount: 3,
+  positioningName: 'Workflow Autopilot for Growing SMBs'
+}[2025-07-30 22:01:55.562] [32minfo[39m: ✅ CompetitiveIntelligenceAgent - Final Result
+
+○ Jul 30, 22:01:55.563 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:01:55.562] [32minfo[39m: ✅ Competitive intelligence completed
+💰 Designing monetization...
+○ Jul 30, 22:02:15.108 run_pb8k1e9scmucwo46tca8z.1 🔧 Generating technical implementation guide...
+○ Jul 30, 22:02:29.794 run_pb8k1e9scmucwo46tca8z.1 🧠 Synthesizing idea...
+○ Jul 30, 22:02:47.181 run_pb8k1e9scmucwo46tca8z.1 💾 Saving to database...
+○ Jul 30, 22:02:56.062 run_pb8k1e9scmucwo46tca8z.1 ✅ Daily idea generated successfully: 455ac643-6b70-4674-9a74-da29be452d6f
+○ Jul 30, 22:02:56.063 run_pb8k1e9scmucwo46tca8z.1 ✅ Idea 3 generated successfully { ideaId: '455ac643-6b70-4674-9a74-da29be452d6f' }[2025-07-30 22:02:56.063] [32minfo[39m: Daily idea generation successful
+⏳ Waiting 10 seconds before next generation...
+○ Jul 30, 22:03:06.065 run_pb8k1e9scmucwo46tca8z.1 💡 Generating idea 4/4...
+○ Jul 30, 22:03:06.066 run_pb8k1e9scmucwo46tca8z.1 🔍 Starting daily idea generation...[2025-07-30 22:03:06.065] [32minfo[39m: 🔍 Starting daily idea generation...
+
+○ Jul 30, 22:03:18.390 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:03:18.387] [32minfo[39m: 📚 Retrieved previous ideas for context
+
+○ Jul 30, 22:03:18.392 run_pb8k1e9scmucwo46tca8z.1 📈 Researching trends...[2025-07-30 22:03:18.391] [32minfo[39m: 📈 Starting trend research...
+
+○ Jul 30, 22:03:18.393 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:03:18.391] [32minfo[39m: 🔍 TrendResearchAgent - Perplexity API Request
+🔍 Perplexity API request: {
+  model: 'sonar-deep-research',
+  reasoning_effort: 'high',
+  messageCount: 2,
+  systemPromptLength: 2784,
+  userPromptLength: 3332
+}
+○ Jul 30, 22:06:38.118 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:06:38.118] [32minfo[39m: 📥 TrendResearchAgent - Perplexity API Response (FULL)
+
+○ Jul 30, 22:06:38.119 run_pb8k1e9scmucwo46tca8z.1 🔍 Perplexity raw response length: 10841🔍 Response preview: <think>
+Okay, so I need to find a genuinely new and impactful trend that's unrelated to the previous ideas mentioned. The user wants something with broad implications across technology, society, econo...[2025-07-30 22:06:38.119] [32minfo[39m: 🔍 TrendResearchAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...
+○ Jul 30, 22:06:38.119 run_pb8k1e9scmucwo46tca8z.1 🔄 Content is not JSON, using LLM to structure...[2025-07-30 22:06:38.119] [32minfo[39m: 🔄 TrendResearchAgent - LLM Structuring Request
+
+○ Jul 30, 22:06:43.577 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:06:43.576] [32minfo[39m: 📤 TrendResearchAgent - LLM Structuring Response (FULL)
+
+○ Jul 30, 22:06:43.578 run_pb8k1e9scmucwo46tca8z.1 🔍 LLM structured response: ```json
+{
+  "title": "Solar Geoengineering as a Climate Solution",
+  "description": "Solar geoengineering (solar radiation management) involves the deliberate large-scale manipulation of Earth’s climate by reflecting sunlight to reduce global temperatures. This trend has sparked fierce debates acros...
+○ Jul 30, 22:06:43.578 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:06:43.578] [32minfo[39m: 🔧 TrendResearchAgent - Parsing Attempt
+
+○ Jul 30, 22:06:43.579 run_pb8k1e9scmucwo46tca8z.1 ✅ Successfully structured trend data: {
+  title: 'Solar Geoengineering as a Climate Solution',
+  trendStrength: 9,
+  catalystType: 'REGULATORY_CHANGE'
+}
+○ Jul 30, 22:06:43.579 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:06:43.579] [32minfo[39m: ✅ TrendResearchAgent - Final Result
+
+○ Jul 30, 22:06:43.579 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:06:43.579] [32minfo[39m: ✅ Trend research completed
+
+○ Jul 30, 22:06:43.580 run_pb8k1e9scmucwo46tca8z.1 🎯 Analyzing problems and gaps...[2025-07-30 22:06:43.579] [32minfo[39m: 🎯 Starting problem gap analysis...
+
+○ Jul 30, 22:06:43.580 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:06:43.580] [32minfo[39m: 🔍 ProblemGapAgent - Perplexity API Request
+
+○ Jul 30, 22:06:43.580 run_pb8k1e9scmucwo46tca8z.1 🔍 Perplexity API request: {
+  model: 'sonar',
+  reasoning_effort: 'medium',
+  messageCount: 2,
+  systemPromptLength: 5144,
+  userPromptLength: 3840
+}
+○ Jul 30, 22:07:20.228 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:07:20.227] [32minfo[39m: 📥 ProblemGapAgent - Perplexity API Response (FULL)
+
+○ Jul 30, 22:07:20.229 run_pb8k1e9scmucwo46tca8z.1 🔍 ProblemGap raw response length: 4715🔍 Response preview: {
+  "problems": [
+    "Large aerospace and environmental monitoring firms involved in solar geoengineering deployment are struggling to coordinate real-time, hyper-local atmospheric data across hetero...[2025-07-30 22:07:20.228] [32minfo[39m: 🔍 ProblemGapAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...✅ Content is already valid JSON, using directly
+○ Jul 30, 22:07:20.229 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:07:20.229] [32minfo[39m: 🔧 ProblemGapAgent - Parsing Attempt
+✅ Successfully structured problem gap data: { problemCount: 3, gapCount: 3 }
+○ Jul 30, 22:07:20.230 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:07:20.229] [32minfo[39m: ✅ ProblemGapAgent - Final Result
+
+○ Jul 30, 22:07:20.230 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:07:20.230] [32minfo[39m: ✅ Problem gap analysis completed
+🏆 Researching competition...
+○ Jul 30, 22:07:20.231 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:07:20.230] [32minfo[39m: 🏆 Starting competitive intelligence...
+
+○ Jul 30, 22:07:20.231 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:07:20.230] [32minfo[39m: 🔍 CompetitiveIntelligenceAgent - Perplexity API Request
+🔍 Perplexity API request: {
+  model: 'sonar-pro',
+  reasoning_effort: 'medium',
+  messageCount: 2,
+  systemPromptLength: 3402,
+  userPromptLength: 1847
+}
+○ Jul 30, 22:07:37.789 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:07:37.788] [32minfo[39m: 📥 CompetitiveIntelligenceAgent - Perplexity API Response (FULL)
+
+○ Jul 30, 22:07:37.789 run_pb8k1e9scmucwo46tca8z.1 🔍 Competitive Intelligence raw response length: 7166🔍 Response preview: {
+  "competition": {
+    "marketConcentrationLevel": "LOW",
+    "marketConcentrationJustification": "Within the extremely narrow vertical of *real-time, hyper-local SRM (solar radiation management) de...
+○ Jul 30, 22:07:37.789 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:07:37.789] [32minfo[39m: 🔍 CompetitiveIntelligenceAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...
+○ Jul 30, 22:07:37.790 run_pb8k1e9scmucwo46tca8z.1 ✅ Content is already valid JSON, using directly
+○ Jul 30, 22:07:37.790 run_pb8k1e9scmucwo46tca8z.1 [2025-07-30 22:07:37.790] [32minfo[39m: 🔧 CompetitiveIntelligenceAgent - Parsing Attempt
+
+○ Jul 30, 22:07:37.791 run_pb8k1e9scmucwo46tca8z.1 ✅ Successfully structured competitive data: {
+  marketConcentration: 'LOW',
+  directCompetitorCount: 2,
+  positioningName: 'GeoSync Impact Dashboard'
+}[2025-07-30 22:07:37.790] [32minfo[39m: ✅ CompetitiveIntelligenceAgent - Final Result
+[2025-07-30 22:07:37.791] [32minfo[39m: ✅ Competitive intelligence completed
+
+○ Jul 30, 22:07:37.791 run_pb8k1e9scmucwo46tca8z.1 💰 Designing monetization...
+○ Jul 30, 22:07:53.325 run_pb8k1e9scmucwo46tca8z.1 🔧 Generating technical implementation guide...
+○ Jul 30, 22:08:04.806 run_pb8k1e9scmucwo46tca8z.1 🧠 Synthesizing idea...
+○ Jul 30, 22:08:24.319 run_pb8k1e9scmucwo46tca8z.1 💾 Saving to database...
+○ Jul 30, 22:08:39.268 run_pb8k1e9scmucwo46tca8z.1 ✅ Daily idea generated successfully: 1e48a46f-88aa-453f-bc76-dd12e4948355
+○ Jul 30, 22:08:39.269 run_pb8k1e9scmucwo46tca8z.1 ✅ Idea 4 generated successfully { ideaId: '1e48a46f-88aa-453f-bc76-dd12e4948355' }[2025-07-30 22:08:39.268] [32minfo[39m: Daily idea generation successful
+
+○ Jul 30, 22:08:39.270 run_pb8k1e9scmucwo46tca8z.1 🎉 Daily idea generation completed {
+  totalRequested: 4,
+  successCount: 4,
+  errorCount: 0,
+  duration: '1104690ms',
+  results: [
+    {
+      attempt: 1,
+      success: true,
+      ideaId: '74400e47-8ea6-4632-a4d6-d17fda31e388'
+    },
+    {
+      attempt: 2,
+      success: true,
+      ideaId: '482041d3-918d-41d1-9bf3-235cd1154dda'
+    },
+    {
+      attempt: 3,
+      success: true,
+      ideaId: '455ac643-6b70-4674-9a74-da29be452d6f'
+    },
+    {
+      attempt: 4,
+      success: true,
+      ideaId: '1e48a46f-88aa-453f-bc76-dd12e4948355'
+    }
+  ]
+}[2025-07-30 22:08:39.269] [32minfo[39m: Daily idea generation job completed
+
+○ Jul 30, 22:08:40.592 ->  20250730.3 | daily-idea-generator | run_pb8k1e9scmucwo46tca8z.1 | Success (18m, 26.5s)

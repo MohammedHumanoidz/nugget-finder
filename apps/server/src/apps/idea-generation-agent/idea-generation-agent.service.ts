@@ -4,6 +4,7 @@ import type {
 	ProblemGapData,
 	SynthesizedIdea,
 	TrendData,
+	WhatToBuildData,
 } from "../../types/apps/idea-generation-agent";
 import { prisma } from "../../utils/configs/db.config";
 
@@ -26,6 +27,14 @@ export const IdeaGenerationAgentService = {
 						financialProjections: true,
 					},
 				},
+				whatToBuild: true,
+				marketCompetition: true,
+				marketGap: true,
+				competitiveAdvantage: true,
+				strategicPositioning: true,
+				executionPlan: true,
+				tractionSignals: true,
+				frameworkFit: true,
 			},
 		});
 
@@ -190,31 +199,52 @@ export const IdeaGenerationAgentService = {
 		});
 	},
 
+	async createWhatToBuild(whatToBuildData: WhatToBuildData, dailyIdeaId: string) {
+		return await prisma.whatToBuild.create({
+			data: {
+				platformDescription: whatToBuildData.platformDescription,
+				coreFeaturesSummary: whatToBuildData.coreFeaturesSummary,
+				userInterfaces: whatToBuildData.userInterfaces,
+				keyIntegrations: whatToBuildData.keyIntegrations,
+				pricingStrategyBuildRecommendation: whatToBuildData.pricingStrategyBuildRecommendation,
+				dailyIdeaId,
+			},
+		});
+	},
+
 	async createDailyIdea(
 		ideaData: SynthesizedIdea,
 		whyNowId: string,
 		ideaScoreId: string,
 		monetizationStrategyId: string,
+		whatToBuildId?: string,
 	) {
+		const createData: any = {
+			title: ideaData.title,
+			description: ideaData.description,
+			executiveSummary: ideaData.executiveSummary,
+			problemSolution: ideaData.problemSolution,
+			problemStatement: ideaData.problemStatement,
+			innovationLevel: ideaData.innovationLevel,
+			timeToMarket: ideaData.timeToMarket,
+			confidenceScore: ideaData.confidenceScore,
+			narrativeHook: ideaData.narrativeHook,
+			targetKeywords: ideaData.targetKeywords,
+			urgencyLevel: ideaData.urgencyLevel,
+			executionComplexity: ideaData.executionComplexity,
+			tags: ideaData.tags,
+			whyNowId,
+			ideaScoreId,
+			monetizationStrategyId,
+		};
+
+		// Only add whatToBuildId if provided
+		if (whatToBuildId) {
+			createData.whatToBuildId = whatToBuildId;
+		}
+
 		return await prisma.dailyIdea.create({
-			data: {
-				title: ideaData.title,
-				description: ideaData.description,
-				executiveSummary: ideaData.executiveSummary,
-				problemSolution: ideaData.problemSolution,
-				problemStatement: ideaData.problemStatement,
-				innovationLevel: ideaData.innovationLevel,
-				timeToMarket: ideaData.timeToMarket,
-				confidenceScore: ideaData.confidenceScore,
-				narrativeHook: ideaData.narrativeHook,
-				targetKeywords: ideaData.targetKeywords,
-				urgencyLevel: ideaData.urgencyLevel,
-				executionComplexity: ideaData.executionComplexity,
-				tags: ideaData.tags,
-				whyNowId,
-				ideaScoreId,
-				monetizationStrategyId,
-			},
+			data: createData,
 		});
 	},
 };
