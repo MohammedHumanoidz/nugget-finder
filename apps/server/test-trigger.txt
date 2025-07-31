@@ -5,171 +5,462 @@ Key: Version | Task | Run
 ------------------------------------------------------
 ○ Building background worker…
 ○ Background worker ready [node] -> 20250730.9
-○ Jul 30, 23:18:11.269 ->  20250730.9 | daily-idea-generator | run_fkb4bupr457dp44841qof.1
-○ Jul 30, 23:18:11.737 run_fkb4bupr457dp44841qof.1 🚀 Starting daily idea generation job { timestamp: '2025-07-30T20:18:11.736Z', targetCount: 4 }
-○ Jul 30, 23:18:11.738 run_fkb4bupr457dp44841qof.1 💡 Generating idea 1/4...
-○ Jul 30, 23:18:11.738 run_fkb4bupr457dp44841qof.1 🔍 Starting daily idea generation...
-○ Jul 30, 23:18:11.740 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:18:11.739] [32minfo[39m: 🔍 Starting daily idea generation...
+○ Jul 31, 20:29:07.593 ->  20250730.9 | daily-idea-generator | run_kfnfxqtwodfz6xf8uxh52.1
+○ Jul 31, 20:29:08.549 run_kfnfxqtwodfz6xf8uxh52.1 🚀 Starting daily idea generation job { timestamp: '2025-07-31T17:29:08.544Z', targetCount: 4 }
+○ Jul 31, 20:29:08.552 run_kfnfxqtwodfz6xf8uxh52.1 💡 Generating idea 1/4...
+○ Jul 31, 20:29:08.554 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Starting daily idea generation...
+○ Jul 31, 20:29:08.560 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:29:08.555] [32minfo[39m: 🔍 Starting daily idea generation...
 
-○ Jul 30, 23:18:22.507 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:18:22.505] [32minfo[39m: 📚 Retrieved previous ideas for context
+○ Jul 31, 20:29:15.778 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:29:15.773] [32minfo[39m: 📚 Retrieved previous ideas for context
 
-○ Jul 30, 23:18:22.508 run_fkb4bupr457dp44841qof.1 📈 Researching trends...
-○ Jul 30, 23:18:22.509 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:18:22.508] [32minfo[39m: 📈 Starting trend research...
+○ Jul 31, 20:29:15.779 run_kfnfxqtwodfz6xf8uxh52.1 📈 Researching trends...
+○ Jul 31, 20:29:15.780 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:29:15.779] [32minfo[39m: 📈 Starting trend research...
 
-○ Jul 30, 23:18:22.510 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:18:22.509] [32minfo[39m: 🔍 TrendResearchAgent - Perplexity API Request
+○ Jul 31, 20:29:15.781 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:29:15.780] [32minfo[39m: 🔍 TrendResearchAgent - Perplexity API Request
 
-○ Jul 30, 23:18:22.511 run_fkb4bupr457dp44841qof.1 🔍 Perplexity API request: {
+○ Jul 31, 20:29:15.783 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Perplexity API request: {
   model: 'sonar-deep-research',
   reasoning_effort: 'high',
   messageCount: 2,
   systemPromptLength: 2769,
-  userPromptLength: 4452
+  userPromptLength: 5420
 }
-○ Jul 30, 23:18:24.154 run_fkb4bupr457dp44841qof.1 Perplexity API error response: <html>
-<head><title>401 Authorization Required</title></head>
-<body>
-<center><h1>401 Authorization Required</h1></center>
-<hr><center>openresty/1.27.4</center>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96778b837b66f011',t:'MTc1MzkwNjcwNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-</html>
+○ Jul 31, 20:32:40.992 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:32:40.991] [32minfo[39m: 📥 TrendResearchAgent - Perplexity API Response (FULL)
 
-○ Jul 30, 23:18:24.566 run_fkb4bupr457dp44841qof.1 Error: Perplexity API error: 401 Unauthorized
-    at perplexity (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/utils/configs/ai.config.ts:51:10)
-    at processTicksAndRejections (node:internal/process/task_queues:105:5)
-    at Object.trendResearchAgent (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:62:24)
-    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:1165:22)
-    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
-    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
-    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
-    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
-    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
-    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
-○ Jul 30, 23:18:24.567 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:18:24.566] [32minfo[39m: 📥 TrendResearchAgent - Perplexity API Response (FULL)
+○ Jul 31, 20:32:40.993 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Perplexity raw response length: 17932🔍 Response preview: <think>
 
-○ Jul 30, 23:18:24.568 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:18:24.567] [31merror[39m: ❌ TrendResearchAgent - Error
+Okay, let me start by understanding the user's query properly. They want a powerful, emerging trend that's generating a lot of buzz in online communities and has broad implications. The key h...
+○ Jul 31, 20:32:40.995 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:32:40.993] [32minfo[39m: 🔍 TrendResearchAgent - Content Analysis
 
-○ Jul 30, 23:18:24.569 run_fkb4bupr457dp44841qof.1 TrendResearchAgent error: Error: No response from Perplexity
-    at Object.trendResearchAgent (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:78:15)
-    at processTicksAndRejections (node:internal/process/task_queues:105:5)
-    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:1165:22)
-    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
-    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
-    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
-    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
-    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
-    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
-    at TaskExecutor.execute (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:87:20)
-○ Jul 30, 23:18:24.569 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:18:24.569] [31merror[39m: ❌ TrendResearchAgent - Error
-🔄 Using fallback mock trend data for development
-○ Jul 30, 23:18:24.570 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:18:24.569] [32minfo[39m: ✅ Trend research completed
+○ Jul 31, 20:32:40.996 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Checking if Perplexity response is already JSON...
+○ Jul 31, 20:32:40.996 run_kfnfxqtwodfz6xf8uxh52.1 🔄 Content is not JSON, using LLM to structure...
+○ Jul 31, 20:32:40.998 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:32:40.997] [32minfo[39m: 🔄 TrendResearchAgent - LLM Structuring Request
 
-○ Jul 30, 23:18:24.571 run_fkb4bupr457dp44841qof.1 🎯 Analyzing problems and gaps...
-○ Jul 30, 23:18:24.571 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:18:24.570] [32minfo[39m: 🎯 Starting problem gap analysis...
+○ Jul 31, 20:32:46.931 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:32:46.929] [32minfo[39m: 📤 TrendResearchAgent - LLM Structuring Response (FULL)
 
-○ Jul 30, 23:18:24.572 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:18:24.572] [32minfo[39m: 🔍 ProblemGapAgent - Perplexity API Request
+○ Jul 31, 20:32:46.933 run_kfnfxqtwodfz6xf8uxh52.1 🔍 LLM structured response: ```json
+{
+  "title": "The Deepfake Epidemic: From Hyperreal Voice Scams to Ethical AI Innovation",
+  "description": "In 2025, deepfake technology has evolved into a pervasive threat, delivering hyperreal voice clones, multimodal fraud schemes, and nation-state infiltration tactics. This trend is sha...
+○ Jul 31, 20:32:46.941 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:32:46.936] [32minfo[39m: 🔧 TrendResearchAgent - Parsing Attempt
 
-○ Jul 30, 23:18:24.572 run_fkb4bupr457dp44841qof.1 🔍 Perplexity API request: {
+○ Jul 31, 20:32:46.943 run_kfnfxqtwodfz6xf8uxh52.1 ✅ Successfully structured trend data: {
+  title: 'The Deepfake Epidemic: From Hyperreal Voice Scams to Ethical AI Innovation',
+  trendStrength: 9,
+  catalystType: 'TECHNOLOGY_BREAKTHROUGH'
+}
+○ Jul 31, 20:32:46.945 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:32:46.944] [32minfo[39m: ✅ TrendResearchAgent - Final Result
+
+○ Jul 31, 20:32:46.947 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:32:46.945] [32minfo[39m: ✅ Trend research completed
+🎯 Analyzing problems and gaps...
+○ Jul 31, 20:32:46.949 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:32:46.947] [32minfo[39m: 🎯 Starting problem gap analysis...
+
+○ Jul 31, 20:32:46.951 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:32:46.950] [32minfo[39m: 🔍 ProblemGapAgent - Perplexity API Request
+
+○ Jul 31, 20:32:46.953 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Perplexity API request: {
   model: 'sonar',
   reasoning_effort: 'medium',
   messageCount: 2,
   systemPromptLength: 5500,
-  userPromptLength: 4840
+  userPromptLength: 6100
 }
-○ Jul 30, 23:18:25.384 run_fkb4bupr457dp44841qof.1 Perplexity API error response: <html>
-<head><title>401 Authorization Required</title></head>
-<body>
-<center><h1>401 Authorization Required</h1></center>
-<hr><center>openresty/1.27.4</center>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96778b8b2ab234f8',t:'MTc1MzkwNjcwNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-</html>
+○ Jul 31, 20:32:55.737 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:32:55.736] [32minfo[39m: 📥 ProblemGapAgent - Perplexity API Response (FULL)
 
-○ Jul 30, 23:18:25.385 run_fkb4bupr457dp44841qof.1 Error: Perplexity API error: 401 Unauthorized
-    at perplexity (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/utils/configs/ai.config.ts:51:10)
-    at processTicksAndRejections (node:internal/process/task_queues:105:5)
-    at Object.problemGapAgent (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:268:24)
-    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:1183:27)
-    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
-    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
-    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
-    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
-    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
-    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
-○ Jul 30, 23:18:25.386 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:18:25.385] [32minfo[39m: 📥 ProblemGapAgent - Perplexity API Response (FULL)
+○ Jul 31, 20:32:55.738 run_kfnfxqtwodfz6xf8uxh52.1 🔍 ProblemGap raw response length: 3823🔍 Response preview: {
+  "problems": [
+    "A mid-sized corporate HR manager is overwhelmed by the surge of deepfake-based job application videos and audio interviews, which current screening tools fail to reliably detect...
+○ Jul 31, 20:32:55.739 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:32:55.738] [32minfo[39m: 🔍 ProblemGapAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...✅ Content is already valid JSON, using directly
+○ Jul 31, 20:32:55.740 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:32:55.739] [32minfo[39m: 🔧 ProblemGapAgent - Parsing Attempt
+✅ Successfully structured problem gap data: { problemCount: 3, gapCount: 3 }
+○ Jul 31, 20:32:55.741 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:32:55.740] [32minfo[39m: ✅ ProblemGapAgent - Final Result
+[2025-07-31 20:32:55.740] [32minfo[39m: ✅ Problem gap analysis completed
+🏆 Researching competition...
+○ Jul 31, 20:32:55.742 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:32:55.741] [32minfo[39m: 🏆 Starting competitive intelligence...
 
-○ Jul 30, 23:18:25.386 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:18:25.386] [31merror[39m: ❌ ProblemGapAgent - Error
+○ Jul 31, 20:32:55.744 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:32:55.743] [32minfo[39m: 🔍 CompetitiveIntelligenceAgent - Perplexity API Request
 
-○ Jul 30, 23:18:25.387 run_fkb4bupr457dp44841qof.1 ProblemGapAgent error: Error: No response from Perplexity
-    at Object.problemGapAgent (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:284:15)
-    at processTicksAndRejections (node:internal/process/task_queues:105:5)
-    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:1183:27)
-    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
-    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
-    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
-    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
-    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
-    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
-    at TaskExecutor.execute (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:87:20)
-○ Jul 30, 23:18:25.387 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:18:25.387] [31merror[39m: ❌ ProblemGapAgent - Error
-🔄 Using fallback mock problem gap data for development
-○ Jul 30, 23:18:25.387 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:18:25.387] [32minfo[39m: ✅ Problem gap analysis completed
-
-○ Jul 30, 23:18:25.388 run_fkb4bupr457dp44841qof.1 🏆 Researching competition...[2025-07-30 23:18:25.388] [32minfo[39m: 🏆 Starting competitive intelligence...
-
-○ Jul 30, 23:18:25.389 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:18:25.388] [32minfo[39m: 🔍 CompetitiveIntelligenceAgent - Perplexity API Request
-
-○ Jul 30, 23:18:25.389 run_fkb4bupr457dp44841qof.1 🔍 Perplexity API request: {
+○ Jul 31, 20:32:55.746 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Perplexity API request: {
   model: 'sonar-pro',
   reasoning_effort: 'medium',
   messageCount: 2,
   systemPromptLength: 3958,
-  userPromptLength: 771
+  userPromptLength: 1333
 }
-○ Jul 30, 23:18:25.733 run_fkb4bupr457dp44841qof.1 Perplexity API error response: <html>
-<head><title>401 Authorization Required</title></head>
-<body>
-<center><h1>401 Authorization Required</h1></center>
-<hr><center>openresty/1.27.4</center>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96778b8d9e34f011',t:'MTc1MzkwNjcwNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-</html>
+○ Jul 31, 20:33:21.772 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:33:21.771] [32minfo[39m: 📥 CompetitiveIntelligenceAgent - Perplexity API Response (FULL)
 
-○ Jul 30, 23:18:25.734 run_fkb4bupr457dp44841qof.1 Error: Perplexity API error: 401 Unauthorized
-    at perplexity (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/utils/configs/ai.config.ts:51:10)
-    at processTicksAndRejections (node:internal/process/task_queues:105:5)
-    at Object.competitiveIntelligenceAgent (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:492:24)
-    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:1202:27)
-    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
-    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
-    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
-    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
-    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
-    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
-○ Jul 30, 23:18:25.734 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:18:25.733] [32minfo[39m: 📥 CompetitiveIntelligenceAgent - Perplexity API Response (FULL)
+○ Jul 31, 20:33:21.773 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Competitive Intelligence raw response length: 8343🔍 Response preview: {
+  "competition": {
+    "marketConcentrationLevel": "MEDIUM",
+    "marketConcentrationJustification": "The deepfake detection niche for high-stakes HR screening, enterprise contact center anti-fraud,...
+○ Jul 31, 20:33:21.774 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:33:21.773] [32minfo[39m: 🔍 CompetitiveIntelligenceAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...
+○ Jul 31, 20:33:21.775 run_kfnfxqtwodfz6xf8uxh52.1 ✅ Content is already valid JSON, using directly
+○ Jul 31, 20:33:21.778 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:33:21.775] [32minfo[39m: 🔧 CompetitiveIntelligenceAgent - Parsing Attempt
 
-○ Jul 30, 23:18:25.735 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:18:25.735] [31merror[39m: ❌ CompetitiveIntelligenceAgent - Error
+○ Jul 31, 20:33:21.779 run_kfnfxqtwodfz6xf8uxh52.1 ✅ Successfully structured competitive data: {
+  marketConcentration: 'MEDIUM',
+  directCompetitorCount: 3,
+  positioningName: 'ProofScreen: Instant Deepfake Detection for Real Workflows'
+}[2025-07-31 20:33:21.778] [32minfo[39m: ✅ CompetitiveIntelligenceAgent - Final Result
 
-○ Jul 30, 23:18:25.736 run_fkb4bupr457dp44841qof.1 CompetitiveIntelligenceAgent error: Error: No response from Perplexity
-    at Object.competitiveIntelligenceAgent (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:511:15)
-    at processTicksAndRejections (node:internal/process/task_queues:105:5)
-    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:1202:27)
-    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
-    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
-    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
-    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
-    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
-    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
-    at TaskExecutor.execute (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:87:20)
-○ Jul 30, 23:18:25.737 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:18:25.736] [31merror[39m: ❌ CompetitiveIntelligenceAgent - Error
-🔄 Using fallback mock competitive intelligence data for development
-○ Jul 30, 23:18:25.737 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:18:25.736] [32minfo[39m: ✅ Competitive intelligence completed
+○ Jul 31, 20:33:21.780 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:33:21.779] [32minfo[39m: ✅ Competitive intelligence completed
 💰 Designing monetization...
-○ Jul 30, 23:18:44.160 run_fkb4bupr457dp44841qof.1 🔧 Generating technical implementation guide...
-○ Jul 30, 23:18:50.570 run_fkb4bupr457dp44841qof.1 🧠 Synthesizing idea...
-○ Jul 30, 23:19:06.227 run_fkb4bupr457dp44841qof.1 💾 Saving to database...
-○ Jul 30, 23:19:19.824 run_fkb4bupr457dp44841qof.1 ✅ Daily idea generated successfully: bbadb862-0675-4925-9606-d90a4365427d
-○ Jul 30, 23:19:19.826 run_fkb4bupr457dp44841qof.1 ✅ Idea 1 generated successfully { ideaId: 'bbadb862-0675-4925-9606-d90a4365427d' }
-○ Jul 30, 23:19:19.827 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:19:19.826] [32minfo[39m: Daily idea generation successful
+○ Jul 31, 20:33:37.530 run_kfnfxqtwodfz6xf8uxh52.1 🔧 Generating technical implementation guide...
+○ Jul 31, 20:33:45.170 run_kfnfxqtwodfz6xf8uxh52.1 🧠 Synthesizing idea...
+○ Jul 31, 20:34:03.693 run_kfnfxqtwodfz6xf8uxh52.1 IdeaSynthesisAgent error: SyntaxError: Unexpected token '`', "```json
+{
+"... is not valid JSON
+    at JSON.parse (<anonymous>)
+    at Object.ideaSynthesisAgent (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:1074:36)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:1233:20)
+    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
+    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
+    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
+    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
+○ Jul 31, 20:34:03.694 run_kfnfxqtwodfz6xf8uxh52.1 🔄 Using fallback mock synthesis data for development💾 Saving to database...
+○ Jul 31, 20:34:12.671 run_kfnfxqtwodfz6xf8uxh52.1 ✅ Daily idea generated successfully: 81d243b0-704c-409b-82d2-9f724897d08c
+○ Jul 31, 20:34:12.672 run_kfnfxqtwodfz6xf8uxh52.1 ✅ Idea 1 generated successfully { ideaId: '81d243b0-704c-409b-82d2-9f724897d08c' }
+○ Jul 31, 20:34:12.674 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:34:12.672] [32minfo[39m: Daily idea generation successful
 ⏳ Waiting 10 seconds before next generation...
-○ Jul 30, 23:19:29.828 run_fkb4bupr457dp44841qof.1 💡 Generating idea 2/4...
-○ Jul 30, 23:19:29.830 run_fkb4bupr457dp44841qof.1 🔍 Starting daily idea generation...
-○ Jul 30, 23:19:29.831 run_fkb4bupr457dp44841qof.1 [2025-07-30 23:19:29.829] [32minfo[39m: 🔍 Starting daily idea generation...
+○ Jul 31, 20:34:22.676 run_kfnfxqtwodfz6xf8uxh52.1 💡 Generating idea 2/4...
+○ Jul 31, 20:34:22.678 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Starting daily idea generation...
+○ Jul 31, 20:34:22.680 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:34:22.677] [32minfo[39m: 🔍 Starting daily idea generation...
 
+○ Jul 31, 20:34:28.937 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:34:28.934] [32minfo[39m: 📚 Retrieved previous ideas for context
+
+○ Jul 31, 20:34:28.938 run_kfnfxqtwodfz6xf8uxh52.1 📈 Researching trends...[2025-07-31 20:34:28.938] [32minfo[39m: 📈 Starting trend research...
+
+○ Jul 31, 20:34:28.939 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:34:28.938] [32minfo[39m: 🔍 TrendResearchAgent - Perplexity API Request
+🔍 Perplexity API request: {
+  model: 'sonar-deep-research',
+  reasoning_effort: 'high',
+  messageCount: 2,
+  systemPromptLength: 2769,
+  userPromptLength: 5691
+}
+○ Jul 31, 20:38:47.749 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:38:47.744] [32minfo[39m: 📥 TrendResearchAgent - Perplexity API Response (FULL)
+🔍 Perplexity raw response length: 23196
+○ Jul 31, 20:38:47.751 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Response preview: <think>
+Let me analyze the provided search results and user instructions carefully. 
+
+The user is asking for a powerful, globally impactful emerging trend that:
+1. Is generating high engagement in onl...
+○ Jul 31, 20:38:47.753 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:38:47.750] [32minfo[39m: 🔍 TrendResearchAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...🔄 Content is not JSON, using LLM to structure...
+○ Jul 31, 20:38:47.757 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:38:47.753] [32minfo[39m: 🔄 TrendResearchAgent - LLM Structuring Request
+
+○ Jul 31, 20:38:56.540 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:38:56.540] [32minfo[39m: 📤 TrendResearchAgent - LLM Structuring Response (FULL)
+🔍 LLM structured response: ```json
+{
+  "title": "The AI Security Arms Race: Prompt Injection Attacks Go Mainstream",
+  "description": "A shadowy battle is brewing in online communities as AI systems flood into business operations. From Reddit threads dissecting 'DAN' exploits that bypass ChatGPT's safety rules to Twitter user...
+○ Jul 31, 20:38:56.543 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:38:56.542] [32minfo[39m: 🔧 TrendResearchAgent - Parsing Attempt
+
+○ Jul 31, 20:38:56.544 run_kfnfxqtwodfz6xf8uxh52.1 ✅ Successfully structured trend data: {
+  title: 'The AI Security Arms Race: Prompt Injection Attacks Go Mainstream',
+  trendStrength: 8,
+  catalystType: 'TECHNOLOGY_BREAKTHROUGH'
+}[2025-07-31 20:38:56.543] [32minfo[39m: ✅ TrendResearchAgent - Final Result
+
+○ Jul 31, 20:38:56.545 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:38:56.544] [32minfo[39m: ✅ Trend research completed
+🎯 Analyzing problems and gaps...
+○ Jul 31, 20:38:56.546 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:38:56.545] [32minfo[39m: 🎯 Starting problem gap analysis...
+
+○ Jul 31, 20:38:56.547 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:38:56.545] [32minfo[39m: 🔍 ProblemGapAgent - Perplexity API Request
+🔍 Perplexity API request: {
+  model: 'sonar',
+  reasoning_effort: 'medium',
+  messageCount: 2,
+  systemPromptLength: 5500,
+  userPromptLength: 6840
+}
+○ Jul 31, 20:39:08.567 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:39:08.565] [32minfo[39m: 📥 ProblemGapAgent - Perplexity API Response (FULL)
+
+○ Jul 31, 20:39:08.569 run_kfnfxqtwodfz6xf8uxh52.1 🔍 ProblemGap raw response length: 4492🔍 Response preview: {
+  "problems": [
+    "Mid-sized SaaS companies integrating AI assistants into customer support workflows struggle with detecting and blocking sophisticated prompt injection attacks slipping through c...
+○ Jul 31, 20:39:08.571 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:39:08.569] [32minfo[39m: 🔍 ProblemGapAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...
+○ Jul 31, 20:39:08.574 run_kfnfxqtwodfz6xf8uxh52.1 ✅ Content is already valid JSON, using directly
+○ Jul 31, 20:39:08.577 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:39:08.573] [32minfo[39m: 🔧 ProblemGapAgent - Parsing Attempt
+✅ Successfully structured problem gap data: { problemCount: 3, gapCount: 3 }
+○ Jul 31, 20:39:08.580 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:39:08.576] [32minfo[39m: ✅ ProblemGapAgent - Final Result
+[2025-07-31 20:39:08.578] [32minfo[39m: ✅ Problem gap analysis completed
+🏆 Researching competition...
+○ Jul 31, 20:39:08.583 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:39:08.580] [32minfo[39m: 🏆 Starting competitive intelligence...
+
+○ Jul 31, 20:39:08.587 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:39:08.581] [32minfo[39m: 🔍 CompetitiveIntelligenceAgent - Perplexity API Request
+
+○ Jul 31, 20:39:08.589 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Perplexity API request: {
+  model: 'sonar-pro',
+  reasoning_effort: 'medium',
+  messageCount: 2,
+  systemPromptLength: 3958,
+  userPromptLength: 1775
+}
+○ Jul 31, 20:39:29.721 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:39:29.719] [32minfo[39m: 📥 CompetitiveIntelligenceAgent - Perplexity API Response (FULL)
+
+○ Jul 31, 20:39:29.723 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Competitive Intelligence raw response length: 7460🔍 Response preview: {
+  "competition": {
+    "marketConcentrationLevel": "LOW",
+    "marketConcentrationJustification": "The niche—real-time, nuanced prompt injection detection tailored for SaaS AI support tools, high-vo...
+○ Jul 31, 20:39:29.725 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:39:29.722] [32minfo[39m: 🔍 CompetitiveIntelligenceAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...
+○ Jul 31, 20:39:29.726 run_kfnfxqtwodfz6xf8uxh52.1 ✅ Content is already valid JSON, using directly
+○ Jul 31, 20:39:29.727 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:39:29.725] [32minfo[39m: 🔧 CompetitiveIntelligenceAgent - Parsing Attempt
+✅ Successfully structured competitive data: {
+  marketConcentration: 'LOW',
+  directCompetitorCount: 3,
+  positioningName: 'PromptGuard: Real-Time SaaS AI Injection Firewall'
+}
+○ Jul 31, 20:39:29.728 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:39:29.727] [32minfo[39m: ✅ CompetitiveIntelligenceAgent - Final Result
+[2025-07-31 20:39:29.727] [32minfo[39m: ✅ Competitive intelligence completed
+
+○ Jul 31, 20:39:29.728 run_kfnfxqtwodfz6xf8uxh52.1 💰 Designing monetization...
+○ Jul 31, 20:39:46.447 run_kfnfxqtwodfz6xf8uxh52.1 🔧 Generating technical implementation guide...
+○ Jul 31, 20:39:53.210 run_kfnfxqtwodfz6xf8uxh52.1 🧠 Synthesizing idea...
+○ Jul 31, 20:40:11.381 run_kfnfxqtwodfz6xf8uxh52.1 💾 Saving to database...
+○ Jul 31, 20:40:21.366 run_kfnfxqtwodfz6xf8uxh52.1 ✅ Daily idea generated successfully: fe53f3d6-d5cf-4e79-be1b-22de5e466612
+○ Jul 31, 20:40:21.368 run_kfnfxqtwodfz6xf8uxh52.1 ✅ Idea 2 generated successfully { ideaId: 'fe53f3d6-d5cf-4e79-be1b-22de5e466612' }
+○ Jul 31, 20:40:21.369 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:40:21.367] [32minfo[39m: Daily idea generation successful
+⏳ Waiting 10 seconds before next generation...
+○ Jul 31, 20:40:31.369 run_kfnfxqtwodfz6xf8uxh52.1 💡 Generating idea 3/4...
+○ Jul 31, 20:40:31.371 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Starting daily idea generation...
+○ Jul 31, 20:40:31.372 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:40:31.370] [32minfo[39m: 🔍 Starting daily idea generation...
+
+○ Jul 31, 20:40:37.457 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:40:37.452] [32minfo[39m: 📚 Retrieved previous ideas for context
+
+○ Jul 31, 20:40:37.458 run_kfnfxqtwodfz6xf8uxh52.1 📈 Researching trends...[2025-07-31 20:40:37.457] [32minfo[39m: 📈 Starting trend research...
+
+○ Jul 31, 20:40:37.458 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:40:37.458] [32minfo[39m: 🔍 TrendResearchAgent - Perplexity API Request
+🔍 Perplexity API request: {
+  model: 'sonar-deep-research',
+  reasoning_effort: 'high',
+  messageCount: 2,
+  systemPromptLength: 2769,
+  userPromptLength: 6712
+}
+○ Jul 31, 20:44:08.912 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:44:08.911] [32minfo[39m: 📥 TrendResearchAgent - Perplexity API Response (FULL)
+
+○ Jul 31, 20:44:08.913 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Perplexity raw response length: 12474🔍 Response preview: <think>
+Okay, so I need to find a new trend that's different from the ones already generated. Let's see, the previous ideas were about BCI middleware, mesh networks, workflow automation, climate dashb...
+○ Jul 31, 20:44:08.913 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:44:08.912] [32minfo[39m: 🔍 TrendResearchAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...🔄 Content is not JSON, using LLM to structure...
+○ Jul 31, 20:44:08.913 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:44:08.913] [32minfo[39m: 🔄 TrendResearchAgent - LLM Structuring Request
+
+○ Jul 31, 20:44:16.889 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:44:16.889] [32minfo[39m: 📤 TrendResearchAgent - LLM Structuring Response (FULL)
+
+○ Jul 31, 20:44:16.890 run_kfnfxqtwodfz6xf8uxh52.1 🔍 LLM structured response: ```json
+{
+  "title": "The Fediverse Goes Mainstream: Meta Threads Sparks Decentralized Social Hype",
+  "description": "Imagine a world where your social media follows travel seamlessly across platforms. This isn’t a utopian tech bro’s dream—it’s the reality unfolding with Meta’s Threads embracing th...[2025-07-31 20:44:16.890] [32minfo[39m: 🔧 TrendResearchAgent - Parsing Attempt
+
+○ Jul 31, 20:44:16.891 run_kfnfxqtwodfz6xf8uxh52.1 ✅ Successfully structured trend data: {
+  title: 'The Fediverse Goes Mainstream: Meta Threads Sparks Decentralized Social Hype',
+  trendStrength: 9,
+  catalystType: 'MARKET_SHIFT'
+}
+○ Jul 31, 20:44:16.891 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:44:16.890] [32minfo[39m: ✅ TrendResearchAgent - Final Result
+[2025-07-31 20:44:16.891] [32minfo[39m: ✅ Trend research completed
+🎯 Analyzing problems and gaps...
+○ Jul 31, 20:44:16.891 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:44:16.891] [32minfo[39m: 🎯 Starting problem gap analysis...
+
+○ Jul 31, 20:44:16.892 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:44:16.891] [32minfo[39m: 🔍 ProblemGapAgent - Perplexity API Request
+🔍 Perplexity API request: {
+  model: 'sonar',
+  reasoning_effort: 'medium',
+  messageCount: 2,
+  systemPromptLength: 5500,
+  userPromptLength: 7741
+}
+○ Jul 31, 20:44:29.570 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:44:29.570] [32minfo[39m: 📥 ProblemGapAgent - Perplexity API Response (FULL)
+
+○ Jul 31, 20:44:29.571 run_kfnfxqtwodfz6xf8uxh52.1 🔍 ProblemGap raw response length: 4144🔍 Response preview: {
+  "problems": [
+    "Independent content creators and niche publishers federating across Threads and Mastodon struggle with fragmented audience engagement because interactions on federated posts app...[2025-07-31 20:44:29.571] [32minfo[39m: 🔍 ProblemGapAgent - Content Analysis
+
+○ Jul 31, 20:44:29.571 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Checking if Perplexity response is already JSON...✅ Content is already valid JSON, using directly
+○ Jul 31, 20:44:29.572 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:44:29.571] [32minfo[39m: 🔧 ProblemGapAgent - Parsing Attempt
+✅ Successfully structured problem gap data: { problemCount: 3, gapCount: 3 }
+○ Jul 31, 20:44:29.572 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:44:29.572] [32minfo[39m: ✅ ProblemGapAgent - Final Result
+[2025-07-31 20:44:29.572] [32minfo[39m: ✅ Problem gap analysis completed
+
+○ Jul 31, 20:44:29.572 run_kfnfxqtwodfz6xf8uxh52.1 🏆 Researching competition...[2025-07-31 20:44:29.572] [32minfo[39m: 🏆 Starting competitive intelligence...
+
+○ Jul 31, 20:44:29.572 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:44:29.572] [32minfo[39m: 🔍 CompetitiveIntelligenceAgent - Perplexity API Request
+🔍 Perplexity API request: {
+  model: 'sonar-pro',
+  reasoning_effort: 'medium',
+  messageCount: 2,
+  systemPromptLength: 3958,
+  userPromptLength: 1420
+}
+○ Jul 31, 20:44:53.449 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:44:53.448] [32minfo[39m: 📥 CompetitiveIntelligenceAgent - Perplexity API Response (FULL)
+
+○ Jul 31, 20:44:53.450 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Competitive Intelligence raw response length: 8028🔍 Response preview: {
+  "competition": {
+    "marketConcentrationLevel": "LOW",
+    "marketConcentrationJustification": "While several platforms and toolkits claim to support cross-posting and analytics across various so...[2025-07-31 20:44:53.449] [32minfo[39m: 🔍 CompetitiveIntelligenceAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...✅ Content is already valid JSON, using directly
+○ Jul 31, 20:44:53.450 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:44:53.450] [32minfo[39m: 🔧 CompetitiveIntelligenceAgent - Parsing Attempt
+✅ Successfully structured competitive data: {
+  marketConcentration: 'LOW',
+  directCompetitorCount: 3,
+  positioningName: 'Fediverse Unify: Engagement + Moderation in One View'
+}
+○ Jul 31, 20:44:53.451 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:44:53.450] [32minfo[39m: ✅ CompetitiveIntelligenceAgent - Final Result
+[2025-07-31 20:44:53.451] [32minfo[39m: ✅ Competitive intelligence completed
+💰 Designing monetization...
+○ Jul 31, 20:45:13.487 run_kfnfxqtwodfz6xf8uxh52.1 🔧 Generating technical implementation guide...
+○ Jul 31, 20:45:18.392 run_kfnfxqtwodfz6xf8uxh52.1 🧠 Synthesizing idea...
+○ Jul 31, 20:45:40.882 run_kfnfxqtwodfz6xf8uxh52.1 💾 Saving to database...
+○ Jul 31, 20:45:51.247 run_kfnfxqtwodfz6xf8uxh52.1 ✅ Daily idea generated successfully: 4255c6af-3601-4535-974e-06a2f901aa17
+○ Jul 31, 20:45:51.248 run_kfnfxqtwodfz6xf8uxh52.1 ✅ Idea 3 generated successfully { ideaId: '4255c6af-3601-4535-974e-06a2f901aa17' }
+○ Jul 31, 20:45:51.248 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:45:51.247] [32minfo[39m: Daily idea generation successful
+⏳ Waiting 10 seconds before next generation...
+○ Jul 31, 20:46:01.249 run_kfnfxqtwodfz6xf8uxh52.1 💡 Generating idea 4/4...
+○ Jul 31, 20:46:01.250 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Starting daily idea generation...
+○ Jul 31, 20:46:01.252 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:46:01.250] [32minfo[39m: 🔍 Starting daily idea generation...
+
+○ Jul 31, 20:46:07.886 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:46:07.881] [32minfo[39m: 📚 Retrieved previous ideas for context
+
+○ Jul 31, 20:46:07.888 run_kfnfxqtwodfz6xf8uxh52.1 📈 Researching trends...[2025-07-31 20:46:07.887] [32minfo[39m: 📈 Starting trend research...
+
+○ Jul 31, 20:46:07.889 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:46:07.887] [32minfo[39m: 🔍 TrendResearchAgent - Perplexity API Request
+🔍 Perplexity API request: {
+  model: 'sonar-deep-research',
+  reasoning_effort: 'high',
+  messageCount: 2,
+  systemPromptLength: 2769,
+  userPromptLength: 7643
+}
+○ Jul 31, 20:48:44.334 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:48:44.332] [32minfo[39m: 📥 TrendResearchAgent - Perplexity API Response (FULL)
+
+○ Jul 31, 20:48:44.334 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Perplexity raw response length: 11235🔍 Response preview: <think>
+Let me analyze the search results to identify emerging trends that are generating significant online community discussion and have immediate, software-solvable opportunities.
+
+Looking at the s...[2025-07-31 20:48:44.334] [32minfo[39m: 🔍 TrendResearchAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...
+○ Jul 31, 20:48:44.335 run_kfnfxqtwodfz6xf8uxh52.1 🔄 Content is not JSON, using LLM to structure...
+○ Jul 31, 20:48:44.336 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:48:44.335] [32minfo[39m: 🔄 TrendResearchAgent - LLM Structuring Request
+
+○ Jul 31, 20:48:52.888 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:48:52.888] [32minfo[39m: 📤 TrendResearchAgent - LLM Structuring Response (FULL)
+
+○ Jul 31, 20:48:52.889 run_kfnfxqtwodfz6xf8uxh52.1 🔍 LLM structured response: ```json
+{
+  "title": "The AI Voice Fraud Epidemic: Digital Identity Under Siege",
+  "description": "A massive surge in AI-generated voice deepfakes is fundamentally disrupting how we verify identity and trust in digital communications. With 37% of business fraud now involving voice clones and incide...
+○ Jul 31, 20:48:52.890 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:48:52.889] [32minfo[39m: 🔧 TrendResearchAgent - Parsing Attempt
+✅ Successfully structured trend data: {
+  title: 'The AI Voice Fraud Epidemic: Digital Identity Under Siege',
+  trendStrength: 9,
+  catalystType: 'TECHNOLOGY_BREAKTHROUGH'
+}
+○ Jul 31, 20:48:52.890 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:48:52.889] [32minfo[39m: ✅ TrendResearchAgent - Final Result
+[2025-07-31 20:48:52.890] [32minfo[39m: ✅ Trend research completed
+🎯 Analyzing problems and gaps...
+○ Jul 31, 20:48:52.890 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:48:52.890] [32minfo[39m: 🎯 Starting problem gap analysis...
+
+○ Jul 31, 20:48:52.891 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:48:52.890] [32minfo[39m: 🔍 ProblemGapAgent - Perplexity API Request
+🔍 Perplexity API request: {
+  model: 'sonar',
+  reasoning_effort: 'medium',
+  messageCount: 2,
+  systemPromptLength: 5500,
+  userPromptLength: 8848
+}
+○ Jul 31, 20:49:02.906 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:49:02.905] [32minfo[39m: 📥 ProblemGapAgent - Perplexity API Response (FULL)
+🔍 ProblemGap raw response length: 4547
+○ Jul 31, 20:49:02.906 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Response preview: {
+  "problems": [
+    "A mid-sized financial services contact center struggles daily with fraud attempts leveraging AI-generated deepfake voices impersonating executives or trusted clients, causing sk...[2025-07-31 20:49:02.906] [32minfo[39m: 🔍 ProblemGapAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...✅ Content is already valid JSON, using directly[2025-07-31 20:49:02.906] [32minfo[39m: 🔧 ProblemGapAgent - Parsing Attempt
+✅ Successfully structured problem gap data: { problemCount: 3, gapCount: 3 }[2025-07-31 20:49:02.906] [32minfo[39m: ✅ ProblemGapAgent - Final Result
+
+○ Jul 31, 20:49:02.906 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:49:02.906] [32minfo[39m: ✅ Problem gap analysis completed
+🏆 Researching competition...
+○ Jul 31, 20:49:02.907 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:49:02.906] [32minfo[39m: 🏆 Starting competitive intelligence...
+
+○ Jul 31, 20:49:02.907 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:49:02.907] [32minfo[39m: 🔍 CompetitiveIntelligenceAgent - Perplexity API Request
+
+○ Jul 31, 20:49:02.907 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Perplexity API request: {
+  model: 'sonar-pro',
+  reasoning_effort: 'medium',
+  messageCount: 2,
+  systemPromptLength: 3958,
+  userPromptLength: 1831
+}
+○ Jul 31, 20:49:23.607 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:49:23.606] [32minfo[39m: 📥 CompetitiveIntelligenceAgent - Perplexity API Response (FULL)
+🔍 Competitive Intelligence raw response length: 6341
+○ Jul 31, 20:49:23.608 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Response preview: {
+  "competition": {
+    "marketConcentrationLevel": "MEDIUM",
+    "marketConcentrationJustification": "The niche of real-time, software-first detection of AI-generated deepfake voices for high-stakes...[2025-07-31 20:49:23.607] [32minfo[39m: 🔍 CompetitiveIntelligenceAgent - Content Analysis
+
+○ Jul 31, 20:49:23.610 run_kfnfxqtwodfz6xf8uxh52.1 🔍 Checking if Perplexity response is already JSON...✅ Content is already valid JSON, using directly[2025-07-31 20:49:23.609] [32minfo[39m: 🔧 CompetitiveIntelligenceAgent - Parsing Attempt
+
+○ Jul 31, 20:49:23.611 run_kfnfxqtwodfz6xf8uxh52.1 ✅ Successfully structured competitive data: {
+  marketConcentration: 'MEDIUM',
+  directCompetitorCount: 2,
+  positioningName: 'TrustCall: Real-Time Deepfake Voice Shield'
+}[2025-07-31 20:49:23.610] [32minfo[39m: ✅ CompetitiveIntelligenceAgent - Final Result
+
+○ Jul 31, 20:49:23.613 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:49:23.611] [32minfo[39m: ✅ Competitive intelligence completed
+💰 Designing monetization...
+○ Jul 31, 20:49:37.871 run_kfnfxqtwodfz6xf8uxh52.1 🔧 Generating technical implementation guide...
+○ Jul 31, 20:49:43.228 run_kfnfxqtwodfz6xf8uxh52.1 🧠 Synthesizing idea...
+○ Jul 31, 20:50:09.051 run_kfnfxqtwodfz6xf8uxh52.1 💾 Saving to database...
+○ Jul 31, 20:50:15.336 run_kfnfxqtwodfz6xf8uxh52.1 ✅ Daily idea generated successfully: 8e743ff1-81aa-4572-9fde-273d196022ba
+○ Jul 31, 20:50:15.337 run_kfnfxqtwodfz6xf8uxh52.1 ✅ Idea 4 generated successfully { ideaId: '8e743ff1-81aa-4572-9fde-273d196022ba' }[2025-07-31 20:50:15.337] [32minfo[39m: Daily idea generation successful
+
+○ Jul 31, 20:50:15.338 run_kfnfxqtwodfz6xf8uxh52.1 🎉 Daily idea generation completed {
+  totalRequested: 4,
+  successCount: 4,
+  errorCount: 0,
+  duration: '1266793ms',
+  results: [
+    {
+      attempt: 1,
+      success: true,
+      ideaId: '81d243b0-704c-409b-82d2-9f724897d08c'
+    },
+    {
+      attempt: 2,
+      success: true,
+      ideaId: 'fe53f3d6-d5cf-4e79-be1b-22de5e466612'
+    },
+    {
+      attempt: 3,
+      success: true,
+      ideaId: '4255c6af-3601-4535-974e-06a2f901aa17'
+    },
+    {
+      attempt: 4,
+      success: true,
+      ideaId: '8e743ff1-81aa-4572-9fde-273d196022ba'
+    }
+  ]
+}
+○ Jul 31, 20:50:15.338 run_kfnfxqtwodfz6xf8uxh52.1 [2025-07-31 20:50:15.338] [32minfo[39m: Daily idea generation job completed
+
+○ Jul 31, 20:50:16.499 ->  20250730.9 | daily-idea-generator | run_kfnfxqtwodfz6xf8uxh52.1 | Success (21m, 8.6s)
+○ Rebuilding background worker…
+○ No changes detected, skipping build…
+○ Rebuilding background worker…
+○ No changes detected, skipping build…
+○ Rebuilding background worker…
+○ No changes detected, skipping build…
+○ Rebuilding background worker…
+○ No changes detected, skipping build…
+○ Rebuilding background worker…
+○ No changes detected, skipping build…
+○ Rebuilding background worker…
+○ No changes detected, skipping build…
+○ Rebuilding background worker…
+○ No changes detected, skipping build…
+○ Rebuilding background worker…
+○ No changes detected, skipping build…

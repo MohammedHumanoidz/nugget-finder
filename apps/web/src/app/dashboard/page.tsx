@@ -1,5 +1,4 @@
 import Dashboard from "@/components/Dashboard";
-import Navbar from "@/components/Navbar";
 import { RedirectToSignIn } from "@daveyplate/better-auth-ui";
 
 export const metadata = {
@@ -11,7 +10,6 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-screen bg-background">
       <RedirectToSignIn />
-      <Navbar />
       <Dashboard />
     </div>
   );

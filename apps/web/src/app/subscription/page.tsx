@@ -18,8 +18,7 @@ export default function SubscriptionPage() {
 
   if (isPending) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
+      <div className="min-h-screen bg-background">        
         <div className="flex justify-center items-center min-h-96">
           <div>Loading...</div>
         </div>
@@ -33,7 +32,6 @@ export default function SubscriptionPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <SubscriptionManager 
         allowPlanChanges={true}
       />

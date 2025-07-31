@@ -1,4 +1,3 @@
-import Navbar from "@/components/Navbar";
 import SavedIdeas from "@/components/SavedIdeas";
 import { RedirectToSignIn } from "@daveyplate/better-auth-ui";
 
@@ -11,8 +10,7 @@ export default async function SavedIdeasPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <RedirectToSignIn/>
-      <Navbar />
+      <RedirectToSignIn/>      
       <SavedIdeas />
     </div>
   );

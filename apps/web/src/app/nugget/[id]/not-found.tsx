@@ -1,10 +1,8 @@
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+    <div className="min-h-screen bg-background">  
       <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 80px)' }}>
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4">Nugget Not Found</h1>

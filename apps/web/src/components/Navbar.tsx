@@ -4,12 +4,40 @@ import { SignedIn, SignedOut, UserButton } from "@daveyplate/better-auth-ui";
 import { CreditCard, Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "./ui/button";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Determine if navbar should be visible
+      if (currentScrollY < lastScrollY || currentScrollY < 100) {
+        // Scrolling up or near top
+        setIsVisible(true);
+      } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down and past threshold
+        setIsVisible(false);
+        setIsMobileMenuOpen(false); // Close mobile menu when hiding
+      }
+
+      // Determine if navbar should have background/shadow
+      setIsScrolled(currentScrollY > 50);
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -29,48 +57,113 @@ export default function Navbar() {
   return (
     <motion.nav
       initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className="border-b border-border px-4 py-3 sticky top-0 bg-background/80 backdrop-blur-md z-50"
+      animate={{
+        y: isVisible ? 0 : -100,
+        opacity: isVisible ? 1 : 0,
+        scale: isScrolled ? 0.95 : 1,
+      }}
+      transition={{
+        duration: 0.3,
+        ease: "easeInOut",
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+      }}
+      className={`px-4 py-3 sticky top-0 z-50 transition-all duration-300 ${
+        isScrolled
+          ? "bg-background/80 backdrop-blur-md border-b border-border/50 shadow-lg"
+          : "bg-transparent"
+      }`}
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <motion.div
+        className="max-w-7xl mx-auto flex items-center justify-between"
+        animate={{
+          paddingTop: isScrolled ? "0.5rem" : "0.75rem",
+          paddingBottom: isScrolled ? "0.5rem" : "0.75rem",
+        }}
+        transition={{ duration: 0.3 }}
+      >
         {/* Logo */}
         <motion.div
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          animate={{
+            scale: isScrolled ? 0.9 : 1,
+          }}
         >
           <Link href="/">
             <div className="flex items-center gap-2">
               <motion.span
-                animate={{ rotate: [0, 10, -10, 0] }}
+                animate={{
+                  rotate: [0, 20, -20, 0],
+                  scale: isScrolled ? 0.8 : 1,
+                }}
                 transition={{
-                  duration: 2,
-                  repeat: Number.POSITIVE_INFINITY,
-                  repeatDelay: 3,
+                  rotate: {
+                    duration: 1.5,
+                    repeat: Number.POSITIVE_INFINITY,
+                    repeatDelay: 0,
+                  },
+                  scale: {
+                    duration: 0.3,
+                  },
                 }}
                 className="text-xl"
               >
-                ⛏️
+                <Image
+                  src="/logo.webp"
+                  alt="logo"
+                  width={100}
+                  height={100}
+                  className={`transition-all duration-300 ${
+                    isScrolled ? "h-8 w-8" : "h-10 w-10"
+                  }`}
+                />
               </motion.span>
-              <span className="font-semibold text-lg">NuggetFinder.io</span>
+              <motion.span
+                className={`font-semibold font-mono transition-all duration-300 ${
+                  isScrolled ? "text-base" : "text-lg"
+                }`}
+                animate={{
+                  fontSize: isScrolled ? "1rem" : "1.125rem",
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                Nugget Finder
+              </motion.span>
             </div>
           </Link>
         </motion.div>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-6">
+        <motion.div
+          className="hidden md:flex items-center gap-6"
+          animate={{
+            gap: isScrolled ? "1rem" : "1.5rem",
+          }}
+          transition={{ duration: 0.3 }}
+        >
           {navLinks.map((link, index) => (
             <motion.div
               key={link.href}
               initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 + 0.2 }}
-              whileHover={{ y: -2 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                scale: isScrolled ? 0.9 : 1,
+              }}
+              transition={{
+                delay: index * 0.1 + 0.2,
+                scale: { duration: 0.3 },
+              }}
+              whileHover={{ y: -2, scale: isScrolled ? 0.95 : 1.05 }}
             >
               <Link
                 href={link.href}
-                className="text-muted-foreground hover:text-foreground transition-colors duration-200 relative group"
+                className={`text-muted-foreground hover:text-foreground transition-all duration-200 relative group ${
+                  isScrolled ? "text-sm" : "text-base"
+                }`}
               >
                 {link.label}
                 <motion.div
@@ -86,13 +179,22 @@ export default function Navbar() {
               <motion.div
                 key={link.href}
                 initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: (navLinks.length + index) * 0.1 + 0.2 }}
-                whileHover={{ y: -2 }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  scale: isScrolled ? 0.9 : 1,
+                }}
+                transition={{
+                  delay: (navLinks.length + index) * 0.1 + 0.2,
+                  scale: { duration: 0.3 },
+                }}
+                whileHover={{ y: -2, scale: isScrolled ? 0.95 : 1.05 }}
               >
                 <Link
                   href={link.href}
-                  className="text-muted-foreground hover:text-foreground transition-colors duration-200 relative group"
+                  className={`text-muted-foreground hover:text-foreground transition-all duration-200 relative group ${
+                    isScrolled ? "text-sm" : "text-base"
+                  }`}
                 >
                   {link.label}
                   <motion.div
@@ -103,14 +205,26 @@ export default function Navbar() {
               </motion.div>
             ))}
           </SignedIn>
-        </div>
+        </motion.div>
 
         {/* Right Side Actions */}
-        <div className="flex items-center gap-3">
+        <motion.div
+          className="flex items-center gap-3"
+          animate={{
+            gap: isScrolled ? "0.5rem" : "0.75rem",
+          }}
+          transition={{ duration: 0.3 }}
+        >
           <motion.div
             initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.4 }}
+            animate={{
+              opacity: 1,
+              scale: isScrolled ? 0.8 : 1,
+            }}
+            transition={{
+              delay: 0.4,
+              scale: { duration: 0.3 },
+            }}
           >
             <ModeToggle />
           </motion.div>
@@ -121,8 +235,14 @@ export default function Navbar() {
             onClick={toggleMobileMenu}
             whileTap={{ scale: 0.95 }}
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
+            animate={{
+              opacity: 1,
+              scale: isScrolled ? 0.8 : 1,
+            }}
+            transition={{
+              delay: 0.5,
+              scale: { duration: 0.3 },
+            }}
           >
             <AnimatePresence mode="wait">
               {isMobileMenuOpen ? (
@@ -133,7 +253,7 @@ export default function Navbar() {
                   exit={{ rotate: 90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <X size={24} />
+                  <X size={isScrolled ? 20 : 24} />
                 </motion.div>
               ) : (
                 <motion.div
@@ -143,7 +263,7 @@ export default function Navbar() {
                   exit={{ rotate: -90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Menu size={24} />
+                  <Menu size={isScrolled ? 20 : 24} />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -154,46 +274,91 @@ export default function Navbar() {
             <SignedOut>
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6 }}
-                whileHover={{ scale: 1.05 }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                  scale: isScrolled ? 0.9 : 1,
+                }}
+                transition={{
+                  delay: 0.6,
+                  scale: { duration: 0.3 },
+                }}
+                whileHover={{ scale: isScrolled ? 0.95 : 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <Link href="/auth/sign-in">
-                  <Button variant="outline">Sign in</Button>
+                  <Button
+                    variant="outline"
+                    size={isScrolled ? "sm" : "default"}
+                    className="transition-all duration-300"
+                  >
+                    Sign in
+                  </Button>
                 </Link>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.7 }}
-                whileHover={{ scale: 1.05 }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                  scale: isScrolled ? 0.9 : 1,
+                }}
+                transition={{
+                  delay: 0.7,
+                  scale: { duration: 0.3 },
+                }}
+                whileHover={{ scale: isScrolled ? 0.95 : 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <Link href="/auth/sign-up">
-                  <Button variant="default">Sign up</Button>
+                  <Button
+                    variant="default"
+                    size={isScrolled ? "sm" : "default"}
+                    className="transition-all duration-300"
+                  >
+                    Sign up
+                  </Button>
                 </Link>
               </motion.div>
             </SignedOut>
             <SignedIn>
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6 }}
-                whileHover={{ scale: 1.05 }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                  scale: isScrolled ? 0.9 : 1,
+                }}
+                transition={{
+                  delay: 0.6,
+                  scale: { duration: 0.3 },
+                }}
+                whileHover={{ scale: isScrolled ? 0.95 : 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <Link href="/dashboard">
-                  <Button variant="default">Dashboard</Button>
+                  <Button
+                    variant="default"
+                    size={isScrolled ? "sm" : "default"}
+                    className="transition-all duration-300"
+                  >
+                    Dashboard
+                  </Button>
                 </Link>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.7 }}
+                animate={{
+                  opacity: 1,
+                  scale: isScrolled ? 0.8 : 1,
+                }}
+                transition={{
+                  delay: 0.7,
+                  scale: { duration: 0.3 },
+                }}
               >
                 <UserButton
-                  size="icon"
+                  size={isScrolled ? "sm" : "icon"}
                   additionalLinks={[
                     {
                       href: "/subscription",
@@ -205,8 +370,8 @@ export default function Navbar() {
               </motion.div>
             </SignedIn>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Mobile Menu */}
       <AnimatePresence>

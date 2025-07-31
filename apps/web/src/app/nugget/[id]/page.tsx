@@ -1,10 +1,8 @@
 /** biome-ignore-all lint/a11y/useValidAnchor: <explanation> */
-import IdeaDetailsView from "@/components/IdeaDetailsView";
-import Navbar from "@/components/Navbar";
 import ClientFallback from "@/components/ClientFallback";
+import IdeaDetailsView from "@/components/IdeaDetailsView";
+import { generateStaticParams, getIdeaById } from "@/lib/server-api";
 import type { IdeaDetailsViewProps } from "@/types/idea-details";
-import { notFound } from "next/navigation";
-import { getIdeaById, generateStaticParams } from "@/lib/server-api";
 
 // Export generateStaticParams for static generation
 export { generateStaticParams };
@@ -21,8 +19,7 @@ export default async function NuggetDetailPage({ params }: { params: Promise<{ i
     // Try client-side fallback before showing 404
     console.log('No server data for nugget, using client fallback');
     return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
+      <div className="min-h-screen bg-background">        
         <ClientFallback type="nugget" nuggetId={id} />
       </div>
     );
@@ -33,7 +30,6 @@ export default async function NuggetDetailPage({ params }: { params: Promise<{ i
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <IdeaDetailsView idea={ideaWithFullData} />
     </div>
   );
