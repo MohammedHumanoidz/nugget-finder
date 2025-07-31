@@ -25,17 +25,22 @@ const serverTrpcClient = createTRPCClient<AppRouter>({
   ],
 });
 
-// Fallback HTTP fetch function
+// Fallback HTTP fetch function for tRPC queries
 async function fallbackFetch<T>(endpoint: string, input: any): Promise<T | null> {
   try {
-    console.log(`Attempting fallback fetch to: ${getServerUrl()}/trpc/${endpoint}`);
+    console.log(`Attempting fallback fetch to: ${getServerUrl()}/trpc/${endpoint}?batch=1&input=${encodeURIComponent(JSON.stringify({ 0: input }))}`);
     
-    const response = await fetch(`${getServerUrl()}/trpc/${endpoint}`, {
-      method: 'POST',
+    // Format as tRPC query request
+    const queryParams = new URLSearchParams({
+      batch: '1',
+      input: JSON.stringify({ 0: input })
+    });
+    
+    const response = await fetch(`${getServerUrl()}/trpc/${endpoint}?${queryParams}`, {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(input),
       next: { revalidate: 60 },
     });
 
@@ -46,7 +51,8 @@ async function fallbackFetch<T>(endpoint: string, input: any): Promise<T | null>
     const data = await response.json();
     console.log('Fallback fetch response:', data);
     
-    return data.result?.data || data;
+    // Handle tRPC batch response format
+    return data[0]?.result?.data || data.result?.data || data;
   } catch (error) {
     console.error(`Fallback fetch failed for ${endpoint}:`, error);
     return null;
@@ -94,7 +100,7 @@ export const getIdeaById = cache(async (id: string) => {
 });
 
 // Cached function for semantic search
-export const semanticSearchIdeas = cache(async (query: string, limit: number = 12, offset: number = 0) => {
+export const semanticSearchIdeas = cache(async (query: string, limit = 12, offset = 0) => {
   try {
     console.log(`Attempting semantic search for: "${query}" via tRPC client...`);
     // TODO: Implement semanticSearch endpoint in agent router
@@ -113,6 +119,51 @@ export const semanticSearchIdeas = cache(async (query: string, limit: number = 1
     });
     
     return fallbackResult || { ideas: [], hasMore: false };
+  }
+});
+
+// Get today's top 3 ideas for homepage - fallback to mock data for now
+export const getTodaysTopIdeas = cache(async () => {
+  try {
+    console.log('Fetching today\'s top 3 ideas...');
+    
+    // Try the tRPC client first
+    try {
+      const result = await serverTrpcClient.agents.getDailyIdeas.query({
+        limit: 50,
+        offset: 0
+      });
+      
+      if (result?.ideas?.length > 0) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        // Filter and sort today's ideas
+        const todaysIdeas = result.ideas
+          .filter((idea: any) => {
+            const createdAt = new Date(idea.createdAt);
+            return createdAt >= today && createdAt < tomorrow;
+          })
+          .sort((a: any, b: any) => {
+            const scoreA = a.ideaScore?.overallScore || 0;
+            const scoreB = b.ideaScore?.overallScore || 0;
+            return scoreB - scoreA;
+          })
+          .slice(0, 3);
+        
+        if (todaysIdeas.length > 0) {
+          console.log(`Found ${todaysIdeas.length} ideas from today`);
+          return todaysIdeas;
+        }
+      }
+    } catch (error) {
+      console.error('tRPC fetch failed:', error);
+    }
+  } catch (error) {
+    console.error('Error fetching today\'s top ideas:', error);
+    return [];
   }
 });
 

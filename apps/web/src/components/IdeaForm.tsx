@@ -5,6 +5,7 @@ import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { ArrowUpRight } from "lucide-react";
 import { useForm } from "@tanstack/react-form";
+import Image from "next/image";
 
 const IdeaForm = () => {
   const form = useForm({
@@ -29,9 +30,19 @@ const IdeaForm = () => {
   };
 
   return (
-    <div className="mx-auto mt-10 w-full max-w-4xl space-y-6">
+    <div className="mx-auto mt-10 w-full max-w-4xl space-y-6 z-50">
       {/* Form Section */}
-      <p className="text-center font-semibold text-4xl">Let&apos;s build mine you some nuggets</p>
+      <div className="flex items-center justify-center gap-4">
+        <Image
+          src="/nuggetfinder-super-happy.png"
+          alt="mine nuggets"
+          width={100}
+          height={100}
+        />
+        <p className="text-center font-semibold text-4xl">
+          Let&apos;s build mine you some nuggets
+        </p>
+      </div>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -45,7 +56,7 @@ const IdeaForm = () => {
             <div className="relative">
               <Textarea
                 placeholder="What should we mine today?"
-                className="min-h-40 pr-20 rounded-3xl p-6 backdrop-blur-xl"
+                className="min-h-40 pr-20 rounded-3xl p-6 backdrop-blur-xs border-primary dark:border-primary/20"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
@@ -70,18 +81,18 @@ const IdeaForm = () => {
       </form>
 
       {/* Default Ideas Section */}
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          {defaultIdeas.map((idea) => (
-            <Button
-              key={idea}
-              variant="outline"
-              onClick={() => handleDefaultIdeaClick(idea)}
-              className="h-auto justify-start whitespace-normal rounded-full p-3 text-left text-muted-foreground text-sm backdrop-blur-xl hover:bg-primary/10"
-            >
-              {idea}
-            </Button>
-          ))}
-        </div>
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        {defaultIdeas.map((idea) => (
+          <Button
+            key={idea}
+            variant="outline"
+            onClick={() => handleDefaultIdeaClick(idea)}
+            className="h-auto justify-start whitespace-normal rounded-full p-3 text-left text-muted-foreground text-sm backdrop-blur-xl hover:bg-primary/10"
+          >
+            {idea}
+          </Button>
+        ))}
+      </div>
     </div>
   );
 };

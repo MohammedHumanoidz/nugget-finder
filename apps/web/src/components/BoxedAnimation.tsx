@@ -1,5 +1,6 @@
 "use client";
 import { Canvas, useFrame } from "@react-three/fiber";
+import { useTheme } from "next-themes";
 import React, { useRef } from "react";
 import { ExtrudeGeometry, Group, Shape } from "three";
 
@@ -25,15 +26,17 @@ const Box = ({ position, rotation }: { position: any; rotation: any }) => {
   const geometry = new ExtrudeGeometry(shape, extrudeSettings);
   geometry.center();
 
+  const { theme } = useTheme()
+
   return (
     <mesh geometry={geometry} position={position} rotation={rotation}>
       <meshPhysicalMaterial
-        color="#232323"
+        color={theme === "light" ? "#e49107" : "#232323"}
         metalness={1}
         roughness={0.3}
         reflectivity={0.5}
         ior={1.5}
-        emissive="#000000"
+        emissive={theme === "light" ? "#ffffff" :"#000000"}
         emissiveIntensity={0}
         transparent={false}
         opacity={1.0}

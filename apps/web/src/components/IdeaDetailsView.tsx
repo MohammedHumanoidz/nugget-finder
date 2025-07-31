@@ -285,7 +285,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
                           {idea.whatToBuild.userInterfaces.map((ui, index) => (
                             <span
                               key={index.toString()}
-                              className="border border-border text-primary-foreground px-6 py-3 rounded-xl text-sm font-medium"
+                              className="text-primary-foreground p-3 rounded-sm text-sm font-medium w-full"
                             >
                               🖥️ {ui}
                             </span>
@@ -306,7 +306,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
                             (integration, index) => (
                               <span
                                 key={index.toString()}
-                                className="border border-border text-primary-foreground px-6 py-3 rounded-xl text-sm font-medium"
+                                className="text-primary-foreground p-3 rounded-sm text-sm font-medium w-full"
                               >
                                 🔗 {integration}
                               </span>
