@@ -751,7 +751,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
 
                 <h3 className="bg-muted/50 text-foreground text-lg font-semibold flex items-center gap-2">
                   <MessageCircle className="w-5 h-5" />
-                  Interrogate this Nugget
+                  Ask Pip the Prospector to dig deeper
                 </h3>
               </div>
               <div className="p-4 py-0">
