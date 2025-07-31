@@ -96,7 +96,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
 
       {/* Main Content Layout */}
       <div className="max-w-7xl mx-auto px-4 pb-16">
-        <div className="flex gap-8 items-start">
+        <div className="flex flex-col lg:flex-row gap-8 items-start">
           {/* Left Column */}
           <div className="flex-2 min-w-0 space-y-8">
             
@@ -112,6 +112,31 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
                   <h4 className="text-foreground font-semibold mb-2">Problem Solution:</h4>
                   <p className="text-muted-foreground">{idea.problemSolution}</p>
                 </div>
+              </div>
+            </div>
+
+
+            {/* The Claim (Why Now?) */}
+            <div className="bg-card border border-border rounded-lg shadow-sm overflow-hidden">
+              <h3 className="bg-muted/50 text-foreground border-b border-border px-6 py-4 text-lg font-semibold">🌟 The Claim (Why Now?)</h3>
+              <div className="p-6 space-y-4">
+                <h4 className="text-foreground font-semibold">{idea.whyNow.title}</h4>
+                <div className="bg-muted/50 border border-border p-4 rounded-lg flex justify-between items-center">
+                  <span className="bg-primary/10 text-primary px-3 py-1 rounded text-sm font-semibold">
+                    {idea.whyNow.catalystType.replace(/_/g, ' ')}
+                  </span>
+                  <div className="flex gap-4 text-sm font-medium">
+                    <span>Strength: {idea.whyNow.trendStrength}/10</span>
+                    <span>Urgency: {idea.whyNow.timingUrgency}/10</span>
+                  </div>
+                </div>
+                <p className="text-muted-foreground">{idea.whyNow.description}</p>
+                {idea.whyNow.supportingData && idea.whyNow.supportingData.length > 0 && (
+                  <div>
+                    <h4 className="text-foreground font-semibold mb-2">Supporting Evidence:</h4>
+                    {renderBulletPoints(idea.whyNow.supportingData)}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -149,7 +174,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
                       <h4 className="text-foreground font-semibold mb-3">Recommended User Interfaces:</h4>
                       <div className="flex flex-wrap gap-2">
                         {idea.whatToBuild.userInterfaces.map((ui, index) => (
-                          <span key={index.toString()} className="bg-blue-100 border border-blue-300 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+                          <span key={index.toString()} className="border border-border text-primary-foreground px-6 py-3 rounded-xl text-sm font-medium">
                             🖥️ {ui}
                           </span>
                         ))}
@@ -163,7 +188,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
                       <h4 className="text-foreground font-semibold mb-3">Essential Third-Party Integrations:</h4>
                       <div className="flex flex-wrap gap-2">
                         {idea.whatToBuild.keyIntegrations.map((integration, index) => (
-                          <span key={index.toString()} className="bg-green-100 border border-green-300 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                          <span key={index.toString()} className="border border-border text-primary-foreground px-6 py-3 rounded-xl text-sm font-medium">
                             🔗 {integration}
                           </span>
                         ))}
@@ -172,7 +197,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
                   )}
 
                   {/* Pricing Implementation */}
-                  <div className="bg-orange-50 border border-orange-200 p-4 rounded-lg">
+                  <div className="border border-border p-4 rounded-lg">
                     <h4 className="text-foreground font-semibold mb-2 flex items-center gap-2">
                       💳 Technical Pricing Implementation:
                     </h4>
@@ -181,30 +206,6 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
                 </div>
               </div>
             )}
-
-            {/* The Claim (Why Now?) */}
-            <div className="bg-card border border-border rounded-lg shadow-sm overflow-hidden">
-              <h3 className="bg-muted/50 text-foreground border-b border-border px-6 py-4 text-lg font-semibold">🌟 The Claim (Why Now?)</h3>
-              <div className="p-6 space-y-4">
-                <h4 className="text-foreground font-semibold">{idea.whyNow.title}</h4>
-                <div className="bg-muted/50 border border-border p-4 rounded-lg flex justify-between items-center">
-                  <span className="bg-primary/10 text-primary px-3 py-1 rounded text-sm font-semibold">
-                    {idea.whyNow.catalystType.replace(/_/g, ' ')}
-                  </span>
-                  <div className="flex gap-4 text-sm font-medium">
-                    <span>Strength: {idea.whyNow.trendStrength}/10</span>
-                    <span>Urgency: {idea.whyNow.timingUrgency}/10</span>
-                  </div>
-                </div>
-                <p className="text-muted-foreground">{idea.whyNow.description}</p>
-                {idea.whyNow.supportingData && idea.whyNow.supportingData.length > 0 && (
-                  <div>
-                    <h4 className="text-foreground font-semibold mb-2">Supporting Evidence:</h4>
-                    {renderBulletPoints(idea.whyNow.supportingData)}
-                  </div>
-                )}
-              </div>
-            </div>
 
             {/* The Vein (Market Gap) */}
             <div className="bg-card border border-border rounded-lg shadow-sm overflow-hidden">
@@ -387,7 +388,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
             </div>
 
             {/* Financial Projections Bar Chart */}
-            {idea.monetizationStrategy.financialProjections && idea.monetizationStrategy.financialProjections.length > 0 && (
+            {/* {idea.monetizationStrategy.financialProjections && idea.monetizationStrategy.financialProjections.length > 0 && (
               <div className="bg-card border border-border rounded-lg shadow-sm overflow-hidden">
                 <h3 className="bg-muted/50 text-foreground border-b border-border px-6 py-4 text-lg font-semibold">📈 Financial Projections (3 Years)</h3>
                 <div className="p-6">
@@ -411,7 +412,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
                   </ChartContainer>
                 </div>
               </div>
-            )}
+            )} */}
 
             {/* Execution & Validation */}
             <div className="bg-card border border-border rounded-lg shadow-sm overflow-hidden">
@@ -463,7 +464,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
                 <div className="bg-muted/30 rounded-lg p-4 mb-4 min-h-[200px] flex flex-col">
                   <div className="flex-1 space-y-3">
                     <div className="bg-primary/10 text-primary p-3 rounded-lg max-w-xs">
-                      <p className="text-sm">Hi! I'm your AI assistant for this nugget. Ask me anything about the market opportunity, risks, competitive analysis, or implementation details.</p>
+                      <p className="text-sm">Howdy fellow miner! Curious about this nugget. Ask me anything about the market opportunity, risks, competitive analysis, or implementation details.</p>
                     </div>
                   </div>
                   
@@ -513,7 +514,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
           </div>
 
           {/* Right Column - Sidebar */}
-          <div className="flex-1 max-w-sm space-y-6 sticky top-24">
+          <div className="flex-1 w-full lg:max-w-sm space-y-6 sticky top-24">
             
             {/* Assay Report */}
             <div className="bg-card border border-border rounded-lg shadow-sm overflow-hidden">
@@ -622,7 +623,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
                     }}
                     className="h-[280px]"
                   >
-                    <RadarChart data={radarData} className='w-fit scale-90 -ml-20'>
+                    <RadarChart data={radarData} className='w-fit scale-90 -ml-10 lg:-ml-20'>
                       <PolarGrid />
                       <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10 }} />
                       <PolarRadiusAxis angle={90} domain={[0, 10]} tick={{ fontSize: 8 }} />
