@@ -44,7 +44,7 @@ const IdeaGenerationAgentController = {
 
       const userPrompt = `What is one powerful, globally impactful emerging trend or significant development that is generating high engagement and sustained discussion in online communities (Reddit, Twitter, forums) or through notable news/blogs? Focus on shifts with broad implications across technology, society, economy, or regulation, especially those creating *immediate, software-solvable problems*.
 
-			Previously Generated Ideas (MUST find a trend completely unrelated in theme, industry, or problem category to these, to ensure diversity of generated ideas):
+			Previously Generated Ideas (MUST find a trend completely unrelated in theme, industry, or problem category to these, to ensure diversity of generated ideas). If the previously generated idea is a B2C then do either B2B or Creative/Original/Creative Idea. Same goes if it is B2B or Creative Idea. The themes shouldnt be similar:
 			${context.previousIdeas && context.previousIdeas.length > 0 ? context.previousIdeas.map((idea) => `- Title: "${idea.title}"\n  Description: "${idea.description}"`).join("\n") : "- None to consider."}
 
 			Ensure the new trend is genuinely fresh and distinct from any of the themes or industries represented by the ideas listed. No LinkedIn vibes. Give me something that genuinely feels *new*.`;
@@ -991,7 +991,8 @@ Focus on specificity - provide exact feature descriptions, precise integration r
 			**Tone & Narrative:** Absolutely **NO abstract jargon, corporate buzzwords, or "LinkedIn influencer" speak.** Use vivid, relatable, and *intriguing* language that makes someone *feel* the problem and *see* the solution in action. Every part of the output should read like a concise, inspiring blueprint for a real product launch, delivered with the persuasive, human tone of a visionary founder talking to their early team.
 			
 			**Title Format:** The title should be descriptive, clearly indicating the product's function, target, or key benefit. It should be immediately understandable and compelling, like a catchy product name or a direct solution statement. **DO NOT ALWAYS INCLUDE '($XM ARR potential)'. Only add it if the ARR estimate is truly outstanding and makes the title significantly more compelling; otherwise, omit it for brevity and authenticity.**
-				*Examples:* 'AI Inventory Manager for Small Retailers', 'Smart Task Orchestrator for Event Planners', 'Local Farmers Market Digitizer'.
+			- DO NOT INCLUDE STARTUP OR PRODUCT NAMES	
+      *Examples:* 'AI Inventory Manager for Small Retailers', 'Smart Task Orchestrator for Event Planners', 'Local Farmers Market Digitizer'.
 			
 			**Narrative Quality:** The 'description', 'problemSolution', and 'executiveSummary' fields must tell a compelling, empathetic story.
 				- Introduce the *specific user archetype* (e.g., 'a busy e-commerce manager' or 'a small accounting firm owner') and their *acute pain* using honest, direct language.
@@ -1007,7 +1008,7 @@ Focus on specificity - provide exact feature descriptions, precise integration r
 			
 			Return JSON in this exact shape:
 			{
-			  "title": "string (FORMAT: Descriptive title. Optionally, add '($XM ARR potential)' ONLY if exceptionally compelling.)",
+			  "title": "string (FORMAT: Descriptive title. Optionally, add '($XM ARR potential)' ONLY if exceptionally compelling.) DO NOT HAVE A STARTUP OR A PRODUCT NAME",
 			  "description": "string (A captivating, human-like narrative (~3-5 sentences) introducing the *user archetype*, their pain, and how the *software/service* genuinely solves it. Weave in 'why now', simple GTM hints, and growth vision. No LinkedIn prose.)",
 			  "executiveSummary": "string (a concise, compelling pitch for *this focused software/service idea*, highlighting the core problem, unique value, and main benefit. Keep it sharp, human.)",
 			  "problemSolution": "string (Honest, direct story format: 'A small business owner spends hours on X. This *software/service* fixes that by Y, saving them Z and making them genuinely happy by A.')",

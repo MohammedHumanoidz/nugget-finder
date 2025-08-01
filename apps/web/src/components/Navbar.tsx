@@ -45,7 +45,7 @@ export default function Navbar() {
 
   const navLinks = [
     { href: "/", label: "Home" },
-    { href: "/browse", label: "Browse" },
+    { href: "/browse", label: "Explore Nuggets" },
     { href: "/pricing", label: "Pricing" },
   ];
 
@@ -130,7 +130,7 @@ export default function Navbar() {
                 }}
                 transition={{ duration: 0.3 }}
               >
-                Nugget Finder
+                NuggetFinder
               </motion.span>
             </div>
           </Link>
