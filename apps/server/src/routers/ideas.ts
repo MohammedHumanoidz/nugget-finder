@@ -84,6 +84,107 @@ export const ideasRouter = router({
     return await getUserClaimedIdeas(ctx.session.user.id);
   }),
 
+  // Get individual idea by ID with view tracking and limits check
+  getIdeaById: protectedProcedure
+    .input(
+      z.object({
+        ideaId: z.string().uuid(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const { ideaId } = input;
+      console.log(`[DEBUG] Protected endpoint called with userId: ${userId}, ideaId: ${ideaId}`);
+
+      // Check if user can view more ideas
+      const limits = await getUserIdeaLimits(userId);
+      console.log(`[DEBUG] View limits for user ${userId}:`, {
+        canView: limits.canView,
+        viewsRemaining: limits.viewsRemaining,
+        ideaId,
+      });
+      
+      // Check if already viewed this specific idea
+      const alreadyViewed = await prisma.viewedIdeas.findUnique({
+        where: {
+          userId_ideaId: {
+            userId,
+            ideaId,
+          },
+        },
+      });
+      console.log(`[DEBUG] Already viewed check:`, { alreadyViewed: !!alreadyViewed, ideaId });
+
+      // If not viewed before and user has no more views left, throw error
+      if (!alreadyViewed && !limits.canView) {
+        console.log(`[DEBUG] THROWING VIEW_LIMIT_EXCEEDED - User has no views left`);
+        throw new Error('VIEW_LIMIT_EXCEEDED');
+      }
+      console.log(`[DEBUG] View check passed - proceeding to fetch idea`);
+
+      // Get the idea
+      const idea = await prisma.dailyIdea.findUnique({
+        where: { id: ideaId },
+        include: {
+          ideaScore: true,
+          marketOpportunity: true,
+          monetizationStrategy: {
+            include: {
+              revenueStreams: true,
+              keyMetrics: true,
+              financialProjections: true,
+            },
+          },
+          whyNow: true,
+          whatToBuild: true,
+          marketCompetition: true,
+          marketGap: true,
+          competitiveAdvantage: true,
+          strategicPositioning: true,
+          executionPlan: true,
+          tractionSignals: true,
+          frameworkFit: true,
+          savedIdeas: {
+            where: { userId },
+            select: { id: true },
+          },
+          claimedIdeas: {
+            select: { userId: true },
+          },
+        },
+      });
+
+      if (!idea) {
+        throw new Error('Idea not found');
+      }
+
+      // Record the view if not already viewed
+      if (!alreadyViewed) {
+        await prisma.viewedIdeas.create({
+          data: {
+            userId,
+            ideaId,
+          },
+        });
+
+        // Increment user's view count if they have limited views
+        if (limits.viewsRemaining !== -1) {
+          await prisma.user.update({
+            where: { id: userId },
+            data: { viewsUsed: { increment: 1 } },
+          });
+        }
+      }
+
+      // Transform the idea to include user-specific flags
+      return {
+        ...idea,
+        isSaved: idea.savedIdeas.length > 0,
+        isClaimed: idea.claimedIdeas?.userId === userId,
+        isClaimedByOther: idea.claimedIdeas ? idea.claimedIdeas.userId !== userId : null,
+      };
+    }),
+
   // Get activity trends for chart (30 days)
   getActivityTrends: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session.user.id;

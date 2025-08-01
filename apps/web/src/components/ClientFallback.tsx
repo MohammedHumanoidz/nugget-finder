@@ -25,7 +25,7 @@ export default function ClientFallback({ type, nuggetId }: ClientFallbackProps) 
   });
 
   const { data: nuggetData, isLoading: nuggetLoading, error: nuggetError } = useQuery({
-    ...trpc.agents.getIdeaById.queryOptions({ id: nuggetId! }),
+    ...trpc.ideas.getIdeaById.queryOptions({ ideaId: nuggetId! }),
     enabled: type === 'nugget' && !!nuggetId,
   });
 
@@ -134,6 +134,17 @@ export default function ClientFallback({ type, nuggetId }: ClientFallbackProps) 
     }
 
     if (nuggetError || !nuggetData) {
+      // Check if error is due to view limit exceeded
+      const errorMessage = (nuggetError as any)?.message || '';
+      
+      if (errorMessage.includes('VIEW_LIMIT_EXCEEDED')) {
+        // Redirect to pricing page
+        if (typeof window !== 'undefined') {
+          window.location.href = '/pricing?reason=view_limit';
+          return null;
+        }
+      }
+      
       return (
         <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 80px)' }}>
           <div className="text-center">
