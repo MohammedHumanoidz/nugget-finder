@@ -156,10 +156,11 @@ export default function BrowseClient() {
       return lastPage.length === 12 ? pages.length * 12 : undefined;
     },
     initialPageParam: 0,
+    enabled: !debouncedSearchQuery.trim(),
   });
 
-  // Use semantic results when available, otherwise show regular results
-  const allIdeas = (searchQuery.trim() && semanticResults.length > 0) ? semanticResults : (data?.pages.flat() || []);
+  // Use semantic results when searching, otherwise show regular results
+  const allIdeas = searchQuery.trim() ? semanticResults : (data?.pages.flat() || []);
 
   // Reset searching state when debounced query changes
   useEffect(() => {
@@ -255,7 +256,8 @@ export default function BrowseClient() {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchQuery(value);
-    if (value.trim() !== debouncedSearchQuery.trim()) {
+    // Only set loading if we're switching from no search to search, not on every keystroke
+    if (!debouncedSearchQuery.trim() && value.trim()) {
       setIsSemanticLoading(true);
     }
   };
@@ -277,12 +279,6 @@ export default function BrowseClient() {
     [isLoading, isFetchingNextPage, fetchNextPage, hasNextPage]
   );
 
-  const getScoreColor = (score?: number) => {
-    if (!score) return "text-gray-500";
-    if (score >= 80) return "text-green-600";
-    if (score >= 60) return "text-yellow-600";
-    return "text-red-600";
-  };
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
@@ -352,7 +348,7 @@ export default function BrowseClient() {
             </div>
             
             {/* Search status and personalization */}
-            <div className="mt-3 flex items-center justify-center pl-4">
+            <div className="mt-3 flex items-center justify-center gap-4 pl-4">
               <div className="flex items-center gap-4">
                 {(debouncedSearchQuery || searchQuery) && (
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">

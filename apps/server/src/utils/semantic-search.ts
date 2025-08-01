@@ -55,16 +55,21 @@ export class TextProcessor {
       .replace(/\s+/g, ' ')
       .trim();
 
-    // Split into tokens
-    const tokens = cleanText.split(' ').filter(token => token.length > 2);
+    // Split into tokens - allow shorter tokens for acronyms like "SBM"
+    const tokens = cleanText.split(' ').filter(token => token.length > 1);
 
-    // Remove stopwords
+    // Remove stopwords but preserve important short terms
     const withoutStopwords = removeStopwords(tokens);
 
-    // Apply stemming
-    const stemmed = withoutStopwords.map((token: string) => PorterStemmer.stem(token));
+    // For very short tokens (like acronyms), skip stemming to preserve them
+    const processed = withoutStopwords.map((token: string) => {
+      if (token.length <= 3) {
+        return token; // Preserve short terms like "SBM", "AI", "API"
+      }
+      return PorterStemmer.stem(token);
+    });
 
-    return stemmed;
+    return processed;
   }
 
   /**
@@ -181,19 +186,21 @@ export class SemanticSearchEngine {
   constructor(ideas: SearchableIdea[]) {
     this.ideas = ideas;
     
-    // Configure Fuse.js for fuzzy search
+    // Configure Fuse.js for fuzzy search - more permissive settings
     const fuseOptions = {
       keys: [
         { name: 'title', weight: 0.4 },
         { name: 'description', weight: 0.3 },
-        { name: 'narrativeHook', weight: 0.2 },
-        { name: 'searchCorpus', weight: 0.1 }
+        { name: 'narrativeHook', weight: 0.15 },
+        { name: 'searchCorpus', weight: 0.1 },
+        { name: 'tags', weight: 0.05 }
       ],
-      threshold: 0.6,
+      threshold: 0.4, // More permissive than 0.6
       includeScore: true,
       includeMatches: true,
-      minMatchCharLength: 2,
-      ignoreLocation: true
+      minMatchCharLength: 1, // Allow single character matches for acronyms
+      ignoreLocation: true,
+      findAllMatches: true
     };
 
     this.fuseIndex = new Fuse(ideas, fuseOptions);
@@ -208,7 +215,7 @@ export class SemanticSearchEngine {
     options?: { limit?: number; threshold?: number }
   ): SearchResult[] {
     const limit = options?.limit || 20;
-    const threshold = options?.threshold || 0.5;
+    const threshold = options?.threshold || 0.01; // Very low threshold for better recall
 
     // Preprocess the query
     const queryTokens = TextProcessor.preprocessText(query);
@@ -232,13 +239,21 @@ export class SemanticSearchEngine {
       const titleFuzzy = TextProcessor.fuzzyMatch(queryText, idea.title.toLowerCase());
       const descFuzzy = TextProcessor.fuzzyMatch(queryText, idea.description.toLowerCase());
 
-      // Combine base semantic scores
+      // Check for exact matches (boost short queries like "SBM")
+      const exactMatchBoost = this.calculateExactMatchBoost(queryText, idea);
+      
+      // Check for partial matches in tags and other fields
+      const partialMatchBoost = this.calculatePartialMatchBoost(queryText, idea);
+
+      // Combine base semantic scores with boosters - give much higher weight to exact matches
       const baseScore = (
-        fuseScore * 0.3 +
-        jaccardScore * 0.25 +
-        cosineScore * 0.25 +
-        titleFuzzy * 0.15 +
-        descFuzzy * 0.05
+        fuseScore * 0.15 +
+        jaccardScore * 0.1 +
+        cosineScore * 0.1 +
+        titleFuzzy * 0.1 +
+        descFuzzy * 0.05 +
+        exactMatchBoost * 0.45 + // Much higher weight for exact/fuzzy matches
+        partialMatchBoost * 0.05
       );
 
       // Calculate personalization boost
@@ -265,6 +280,257 @@ export class SemanticSearchEngine {
       .filter(result => result.personalizedScore >= threshold)
       .sort((a, b) => b.personalizedScore - a.personalizedScore)
       .slice(0, limit);
+  }
+
+  /**
+   * Calculate boost for exact matches (especially useful for short queries like "SBM")
+   */
+  private calculateExactMatchBoost(query: string, idea: SearchableIdea): number {
+    const queryLower = query.toLowerCase().trim();
+    const searchFields = [
+      idea.title.toLowerCase(),
+      idea.description.toLowerCase(),
+      idea.narrativeHook?.toLowerCase() || '',
+      ...idea.tags.map(tag => tag.toLowerCase()),
+      idea.searchCorpus.toLowerCase()
+    ];
+
+    console.log(`[DEBUG] Checking exact match for query: "${queryLower}"`);
+
+    // Check for exact substring matches first
+    for (const field of searchFields) {
+      if (field.includes(queryLower)) {
+        console.log(`[DEBUG] Found exact match in field: "${field.substring(0, 50)}..."`);
+        // Higher boost for shorter queries (like acronyms)
+        const lengthBoost = queryLower.length <= 5 ? 1.0 : 0.5;
+        return lengthBoost;
+      }
+    }
+
+    // For short queries, do aggressive fuzzy matching
+    if (queryLower.length <= 6) {
+      console.log(`[DEBUG] Attempting fuzzy match for short query: "${queryLower}"`);
+      
+      // Simple character-based fuzzy matching
+      let bestScore = 0;
+      
+      for (const field of searchFields) {
+        const words = field.split(/\s+/);
+        
+        for (const word of words) {
+          if (word.length >= 2 && word.length <= 8) {
+            // Calculate simple edit distance similarity
+            const editDistance = this.levenshteinDistance(queryLower, word);
+            const maxLength = Math.max(queryLower.length, word.length);
+            const similarity = (maxLength - editDistance) / maxLength;
+            
+            console.log(`[DEBUG] "${queryLower}" vs "${word}": edit_distance=${editDistance}, similarity=${similarity}`);
+            
+            // Very permissive threshold for short queries
+            if (similarity >= 0.4) {
+              bestScore = Math.max(bestScore, similarity);
+              console.log(`[DEBUG] New best fuzzy score: ${bestScore}`);
+            }
+          }
+        }
+      }
+      
+      // If we found a good fuzzy match, return high score
+      if (bestScore > 0.4) {
+        console.log(`[DEBUG] Returning fuzzy boost: ${bestScore}`);
+        return bestScore;
+      }
+    }
+
+    return 0;
+  }
+
+  /**
+   * Special fuzzy matching for acronyms (e.g., "SBMs" should match "SMBs")
+   */
+  private calculateAcronymFuzzyMatch(query: string, searchFields: string[]): number {
+    let bestScore = 0;
+    console.log(`[DEBUG] Fuzzy matching query: "${query}"`);
+
+    for (const field of searchFields) {
+      // Extract potential acronyms from the field (2-5 letter sequences)
+      const acronymMatches = field.match(/\b[a-z]{2,5}s?\b/g) || [];
+      console.log(`[DEBUG] Field: "${field.substring(0, 100)}..." found acronyms:`, acronymMatches);
+      
+      for (const acronym of acronymMatches) {
+        // Calculate character-level similarity
+        const similarity = this.calculateCharacterSimilarity(query, acronym);
+        console.log(`[DEBUG] "${query}" vs "${acronym}" similarity: ${similarity}`);
+        if (similarity > 0.5) { // 50% character similarity for better recall
+          bestScore = Math.max(bestScore, similarity);
+          console.log(`[DEBUG] New best score: ${bestScore}`);
+        }
+      }
+
+      // Also check for edit distance on individual words
+      const words = field.split(/\s+/);
+      for (const word of words) {
+        if (word.length >= 2 && word.length <= 8) { // More inclusive length range
+          const editDistance = this.levenshteinDistance(query, word);
+          const similarity = (Math.max(query.length, word.length) - editDistance) / Math.max(query.length, word.length);
+          if (similarity > 0.5) { // Lower threshold for better recall
+            console.log(`[DEBUG] Edit distance "${query}" vs "${word}": distance=${editDistance}, similarity=${similarity}`);
+            bestScore = Math.max(bestScore, similarity);
+          }
+        }
+      }
+    }
+
+    console.log(`[DEBUG] Final best score for "${query}": ${bestScore}`);
+    return bestScore;
+  }
+
+  /**
+   * Calculate character-level similarity for short strings
+   */
+  private calculateCharacterSimilarity(str1: string, str2: string): number {
+    if (str1.length === 0 || str2.length === 0) return 0;
+    
+    const chars1 = str1.split('');
+    const chars2 = str2.split('');
+    
+    let matches = 0;
+    const used = new Set<number>();
+    
+    // Find character matches allowing for position shifts
+    for (let i = 0; i < chars1.length; i++) {
+      for (let j = 0; j < chars2.length; j++) {
+        if (!used.has(j) && chars1[i] === chars2[j]) {
+          matches++;
+          used.add(j);
+          break;
+        }
+      }
+    }
+    
+    // For very similar length strings, give higher scores
+    const lengthSimilarity = 1 - Math.abs(chars1.length - chars2.length) / Math.max(chars1.length, chars2.length);
+    const characterSimilarity = matches / Math.max(chars1.length, chars2.length);
+    
+    // Combine both metrics, favoring character matches
+    return (characterSimilarity * 0.8) + (lengthSimilarity * 0.2);
+  }
+
+  /**
+   * Calculate Levenshtein distance between two strings
+   */
+  private levenshteinDistance(str1: string, str2: string): number {
+    const matrix = Array(str2.length + 1).fill(null).map(() => 
+      Array(str1.length + 1).fill(null)
+    );
+
+    for (let i = 0; i <= str1.length; i++) matrix[0][i] = i;
+    for (let j = 0; j <= str2.length; j++) matrix[j][0] = j;
+
+    for (let j = 1; j <= str2.length; j++) {
+      for (let i = 1; i <= str1.length; i++) {
+        const indicator = str1[i - 1] === str2[j - 1] ? 0 : 1;
+        matrix[j][i] = Math.min(
+          matrix[j][i - 1] + 1,     // deletion
+          matrix[j - 1][i] + 1,     // insertion
+          matrix[j - 1][i - 1] + indicator // substitution
+        );
+      }
+    }
+
+    return matrix[str2.length][str1.length];
+  }
+
+  /**
+   * Calculate boost for partial matches in specific fields
+   */
+  private calculatePartialMatchBoost(query: string, idea: SearchableIdea): number {
+    const queryLower = query.toLowerCase();
+    let boost = 0;
+
+    // Check tags for partial matches
+    for (const tag of idea.tags) {
+      if (tag.toLowerCase().includes(queryLower) || queryLower.includes(tag.toLowerCase())) {
+        boost += 0.3;
+      }
+    }
+
+    // Check if query words appear in title
+    const queryWords = queryLower.split(' ');
+    const titleWords = idea.title.toLowerCase().split(' ');
+    
+    for (const queryWord of queryWords) {
+      for (const titleWord of titleWords) {
+        if (queryWord.length > 2 && titleWord.includes(queryWord)) {
+          boost += 0.2;
+        }
+      }
+    }
+
+    // For short queries, add n-gram similarity boost
+    if (queryLower.length <= 6) {
+      const ngramBoost = this.calculateNgramSimilarity(queryLower, [
+        idea.title.toLowerCase(),
+        idea.description.toLowerCase(),
+        ...idea.tags.map(tag => tag.toLowerCase())
+      ]);
+      boost += ngramBoost * 0.3;
+    }
+
+    return Math.min(boost, 1.0);
+  }
+
+  /**
+   * Calculate n-gram similarity for better matching of short queries
+   */
+  private calculateNgramSimilarity(query: string, fields: string[]): number {
+    let bestScore = 0;
+    
+    // Generate bigrams and trigrams from query
+    const queryNgrams = new Set([
+      ...this.generateNgrams(query, 2),
+      ...this.generateNgrams(query, 3)
+    ]);
+
+    if (queryNgrams.size === 0) return 0;
+
+    for (const field of fields) {
+      const words = field.split(/\s+/);
+      
+      for (const word of words) {
+        if (word.length >= 2 && word.length <= 8) {
+          const wordNgrams = new Set([
+            ...this.generateNgrams(word, 2),
+            ...this.generateNgrams(word, 3)
+          ]);
+
+          if (wordNgrams.size > 0) {
+            const intersection = new Set([...queryNgrams].filter(x => wordNgrams.has(x)));
+            const union = new Set([...queryNgrams, ...wordNgrams]);
+            const similarity = intersection.size / union.size;
+            
+            if (similarity > 0.3) {
+              bestScore = Math.max(bestScore, similarity);
+            }
+          }
+        }
+      }
+    }
+
+    return bestScore;
+  }
+
+  /**
+   * Generate n-grams from a string
+   */
+  private generateNgrams(str: string, n: number): string[] {
+    if (str.length < n) return [str];
+    
+    const ngrams: string[] = [];
+    for (let i = 0; i <= str.length - n; i++) {
+      ngrams.push(str.substring(i, i + n));
+    }
+    return ngrams;
   }
 
   /**
@@ -341,14 +607,16 @@ export class SemanticSearchEngine {
       keys: [
         { name: 'title', weight: 0.4 },
         { name: 'description', weight: 0.3 },
-        { name: 'narrativeHook', weight: 0.2 },
-        { name: 'searchCorpus', weight: 0.1 }
+        { name: 'narrativeHook', weight: 0.15 },
+        { name: 'searchCorpus', weight: 0.1 },
+        { name: 'tags', weight: 0.05 }
       ],
-      threshold: 0.6,
+      threshold: 0.4,
       includeScore: true,
       includeMatches: true,
-      minMatchCharLength: 2,
-      ignoreLocation: true
+      minMatchCharLength: 1,
+      ignoreLocation: true,
+      findAllMatches: true
     });
   }
 }
