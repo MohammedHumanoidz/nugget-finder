@@ -3,7 +3,7 @@ import { stripe } from "@better-auth/stripe";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from "../../prisma";
-import { fetchPlansFromStripe } from "../utils/stripe-plans";
+import { fetchPlansFromStripe, getPlanByPriceId } from "../utils/stripe-plans";
 
 // Cache for plans to avoid frequent Stripe API calls
 let cachedPlans: any[] = [];
@@ -108,6 +108,78 @@ export const auth = betterAuth({
         enabled: true,
         plans: async () => {
           return await getPlansForAuth();
+        },
+        // Apply custom limits when subscription is created
+        onSubscriptionCreated: async ({ user, subscription }: { user: any; subscription: any }) => {
+          console.log(`🚀 New subscription for user ${user.id}, plan ${subscription.planId}`);
+          
+          try {
+            const plan = await getPlanByPriceId(subscription.planId);
+            if (plan?.metadata?.limits) {
+              const limits = JSON.parse(plan.metadata.limits as string);
+              console.log(`✅ Applying limits for plan ${plan.name}:`, limits);
+              
+              await prisma.user.update({
+                where: { id: user.id },
+                data: {
+                  claimLimit: limits.claims ?? 0,
+                  saveLimit: limits.saves ?? 0,
+                  viewLimit: limits.views ?? 1,
+                  // Reset usage counters when applying new plan
+                  claimsUsed: 0,
+                  savesUsed: 0,
+                  viewsUsed: 0,
+                  lastViewReset: new Date(),
+                },
+              });
+              
+              console.log(`🎯 User ${user.id} limits updated:`, {
+                claimLimit: limits.claims ?? 0,
+                saveLimit: limits.saves ?? 0,
+                viewLimit: limits.views ?? 1,
+              });
+            } else {
+              console.warn(`⚠️ No limits found in metadata for plan ${subscription.planId}`);
+            }
+          } catch (error) {
+            console.error("❌ Error applying subscription limits:", error);
+          }
+        },
+        // Apply custom limits when subscription is updated (plan changes)
+        onSubscriptionUpdated: async ({ user, subscription }: { user: any; subscription: any }) => {
+          console.log(`🔄 Subscription updated for user ${user.id}, plan ${subscription.planId}`);
+
+          try {
+            const plan = await getPlanByPriceId(subscription.planId);
+            if (plan?.metadata?.limits) {
+              const limits = JSON.parse(plan.metadata.limits as string);
+              console.log(`✅ Applying updated limits for plan ${plan.name}:`, limits);
+
+              await prisma.user.update({
+                where: { id: user.id },
+                data: {
+                  claimLimit: limits.claims ?? 0,
+                  saveLimit: limits.saves ?? 0,
+                  viewLimit: limits.views ?? 1,
+                  // Reset usage counters when plan changes
+                  claimsUsed: 0,
+                  savesUsed: 0,
+                  viewsUsed: 0,
+                  lastViewReset: new Date(),
+                },
+              });
+              
+              console.log(`🎯 User ${user.id} limits updated:`, {
+                claimLimit: limits.claims ?? 0,
+                saveLimit: limits.saves ?? 0,
+                viewLimit: limits.views ?? 1,
+              });
+            } else {
+              console.warn(`⚠️ No limits found in metadata for plan ${subscription.planId}`);
+            }
+          } catch (error) {
+            console.error("❌ Error applying subscription limits:", error);
+          }
         },
       },
     }),
