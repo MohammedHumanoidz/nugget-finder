@@ -1,6 +1,7 @@
 import AnimatedHowItWorks from "@/components/AnimatedHowItWorks";
 import { Scene } from "@/components/BoxedAnimation";
 import FAQSection from "@/components/FaqSection";
+import IdeaActions from "@/components/IdeaActions";
 import IdeaForm from "@/components/IdeaForm";
 import { PricingPage } from "@/components/PricingPage";
 import { Badge } from "@/components/ui/badge";
@@ -64,17 +65,21 @@ export default async function Page() {
                     {idea.narrativeHook}
                   </CardDescription>
                 </div>
-                <Badge className="text-sm bg-yellow-200 text-yellow-900 border border-yellow-300 dark:bg-yellow-900 dark:text-yellow-100 dark:border-yellow-800">
-                  {idea.ideaScore?.totalScore?.toFixed(1)}
-                </Badge>
               </CardHeader>
 
               <CardContent className="text-sm leading-relaxed space-y-2 text-gray-800 dark:text-gray-200">
                 <p>{idea.problemSolution}</p>
               </CardContent>
 
-              <CardFooter className="flex items-center justify-end">
-                <Link href={`/nugget/${idea.id}`}>
+              <CardFooter className="flex items-center justify-between gap-2">
+                <IdeaActions 
+                  ideaId={idea.id}
+                  isSaved={false}
+                  isClaimed={false}
+                  isClaimedByOther={false}
+                  size="sm"
+                />
+                <Link href={`/nugget/${idea.id}`} className="w-full">
                   <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
                     View Nugget <ArrowUpRight />
                   </Button>
@@ -353,9 +358,9 @@ export default async function Page() {
                         🚀 {idea.title}
                       </CardTitle>
                       <div className="flex items-center gap-2 mb-2">
-                        <Badge className="text-xs bg-primary/10 text-primary">
-                          Score: {idea.ideaScore?.totalScore?.toFixed(1)}
-                        </Badge>
+                        <p className="text-sm text-muted-foreground">
+                          {idea.narrativeHook}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -364,7 +369,14 @@ export default async function Page() {
                   <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
                     {idea.problemSolution}
                   </p>
-                  <div className="flex items-center justify-end">
+                  <div className="flex items-center justify-between">
+                      <IdeaActions
+                        ideaId={idea.id}
+                        isSaved={false}
+                        isClaimed={false}
+                        isClaimedByOther={false}
+                        size="sm"
+                      />
                     <Link href={`/nugget/${idea.id}`}>
                       <Button size="sm">
                         Explore <ArrowUpRight className="w-3 h-3 ml-1" />
@@ -468,118 +480,6 @@ export default async function Page() {
 
           <FAQSection />
         </section>
-
-        {/* Footer Section */}
-        <footer className="w-full bg-muted/30 border-t border-border mt-16">
-          <div className="max-w-7xl mx-auto px-4 py-12">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <div className="text-2xl">⛏️</div>
-                  <span className="text-xl font-bold">NuggetFinder</span>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Mining the future of AI-powered startup opportunities, one
-                  nugget at a time.
-                </p>
-                <div className="flex items-center gap-4">
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                    <Twitter className="w-4 h-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                    <Github className="w-4 h-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                    <Mail className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="font-semibold">Product</h3>
-                <div className="space-y-2 text-sm">
-                  <Link
-                    href="/browse"
-                    className="block text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    Browse Ideas
-                  </Link>
-                  <Link
-                    href="/dashboard"
-                    className="block text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    Dashboard
-                  </Link>
-                  <Link
-                    href="/pricing"
-                    className="block text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    Pricing
-                  </Link>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="font-semibold">Company</h3>
-                <div className="space-y-2 text-sm">
-                  <a
-                    href="/about"
-                    className="block text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    About
-                  </a>
-                  <a
-                    href="/blog"
-                    className="block text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    Blog
-                  </a>
-                  <a
-                    href="/careers"
-                    className="block text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    Careers
-                  </a>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="font-semibold">Legal</h3>
-                <div className="space-y-2 text-sm">
-                  <a
-                    href="/privacy"
-                    className="block text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    Privacy Policy
-                  </a>
-                  <a
-                    href="/terms"
-                    className="block text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    Terms of Service
-                  </a>
-                  <a
-                    href="/cookies"
-                    className="block text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    Cookie Policy
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="border-t border-border mt-8 pt-8 flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">
-                © 2024 NuggetFinder. All rights reserved.
-              </p>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span>You&apos;ve mined to the bottom</span>
-                <span className="text-amber-500">🪙</span>
-                <Heart className="w-4 h-4 text-red-500 fill-current animate-pulse" />
-              </div>
-            </div>
-          </div>
-        </footer>
       </div>
     </div>
   );

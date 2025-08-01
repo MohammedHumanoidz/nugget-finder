@@ -40,7 +40,7 @@ const IdeaForm = () => {
           height={100}
         />
         <p className="text-center font-semibold text-4xl">
-          Find Your GOlden Business Opportunity Before Anyone Else
+          Find Your Golden Business Opportunity Before Anyone Else
         </p>
       </div>
       <form

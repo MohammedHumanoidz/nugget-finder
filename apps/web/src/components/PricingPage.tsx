@@ -10,6 +10,7 @@ import { Check, Star, Loader2 } from "lucide-react";
 import { useBetterAuthSubscription } from "@/hooks/useBetterAuthSubscription";
 import { authClient } from "@/lib/auth-client";
 import type { PricingPageProps, BillingPeriod } from "@/types/subscription";
+import Link from "next/link";
 
 export function PricingPage({ 
   highlightedPlanId,
@@ -251,9 +252,11 @@ export function PricingPage({
         <p className="text-muted-foreground mb-4">
           All plans include 24/7 support and can be canceled anytime.
         </p>
+        <Link href="mailto:david@humanoidz.ai">
         <p className="text-sm text-muted-foreground">
           Questions? <Button variant="link" className="p-0 h-auto">Contact our sales team</Button>
         </p>
+        </Link>
       </div>
     </div>
   );

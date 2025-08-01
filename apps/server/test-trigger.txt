@@ -4,3 +4,4 @@ Trigger.dev (3.3.17)
 Key: Version | Task | Run
 ------------------------------------------------------
 ○ Building background worker…
+○ Background worker ready [node] -> 20250801.1

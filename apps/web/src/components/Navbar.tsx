@@ -69,7 +69,7 @@ export default function Navbar() {
         stiffness: 300,
         damping: 30,
       }}
-      className={`px-4 py-3 sticky top-0 z-50 transition-all duration-300 ${
+      className={`px-4 py-3 sticky top-0 z-[9999] transition-all duration-300 ${
         isScrolled
           ? "bg-background/80 backdrop-blur-md border-b border-border/50 shadow-lg"
           : "bg-transparent"
@@ -161,9 +161,7 @@ export default function Navbar() {
             >
               <Link
                 href={link.href}
-                className={`text-muted-foreground hover:text-foreground transition-all duration-200 relative group ${
-                  isScrolled ? "text-sm" : "text-base"
-                }`}
+                className={"group relative text-base text-muted-foreground transition-all duration-200 hover:text-foreground"}
               >
                 {link.label}
                 <motion.div
@@ -192,9 +190,7 @@ export default function Navbar() {
               >
                 <Link
                   href={link.href}
-                  className={`text-muted-foreground hover:text-foreground transition-all duration-200 relative group ${
-                    isScrolled ? "text-sm" : "text-base"
-                  }`}
+                  className={"group relative text-base text-muted-foreground transition-all duration-200 hover:text-foreground"}
                 >
                   {link.label}
                   <motion.div
@@ -289,7 +285,7 @@ export default function Navbar() {
                 <Link href="/auth/sign-in">
                   <Button
                     variant="outline"
-                    size={isScrolled ? "sm" : "default"}
+                    size={"default"}
                     className="transition-all duration-300"
                   >
                     Sign in
@@ -339,7 +335,7 @@ export default function Navbar() {
                 <Link href="/dashboard">
                   <Button
                     variant="default"
-                    size={isScrolled ? "sm" : "default"}
+                    size={"default"}
                     className="transition-all duration-300"
                   >
                     Dashboard
@@ -358,7 +354,7 @@ export default function Navbar() {
                 }}
               >
                 <UserButton
-                  size={isScrolled ? "sm" : "icon"}
+                  size={"icon"}
                   additionalLinks={[
                     {
                       href: "/subscription",

@@ -1,6 +1,7 @@
 // Type definitions for idea generation agent data structures
 
 export interface SynthesizedIdea {
+  id: string;
   title: string;
   description: string;
   executiveSummary: string;

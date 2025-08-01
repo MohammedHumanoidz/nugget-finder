@@ -202,7 +202,7 @@ export default function BrowseClient() {
         threshold: 0.15,
       },
     });
-  }, [debouncedSearchQuery, searchQuery, personalizationData, semanticSearchMutation]);
+  }, [debouncedSearchQuery, searchQuery, personalizationData]);
 
   // Trigger semantic search when debounced query changes
   useEffect(() => {
@@ -474,20 +474,6 @@ export default function BrowseClient() {
                       <CardTitle className="line-clamp-2 flex-1 text-lg">
                         {baseIdea.title || "Untitled Idea"}
                       </CardTitle>
-                      <div className="flex items-center gap-2">
-                        {semanticResult && (
-                          <div className="text-xs font-medium text-primary">
-                            {semanticResult.personalizedScore}% match
-                          </div>
-                        )}
-                        {baseIdea.ideaScore?.totalScore && (
-                          <div
-                            className={`text-sm font-semibold ${getScoreColor(baseIdea.ideaScore.totalScore)}`}
-                          >
-                            {baseIdea.ideaScore.totalScore}/100
-                          </div>
-                        )}
-                      </div>
                     </div>
                     
                     {/* Personalization badges */}

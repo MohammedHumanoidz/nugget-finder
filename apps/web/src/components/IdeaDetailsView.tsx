@@ -26,6 +26,7 @@ import {
 import { Send, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import IdeaActions from "@/components/IdeaActions";
 import Image from "next/image";
 
 const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
@@ -154,7 +155,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
 
 
         {/* Badges */}
-        <div className="flex justify-center gap-3 flex-wrap">
+        <div className="flex justify-center gap-3 flex-wrap mb-6">
           <span className="bg-purple-100 border border-purple-300 text-purple-700 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">
             💎 High Purity
           </span>
@@ -164,6 +165,18 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
           <span className="bg-green-100 border border-green-300 text-green-700 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">
             ⛏️ Ready to Mine
           </span>
+        </div>
+
+        {/* Save and Claim Actions */}
+        <div className="flex justify-center max-w-md mx-auto">
+          <IdeaActions 
+            ideaId={idea.id}
+            isSaved={false}
+            isClaimed={false}
+            isClaimedByOther={false}
+            size="default"
+            className="w-full"
+          />
         </div>
       </div>
 
