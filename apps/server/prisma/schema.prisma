@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client"
-  output   = "../generated"
+  output   = "./generated"
   moduleFormat = "esm"
 }
 
@@ -9,6 +9,117 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Auth Models
+model User {
+  id               String    @id @map("_id")
+  name             String
+  email            String
+  emailVerified    Boolean
+  image            String?
+  createdAt        DateTime
+  updatedAt        DateTime
+  stripeCustomerId String?   // Add this field for the Stripe plugin
+  claimLimit       Int       @default(0)  // Number of claims allowed
+  claimsUsed       Int       @default(0)  // Number of claims used
+  saveLimit        Int       @default(0)  // Number of saves allowed (-1 for unlimited)
+  savesUsed        Int       @default(0)  // Number of saves used
+  viewLimit        Int       @default(1)  // Number of views per day (-1 for unlimited)
+  viewsUsed        Int       @default(0)  // Number of views used today
+  lastViewReset    DateTime? // Last time view count was reset
+  sessions         Session[]
+  accounts         Account[]
+  subscription     Subscription?
+  paymentVerification PaymentVerification?
+  savedIdeas SavedIdeas[]
+  claimedIdeas ClaimedIdeas[]
+  viewedIdeas ViewedIdeas[]
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @map("_id")
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @map("_id")
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id @map("_id")
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
+}
+
+// Payment Models
+model Subscription {
+  id                   String    @id @map("_id")
+  plan                 String
+  referenceId          String    @unique  // Better Auth uses this as the userId
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  status               String    @default("incomplete")
+  periodStart          DateTime?
+  periodEnd            DateTime?
+  cancelAtPeriodEnd    Boolean   @default(false)
+  seats                Int?
+  trialStart           DateTime?
+  trialEnd             DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  
+  // Better Auth compatible user relation using referenceId
+  user User @relation(fields: [referenceId], references: [id])
+  
+  @@map("subscription")
+}
+
+model PaymentVerification {
+  id                String   @id @map("_id")
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id])
+  transactionNumber String   @unique
+  amount            Decimal
+  currency          String
+  status            String   @default("pending")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@map("paymentVerification")
+}
+
+// Business Logic Enums
 enum CatalystType {
   TECHNOLOGY_BREAKTHROUGH
   REGULATORY_CHANGE
@@ -35,6 +146,7 @@ enum GrowthScale {
   LARGE
 }
 
+// Business Logic Models
 model WhyNow {
   id String @id @default(uuid())
   title String
@@ -356,4 +468,4 @@ model ViewedIdeas {
   idea DailyIdea @relation(fields: [ideaId], references: [id], onDelete: Cascade)
   
   @@unique([userId, ideaId])
-}
+} 
