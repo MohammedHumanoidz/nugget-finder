@@ -5,6 +5,7 @@ import { Elysia } from "elysia";
 import { auth } from "./lib/auth";
 import { createContext } from "./lib/context";
 import { appRouter } from "./routers/index";
+import { chatRouter } from "./routers/chat";
 import "./trigger/daily-idea-generation"; // Initialize Trigger.dev jobs
 
 const _app = new Elysia()
@@ -16,6 +17,7 @@ const _app = new Elysia()
 			credentials: true,
 		}),
 	)
+	.use(chatRouter)
 	.all("/api/auth/*", async (context) => {
 		const { request } = context;
 		if (["POST", "GET"].includes(request.method)) {

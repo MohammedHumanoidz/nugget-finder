@@ -6,6 +6,7 @@ import type {
   DirectCompetitor,
   IndirectCompetitor,
 } from "@/types/idea-details";
+import NuggetChat from "./NuggetChat";
 import {
   ChartContainer,
   ChartTooltip,
@@ -33,7 +34,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
   const [competitorTab, setCompetitorTab] = useState<"direct" | "indirect">(
     "direct"
   );
-  const [chatMessage, setChatMessage] = useState("");
+  
 
   // Helper function to format currency
   const formatCurrency = (amount: number): string => {
@@ -102,12 +103,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
     })
   );
 
-  const handleChatSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle chat message submission here
-    console.log("Chat message:", chatMessage);
-    setChatMessage("");
-  };
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -752,86 +748,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
             </div>
 
             {/* Chat-style Interrogate Section */}
-            <div className="bg-card border border-border rounded-lg shadow-sm overflow-hidden">
-              <div className="flex px-6 py-2">
-                <Image
-                  src="/nugget-faq.webp"
-                  alt="nugget faq"
-                  width={100}
-                  height={100}
-                  className="w-20 h-20 object-cover"
-                />
-
-                <h3 className="bg-muted/50 text-foreground text-lg font-semibold flex items-center gap-2">
-                  <MessageCircle className="w-5 h-5" />
-                  Ask Pip the Prospector to dig deeper
-                </h3>
-              </div>
-              <div className="p-4 py-0">
-                <div className="bg-muted/30 rounded-lg p-4 mb-4 min-h-[200px] flex flex-col">
-                  <div className="flex-1 space-y-3">
-                    <div className="bg-primary/10 text-primary p-3 rounded-lg max-w-xs">
-                      <p className="text-sm">
-                        Howdy fellow miner! Curious about this nugget. Ask me
-                        anything about the market opportunity, risks,
-                        competitive analysis, or implementation details.
-                      </p>
-                    </div>
-                  </div>
-
-                  <form onSubmit={handleChatSubmit} className="flex gap-2 mt-4">
-                    <input
-                      type="text"
-                      value={chatMessage}
-                      onChange={(e) => setChatMessage(e.target.value)}
-                      placeholder="Ask me about this nugget..."
-                      className="flex-1 px-4 py-2 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-                    <Button type="submit" className="flex items-center gap-2">
-                      <Send className="w-4 h-4" />
-                      Send
-                    </Button>
-                  </form>
-
-                  <div className="flex gap-2 mt-3 flex-wrap">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        setChatMessage(
-                          "What are the main risks with this idea?"
-                        )
-                      }
-                      className="text-xs bg-muted hover:bg-muted/80 text-muted-foreground px-3 py-1 rounded-full transition-colors h-auto"
-                    >
-                      Show me risks
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        setChatMessage(
-                          "What's the market size for this opportunity?"
-                        )
-                      }
-                      className="text-xs bg-muted hover:bg-muted/80 text-muted-foreground px-3 py-1 rounded-full transition-colors h-auto"
-                    >
-                      Market size
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        setChatMessage("How do I validate this idea quickly?")
-                      }
-                      className="text-xs bg-muted hover:bg-muted/80 text-muted-foreground px-3 py-1 rounded-full transition-colors h-auto"
-                    >
-                      Validation strategy
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <NuggetChat idea={idea} />
           </div>
 
           {/* Right Column - Sidebar */}
