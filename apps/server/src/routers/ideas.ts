@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { protectedProcedure, router } from "../lib/trpc";
+import { protectedProcedure, publicProcedure, router } from "../lib/trpc";
 import prisma from "../../prisma";
 import {
   getUserIdeaLimits,
@@ -19,7 +19,7 @@ export const ideasRouter = router({
   }),
 
   // Get ideas filtered for the current user
-  getIdeas: protectedProcedure
+  getIdeas: publicProcedure
     .input(
       z.object({
         limit: z.number().min(1).max(100).default(50),
@@ -27,7 +27,7 @@ export const ideasRouter = router({
       }).optional()
     )
     .query(async ({ ctx, input }) => {
-      return await getIdeasForUser(ctx.session.user.id, input);
+      return await getIdeasForUser(ctx?.session?.user?.id ?? '', input);
     }),
 
   // Save an idea
@@ -113,14 +113,14 @@ export const ideasRouter = router({
           },
         },
       });
-      console.log(`[DEBUG] Already viewed check:`, { alreadyViewed: !!alreadyViewed, ideaId });
+      console.log("[DEBUG] Already viewed check:", { alreadyViewed: !!alreadyViewed, ideaId });
 
       // If not viewed before and user has no more views left, throw error
       if (!alreadyViewed && !limits.canView) {
-        console.log(`[DEBUG] THROWING VIEW_LIMIT_EXCEEDED - User has no views left`);
+        console.log("[DEBUG] THROWING VIEW_LIMIT_EXCEEDED - User has no views left");
         throw new Error('VIEW_LIMIT_EXCEEDED');
       }
-      console.log(`[DEBUG] View check passed - proceeding to fetch idea`);
+      console.log("[DEBUG] View check passed - proceeding to fetch idea");
 
       // Get the idea
       const idea = await prisma.dailyIdea.findUnique({

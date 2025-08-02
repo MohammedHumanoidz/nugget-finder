@@ -347,16 +347,12 @@ export async function getIdeasForUser(userId: string, filters?: { limit?: number
   try {
     const { limit = 50, offset = 0 } = filters || {};
 
-    // Get user limits for filtering, but don't increment view count
-    // View counts are only incremented when users click on individual ideas
-    const limits = await getUserIdeaLimits(userId);
-
     // Get ideas excluding those claimed by others
     const ideas = await prisma.dailyIdea.findMany({
       where: {
         OR: [
           { claimedIdeas: null }, // Not claimed by anyone
-          { claimedIdeas: { userId } }, // Claimed by current user
+          { claimedIdeas: { userId: userId ?? undefined } }, // Claimed by current user
         ],
       },
       include: {
@@ -365,10 +361,11 @@ export async function getIdeasForUser(userId: string, filters?: { limit?: number
         monetizationStrategy: true,
         whyNow: true,
         savedIdeas: {
-          where: { userId },
+          where: { userId: userId ?? undefined },
           select: { id: true },
         },
         claimedIdeas: {
+          where: { userId: userId ?? undefined },
           select: { userId: true },
         },
       },
