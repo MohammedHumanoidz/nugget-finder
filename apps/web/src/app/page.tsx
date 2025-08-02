@@ -4,6 +4,7 @@ import FAQSection from "@/components/FaqSection";
 import IdeaActions from "@/components/IdeaActions";
 import IdeaForm from "@/components/IdeaForm";
 import { PricingPage } from "@/components/PricingPage";
+import NuggetLink from "@/components/NuggetLink";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -79,11 +80,11 @@ export default async function Page() {
                   isClaimedByOther={false}
                   size="sm"
                 />
-                <Link href={`/nugget/${idea.id}`} className="w-full">
+                <NuggetLink ideaId={idea.id} className="w-full">
                   <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
                     View Nugget <ArrowUpRight />
                   </Button>
-                </Link>
+                </NuggetLink>
               </CardFooter>
             </Card>
           ))}
@@ -377,11 +378,11 @@ export default async function Page() {
                         isClaimedByOther={false}
                         size="sm"
                       />
-                    <Link href={`/nugget/${idea.id}`}>
+                    <NuggetLink ideaId={idea.id}>
                       <Button size="sm">
                         Explore <ArrowUpRight className="w-3 h-3 ml-1" />
                       </Button>
-                    </Link>
+                    </NuggetLink>
                   </div>
                 </CardContent>
               </Card>

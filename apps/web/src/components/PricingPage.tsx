@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Check, Star, Loader2 } from "lucide-react";
+import { Check, Star, Loader2, AlertCircle } from "lucide-react";
 import { useBetterAuthSubscription } from "@/hooks/useBetterAuthSubscription";
 import { authClient } from "@/lib/auth-client";
 import type { PricingPageProps, BillingPeriod } from "@/types/subscription";
@@ -18,10 +18,15 @@ export function PricingPage({
 }: PricingPageProps) {
   const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>("monthly");
   const router = useRouter();
+  const searchParams = useSearchParams();
   
   // Get authentication status
   const { data: session } = authClient.useSession();
   const isAuthenticated = !!session?.user;
+  
+  // Check if user was redirected due to view limit
+  const reason = searchParams.get('reason');
+  const isViewLimitRedirect = reason === 'view_limit' || reason === 'view_limit_non_auth';
   
   const {
     plans,
@@ -118,6 +123,43 @@ export function PricingPage({
           </TabsList>
         </Tabs>
       </div>
+
+      {/* View Limit Notice */}
+      {isViewLimitRedirect && (
+        <div className="mb-8 max-w-2xl mx-auto">
+          <Card className="border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/20">
+            <CardHeader>
+              <CardTitle className="text-amber-800 dark:text-amber-200 flex items-center gap-2">
+                <AlertCircle className="w-5 h-5" />
+                {reason === 'view_limit_non_auth' 
+                  ? 'You\'ve used your free nugget view!' 
+                  : 'View limit reached'
+                }
+              </CardTitle>
+              <CardDescription className="text-amber-700 dark:text-amber-300">
+                {reason === 'view_limit_non_auth' 
+                  ? 'Want to explore more startup opportunities? Create an account or upgrade to get unlimited access to our entire library of AI-generated ideas.'
+                  : 'You\'ve reached your view limit for your current plan. Upgrade to continue exploring startup opportunities.'
+                }
+              </CardDescription>
+            </CardHeader>
+            {reason === 'view_limit_non_auth' && (
+              <CardContent>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <Button asChild className="flex-1">
+                    <Link href="/auth/sign-in">
+                      Sign In to Continue
+                    </Link>
+                  </Button>
+                  <p className="text-sm text-amber-600 dark:text-amber-400 text-center py-2">
+                    or upgrade below for unlimited access
+                  </p>
+                </div>
+              </CardContent>
+            )}
+          </Card>
+        </div>
+      )}
 
       {/* Pricing Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

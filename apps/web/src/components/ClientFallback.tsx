@@ -9,6 +9,9 @@ import Link from "next/link";
 import AnimatedHowItWorks from "@/components/AnimatedHowItWorks";
 import StatsCards from "@/components/StatsCards";
 import IdeaScoreBreakdown from "@/components/IdeaScoreBreakdown";
+import NuggetLink from "@/components/NuggetLink";
+import { useNonAuthViewTracker } from "@/hooks/useNonAuthViewTracker";
+import { authClient } from "@/lib/auth-client";
 
 interface ClientFallbackProps {
   type: 'home' | 'nugget';
@@ -16,6 +19,15 @@ interface ClientFallbackProps {
 }
 
 export default function ClientFallback({ type, nuggetId }: ClientFallbackProps) {
+  const { data: session } = authClient.useSession();
+  const isAuthenticated = !!session?.user;
+  
+  const {
+    isLoaded,
+    hasViewedIdea,
+    canViewNewIdea,
+  } = useNonAuthViewTracker();
+
   const { data: ideasResponse, isLoading: homeLoading, error: homeError } = useQuery({
     ...trpc.agents.getDailyIdeas.queryOptions({
       limit: 50,
@@ -24,9 +36,12 @@ export default function ClientFallback({ type, nuggetId }: ClientFallbackProps) 
     enabled: type === 'home',
   });
 
+  // For nugget detail, check access for non-authenticated users
+  const canAccessNugget = isAuthenticated || !isLoaded || (nuggetId && (hasViewedIdea(nuggetId) || canViewNewIdea()));
+
   const { data: nuggetData, isLoading: nuggetLoading, error: nuggetError } = useQuery({
-    ...trpc.ideas.getIdeaById.queryOptions({ ideaId: nuggetId! }),
-    enabled: type === 'nugget' && !!nuggetId,
+    ...trpc.agents.getIdeaById.queryOptions({ id: nuggetId! }),
+    enabled: Boolean(type === 'nugget' && nuggetId && canAccessNugget),
   });
 
   if (type === 'home') {
@@ -102,9 +117,9 @@ export default function ClientFallback({ type, nuggetId }: ClientFallbackProps) 
               </CardContent>
               
               <CardFooter>
-                <Button asChild className="w-full">
-                  <Link href={`/nugget/${featuredNugget.id}`}>Read Full Analysis →</Link>
-                </Button>
+                <NuggetLink ideaId={featuredNugget.id} className="w-full">
+                  <Button className="w-full">Read Full Analysis →</Button>
+                </NuggetLink>
               </CardFooter>
             </Card>
           )}
@@ -122,7 +137,16 @@ export default function ClientFallback({ type, nuggetId }: ClientFallbackProps) 
 
   // Nugget detail fallback
   if (type === 'nugget') {
-    if (nuggetLoading) {
+    // Check if non-authenticated user has exceeded their view limit
+    if (!isAuthenticated && isLoaded && nuggetId && !hasViewedIdea(nuggetId) && !canViewNewIdea()) {
+      // Redirect to pricing page for non-authenticated users who exceeded limit
+      if (typeof window !== 'undefined') {
+        window.location.href = '/pricing?reason=view_limit_non_auth';
+        return null;
+      }
+    }
+
+    if (nuggetLoading || (!isAuthenticated && !isLoaded)) {
       return (
         <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 80px)' }}>
           <div className="text-center">

@@ -4,7 +4,9 @@ import ClientFallback from "@/components/ClientFallback";
 import IdeaDetailsView from "@/components/IdeaDetailsView";
 import { generateStaticParams } from "@/lib/server-api";
 import { getAuthenticatedIdeaById, getUserLimits } from "@/lib/server-auth";
+import { getServerSession } from "@/lib/auth-server";
 import type { IdeaDetailsViewProps } from "@/types/idea-details";
+import NonAuthIdeaWrapper from "@/components/NonAuthIdeaWrapper";
 
 // Helper function to ensure all required arrays exist
 function transformIdeaData(idea: any): IdeaDetailsViewProps['idea'] {
@@ -129,6 +131,7 @@ function transformIdeaData(idea: any): IdeaDetailsViewProps['idea'] {
   };
 }
 
+
 // Export generateStaticParams for static generation
 export { generateStaticParams };
 
@@ -140,50 +143,67 @@ export default async function NuggetDetailPage({ params }: { params: Promise<{ i
   try {
     console.log('[DEBUG] Page: Attempting to fetch idea', id);
     
-    // First, check user's view limits proactively
-    const limits = await getUserLimits();
-    console.log('[DEBUG] Page: User limits check:', {
-      canView: limits?.canView,
-      viewsRemaining: limits?.viewsRemaining,
-      ideaId: id,
-    });
+    // Check if user is authenticated
+    const session = await getServerSession();
+    const isAuthenticated = !!session?.user;
     
-    // If user has no views remaining and this is a new idea they haven't viewed before,
-    // redirect them to pricing page immediately
-    if (limits && !limits.canView && limits.viewsRemaining === 0) {
-      console.log('[DEBUG] Page: User has 0 views remaining, redirecting to pricing');
-      redirect('/pricing?reason=view_limit');
-    }
+    console.log('[DEBUG] Page: User authentication status:', { isAuthenticated });
     
-    // Fetch data server-side with authentication and view limits check
-    const idea = await getAuthenticatedIdeaById(id);
+    if (isAuthenticated) {
+      // For authenticated users, use the existing flow with view limits
+      const limits = await getUserLimits();
+      console.log('[DEBUG] Page: User limits check:', {
+        canView: limits?.canView,
+        viewsRemaining: limits?.viewsRemaining,
+        ideaId: id,
+      });
+      
+      // If user has no views remaining and this is a new idea they haven't viewed before,
+      // redirect them to pricing page immediately
+      if (limits && !limits.canView && limits.viewsRemaining === 0) {
+        console.log('[DEBUG] Page: User has 0 views remaining, redirecting to pricing');
+        redirect('/pricing?reason=view_limit');
+      }
+      
+      // Fetch data server-side with authentication and view limits check
+      const idea = await getAuthenticatedIdeaById(id);
 
-    if (!idea) {
-      // Try client-side fallback before showing 404
-      console.log('[DEBUG] Page: No server data for nugget, using client fallback');
-      return (
-        <div className="min-h-screen bg-background">        
-          <ClientFallback type="nugget" nuggetId={id} />
-        </div>
-      );
-    }
+      if (!idea) {
+        // Try client-side fallback before showing 404
+        console.log('[DEBUG] Page: No server data for nugget, using client fallback');
+        return (
+          <div className="min-h-screen bg-background">        
+            <ClientFallback type="nugget" nuggetId={id} />
+          </div>
+        );
+      }
 
-    console.log('[DEBUG] Page: Server data fetch successful, rendering IdeaDetailsView');
+      console.log('[DEBUG] Page: Server data fetch successful, rendering IdeaDetailsView');
 
-    // Transform the data to ensure all required arrays exist
-    const ideaWithFullData = transformIdeaData(idea);
+      // Transform the data to ensure all required arrays exist
+      const ideaWithFullData = transformIdeaData(idea);
 
-    return (
-      <div className="min-h-screen bg-background">
-        <IdeaDetailsView idea={ideaWithFullData} />
-      </div>
-    );
+             return (
+         <div className="min-h-screen bg-background">
+           <IdeaDetailsView idea={ideaWithFullData} />
+         </div>
+       );
+     }
+     
+     // For non-authenticated users, use client-side localStorage tracking
+     console.log('[DEBUG] Page: Non-authenticated user, using client-side tracking');
+     return (
+       <div className="min-h-screen bg-background">
+         <NonAuthIdeaWrapper ideaId={id} />
+       </div>
+     );
   } catch (error: any) {
     console.log('[DEBUG] Page: Caught error:', {
       message: error?.message,
       name: error?.name,
       stack: error?.stack?.substring(0, 200),
     });
+
     
     // Re-throw redirect errors to let Next.js handle them properly
     if (error?.message === 'NEXT_REDIRECT') {
