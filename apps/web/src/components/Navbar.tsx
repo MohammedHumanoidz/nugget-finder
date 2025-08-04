@@ -14,6 +14,7 @@ export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     // Prevent initial animation by setting initial load to false after mount
@@ -21,8 +22,15 @@ export default function Navbar() {
       setIsInitialLoad(false);
     }, 100);
 
+    // Set initial mobile state
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      const isMobileCheck = window.innerWidth < 768; // md breakpoint
 
       // Determine if navbar should be visible
       if (currentScrollY < lastScrollY || currentScrollY < 100) {
@@ -30,7 +38,15 @@ export default function Navbar() {
         setIsVisible(true);
       } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
         // Scrolling down and past threshold
-        setIsVisible(false);
+        // On mobile, be less aggressive about hiding the navbar
+        if (isMobileCheck) {
+          // Only hide if scrolling down significantly and mobile menu is closed
+          if (!isMobileMenuOpen && currentScrollY > lastScrollY + 10) {
+            setIsVisible(false);
+          }
+        } else {
+          setIsVisible(false);
+        }
         setIsMobileMenuOpen(false); // Close mobile menu when hiding
       }
 
@@ -40,12 +56,18 @@ export default function Navbar() {
       setLastScrollY(currentScrollY);
     };
 
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
       clearTimeout(timer);
     };
-  }, [lastScrollY]);
+  }, [lastScrollY, isMobileMenuOpen]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -66,9 +88,9 @@ export default function Navbar() {
     <motion.nav
       initial={false} // Prevent initial animation
       animate={{
-        y: isInitialLoad ? 0 : isVisible ? 0 : -100,
-        opacity: isInitialLoad ? 1 : isVisible ? 1 : 0,
-        scale: isScrolled ? 0.95 : 1,
+        y: isInitialLoad ? 0 : isVisible ? 0 : isMobile ? -60 : -100,
+        opacity: isInitialLoad ? 1 : isVisible ? 1 : isMobile ? 0.3 : 0,
+        scale: isMobile ? 1 : isScrolled ? 0.95 : 1,
       }}
       transition={{
         duration: isInitialLoad ? 0 : 0.3,
@@ -86,8 +108,8 @@ export default function Navbar() {
       <motion.div
         className="max-w-7xl mx-auto flex items-center justify-between"
         animate={{
-          paddingTop: isScrolled ? "0.5rem" : "0.75rem",
-          paddingBottom: isScrolled ? "0.5rem" : "0.75rem",
+          paddingTop: isMobile ? "0.75rem" : isScrolled ? "0.5rem" : "0.75rem",
+          paddingBottom: isMobile ? "0.75rem" : isScrolled ? "0.5rem" : "0.75rem",
         }}
         transition={{ duration: 0.3 }}
       >
@@ -361,9 +383,10 @@ export default function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="md:hidden border-t border-border mt-3 pt-3 overflow-hidden"
+            className="md:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-md border-t border-border shadow-lg overflow-hidden z-50"
+            style={{ marginTop: 0 }}
           >
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 p-4">
               {/* Mobile Navigation Links */}
               {navLinks.map((link, index) => (
                 <motion.div

@@ -32,7 +32,7 @@ const IdeaForm = () => {
   return (
     <div className="mx-auto mt-10 w-full max-w-4xl space-y-6 z-50">
       {/* Form Section */}
-      <div className="flex items-center justify-center gap-4">
+      <div className="flex flex-col lg:flex-row items-center justify-center gap-4">
         <Image
           src="/nuggetfinder-super-happy.png"
           alt="mine nuggets"

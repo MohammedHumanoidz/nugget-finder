@@ -51,46 +51,46 @@ export default async function Page() {
         <p className="text-center font-medium text-2xl">
           Today&apos;s finest nuggets
         </p>
-        <div className="flex items-center justify-center gap-4 w-full">
-          {todaysIdeas?.map((idea) => (
-            <Card
-              key={idea.id}
-              className="w-96 transition-transform duration-300 hover:scale-[1.02] hover:shadow-2xl border border-yellow-400/20 bg-gradient-to-br from-yellow-50 via-white to-yellow-100 dark:from-zinc-800 dark:via-zinc-900 dark:to-zinc-950 dark:border-zinc-700"
-            >
-              <CardHeader className="flex items-start justify-between space-y-2">
-                <div>
-                  <CardTitle className="text-xl font-bold flex items-center gap-2 text-yellow-800 dark:text-primary">
-                    💡 {idea.title}
-                  </CardTitle>
-                  <CardDescription className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    {idea.narrativeHook}
-                  </CardDescription>
-                </div>
-              </CardHeader>
+        <div className="flex flex-wrap items-center justify-center gap-4 w-full">
+          {Array.isArray(todaysIdeas) && todaysIdeas.length > 0 ? (
+            todaysIdeas.map((idea) => (
+              <Card
+                key={idea.id}
+                className="w-96 transition-transform duration-300 hover:scale-[1.02] hover:shadow-2xl border border-yellow-400/20 bg-gradient-to-br from-yellow-50 via-white to-yellow-100 dark:from-zinc-800 dark:via-zinc-900 dark:to-zinc-950 dark:border-zinc-700"
+              >
+                <CardHeader className="flex items-start justify-between space-y-2">
+                  <div>
+                    <CardTitle className="text-xl font-bold flex items-center gap-2 text-yellow-800 dark:text-primary">
+                      💡 {idea.title}
+                    </CardTitle>
+                    <CardDescription className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                      {idea.narrativeHook}
+                    </CardDescription>
+                  </div>
+                </CardHeader>
 
-              <CardContent className="text-sm leading-relaxed space-y-2 text-gray-800 dark:text-gray-200">
-                <p>{idea.problemSolution}</p>
-              </CardContent>
+                <CardContent className="text-sm leading-relaxed space-y-2 text-gray-800 dark:text-gray-200">
+                  <p>{idea.problemSolution}</p>
+                </CardContent>
 
-              <CardFooter className="flex items-center justify-between gap-2">
-                <IdeaActions 
-                  ideaId={idea.id}
-                  isSaved={false}
-                  isClaimed={false}
-                  isClaimedByOther={false}
-                  size="sm"
-                />
-                <NuggetLink ideaId={idea.id} className="w-full">
-                  <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                    View Nugget <ArrowUpRight />
-                  </Button>
-                </NuggetLink>
-              </CardFooter>
-            </Card>
-          ))}
-
-          {todaysIdeas?.length === 0 && (
-            <p className="text-gray-300 text-center">
+                <CardFooter className="flex items-center justify-between gap-2">
+                  <IdeaActions
+                    ideaId={idea.id}
+                    isSaved={false}
+                    isClaimed={false}
+                    isClaimedByOther={false}
+                    size="sm"
+                  />
+                  <NuggetLink ideaId={idea.id} className="w-full">
+                    <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                      View Nugget <ArrowUpRight />
+                    </Button>
+                  </NuggetLink>
+                </CardFooter>
+              </Card>
+            ))
+          ) : (
+            <p className="text-gray-300 text-center w-full">
               No ideas generated today yet
             </p>
           )}
@@ -371,13 +371,13 @@ export default async function Page() {
                     {idea.problemSolution}
                   </p>
                   <div className="flex items-center justify-between">
-                      <IdeaActions
-                        ideaId={idea.id}
-                        isSaved={false}
-                        isClaimed={false}
-                        isClaimedByOther={false}
-                        size="sm"
-                      />
+                    <IdeaActions
+                      ideaId={idea.id}
+                      isSaved={false}
+                      isClaimed={false}
+                      isClaimedByOther={false}
+                      size="sm"
+                    />
                     <NuggetLink ideaId={idea.id}>
                       <Button size="sm">
                         Explore <ArrowUpRight className="w-3 h-3 ml-1" />
