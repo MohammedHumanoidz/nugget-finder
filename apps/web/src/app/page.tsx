@@ -33,8 +33,8 @@ export default async function Page() {
   const todaysIdeas = await getTodaysTopIdeas();
 
   // Calculate market intelligence metrics
-  const aiTrendsTracked = 1247;
-  const signalsAnalyzed = 3542;
+  const aiTrendsTracked = 12764;
+  const signalsAnalyzed = 35431;
 
   return (
     <div className="min-h-screen w-full">
@@ -57,7 +57,7 @@ export default async function Page() {
             todaysIdeas.map((idea) => (
               <Card
                 key={idea.id}
-                className="w-96 transition-transform duration-300 hover:scale-[1.02] hover:shadow-2xl border border-yellow-400/20 bg-gradient-to-br from-yellow-50 via-white to-yellow-100 dark:from-zinc-800 dark:via-zinc-900 dark:to-zinc-950 dark:border-zinc-700"
+                className="w-96 border border-yellow-400/20 bg-gradient-to-br from-yellow-50 via-white to-yellow-100 transition-transform duration-300 hover:scale-[1.02] hover:shadow-2xl dark:border-zinc-700 dark:from-zinc-800 dark:via-zinc-900 dark:to-zinc-950"
               >
                 <CardHeader className="flex items-start justify-between space-y-2">
                   <div>
@@ -70,7 +70,7 @@ export default async function Page() {
                   </div>
                 </CardHeader>
 
-                <CardContent className="text-sm leading-relaxed space-y-2 text-gray-800 dark:text-gray-200">
+                <CardContent className="text-sm leading-relaxed space-y-2 text-gray-800 dark:text-gray-200 line-clamp-6">
                   <p>{idea.problemSolution}</p>
                 </CardContent>
 
