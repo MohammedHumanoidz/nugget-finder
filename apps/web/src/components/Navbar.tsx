@@ -3,19 +3,24 @@
 import { SignedIn, SignedOut, UserButton } from "@daveyplate/better-auth-ui";
 import { CreditCard, Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import Link from "next/link";
-import { useState, useEffect } from "react";
-import { ModeToggle } from "@/components/mode-toggle";
-import { Button } from "./ui/button";
 import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Button } from "./ui/button";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   useEffect(() => {
+    // Prevent initial animation by setting initial load to false after mount
+    const timer = setTimeout(() => {
+      setIsInitialLoad(false);
+    }, 100);
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
@@ -36,7 +41,10 @@ export default function Navbar() {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(timer);
+    };
   }, [lastScrollY]);
 
   const toggleMobileMenu = () => {
@@ -56,14 +64,14 @@ export default function Navbar() {
 
   return (
     <motion.nav
-      initial={{ y: -100, opacity: 0 }}
+      initial={false} // Prevent initial animation
       animate={{
-        y: isVisible ? 0 : -100,
-        opacity: isVisible ? 1 : 0,
+        y: isInitialLoad ? 0 : isVisible ? 0 : -100,
+        opacity: isInitialLoad ? 1 : isVisible ? 1 : 0,
         scale: isScrolled ? 0.95 : 1,
       }}
       transition={{
-        duration: 0.3,
+        duration: isInitialLoad ? 0 : 0.3,
         ease: "easeInOut",
         type: "spring",
         stiffness: 300,
@@ -85,30 +93,32 @@ export default function Navbar() {
       >
         {/* Logo */}
         <motion.div
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={!isInitialLoad ? { scale: 1.05 } : {}}
+          whileTap={!isInitialLoad ? { scale: 0.95 } : {}}
           transition={{ type: "spring", stiffness: 400, damping: 17 }}
           animate={{
-            scale: isScrolled ? 0.9 : 1,
+            scale: isInitialLoad ? 1 : isScrolled ? 0.9 : 1,
           }}
+          initial={{ scale: 1 }}
         >
           <Link href="/">
             <div className="flex items-center gap-2">
               <motion.span
                 animate={{
-                  rotate: [0, 20, -20, 0],
-                  scale: isScrolled ? 0.8 : 1,
+                  rotate: isInitialLoad ? 0 : [0, 20, -20, 0],
+                  scale: isInitialLoad ? 1 : isScrolled ? 0.8 : 1,
                 }}
                 transition={{
                   rotate: {
                     duration: 1.5,
-                    repeat: Number.POSITIVE_INFINITY,
+                    repeat: isInitialLoad ? 0 : Number.POSITIVE_INFINITY,
                     repeatDelay: 0,
                   },
                   scale: {
-                    duration: 0.3,
+                    duration: isInitialLoad ? 0 : 0.3,
                   },
                 }}
+                initial={{ rotate: 0, scale: 1 }}
                 className="text-xl"
               >
                 <Image
@@ -126,9 +136,10 @@ export default function Navbar() {
                   isScrolled ? "text-base" : "text-lg"
                 }`}
                 animate={{
-                  fontSize: isScrolled ? "1rem" : "1.125rem",
+                  fontSize: isInitialLoad ? "1.125rem" : isScrolled ? "1rem" : "1.125rem",
                 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: isInitialLoad ? 0 : 0.3 }}
+                initial={{ fontSize: "1.125rem" }}
               >
                 NuggetFinder
               </motion.span>
@@ -147,27 +158,23 @@ export default function Navbar() {
           {navLinks.map((link, index) => (
             <motion.div
               key={link.href}
-              initial={{ opacity: 0, y: -20 }}
+              initial={false} // Prevent initial animation
               animate={{
                 opacity: 1,
                 y: 0,
                 scale: isScrolled ? 0.9 : 1,
               }}
               transition={{
-                delay: index * 0.1 + 0.2,
                 scale: { duration: 0.3 },
               }}
               whileHover={{ y: -2, scale: isScrolled ? 0.95 : 1.05 }}
             >
               <Link
                 href={link.href}
-                className={"group relative text-base text-muted-foreground transition-all duration-200 hover:text-foreground"}
+                className="group relative text-base text-muted-foreground transition-all duration-200 hover:text-foreground"
               >
                 {link.label}
-                <motion.div
-                  className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"
-                  whileHover={{ width: "100%" }}
-                />
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
               </Link>
             </motion.div>
           ))}
@@ -176,27 +183,23 @@ export default function Navbar() {
             {authenticatedLinks.map((link, index) => (
               <motion.div
                 key={link.href}
-                initial={{ opacity: 0, y: -20 }}
+                initial={false} // Prevent initial animation
                 animate={{
                   opacity: 1,
                   y: 0,
                   scale: isScrolled ? 0.9 : 1,
                 }}
                 transition={{
-                  delay: (navLinks.length + index) * 0.1 + 0.2,
                   scale: { duration: 0.3 },
                 }}
                 whileHover={{ y: -2, scale: isScrolled ? 0.95 : 1.05 }}
               >
                 <Link
                   href={link.href}
-                  className={"group relative text-base text-muted-foreground transition-all duration-200 hover:text-foreground"}
+                  className="group relative text-base text-muted-foreground transition-all duration-200 hover:text-foreground"
                 >
                   {link.label}
-                  <motion.div
-                    className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"
-                    whileHover={{ width: "100%" }}
-                  />
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
                 </Link>
               </motion.div>
             ))}
@@ -211,32 +214,17 @@ export default function Navbar() {
           }}
           transition={{ duration: 0.3 }}
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{
-              opacity: 1,
-              scale: isScrolled ? 0.8 : 1,
-            }}
-            transition={{
-              delay: 0.4,
-              scale: { duration: 0.3 },
-            }}
-          >
-            <ModeToggle />
-          </motion.div>
-
           {/* Mobile Menu Button */}
           <motion.button
             className="md:hidden p-2"
             onClick={toggleMobileMenu}
             whileTap={{ scale: 0.95 }}
-            initial={{ opacity: 0 }}
+            initial={false} // Prevent initial animation
             animate={{
               opacity: 1,
               scale: isScrolled ? 0.8 : 1,
             }}
             transition={{
-              delay: 0.5,
               scale: { duration: 0.3 },
             }}
           >
@@ -269,14 +257,13 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             <SignedOut>
               <motion.div
-                initial={{ opacity: 0, x: 20 }}
+                initial={false} // Prevent initial animation
                 animate={{
                   opacity: 1,
                   x: 0,
                   scale: isScrolled ? 0.9 : 1,
                 }}
                 transition={{
-                  delay: 0.6,
                   scale: { duration: 0.3 },
                 }}
                 whileHover={{ scale: isScrolled ? 0.95 : 1.05 }}
@@ -293,14 +280,13 @@ export default function Navbar() {
                 </Link>
               </motion.div>
               <motion.div
-                initial={{ opacity: 0, x: 20 }}
+                initial={false} // Prevent initial animation
                 animate={{
                   opacity: 1,
                   x: 0,
                   scale: isScrolled ? 0.9 : 1,
                 }}
                 transition={{
-                  delay: 0.7,
                   scale: { duration: 0.3 },
                 }}
                 whileHover={{ scale: isScrolled ? 0.95 : 1.05 }}
@@ -319,14 +305,13 @@ export default function Navbar() {
             </SignedOut>
             <SignedIn>
               <motion.div
-                initial={{ opacity: 0, x: 20 }}
+                initial={false} // Prevent initial animation
                 animate={{
                   opacity: 1,
                   x: 0,
                   scale: isScrolled ? 0.9 : 1,
                 }}
                 transition={{
-                  delay: 0.6,
                   scale: { duration: 0.3 },
                 }}
                 whileHover={{ scale: isScrolled ? 0.95 : 1.05 }}
@@ -343,13 +328,12 @@ export default function Navbar() {
                 </Link>
               </motion.div>
               <motion.div
-                initial={{ opacity: 0, scale: 0 }}
+                initial={false} // Prevent initial animation
                 animate={{
                   opacity: 1,
                   scale: isScrolled ? 0.8 : 1,
                 }}
                 transition={{
-                  delay: 0.7,
                   scale: { duration: 0.3 },
                 }}
               >
