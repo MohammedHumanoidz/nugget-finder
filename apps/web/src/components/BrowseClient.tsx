@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import {
   Bookmark,
@@ -26,6 +27,7 @@ import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/useDebounce";
 import { trpc, queryClient } from "@/utils/trpc";
 import PersonalizationModal, { type PersonalizationData } from "./PersonalizationModal";
+import AnimatedSearchLoader from "./AnimatedSearchLoader";
 
 interface IdeaScore {
   totalScore?: number;
@@ -53,14 +55,42 @@ interface SemanticSearchResult extends Idea {
 }
 
 export default function BrowseClient() {
+  const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [showPersonalizationModal, setShowPersonalizationModal] = useState(false);
   const [personalizationData, setPersonalizationData] = useState<PersonalizationData | null>(null);
   const [semanticResults, setSemanticResults] = useState<SemanticSearchResult[]>([]);
   const [isSemanticLoading, setIsSemanticLoading] = useState(false);
+  const [showAnimatedLoader, setShowAnimatedLoader] = useState(false);
+  const [isFromHomepage, setIsFromHomepage] = useState(false);
+  const [searchDataReady, setSearchDataReady] = useState(false);
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const observerRef = useRef<IntersectionObserver>(null);
+
+  // Handle search context from homepage
+  useEffect(() => {
+    // Check for search query from URL
+    const queryParam = searchParams.get('q');
+    if (queryParam) {
+      setSearchQuery(queryParam);
+      setIsFromHomepage(true);
+      setShowAnimatedLoader(true);
+      setSearchDataReady(false);
+    }
+
+    // Check for personalization data from sessionStorage
+    const storedPersonalization = sessionStorage.getItem('personalizationData');
+    
+    if (storedPersonalization) {
+      try {
+        const personalization = JSON.parse(storedPersonalization);
+        setPersonalizationData(personalization);
+      } catch (error) {
+        console.error('Failed to parse stored personalization data:', error);
+      }
+    }
+  }, [searchParams]);
 
   // Get user limits
   const { data: limits, refetch: refetchLimits } = useQuery({
@@ -173,10 +203,13 @@ export default function BrowseClient() {
       onSuccess: (data: any) => {
         setSemanticResults(data.results);
         setIsSemanticLoading(false);
+        setSearchDataReady(true);
+        // Don't hide animated loader immediately, let animation complete
       },
       onError: (error: { message: string }) => {
         toast.error(`Search failed: ${error.message}`);
         setIsSemanticLoading(false);
+        setShowAnimatedLoader(false);
       },
     })
   );
@@ -215,6 +248,15 @@ export default function BrowseClient() {
       setIsSemanticLoading(false);
     }
   }, [debouncedSearchQuery, handleSemanticSearch]);
+
+  // Trigger search immediately when coming from homepage
+  useEffect(() => {
+    if (isFromHomepage && searchQuery.trim() && personalizationData !== undefined) {
+      setIsSemanticLoading(true);
+      handleSemanticSearch();
+      setIsFromHomepage(false); // Reset flag to prevent re-triggering
+    }
+  }, [isFromHomepage, searchQuery, personalizationData, handleSemanticSearch]);
 
   // Handle personalization modal save
   const handlePersonalizationSave = (data: PersonalizationData) => {
@@ -279,6 +321,28 @@ export default function BrowseClient() {
     [isLoading, isFetchingNextPage, fetchNextPage, hasNextPage]
   );
 
+  // Handle animation completion
+  const handleAnimationComplete = () => {
+    // Only hide loader if search data is ready, otherwise wait a bit more
+    if (searchDataReady) {
+      setShowAnimatedLoader(false);
+    } else {
+      // If data isn't ready yet, wait a bit more and check again
+      setTimeout(() => {
+        setShowAnimatedLoader(false);
+      }, 1000);
+    }
+  };
+
+  // Show animated loader when search is triggered from homepage
+  if (showAnimatedLoader && searchQuery.trim()) {
+    return (
+      <AnimatedSearchLoader 
+        searchQuery={searchQuery}
+        onAnimationComplete={handleAnimationComplete}
+      />
+    );
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">

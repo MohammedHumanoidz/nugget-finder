@@ -1,20 +1,34 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Settings } from "lucide-react";
 import { useForm } from "@tanstack/react-form";
 import Image from "next/image";
+import { toast } from "sonner";
+import PersonalizationModal, { type PersonalizationData } from "./PersonalizationModal";
 
 const IdeaForm = () => {
+  const router = useRouter();
+  const [personalizationData, setPersonalizationData] = useState<PersonalizationData | null>(null);
+  const [showPersonalizationModal, setShowPersonalizationModal] = useState(false);
+
   const form = useForm({
     defaultValues: {
       idea: "",
     },
     onSubmit: async ({ value }) => {
-      // Log the form data - replace with actual backend call later
-      console.log("Form submitted:", value);
+      if (!value.idea.trim()) return;
+      
+      // Store personalization data in sessionStorage if available
+      if (personalizationData) {
+        sessionStorage.setItem('personalizationData', JSON.stringify(personalizationData));
+      }
+      
+      // Redirect immediately to browse page with search query
+      router.push(`/browse?q=${encodeURIComponent(value.idea)}`);
     },
   });
 
@@ -25,8 +39,13 @@ const IdeaForm = () => {
   ];
 
   const handleDefaultIdeaClick = (idea: string) => {
-    // Get the current form field and update its value
     form.setFieldValue("idea", idea);
+  };
+
+  const handlePersonalizationSave = (data: PersonalizationData) => {
+    setPersonalizationData(data);
+    setShowPersonalizationModal(false);
+    toast.success("Personalization settings saved!");
   };
 
   return (
@@ -43,6 +62,20 @@ const IdeaForm = () => {
           Find Your Golden Business Opportunity Before Anyone Else
         </p>
       </div>
+
+      {/* Personalization Button */}
+      <div className="flex justify-center">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setShowPersonalizationModal(true)}
+          className="h-auto px-4 py-2 text-sm"
+        >
+          <Settings className="mr-2 h-4 w-4" />
+          {personalizationData ? "Update Search Profile" : "Personalize Search"}
+        </Button>
+      </div>
+
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -93,6 +126,14 @@ const IdeaForm = () => {
           </Button>
         ))}
       </div>
+
+      {/* Personalization Modal */}
+      <PersonalizationModal
+        isOpen={showPersonalizationModal}
+        onClose={() => setShowPersonalizationModal(false)}
+        onSave={handlePersonalizationSave}
+        initialData={personalizationData || undefined}
+      />
     </div>
   );
 };
