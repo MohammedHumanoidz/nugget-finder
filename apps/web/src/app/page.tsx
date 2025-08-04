@@ -53,6 +53,7 @@ export default async function Page() {
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4 w-full">
           {Array.isArray(todaysIdeas) && todaysIdeas.length > 0 ? (
+            // @ts-ignore
             todaysIdeas.map((idea) => (
               <Card
                 key={idea.id}

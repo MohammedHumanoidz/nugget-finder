@@ -25,3 +25,129 @@ Key: Version | Task | Run
   systemPromptLength: 2769,
   userPromptLength: 927
 }
+○ Aug 04, 22:23:53.791 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:23:53.791] [32minfo[39m: 📥 TrendResearchAgent - Perplexity API Response (FULL)
+
+○ Aug 04, 22:23:53.792 run_4qmk1qnaq44jeaots7vn2.1 🔍 Perplexity raw response length: 19063🔍 Response preview: <think>
+I need to identify a powerful, globally impactful emerging trend that is generating high engagement in online communities, especially those creating immediate, software-solvable problems. Sinc...
+○ Aug 04, 22:23:53.792 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:23:53.792] [32minfo[39m: 🔍 TrendResearchAgent - Content Analysis
+
+○ Aug 04, 22:23:53.792 run_4qmk1qnaq44jeaots7vn2.1 🔍 Checking if Perplexity response is already JSON...
+○ Aug 04, 22:23:53.792 run_4qmk1qnaq44jeaots7vn2.1 🔄 Content is not JSON, using LLM to structure...
+○ Aug 04, 22:23:53.793 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:23:53.793] [32minfo[39m: 🔄 TrendResearchAgent - LLM Structuring Request
+
+○ Aug 04, 22:24:05.495 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:24:05.494] [32minfo[39m: 📤 TrendResearchAgent - LLM Structuring Response (FULL)
+
+○ Aug 04, 22:24:05.495 run_4qmk1qnaq44jeaots7vn2.1 🔍 LLM structured response: ```json
+{
+  "title": "AI Voice Cloning Scams Trigger Global Communication Security Crisis",
+  "description": "The explosive growth of sophisticated AI voice cloning technology has created an unprecedented wave of deepfake audio fraud that is fundamentally reshaping how individuals, families, and org...
+○ Aug 04, 22:24:05.496 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:24:05.495] [32minfo[39m: 🔧 TrendResearchAgent - Parsing Attempt
+
+○ Aug 04, 22:24:05.496 run_4qmk1qnaq44jeaots7vn2.1 ✅ Successfully structured trend data: {
+  title: 'AI Voice Cloning Scams Trigger Global Communication Security Crisis',
+  trendStrength: 9,
+  catalystType: 'TECHNOLOGY_BREAKTHROUGH'
+}
+○ Aug 04, 22:24:05.496 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:24:05.496] [32minfo[39m: ✅ TrendResearchAgent - Final Result
+
+○ Aug 04, 22:24:05.497 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:24:05.496] [32minfo[39m: ✅ Trend research completed
+
+○ Aug 04, 22:24:05.497 run_4qmk1qnaq44jeaots7vn2.1 🎯 Analyzing problems and gaps...
+○ Aug 04, 22:24:05.498 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:24:05.497] [32minfo[39m: 🎯 Starting problem gap analysis...
+
+○ Aug 04, 22:24:05.498 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:24:05.498] [32minfo[39m: 🔍 ProblemGapAgent - Perplexity API Request
+
+○ Aug 04, 22:24:05.499 run_4qmk1qnaq44jeaots7vn2.1 🔍 Perplexity API request: {
+  model: 'sonar',
+  reasoning_effort: 'medium',
+  messageCount: 2,
+  systemPromptLength: 5500,
+  userPromptLength: 2054
+}
+○ Aug 04, 22:24:14.868 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:24:14.867] [32minfo[39m: 📥 ProblemGapAgent - Perplexity API Response (FULL)
+
+○ Aug 04, 22:24:14.868 run_4qmk1qnaq44jeaots7vn2.1 🔍 ProblemGap raw response length: 4174🔍 Response preview: {
+  "problems": [
+    "Small to mid-sized financial advisors and wealth managers experience frequent client trust breakdowns and lost accounts due to their continuing reliance on voice-based authentic...[2025-08-04 22:24:14.868] [32minfo[39m: 🔍 ProblemGapAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...✅ Content is already valid JSON, using directly
+○ Aug 04, 22:24:14.868 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:24:14.868] [32minfo[39m: 🔧 ProblemGapAgent - Parsing Attempt
+✅ Successfully structured problem gap data: { problemCount: 3, gapCount: 3 }
+○ Aug 04, 22:24:14.868 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:24:14.868] [32minfo[39m: ✅ ProblemGapAgent - Final Result
+
+○ Aug 04, 22:24:14.868 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:24:14.868] [32minfo[39m: ✅ Problem gap analysis completed
+🏆 Researching competition...
+○ Aug 04, 22:24:14.869 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:24:14.868] [32minfo[39m: 🏆 Starting competitive intelligence...
+
+○ Aug 04, 22:24:14.869 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:24:14.869] [32minfo[39m: 🔍 CompetitiveIntelligenceAgent - Perplexity API Request
+
+○ Aug 04, 22:24:14.869 run_4qmk1qnaq44jeaots7vn2.1 🔍 Perplexity API request: {
+  model: 'sonar-pro',
+  reasoning_effort: 'medium',
+  messageCount: 2,
+  systemPromptLength: 3958,
+  userPromptLength: 1760
+}
+○ Aug 04, 22:24:49.174 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:24:49.174] [32minfo[39m: 📥 CompetitiveIntelligenceAgent - Perplexity API Response (FULL)
+
+○ Aug 04, 22:24:49.175 run_4qmk1qnaq44jeaots7vn2.1 🔍 Competitive Intelligence raw response length: 7128🔍 Response preview: {
+  "competition": {
+    "marketConcentrationLevel": "LOW",
+    "marketConcentrationJustification": "For rapid, affordable, real-time detection of AI voice impersonation targeting mid-market wealth ma...
+○ Aug 04, 22:24:49.175 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:24:49.175] [32minfo[39m: 🔍 CompetitiveIntelligenceAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...
+○ Aug 04, 22:24:49.175 run_4qmk1qnaq44jeaots7vn2.1 🔄 Content is not JSON, using LLM to structure...
+○ Aug 04, 22:24:49.175 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:24:49.175] [32minfo[39m: 🔄 CompetitiveIntelligenceAgent - LLM Structuring Request
+
+○ Aug 04, 22:25:06.697 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:25:06.696] [32minfo[39m: 📤 CompetitiveIntelligenceAgent - LLM Structuring Response (FULL)
+
+○ Aug 04, 22:25:06.698 run_4qmk1qnaq44jeaots7vn2.1 🔍 LLM structured response: ```json
+{
+  "competition": {
+    "marketConcentrationLevel": "LOW",
+    "marketConcentrationJustification": "For rapid, affordable, real-time detection of AI voice impersonation targeting mid-market wealth managers, non-tech-savvy caregivers, and mid-sized customer support teams, the market is fragm...
+○ Aug 04, 22:25:06.699 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:25:06.698] [32minfo[39m: 🔧 CompetitiveIntelligenceAgent - Parsing Attempt
+
+○ Aug 04, 22:25:06.700 run_4qmk1qnaq44jeaots7vn2.1 ❌ Failed to parse competitive data: Failed to extract valid JSON from content using all strategies
+○ Aug 04, 22:25:07.122 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:25:07.122] [31merror[39m: ❌ CompetitiveIntelligenceAgent - Error
+
+○ Aug 04, 22:25:07.122 run_4qmk1qnaq44jeaots7vn2.1 CompetitiveIntelligenceAgent error: Error: Failed to parse Perplexity response: Failed to extract valid JSON from content using all strategies
+    at Object.competitiveIntelligenceAgent (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:624:15)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:1203:27)
+    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
+    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
+    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
+    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
+    at TaskExecutor.execute (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:87:20)
+○ Aug 04, 22:25:07.123 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:25:07.123] [31merror[39m: ❌ CompetitiveIntelligenceAgent - Error
+
+○ Aug 04, 22:25:07.123 run_4qmk1qnaq44jeaots7vn2.1 🔄 Using fallback mock competitive intelligence data for development
+○ Aug 04, 22:25:07.123 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:25:07.123] [32minfo[39m: ✅ Competitive intelligence completed
+💰 Designing monetization...
+○ Aug 04, 22:25:22.060 run_4qmk1qnaq44jeaots7vn2.1 🔧 Generating technical implementation guide...
+○ Aug 04, 22:25:27.554 run_4qmk1qnaq44jeaots7vn2.1 🧠 Synthesizing idea...
+○ Aug 04, 22:25:39.270 run_4qmk1qnaq44jeaots7vn2.1 💾 Saving to database...
+○ Aug 04, 22:25:45.354 run_4qmk1qnaq44jeaots7vn2.1 ✅ Daily idea generated successfully: ff1a3eb7-8a5d-481e-8888-f5474d476ba8
+○ Aug 04, 22:25:45.355 run_4qmk1qnaq44jeaots7vn2.1 ✅ Idea 1 generated successfully { ideaId: 'ff1a3eb7-8a5d-481e-8888-f5474d476ba8' }
+○ Aug 04, 22:25:45.355 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:25:45.355] [32minfo[39m: Daily idea generation successful
+
+○ Aug 04, 22:25:45.355 run_4qmk1qnaq44jeaots7vn2.1 ⏳ Waiting 10 seconds before next generation...
+○ Aug 04, 22:25:55.357 run_4qmk1qnaq44jeaots7vn2.1 💡 Generating idea 2/4...
+○ Aug 04, 22:25:55.357 run_4qmk1qnaq44jeaots7vn2.1 🔍 Starting daily idea generation...
+○ Aug 04, 22:25:55.358 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:25:55.357] [32minfo[39m: 🔍 Starting daily idea generation...
+
+○ Aug 04, 22:25:58.514 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:25:58.513] [32minfo[39m: 📚 Retrieved previous ideas for context
+
+○ Aug 04, 22:25:58.515 run_4qmk1qnaq44jeaots7vn2.1 📈 Researching trends...[2025-08-04 22:25:58.514] [32minfo[39m: 📈 Starting trend research...
+
+○ Aug 04, 22:25:58.515 run_4qmk1qnaq44jeaots7vn2.1 [2025-08-04 22:25:58.515] [32minfo[39m: 🔍 TrendResearchAgent - Perplexity API Request
+
+○ Aug 04, 22:25:58.515 run_4qmk1qnaq44jeaots7vn2.1 🔍 Perplexity API request: {
+  model: 'sonar-deep-research',
+  reasoning_effort: 'high',
+  messageCount: 2,
+  systemPromptLength: 2769,
+  userPromptLength: 1928
+}
