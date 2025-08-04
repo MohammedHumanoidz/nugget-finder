@@ -8,6 +8,9 @@ import { getServerSession } from "@/lib/auth-server";
 import type { IdeaDetailsViewProps } from "@/types/idea-details";
 import NonAuthIdeaWrapper from "@/components/NonAuthIdeaWrapper";
 
+// Force dynamic rendering since we use cookies for authentication
+export const dynamic = 'force-dynamic';
+
 // Helper function to ensure all required arrays exist
 function transformIdeaData(idea: any): IdeaDetailsViewProps['idea'] {
   return {
@@ -184,19 +187,19 @@ export default async function NuggetDetailPage({ params }: { params: Promise<{ i
       const ideaWithFullData = transformIdeaData(idea);
 
              return (
-         <div className="min-h-screen bg-background">
-           <IdeaDetailsView idea={ideaWithFullData} />
-         </div>
-       );
-     }
-     
-     // For non-authenticated users, use client-side localStorage tracking
-     console.log('[DEBUG] Page: Non-authenticated user, using client-side tracking');
-     return (
-       <div className="min-h-screen bg-background">
-         <NonAuthIdeaWrapper ideaId={id} />
-       </div>
-     );
+        <div className="min-h-screen bg-background">
+          <IdeaDetailsView idea={ideaWithFullData} />
+        </div>
+      );
+    }
+    
+    // For non-authenticated users, use client-side localStorage tracking
+    console.log('[DEBUG] Page: Non-authenticated user, using client-side tracking');
+    return (
+      <div className="min-h-screen bg-background">
+        <NonAuthIdeaWrapper ideaId={id} />
+      </div>
+    );
   } catch (error: any) {
     console.log('[DEBUG] Page: Caught error:', {
       message: error?.message,

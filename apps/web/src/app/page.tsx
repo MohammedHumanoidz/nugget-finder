@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import AnimatedHowItWorks from "@/components/AnimatedHowItWorks";
 import { Scene } from "@/components/BoxedAnimation";
 import FAQSection from "@/components/FaqSection";
@@ -20,6 +21,7 @@ import {
   ArrowUpRight,
   Github,
   Heart,
+  Loader2,
   Mail,
   Sparkles,
   TrendingUp,
@@ -27,6 +29,15 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+
+function PricingFallback() {
+  return (
+    <div className="w-full max-w-6xl mx-auto px-4 py-16 text-center">
+      <Loader2 className="mx-auto mb-4 h-8 w-8 animate-spin" />
+      <p className="text-muted-foreground">Loading pricing options...</p>
+    </div>
+  );
+}
 
 // Server component with SSR
 export default async function Page() {
@@ -325,7 +336,9 @@ export default async function Page() {
         </section>
 
         {/* Pricing Section (existing) */}
-        <PricingPage />
+        <Suspense fallback={<PricingFallback />}>
+          <PricingPage />
+        </Suspense>
 
         {/* Discover More Nuggets Section */}
         <section className="w-full max-w-7xl mx-auto px-4 py-16">
