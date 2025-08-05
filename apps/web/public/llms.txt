@@ -1,0 +1,60 @@
+{
+  "name": "Nugget Finder",
+  "description": "AI-powered platform for discovering and validating startup ideas. Find business opportunities through intelligent market analysis and trend detection.",
+  "version": "1.0",
+  "type": "startup_intelligence_platform",
+  "paths": {
+    "/": {
+      "type": "homepage",
+      "description": "Main landing page showcasing AI-generated startup ideas and platform features"
+    },
+    "/browse": {
+      "type": "idea_discovery",
+      "description": "Browse and explore AI-generated startup opportunities with filtering and search"
+    },
+    "/nugget/*": {
+      "type": "idea_detail",
+      "description": "Detailed analysis of individual startup ideas including market research, competition analysis, and execution plans"
+    },
+    "/pricing": {
+      "type": "pricing",
+      "description": "Subscription plans and pricing for accessing advanced features and unlimited idea generation"
+    },
+    "/dashboard": {
+      "type": "user_dashboard",
+      "description": "User dashboard for managing saved ideas, tracking progress, and accessing personalized recommendations"
+    },
+    "/saved-ideas": {
+      "type": "user_content",
+      "description": "Collection of user's saved startup ideas and opportunities"
+    },
+    "/claimed-ideas": {
+      "type": "user_content",
+      "description": "Ideas that users are actively pursuing or have claimed interest in"
+    }
+  },
+  "features": [
+    "AI-powered startup idea generation",
+    "Market opportunity analysis",
+    "Competitive landscape research",
+    "Business model recommendations",
+    "Technical feasibility assessment",
+    "Trend tracking and signals analysis",
+    "Expert validation and scoring"
+  ],
+  "target_audience": [
+    "Entrepreneurs seeking startup ideas",
+    "Investors researching market opportunities",
+    "Product managers exploring new markets",
+    "Developers looking for project ideas",
+    "Business analysts studying trends"
+  ],
+  "content_focus": [
+    "Startup opportunities",
+    "Market intelligence",
+    "Business ideas",
+    "Technology trends",
+    "Competitive analysis",
+    "Business validation"
+  ]
+} 
