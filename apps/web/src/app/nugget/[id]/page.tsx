@@ -1,15 +1,14 @@
 /** biome-ignore-all lint/a11y/useValidAnchor: <explanation> */
 import { redirect } from "next/navigation";
+import type { Metadata } from 'next';
 import ClientFallback from "@/components/ClientFallback";
 import IdeaDetailsView from "@/components/IdeaDetailsView";
-import { generateStaticParams } from "@/lib/server-api";
+import { generateStaticParams, getIdeaById } from "@/lib/server-api";
 import { getAuthenticatedIdeaById, getUserLimits } from "@/lib/server-auth";
 import { getServerSession } from "@/lib/auth-server";
 import type { IdeaDetailsViewProps } from "@/types/idea-details";
 import NonAuthIdeaWrapper from "@/components/NonAuthIdeaWrapper";
 import StructuredData from "@/components/StructuredData";
-import type { Metadata } from "next";
-import { SchemaFactory, type IdeaData } from "@/lib/schema-factory";
 
 // Force dynamic rendering since we use cookies for authentication
 export const dynamic = 'force-dynamic';
@@ -225,8 +224,58 @@ function generateComprehensiveSchemas(idea: any, id: string) {
 // Export generateStaticParams for static generation
 export { generateStaticParams };
 
+interface NuggetPageProps {
+  params: Promise<{
+    id: string;
+  }>;
+}
+
+// Dynamically generate metadata for this page
+export async function generateMetadata({ params }: NuggetPageProps): Promise<Metadata> {
+  const { id } = await params;
+  
+  try {
+    const ideaData = await getIdeaById(id);
+    if (!ideaData) {
+      return {
+        title: "Nugget Not Found | Nugget Finder",
+      };
+    }
+
+    const title = ideaData.title || 'Untitled Nugget';
+    const description = ideaData.executiveSummary || ideaData.description || 'Explore this unique startup opportunity on Nugget Finder.';
+    const url = `https://nuggetfinder.ai/nugget/${id}`;
+
+    return {
+      title: `${title} | Nugget Finder`,
+      description,
+      alternates: {
+        canonical: url,
+      },
+      openGraph: {
+        title,
+        description,
+        url,
+        type: 'article',
+        publishedTime: ideaData.createdAt ? new Date(ideaData.createdAt).toISOString() : undefined,
+        authors: ['Nugget Finder AI'],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title,
+        description,
+      },
+    };
+  } catch (error) {
+    console.error('Error generating metadata for nugget:', error);
+    return {
+      title: "Nugget | Nugget Finder",
+    };
+  }
+}
+
 // Server component with SSR and authentication
-export default async function NuggetDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function NuggetDetailPage({ params }: NuggetPageProps) {
   // Await params in Next.js 15
   const { id } = await params;
   
@@ -273,17 +322,68 @@ export default async function NuggetDetailPage({ params }: { params: Promise<{ i
       // Transform the data to ensure all required arrays exist
       const ideaWithFullData = transformIdeaData(idea);
 
-             const schemas = generateComprehensiveSchemas(idea, id);
+      // Generate structured data for SEO
+      const url = `https://nuggetfinder.ai/nugget/${id}`;
+      
+      // Schema for an Article (the idea itself)
+      const articleSchema = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": ideaWithFullData.title,
+        "description": ideaWithFullData.executiveSummary || ideaWithFullData.description,
+        "image": "https://nuggetfinder.ai/logo.webp",
+        "author": {
+          "@type": "Organization",
+          "name": "Nugget Finder AI"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Nugget Finder",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://nuggetfinder.ai/logo.webp"
+          }
+        },
+        "datePublished": ideaWithFullData.createdAt ? new Date(ideaWithFullData.createdAt).toISOString() : undefined,
+        "dateModified": ideaWithFullData.updatedAt ? new Date(ideaWithFullData.updatedAt).toISOString() : undefined,
+      };
 
-       return (
-         <div className="min-h-screen bg-background">
-           {/* Multiple structured data schemas for comprehensive SEO */}
-           <StructuredData data={schemas.article} />
-           <StructuredData data={schemas.product} />
-           <StructuredData data={schemas.howTo} />
-           
-           <IdeaDetailsView idea={ideaWithFullData} />
-         </div>
+      // Schema for a Product (the idea as a claimable item)
+      const productSchema = {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": ideaWithFullData.title,
+        "description": ideaWithFullData.executiveSummary || ideaWithFullData.description,
+        "image": "https://nuggetfinder.ai/logo.webp",
+        "sku": ideaWithFullData.id,
+        "brand": {
+          "@type": "Brand",
+          "name": "Nugget Finder"
+        },
+        "offers": {
+          "@type": "Offer",
+          "url": url,
+          "priceCurrency": "USD",
+          "price": "0", // Represents "claiming" the idea
+          "availability": "https://schema.org/InStock",
+          "seller": {
+            "@type": "Organization",
+            "name": "Nugget Finder"
+          }
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": ideaWithFullData.ideaScore?.totalScore ? (ideaWithFullData.ideaScore.totalScore / 10).toFixed(1) : "4.5",
+          "reviewCount": "1" // Represents the AI's single, comprehensive review
+        }
+      };
+
+      return (
+        <div className="min-h-screen bg-background">
+          <StructuredData data={articleSchema} />
+          <StructuredData data={productSchema} />
+          <IdeaDetailsView idea={ideaWithFullData} />
+        </div>
       );
     }
     

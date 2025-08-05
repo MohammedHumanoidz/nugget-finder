@@ -10,6 +10,8 @@ const manrope = Manrope({
   subsets: ["latin"],
 });
 
+// This metadata object provides default SEO information for the entire site.
+// Pages can override these defaults by exporting their own metadata object.
 export const metadata: Metadata = {
   title: {
     default: "Nugget Finder | AI-Powered Startup Ideas & Market Intelligence",
@@ -45,23 +47,16 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://nuggetfinder.ai",
     title: "Nugget Finder | AI-Powered Startup Ideas & Market Intelligence",
-    description: "Discover validated startup opportunities with AI-powered market analysis. Get comprehensive business ideas, competitive research, and execution plans.",
+    description: "Discover validated startup opportunities with AI-powered market analysis.",
     siteName: "Nugget Finder",
-    images: [
-      {
-        url: "/logo.webp",
-        width: 1200,
-        height: 630,
-        alt: "Nugget Finder - AI-Powered Startup Ideas",
-      },
-    ],
+    images: [ { url: "/logo.webp", width: 1200, height: 630, alt: "Nugget Finder Logo" } ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nugget Finder | AI-Powered Startup Ideas & Market Intelligence", 
-    description: "Discover validated startup opportunities with AI-powered market analysis. Find your next big opportunity 5x faster.",
+    title: "Nugget Finder | AI-Powered Startup Ideas & Market Intelligence",
+    description: "Discover validated startup opportunities with AI-powered market analysis.",
     images: ["/logo.webp"],
-    creator: "@nuggetfinder",
+    creator: "@nuggetfinder", // Replace with your actual Twitter handle
   },
   robots: {
     index: true,
@@ -182,6 +177,18 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Nugget Finder",
+    "url": "https://nuggetfinder.ai",
+    "logo": "https://nuggetfinder.ai/logo.webp",
+    "sameAs": [
+      // "https://twitter.com/nuggetfinder", // Add your social media links
+      // "https://www.linkedin.com/company/nugget-finder"
+    ]
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>

@@ -4,6 +4,10 @@
   "version": "1.0",
   "type": "startup_intelligence_platform",
   "paths": {
+    "/": { "type": "homepage", "description": "Main landing page showcasing AI-generated startup ideas and platform features" },
+    "/browse": { "type": "idea_discovery", "description": "Browse and explore AI-generated startup opportunities with filtering and search" },
+    "/nugget/*": { "type": "idea_detail", "description": "Detailed analysis of individual startup ideas including market research, competition analysis, and execution plans" },
+    "/pricing": { "type": "pricing", "description": "Subscription plans and pricing for accessing advanced features and unlimited idea generation" }
     "/": {
       "type": "homepage",
       "description": "Main landing page showcasing AI-generated startup ideas and platform features"

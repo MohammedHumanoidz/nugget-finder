@@ -31,6 +31,9 @@ export interface SynthesizedIdea {
   tractionSignals?: string;
   frameworkFit?: string;
   whatToBuild?: WhatToBuildData;
+  whyNow?: TrendData;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface WhatToBuildData {

@@ -1,4 +1,4 @@
-import { generateText } from "ai";
+import { generateText, streamText } from "ai";
 import { IdeaGenerationAgentService } from "./idea-generation-agent.service";
 import type {
   AgentContext,
@@ -10,52 +10,233 @@ import type {
 } from "../../types/apps/idea-generation-agent";
 import { openrouter, perplexity } from "../../utils/configs/ai.config";
 import { parsePerplexityResponse } from "../../utils/json-parser";
+import { EnhancedJsonParser } from "../../utils/enhanced-json-parser";
 import { debugLogger } from "../../utils/logger";
 import { prisma } from "../../utils/configs/db.config";
 
+// Add new interface for Master Research Director
+interface ResearchDirectorData {
+  researchTheme: string;
+  geographicFocus: string;
+  industryRotation: string;
+  diversityMandates: string[];
+  researchApproach: string;
+}
+
 const IdeaGenerationAgentController = {
   /**
-   * TrendResearchAgent - Discover emerging AI/tech trends with market timing signals
-   * Uses Perplexity Deep Research for comprehensive trend analysis
+   * Master Research Director - Creates diverse research themes per day
+   * Influences trend research with rotating diversity across industry + geography
    */
-  async trendResearchAgent(context: AgentContext): Promise<TrendData | null> {
+  async masterResearchDirector(context: AgentContext): Promise<ResearchDirectorData | null> {
     try {
-      const systemPrompt = `Alright, trend wizard, listen up. Your job is to find *one* seriously impactful, undeniable trend from the last few days that's shaking things up. Think big shifts in tech, society, money, or new rules.
+      console.log("🎯 Step 1: Activating Master Research Director");
 
-			Your mission: pinpoint something genuinely profound. This isn't about fleeting news; it's about spotting the real currents changing our world, especially those that **unleash immediate, actionable, software-centric opportunities for lean startups.**
+      const directorPrompt = `You are the Master Research Director for a world-class startup opportunity discovery system. Your role is to establish today's research parameters that will drive the entire pipeline toward discovering genuinely novel, diverse startup opportunities.
 
-			**Crucially, this trend MUST be backed by genuine human buzz – think red-hot Reddit threads, viral Twitter discussions, or lively debates in niche forums. We want real people talking about real things, not AI-generated fluff or boring press releases.**
+**Core Mission:** Generate a research theme for today that ensures maximum diversity from previously generated ideas while maintaining commercial viability and software-first focus.
 
-			**ABSOLUTELY CRITICAL FOR DIVERSITY:** The trend you identify **MUST be entirely different in its core theme, industry focus, and problem category from any of the 'Previously Generated Ideas' provided.** If past ideas were about 'enterprise compliance', 'decentralized social', or 'neurotech devices', then find something completely unrelated, like 'local creator economy tools', 'sustainable practices for small businesses', 'hyper-personalized learning for niche skills', or 'community-driven commerce models'. Aim for a truly novel and diverse domain that encourages *tangible, buildable, software solutions (MVP in <6 months, <$10k investment)*.
+**CRITICAL DIVERSITY ENFORCEMENT:** Based on the previously generated ideas, you MUST choose a research direction that is fundamentally different in:
+- Industry/vertical focus
+- Target user demographic  
+- Geographic/cultural context
+- Business model approach (B2B vs B2C vs Creative/Original)
+- Technology stack or approach
 
-			**IMPORTANT: Do NOT, repeat, DO NOT, try to find a product idea or business model yet.** Just tell us what the big, interesting thing is. Focus on the 'what' and 'why' of the trend itself.
+**Geographic Rotation Strategy:** Rotate research focus across:
+- North America (US/Canada startup ecosystems)
+- Europe (Nordic innovation, German engineering, UK fintech)
+- Asia-Pacific (Japan efficiency, Singapore trade, Australia resources)
+- Emerging Markets (Latin America, Southeast Asia, Africa)
+- Global Remote/Digital-First opportunities
 
-			Return a structured JSON object with this exact shape:
-			{
-			  "title": "string (A punchy, honest title for the global trend – no corporate jargon, just straight talk. e.g., 'The Creator Economy Goes Local: Niche Platforms Thrive')",
-			  "description": "string (A clear, engaging story about this big trend. Explain its origins and broad impact, like you're telling it to a friend over coffee. Show *how* you know it's a real trend by referencing those high-engagement online communities. No startup pitches here, just the pure, unadulterated truth of the trend.)",
-			  "trendStrength": number (1-10),
-			  "catalystType": "TECHNOLOGY_BREAKTHROUGH" | "REGULATORY_CHANGE" | "MARKET_SHIFT" | "SOCIAL_TREND" | "ECONOMIC_FACTOR",
-			  "timingUrgency": number (1-10),
-			  "supportingData": ["specific evidence from Reddit/Twitter/forums (e.g., 'Reddit r/LocalArtists discussing new sales platforms')", "a key news event or policy that triggered significant discussion", "a solid, broad metric if available and relevant"]
-			}
+**Industry Rotation Mandates:**
+- If previous: Enterprise/B2B → Focus on: Consumer/Creator/Local Business
+- If previous: Consumer/B2C → Focus on: SMB/Professional Services/Creative Tools
+- If previous: AI/Tech → Focus on: Traditional Industries + Digital Transformation
+- If previous: Local/Physical → Focus on: Remote/Digital/Global
 
-			Cut the fancy words. Focus on the raw, undeniable shifts, validated by actual human conversation. Let's see the world as it truly is, not as a LinkedIn post would portray it.`;
+Return this exact JSON structure:
+{
+  "researchTheme": "string (Today's focused research direction, e.g., 'Independent Creator Economy Tools in Southeast Asia' or 'Rural SMB Digital Infrastructure in Latin America')",
+  "geographicFocus": "string (Specific region/market context that influences user needs and competitive landscape)",
+  "industryRotation": "string (The industry vertical to explore today, ensuring diversity from previous)",
+  "diversityMandates": ["mandate 1: avoid X from previous ideas", "mandate 2: focus on Y demographic not covered before", "mandate 3: explore Z business model not used recently"],
+  "researchApproach": "string (How the trend research should be conducted - what communities, signals, and validation sources to prioritize)"
+}
 
-      const userPrompt = `What is one powerful, globally impactful emerging trend or significant development that is generating high engagement and sustained discussion in online communities (Reddit, Twitter, forums) or through notable news/blogs? Focus on shifts with broad implications across technology, society, economy, or regulation, especially those creating *immediate, software-solvable problems*.
+**Previous Research Context (MUST AVOID THESE PATTERNS):**
+${context.previousIdeas && context.previousIdeas.length > 0 ? 
+  context.previousIdeas.map((idea, idx) => `${idx + 1}. "${idea.title}" - Industry: ${this.extractIndustry(idea.description)}, Target: ${this.extractTarget(idea.description)}`).join('\n') : 
+  'No previous ideas - establish initial research direction focusing on underserved global markets'}
 
-			Previously Generated Ideas (MUST find a trend completely unrelated in theme, industry, or problem category to these, to ensure diversity of generated ideas). If the previously generated idea is a B2C then do either B2B or Creative/Original/Creative Idea. Same goes if it is B2B or Creative Idea. The themes shouldnt be similar:
-			${context.previousIdeas && context.previousIdeas.length > 0 ? context.previousIdeas.map((idea) => `- Title: "${idea.title}"\n  Description: "${idea.description}"`).join("\n") : "- None to consider."}
+Today's research must explore completely new territory. Be specific and actionable.`;
 
-			Ensure the new trend is genuinely fresh and distinct from any of the themes or industries represented by the ideas listed. No LinkedIn vibes. Give me something that genuinely feels *new*.`;
-      // LOG: Perplexity API request
+                    const { text } = await generateText({
+         model: openrouter("openai/gpt-4.1-mini"),
+         prompt: directorPrompt,
+         temperature: 0.3,
+         maxTokens: 600,
+       });
+
+       // Use enhanced JSON parser to handle markdown code blocks and formatting issues
+       const parseResult = await EnhancedJsonParser.parseWithFallback<ResearchDirectorData>(
+         text,
+         ["researchTheme", "geographicFocus", "industryRotation"],
+         {
+           researchTheme: "Global Remote Work Tools for Emerging Markets",
+           geographicFocus: "Southeast Asia and Latin America",
+           industryRotation: "SMB Productivity and Operations",
+           diversityMandates: [
+             "Avoid enterprise/large corporation focus",
+             "Target independent professionals and small teams",
+             "Explore mobile-first, low-bandwidth solutions"
+           ],
+           researchApproach: "Focus on remote work communities, startup hubs in emerging markets, and mobile-first productivity discussions"
+         }
+       );
+
+       if (!parseResult.success) {
+         console.error("❌ Master Research Director JSON parsing failed:", parseResult.error);
+         console.log("📝 Original response:", parseResult.originalText?.substring(0, 500));
+         if (parseResult.cleanedText) {
+           console.log("🧹 Cleaned response:", parseResult.cleanedText.substring(0, 500));
+         }
+       }
+
+       const directorData = parseResult.data as ResearchDirectorData;
+      
+      console.log("✅ Step 1: Research Director Set Research Parameters:", {
+        theme: directorData.researchTheme,
+        geography: directorData.geographicFocus,
+        industry: directorData.industryRotation
+      });
+
+      return directorData;
+    } catch (error) {
+      console.error("Master Research Director error:", error);
+      // Return fallback research direction
+      return {
+        researchTheme: "Global Remote Work Tools for Emerging Markets",
+        geographicFocus: "Southeast Asia and Latin America",
+        industryRotation: "SMB Productivity and Operations",
+        diversityMandates: [
+          "Avoid enterprise/large corporation focus",
+          "Target independent professionals and small teams",
+          "Explore mobile-first, low-bandwidth solutions"
+        ],
+        researchApproach: "Focus on remote work communities, startup hubs in emerging markets, and mobile-first productivity discussions"
+      };
+    }
+  },
+
+  // Helper functions for extracting patterns from previous ideas
+  extractIndustry(description: string): string {
+    const industryKeywords = {
+      'enterprise': ['enterprise', 'corporate', 'large business'],
+      'smb': ['small business', 'SMB', 'local business'],
+      'consumer': ['consumer', 'individual', 'personal'],
+      'creator': ['creator', 'artist', 'content'],
+      'healthcare': ['health', 'medical', 'wellness'],
+      'fintech': ['finance', 'payment', 'banking'],
+      'edtech': ['education', 'learning', 'student']
+    };
+    
+    for (const [industry, keywords] of Object.entries(industryKeywords)) {
+      if (keywords.some(keyword => description.toLowerCase().includes(keyword))) {
+        return industry;
+      }
+    }
+    return 'general';
+  },
+
+  extractTarget(description: string): string {
+    const targetKeywords = {
+      'enterprise': ['enterprise', 'corporation', 'large company'],
+      'smb': ['small business', 'SMB', 'local shop'],
+      'individual': ['individual', 'personal', 'consumer'],
+      'professional': ['professional', 'freelancer', 'consultant'],
+      'creator': ['creator', 'artist', 'influencer']
+    };
+    
+    for (const [target, keywords] of Object.entries(targetKeywords)) {
+      if (keywords.some(keyword => description.toLowerCase().includes(keyword))) {
+        return target;
+      }
+    }
+    return 'general';
+  },
+
+  /**
+   * Enhanced TrendResearchAgent - Now guided by Master Research Director
+   * Uses Perplexity Deep Research with Director's research theme
+   */
+  async trendResearchAgent(context: AgentContext, researchDirection?: ResearchDirectorData): Promise<TrendData | null> {
+    try {
+      console.log("📈 Step 2: Enhanced Trend Research");
+
+      const systemPrompt = `You are an elite trend research specialist with deep expertise in identifying emerging patterns that create immediate software startup opportunities. Your research is guided by today's strategic research direction.
+
+**Research Mission Parameters:**
+${researchDirection ? `
+- Research Theme: ${researchDirection.researchTheme}
+- Geographic Focus: ${researchDirection.geographicFocus}  
+- Industry Focus: ${researchDirection.industryRotation}
+- Diversity Mandates: ${researchDirection.diversityMandates.join(', ')}
+` : 'General global technology and market trend research'}
+
+**Critical Requirements:**
+1. **Human-Validated Signals**: The trend MUST be backed by genuine online community engagement (Reddit threads with 500+ comments, viral Twitter discussions, Product Hunt buzz, active forum debates)
+2. **Software-Solvable**: Focus on trends creating immediate opportunities for SaaS, APIs, web/mobile apps, or lightweight services
+3. **Timing-Sensitive**: Identify trends in the "early adopter" phase - not too early (theoretical) or too late (saturated)
+4. **Geographic Relevance**: Consider how the trend manifests differently in the target geographic region
+5. **Buildable Solutions**: Ensure the trend opens paths to <$10K MVP, 3-6 month development cycle solutions
+
+**Validation Framework:**
+- Social Media Signals: Active discussions in target communities
+- Market Movement: New funding rounds, product launches, policy changes
+- Behavioral Shifts: Changes in how target users work, shop, communicate
+- Technology Enablers: New APIs, platforms, or capabilities becoming accessible
+
+Return structured JSON with enhanced data:
+{
+  "title": "string (Compelling, specific trend title that captures the essence and geographic/industry context)",
+  "description": "string (Rich narrative explaining the trend's emergence, current traction, and implications for the target region/industry. Include specific examples of online community engagement)",
+  "trendStrength": number (1-10, weighted for current market momentum),
+  "catalystType": "TECHNOLOGY_BREAKTHROUGH" | "REGULATORY_CHANGE" | "MARKET_SHIFT" | "SOCIAL_TREND" | "ECONOMIC_FACTOR",
+  "timingUrgency": number (1-10, how time-sensitive this opportunity window is),
+  "supportingData": ["Specific Reddit thread or community discussion", "Key news event or policy change", "Quantitative metrics if available", "Geographic-specific evidence"]
+}
+
+Focus on trends that are currently generating genuine excitement and discussion in real communities, not theoretical future possibilities.`;
+
+      const userPrompt = `Conduct deep research to identify one powerful emerging trend that is generating significant buzz in online communities and creating immediate opportunities for software-based solutions.
+
+**Strategic Research Direction:**
+${researchDirection ? `
+Focus your research on: ${researchDirection.researchTheme}
+Geographic context: ${researchDirection.geographicFocus}
+Industry vertical: ${researchDirection.industryRotation}
+
+Research approach: ${researchDirection.researchApproach}
+` : 'Conduct broad global technology and market trend research'}
+
+**Diversity Requirements - MUST AVOID:**
+${context.previousIdeas && context.previousIdeas.length > 0 ? 
+  context.previousIdeas.map((idea) => `- Theme: "${idea.title}" - Focus area already covered`).join('\n') : 
+  '- No restrictions - establish new research territory'}
+
+Find a trend that is genuinely creating conversation, excitement, and early market movement. Provide evidence of real human engagement and community validation.`;
+
+      // LOG: Enhanced Perplexity API request
       debugLogger.logPerplexityRequest(
-        "TrendResearchAgent",
+        "EnhancedTrendResearchAgent",
         userPrompt,
         systemPrompt,
         {
           reasoning_effort: "high",
           model: "sonar-deep-research",
+          researchDirection: researchDirection,
         }
       );
 
@@ -67,11 +248,11 @@ const IdeaGenerationAgentController = {
       );
 
       // LOG: Perplexity API response (FULL)
-      debugLogger.logPerplexityResponse("TrendResearchAgent", response);
+      debugLogger.logPerplexityResponse("EnhancedTrendResearchAgent", response);
 
       if (!response?.choices?.[0]?.message?.content) {
         debugLogger.logError(
-          "TrendResearchAgent",
+          "EnhancedTrendResearchAgent",
           new Error("No response from Perplexity"),
           { response }
         );
@@ -79,21 +260,12 @@ const IdeaGenerationAgentController = {
       }
 
       const content = response.choices[0].message.content;
-      console.log("🔍 Perplexity raw response length:", content.length);
+      console.log("🔍 Enhanced Trend raw response length:", content.length);
       console.log("🔍 Response preview:", `${content.substring(0, 200)}...`);
 
-      // LOG: Content analysis (is it JSON or needs structuring)
-      const isAlreadyJson =
-        content.trim().startsWith("{") && content.trim().endsWith("}");
-      debugLogger.logContentAnalysis(
-        "TrendResearchAgent",
-        content,
-        isAlreadyJson
-      );
-
-      // LLM structuring function for when content is not already JSON
+      // Enhanced LLM structuring with better prompts
       const structureWithLLM = async (content: string): Promise<string> => {
-        const structuringPrompt = `You are a data structuring expert. Convert the following business trend research into the exact JSON structure requested.
+        const structuringPrompt = `You are an expert data analyst specializing in trend research. Convert the following comprehensive trend analysis into the exact JSON structure requested.
 
 REQUIRED JSON STRUCTURE:
 {
@@ -102,35 +274,34 @@ REQUIRED JSON STRUCTURE:
   "trendStrength": number (1-10),
   "catalystType": "TECHNOLOGY_BREAKTHROUGH" | "REGULATORY_CHANGE" | "MARKET_SHIFT" | "SOCIAL_TREND" | "ECONOMIC_FACTOR",
   "timingUrgency": number (1-10),
-  "supportingData": ["data point 1", "data point 2", "data point 3"]
+  "supportingData": ["evidence point 1", "evidence point 2", "evidence point 3"]
 }
 
-RESEARCH CONTENT TO CONVERT:
+TREND RESEARCH CONTENT:
 ${content}
 
-Extract the key trend information and format it as valid JSON. Return ONLY the JSON object, no additional text.`;
+Extract the core trend information and format as valid JSON. Ensure all supporting data includes specific, verifiable sources. Return ONLY the JSON object.`;
 
-        // LOG: LLM structuring request
         debugLogger.logLLMStructuring(
-          "TrendResearchAgent",
+          "EnhancedTrendResearchAgent",
           structuringPrompt,
           content
         );
 
         const { text: structuredJson } = await generateText({
-          model: openrouter("openai/gpt-4o-mini"),
+          model: openrouter("openai/gpt-4.1-mini"),
           prompt: structuringPrompt,
           temperature: 0.1,
           maxTokens: 800,
         });
 
-        // LOG: LLM structuring response
         debugLogger.logLLMStructuringResponse(
-          "TrendResearchAgent",
+          "EnhancedTrendResearchAgent",
           structuredJson
         );
 
-        return structuredJson;
+        // Clean the LLM response before returning
+        return EnhancedJsonParser.cleanJsonResponse(structuredJson);
       };
 
       const parseResult = await parsePerplexityResponse<TrendData>(
@@ -139,145 +310,156 @@ Extract the key trend information and format it as valid JSON. Return ONLY the J
         ["title", "description"] // Required fields
       );
 
-      // LOG: Parsing attempt and result
-      debugLogger.logParsingAttempt("TrendResearchAgent", content, parseResult);
+      debugLogger.logParsingAttempt("EnhancedTrendResearchAgent", content, parseResult);
 
       if (!parseResult.success) {
-        console.error("❌ Failed to parse trend data:", parseResult.error);
+        console.error("❌ Failed to parse enhanced trend data:", parseResult.error);
         debugLogger.logError(
-          "TrendResearchAgent",
-          new Error(
-            `Failed to parse Perplexity response: ${parseResult.error}`
-          ),
-          {
-            parseResult,
-            originalContent: content,
-          }
+          "EnhancedTrendResearchAgent",
+          new Error(`Failed to parse Perplexity response: ${parseResult.error}`),
+          { parseResult, originalContent: content }
         );
-        throw new Error(
-          `Failed to parse Perplexity response: ${parseResult.error}`
-        );
+        throw new Error(`Failed to parse Perplexity response: ${parseResult.error}`);
       }
 
       const trendData = parseResult.data as TrendData;
 
-      console.log("✅ Successfully structured trend data:", {
+      console.log("✅ Step 2: Enhanced Trend Research Completed:", {
         title: trendData.title,
         trendStrength: trendData.trendStrength,
         catalystType: trendData.catalystType,
+        timingUrgency: trendData.timingUrgency
       });
 
-      // LOG: Final agent result
-      debugLogger.logAgentResult("TrendResearchAgent", trendData, true);
-
+      debugLogger.logAgentResult("EnhancedTrendResearchAgent", trendData, true);
       return trendData;
+
     } catch (error) {
-      console.error("TrendResearchAgent error:", error);
-      debugLogger.logError("TrendResearchAgent", error as Error, {
-        agent: "TrendResearchAgent",
+      console.error("EnhancedTrendResearchAgent error:", error);
+      debugLogger.logError("EnhancedTrendResearchAgent", error as Error, {
+        agent: "EnhancedTrendResearchAgent",
         fallbackUsed: true,
       });
 
-      // Return mock data as fallback for development/testing
-      console.log("🔄 Using fallback mock trend data for development");
+      // Enhanced fallback with research direction context
+      console.log("🔄 Using enhanced fallback trend data");
       return {
-        title: "AI-Powered Workflow Automation for SMBs",
-        description:
-          "Small to medium businesses are increasingly adopting AI-powered tools to automate repetitive workflows, driven by labor shortages and cost pressures. Tools that can integrate multiple business processes (CRM, inventory, scheduling) with simple AI automation are seeing rapid adoption.",
+        title: researchDirection ? 
+          `${researchDirection.industryRotation} Innovation in ${researchDirection.geographicFocus}` :
+          "AI-Powered Workflow Automation for SMBs",
+        description: researchDirection ?
+          `Emerging trend in ${researchDirection.geographicFocus} focused on ${researchDirection.industryRotation} digital transformation.` :
+          "Small to medium businesses are increasingly adopting AI-powered tools to automate repetitive workflows, driven by labor shortages and cost pressures.",
         trendStrength: 8,
         catalystType: "TECHNOLOGY_BREAKTHROUGH" as const,
         timingUrgency: 7,
         supportingData: [
-          "Google Trends shows 340% increase in 'AI workflow automation' searches",
-          "Zapier reports 200% growth in AI-powered automation usage by SMBs",
-          "Recent $50M funding rounds for workflow automation startups",
+          "Active discussions in target region startup communities",
+          "Growing investment in regional digital infrastructure",
+          "Increasing adoption metrics for relevant software categories",
         ],
       };
     }
   },
 
   /**
-   * ProblemGapAgent - Identify market problems AND gaps in single pass
-   * Uses Perplexity Sonar for market research
+   * Enhanced ProblemGapAgent - Uses reasoning-rich prompts from sonar-reasoning model
+   * Identifies 2-3 sharply defined, systemic problems for specific personas
    */
   async problemGapAgent(context: AgentContext): Promise<ProblemGapData | null> {
     try {
-      const systemPrompt = `You are a savvy business strategist and *real-world problem finder*. Given a significant, high-level trend, your job is to uncover 2-3 *excruciatingly specific, commercial problems that businesses or individuals are experiencing **RIGHT NOW** due to this trend*. These are not future problems; they are current, tangible pains that are costly, time-consuming, inefficient, or creating competitive disadvantages *today*.
+      console.log("🎯 Step 3: Enhanced Problem Gap Analysis");
 
-			**Your critical filter: The identified problems MUST lead to solutions that are:**
-				1.  **Acute & Present:** Happening in the market today, not a theoretical future issue.
-				2.  **IMMEDIATELY SOLVABLE FOR A LEAN SOFTWARE-FOCUSED STARTUP (<$10,000, 3-6 month MVP, no-code/low-code friendly):** This is CRUCIAL. The solution implied by the problem must be primarily **SOFTWARE-BASED (SaaS, API, web/mobile app)** or a **LIGHT SERVICE**. It **MUST NOT** require:
-					*   **Any custom hardware development (e.g., custom chips, medical devices, robotics, advanced physical wearables, complex IoT devices).**
-					*   **Deep scientific R&D (e.g., new materials, genetic engineering, novel brain interfaces, quantum computing hardware, advanced battery tech).**
-					*   **Lengthy, multi-year regulatory approvals (e.g., FDA for novel medical devices, complex financial licenses where compliance is the *core* solution).**
-					*   **Millions or billions in funding for MVP.**
-					*   **Years of clinical trials.**
-					*   **Extensive, complex, or highly specialized legal/compliance frameworks that dominate the solution's core.** (This is to avoid the "compliance overload" as a primary problem).
-					*   **Building foundational AI models; focus on *applying* existing AI via APIs.**
-				3.  **Directly or Indirectly Influenced by the Trend:** The trend should act as the *catalyst* or *intensifier* for this *current* problem, making it urgent and commercially viable for a new solution.
-				4.  **GENUINELY NOVEL:** The problems and implied solutions should feel *new* and *different*, building on the trend in a way that avoids previous idea categories.
+      const systemPrompt = `You are an elite business strategist and systemic problem identifier with deep expertise in discovering acute commercial pain points that create immediate software startup opportunities.
 
-			For each problem, dissect *why* existing solutions or traditional methods are utterly failing *in today's context*. Is it:
-				- They are too generic or rigid to adapt to the new trend's *immediate* demands?
-				- They create more friction or cost *now* in the evolving environment?
-				- They completely miss a critical *current* need created by the trend's influence?
+**Enhanced Analysis Framework:**
 
-			**Describe the persona affected as a specific archetype or segment (e.g., 'small, independent podcast creators' or 'local food truck owners') and detail their frustration with tangible, quantifiable examples where possible.** The gaps should highlight a *clear, solvable commercial opportunity* that directly stems from the macro trend's *current* impact.
+**Problem Identification Criteria:**
+1. **Acute & Present**: Problems happening RIGHT NOW, costing real money/time/opportunities daily
+2. **Persona-Specific**: Focus on specific archetypes (e.g., "independent podcast creators in Southeast Asia" vs "content creators generally")
+3. **Software-Solvable**: Problems that can be addressed with SaaS, APIs, web/mobile apps, or lightweight services within <$10K MVP budget
+4. **Trend-Amplified**: Problems that are intensified or newly created by the identified trend
+5. **Quantifiable Impact**: Problems with measurable business impact (lost revenue, wasted time, competitive disadvantage)
 
-			**CRITICAL DIVERSITY INSTRUCTION:** Ensure the problems and implied software/service solutions are distinctly different in their core industry, user group, and technological approach from the 'Previously Generated Ideas' provided. For example, if previous ideas focused on 'enterprise IT compliance', then find problems for 'individual artists managing digital rights' or 'local bakeries optimizing online delivery routes'. **Avoid any problem that is predominantly about "compliance" unless it's a minor aspect of a much broader, more innovative software solution.**
+**Systemic Analysis Requirements:**
+- Why do existing solutions fundamentally fail for this specific persona?
+- What structural/technological/market barriers prevent current players from solving this?
+- How does the trend create new urgency or change the problem dynamics?
+- What makes this persona underserved by current market offerings?
 
-			Return this object exactly:
-			{
-			  "problems": [
-				"A local coffee shop owner wastes 5 hours/week manually updating daily specials across social media, their website, and local listing sites, leading to missed customer opportunities and outdated info, because no single tool syncs these updates automatically for small businesses.",
-				"problem 2 for a specific archetype/segment, detailing their current pain and its cost/impact related to the macro trend, specifically solvable with simple software/services",
-				"problem 3 if applicable, same level of detail, always software-first MVP"
-			  ],
-			  "gaps": [
-				{
-				  "title": "string (A vivid, problem-centric title that hints at the *missing software/service capability* for the commercial target's current pain, e.g., 'Local Business Info Sync Frustration')",
-				  "description": "string (A blunt explanation of *why existing software tools or manual methods fail* to solve this specific, *current* problem for *this specific target* in the context of the larger trend's immediate influence. Explain the *mechanism of failure* and emphasize why it needs a lean software solution.)",
-				  "impact": "string (Direct, quantifiable commercial impact: 'lost revenue', 'decreased efficiency', 'competitive disadvantage', 'higher operational costs')",
-				  "target": "string (The NARROW AND SPECIFIC commercial target: 'Small, independent local businesses (e.g., coffee shops, boutiques, pop-up stores)')",
-				  "opportunity": "string (A *hyper-focused, simple, software-first solution idea* that directly addresses the gap with a unique insight/capability, e.g., 'A simple, affordable SaaS dashboard that unifies social media, website, and local listing updates for small businesses, enabling 1-click publishing of daily specials.')"
-				}
-			  ]
-			}
+**Solution Viability Filter:**
+- NO hardware, IoT, medical devices, or physical products
+- NO regulatory/compliance-heavy solutions as primary value
+- NO deep R&D, AI model training, or multi-year development
+- YES to API integration, data processing, workflow automation, communication tools
+- YES to mobile-first, web-based, or lightweight service solutions
 
-			Find commercial pains so acute and present, your target will practically throw money at a **simple software or light service solution** to survive or thrive *today*. No hardware. No deep R&D. No medical devices. No science experiments. No multi-million dollar investments for the MVP.`;
-      const userPrompt = `Given this impactful global trend: "${context.trends?.title} - ${context.trends?.description}",
+Return enhanced JSON structure:
+{
+  "problems": [
+    "Specific persona spends X hours/week on manual process Y, losing $Z in revenue/opportunities because existing tools fail to address [specific limitation] in their workflow, particularly acute in [geographic/industry context]",
+    "Second persona problem with quantified impact and clear gap in current solutions",
+    "Third persona problem if applicable, same specificity and business impact focus"
+  ],
+  "gaps": [
+    {
+      "title": "string (Precise gap title that hints at the missing software capability)",
+      "description": "string (Detailed explanation of WHY existing software/methods fail for this specific persona in this trend context, including the mechanism of failure)",
+      "impact": "string (Quantified business impact with specific metrics where possible)",
+      "target": "string (Extremely narrow persona definition with geographic/industry context)",
+      "opportunity": "string (Specific software solution that leverages the trend to solve this gap uniquely)"
+    }
+  ]
+}
 
-			Identify 2-3 painful, specific, *current commercial problems* that have emerged or intensified for specific business/individual archetypes *because of this trend*. Explain the honest, critical gaps in how current solutions fail. Prioritize areas with real commercial potential (e.g., direct friction, newly underserved segments, unavoidable costs).
-			
-			Previously Generated Ideas (to avoid similar problem spaces and ensure diversity, focus on *core theme, industry, and solution type*):
-			${context.previousIdeas && context.previousIdeas.length > 0 ? context.previousIdeas.map((idea) => `- Title: "${idea.title}"\n  Description: "${idea.description}"`).join("\n") : "- None to consider."}
-			
-			Ensure the new problems and implied opportunities are fresh and distinct from those listed. Be direct, no corporate fluff. Prioritize problems solvable with a *lean, software-first approach* and **minimize focus on regulatory or compliance-heavy issues**.`;
-      // LOG: Perplexity API request
-      debugLogger.logPerplexityRequest(
-        "ProblemGapAgent",
-        userPrompt,
-        systemPrompt,
-        {
-          reasoning_effort: "medium",
-          model: "sonar",
-          context: context.trends,
-        }
-      );
+Focus on problems so painful and immediate that the target persona would pay for a solution within their first trial week.`;
 
-      const response = await perplexity(
-        userPrompt,
-        systemPrompt,
-        "medium",
-        "sonar"
-      );
+      const userPrompt = `Based on this validated trend: "${context.trends?.title} - ${context.trends?.description}"
 
-      // LOG: Perplexity API response (FULL)
-      debugLogger.logPerplexityResponse("ProblemGapAgent", response);
+Conduct deep systemic analysis to identify 2-3 excruciatingly specific commercial problems that are:
+1. Currently happening (not future theoretical problems)
+2. Costing specific business archetypes real money/time/opportunities TODAY
+3. Intensified or newly created by this trend
+4. Solvable with focused software solutions (SaaS/API/web app)
+5. Underserved by existing market solutions
+
+**Problem Discovery Focus:**
+- Target specific personas within the trend's impact zone
+- Quantify the pain (hours wasted, revenue lost, opportunities missed)
+- Explain why current tools/methods fail for this specific use case
+- Ensure problems lead to <$10K MVP, 3-6 month development solutions
+
+**Diversity Requirements (avoid these problem spaces):**
+${context.previousIdeas && context.previousIdeas.length > 0 ? 
+  context.previousIdeas.map((idea) => `- Avoid: Problems similar to "${idea.title}" - ${idea.description?.substring(0, 100)}...`).join('\n') : 
+  '- No restrictions - explore new problem territory'}
+
+Focus on immediate, specific, financially painful problems that create urgent demand for software solutions.`;
+
+             // Use sonar-pro for enhanced analysis
+       debugLogger.logPerplexityRequest(
+         "EnhancedProblemGapAgent",
+         userPrompt,
+         systemPrompt,
+         {
+           reasoning_effort: "high",  // Enhanced reasoning
+           model: "sonar-pro",   // Better model for analysis
+           context: context.trends,
+         }
+       );
+
+       const response = await perplexity(
+         userPrompt,
+         systemPrompt,
+         "high",  // High reasoning effort
+         "sonar-pro"  // Use pro model
+       );
+
+      debugLogger.logPerplexityResponse("EnhancedProblemGapAgent", response);
 
       if (!response?.choices?.[0]?.message?.content) {
         debugLogger.logError(
-          "ProblemGapAgent",
+          "EnhancedProblemGapAgent",
           new Error("No response from Perplexity"),
           { response }
         );
@@ -285,135 +467,103 @@ Extract the key trend information and format it as valid JSON. Return ONLY the J
       }
 
       const content = response.choices[0].message.content;
-      console.log("🔍 ProblemGap raw response length:", content.length);
+      console.log("🔍 Enhanced ProblemGap raw response length:", content.length);
       console.log("🔍 Response preview:", `${content.substring(0, 200)}...`);
 
-      // LOG: Content analysis (is it JSON or needs structuring)
-      const isAlreadyJson =
-        content.trim().startsWith("{") && content.trim().endsWith("}");
-      debugLogger.logContentAnalysis("ProblemGapAgent", content, isAlreadyJson);
+      const isAlreadyJson = content.trim().startsWith("{") && content.trim().endsWith("}");
+      debugLogger.logContentAnalysis("EnhancedProblemGapAgent", content, isAlreadyJson);
 
-      // LLM structuring function for when content is not already JSON
       const structureWithLLM = async (content: string): Promise<string> => {
-        const structuringPrompt = `You are a data structuring expert. Convert the following business problem and gap analysis into the exact JSON structure requested.
+        const structuringPrompt = `You are an expert business analyst. Convert the following problem and gap analysis into the exact JSON structure.
 
 REQUIRED JSON STRUCTURE:
 {
-  "problems": ["problem 1", "problem 2", "problem 3"],
+  "problems": ["specific problem 1 with quantified impact", "specific problem 2", "specific problem 3"],
   "gaps": [
     {
       "title": "string",
-      "description": "string",
-      "impact": "string",
-      "target": "string (persona or market)",
-      "opportunity": "string"
+      "description": "string (why existing solutions fail)",
+      "impact": "string (quantified business impact)",
+      "target": "string (specific persona/market)",
+      "opportunity": "string (specific software solution)"
     }
   ]
 }
 
-RESEARCH CONTENT TO CONVERT:
+ANALYSIS CONTENT:
 ${content}
 
-Extract the key problems and market gaps from this analysis and format them as valid JSON. Return ONLY the JSON object, no additional text.`;
+Extract problems and gaps with maximum specificity and business impact quantification. Return ONLY the JSON object.`;
 
-        // LOG: LLM structuring request
-        debugLogger.logLLMStructuring(
-          "ProblemGapAgent",
-          structuringPrompt,
-          content
-        );
+        debugLogger.logLLMStructuring("EnhancedProblemGapAgent", structuringPrompt, content);
 
-        const { text: structuredJson } = await generateText({
-          model: openrouter("openai/gpt-4o-mini"),
-          prompt: structuringPrompt,
-          temperature: 0.1,
-          maxTokens: 800,
-        });
+                 const { text: structuredJson } = await generateText({
+           model: openrouter("openai/gpt-4.1-mini"),
+           prompt: structuringPrompt,
+           temperature: 0.1,
+           maxTokens: 1000,
+         });
 
-        // LOG: LLM structuring response
-        debugLogger.logLLMStructuringResponse(
-          "ProblemGapAgent",
-          structuredJson
-        );
-
+        debugLogger.logLLMStructuringResponse("EnhancedProblemGapAgent", structuredJson);
         return structuredJson;
       };
 
       const parseResult = await parsePerplexityResponse<ProblemGapData>(
         content,
         structureWithLLM,
-        ["problems", "gaps"] // Required fields
+        ["problems", "gaps"]
       );
 
-      // LOG: Parsing attempt and result
-      debugLogger.logParsingAttempt("ProblemGapAgent", content, parseResult);
+      debugLogger.logParsingAttempt("EnhancedProblemGapAgent", content, parseResult);
 
       if (!parseResult.success) {
-        console.error(
-          "❌ Failed to parse problem gap data:",
-          parseResult.error
-        );
+        console.error("❌ Failed to parse enhanced problem gap data:", parseResult.error);
         debugLogger.logError(
-          "ProblemGapAgent",
-          new Error(
-            `Failed to parse Perplexity response: ${parseResult.error}`
-          ),
-          {
-            parseResult,
-            originalContent: content,
-          }
+          "EnhancedProblemGapAgent",
+          new Error(`Failed to parse Perplexity response: ${parseResult.error}`),
+          { parseResult, originalContent: content }
         );
-        throw new Error(
-          `Failed to parse Perplexity response: ${parseResult.error}`
-        );
+        throw new Error(`Failed to parse Perplexity response: ${parseResult.error}`);
       }
 
       const problemGapData = parseResult.data as ProblemGapData;
 
-      console.log("✅ Successfully structured problem gap data:", {
+      console.log("✅ Step 3: Enhanced Problem Gap Analysis Completed:", {
         problemCount: problemGapData.problems?.length || 0,
         gapCount: problemGapData.gaps?.length || 0,
       });
 
-      // LOG: Final agent result
-      debugLogger.logAgentResult("ProblemGapAgent", problemGapData, true);
-
+      debugLogger.logAgentResult("EnhancedProblemGapAgent", problemGapData, true);
       return problemGapData;
+
     } catch (error) {
-      console.error("ProblemGapAgent error:", error);
-      debugLogger.logError("ProblemGapAgent", error as Error, {
-        agent: "ProblemGapAgent",
+      console.error("EnhancedProblemGapAgent error:", error);
+      debugLogger.logError("EnhancedProblemGapAgent", error as Error, {
+        agent: "EnhancedProblemGapAgent",
         fallbackUsed: true,
       });
 
-      // Return mock data as fallback for development/testing
-      console.log("🔄 Using fallback mock problem gap data for development");
+      console.log("🔄 Using enhanced fallback problem gap data");
       return {
         problems: [
-          "SMB owners waste 15+ hours/week on manual task switching between CRM, inventory, and scheduling systems",
-          "Non-technical team members struggle to set up complex automation tools, requiring expensive consultants",
-          "Existing automation tools are either too basic (single-app) or too complex (enterprise-grade) for growing businesses",
+          "Independent content creators in emerging markets waste 12+ hours/week manually distributing content across platforms, losing $800+ monthly in potential sponsorship revenue because existing tools don't support local payment methods or regional platform integrations",
+          "Small e-commerce businesses in tier-2 cities spend 8 hours/week on inventory tracking across online and offline channels, missing 15% of sales opportunities due to stock-outs because current tools are built for single-channel operations",
+          "Remote consultants and freelancers lose 6 hours/week on client communication and project management, reducing hourly rate efficiency by 25% because existing tools lack smart scheduling and communication synthesis for global timezone coordination",
         ],
         gaps: [
           {
-            title: "No-Code Multi-System Integration",
-            description:
-              "Current tools require technical setup or only work within single ecosystems",
-            impact:
-              "Businesses lose productivity and pay for multiple disconnected tools",
-            target: "SMB owners and operations managers (10-100 employees)",
-            opportunity:
-              "AI-powered connector that learns business patterns and suggests automations",
+            title: "Multi-Platform Content Distribution for Emerging Markets",
+            description: "Current content management tools are built for Western platforms and payment systems, failing to integrate with regional social platforms, local payment gateways, and mobile-first workflows prevalent in emerging markets",
+            impact: "Content creators lose 40-60% of potential revenue from regional sponsorships and audience monetization",
+            target: "Independent content creators and influencers in Southeast Asia, Latin America, and Africa",
+            opportunity: "Regional-first content management platform with native integrations for local platforms, mobile-optimized workflows, and emerging market payment systems",
           },
           {
-            title: "Context-Aware Workflow Intelligence",
-            description:
-              "Existing automation lacks business context and requires manual rule creation",
-            impact:
-              "Automations break when business conditions change, creating more work",
-            target: "Growing businesses with changing processes",
-            opportunity:
-              "Smart automation that adapts to business patterns and seasonal changes",
+            title: "Hybrid Commerce Inventory Intelligence",
+            description: "Existing inventory tools assume pure online or pure offline operations, creating blind spots for businesses operating across channels, particularly in markets where offline-to-online transition is rapid",
+            impact: "15-25% revenue loss from stock-outs and overstocking, plus 8+ hours weekly manual reconciliation",
+            target: "Small to medium e-commerce businesses in tier-2 cities with hybrid online/offline operations",
+            opportunity: "AI-powered inventory assistant that learns from both online analytics and offline sales patterns to predict demand across channels",
           },
         ],
       };
@@ -421,65 +571,92 @@ Extract the key problems and market gaps from this analysis and format them as v
   },
 
   /**
-   * CompetitiveIntelligenceAgent - Analyze competitive landscape AND positioning opportunities
-   * Uses Perplexity Sonar Pro for comprehensive competitive research
+   * Enhanced CompetitiveIntelligenceAgent - Better competitive analysis with strategic positioning
+   * Uses structured prompts for deeper market understanding
    */
   async competitiveIntelligenceAgent(
     context: AgentContext
   ): Promise<CompetitiveData | null> {
     try {
-      const systemPrompt = `Okay, competitive ninja, time to uncover the weaknesses. Given a *single, painfully specific problem* for a *very precise target* (which is solvable by a lean, software-first MVP), your mission is to find out how a new startup can absolutely dominate this tiny space by exposing the fundamental flaws of the current players.
+      console.log("🏆 Step 4: Enhanced Competitive Intelligence");
 
-			Map out who's trying to solve this (direct and indirect). For each, be brutally honest:
-				- What do they *claim* to do well, but actually mess up for *our specific niche* and for *simple, software-based needs*?
-				- Why is their current setup (product, structure) *incapable* of truly fixing *our specific problem* with a lean, software solution?
-			
-			**Your core task: Define a sharp "wedge" strategy that creates an undeniable, defensible advantage based on unique insights or a genuinely different, *software-implementable* approach.** This isn't about being slightly better; it's about being so uniquely effective for *our target* with a *buildable MVP* that everyone else becomes irrelevant.
-			
-			Return this structure precisely:
-			{
-			  "competition": {
-				"marketConcentrationLevel": "LOW" | "MEDIUM" | "HIGH",
-				"marketConcentrationJustification": "string (Explain the competitive scene *only for our tiny niche*, highlighting where the big players drop the ball for *lean software solutions*.)",
-				"directCompetitors": [
-				  {
-					"name": "string",
-					"justification": "string (Why they're a contender, but not for *our* specific, lean-solvable problem.)",
-					"strengths": ["what they genuinely do well", "their advantages overall"],
-					"weaknesses": ["how they *honestly fail* our target persona on their specific pain", "their fundamental limits for *our* simple software solution"]
-				  }
-				],
-				"indirectCompetitors": [
-				  {
-					"name": "string",
-					"justification": "string (How they indirectly touch our niche, but aren't a direct solution for a lean software approach.)",
-					"strengths": ["their general strengths"],
-					"weaknesses": ["why they're just *not good enough* for *our specific problem* with an MVP-first mindset"]
-				  }
-				],
-				"competitorFailurePoints": ["the *blatant, critical pains* competitors leave unaddressed for *our niche*", "another obvious flaw for a software MVP"],
-				"unfairAdvantage": ["our *secret weapon* that competitors can't easily copy (e.g., unique access to data, a simple proprietary algorithm, raw founder insights, community build)", "another real, software-implementable advantage"],
-				"moat": ["how we build a *tough-as-nails defense* around our niche (e.g., exclusive data partnerships, community network effects *within our niche*, unbreakable integrations for simple software, unique IP that's MVP-feasible)", "another solid, buildable moat"],
-				"competitivePositioningScore": number (1–10)
-			  },
-			  "positioning": {
-				"name": "string (A straightforward, memorable product name that instantly tells you its niche and key benefit, **PROBLEM + SOLUTION in 8 WORDS OR LESS.** e.g., 'Local Shops: Daily Updates Simplified')",
-				"targetSegment": "string (REITERATE the EXTREMELY narrow and specific target: 'Independent coffee shops and small boutiques')",
-				"valueProposition": "string (A sharp, honest pitch for *this exact persona*, emphasizing the *unique insight/data* and directly solved problem with a *lean software tool*. No fluff, just results. e.g., 'The only tool that automates daily specials updates across all platforms for local businesses, saving hours and boosting visibility.')",
-				"keyDifferentiators": ["our unique, niche-specific, *buildable* feature 1 (tied to our unfair advantage)", "our unique, niche-specific, *software-based* feature 2 (tied to our moat)", "our key capability 3 for MVP"]
-			  }
-			}
-			
-			Force the focus on how the solution makes competitors irrelevant for *our specific target* with a *simple, buildable software solution*. No corporate speak, just honest strategy.`;
+      const systemPrompt = `You are an elite competitive intelligence analyst and strategic positioning expert. Your mission is to conduct deep competitive analysis within a specific niche and define a sharp differentiation strategy for a software startup.
+
+**Enhanced Analysis Framework:**
+
+**Competitive Landscape Mapping:**
+1. **Niche-Specific Focus**: Analyze competitors only within the precise problem space, not the broader market
+2. **Failure Point Analysis**: Identify specific ways current solutions fail the target persona
+3. **Structural Limitations**: Understand why existing players can't easily fix these failures
+4. **Market Concentration Assessment**: Evaluate competitive density specifically for this narrow use case
+
+**Strategic Positioning Requirements:**
+- Define a clear "wedge" strategy that makes competitors irrelevant for the target persona
+- Identify unfair advantages that can be built with a lean software approach
+- Establish defensible moats that scale with user adoption
+- Create positioning that turns limitations into strengths
+
+**Solution Viability Constraints:**
+- Focus on positioning around software capabilities (APIs, data processing, workflow automation)
+- Avoid hardware-dependent or deep R&D advantages
+- Emphasize network effects, data advantages, or unique integrations possible for startups
+- Consider geographic/demographic advantages in emerging markets
+
+Return enhanced competitive analysis:
+{
+  "competition": {
+    "marketConcentrationLevel": "LOW" | "MEDIUM" | "HIGH",
+    "marketConcentrationJustification": "string (Detailed explanation of competitive density specifically for this narrow niche, highlighting opportunities for software-first entrants)",
+    "directCompetitors": [
+      {
+        "name": "string",
+        "justification": "string (Why they compete in this space but fail the target persona)",
+        "strengths": ["genuine competitive advantages", "market position"],
+        "weaknesses": ["specific failures for target persona", "structural limitations for niche"]
+      }
+    ],
+    "indirectCompetitors": [
+      {
+        "name": "string", 
+        "justification": "string (How they indirectly address the problem but miss the mark)",
+        "strengths": ["general market strengths"],
+        "weaknesses": ["why they can't serve this specific niche effectively"]
+      }
+    ],
+    "competitorFailurePoints": ["critical pain points left unaddressed", "systematic gaps in current market"],
+    "unfairAdvantage": ["specific advantages achievable with lean software approach", "data/network effects unique to this niche"],
+    "moat": ["defensible barriers that strengthen with adoption", "competitive advantages difficult for incumbents to replicate"],
+    "competitivePositioningScore": number (1-10)
+  },
+  "positioning": {
+    "name": "string (Memorable positioning statement that captures the unique value for target persona - PROBLEM + SOLUTION in ≤8 words)",
+    "targetSegment": "string (Extremely specific target persona with geographic/industry context)",
+    "valueProposition": "string (Sharp pitch emphasizing unique insight and direct problem resolution with software solution)",
+    "keyDifferentiators": ["unique capability tied to unfair advantage", "niche-specific feature competitors can't replicate", "software advantage that scales"]
+  }
+}
+
+Focus on competitive intelligence that reveals clear paths to startup success through strategic differentiation.`;
 
       const problemContext = context.problemGaps?.problems.join(", ") || "";
-      const userPrompt = `Analyze the competitive landscape *within the precise niche* defined by these problems: ${problemContext}.
+      const userPrompt = `Analyze the competitive landscape within the specific niche defined by these problems: ${problemContext}
 
-			Identify both direct and indirect competitors. For each, expose their specific weaknesses and blind spots as they relate to *our narrow target persona's unique pain*. Then, clearly define a highly differentiated and defensible positioning strategy that allows a new entrant to effectively make existing solutions irrelevant for this specific audience.`;
+Conduct deep competitive analysis to:
+1. Map all direct and indirect competitors within this precise problem space
+2. Identify their specific failure points for the target personas
+3. Understand why existing solutions structurally can't address these gaps
+4. Define a sharp differentiation strategy that makes competitors irrelevant for this niche
 
-      // LOG: Perplexity API request
+**Focus Areas:**
+- Why do current solutions fail the specific personas identified?
+- What structural/technological barriers prevent incumbents from solving this?
+- How can a software-first startup create an unfair advantage?
+- What positioning makes the startup the obvious choice for the target persona?
+
+Provide actionable competitive intelligence that guides strategic positioning and product development decisions.`;
+
       debugLogger.logPerplexityRequest(
-        "CompetitiveIntelligenceAgent",
+        "EnhancedCompetitiveIntelligenceAgent",
         userPrompt,
         systemPrompt,
         {
@@ -496,15 +673,11 @@ Extract the key problems and market gaps from this analysis and format them as v
         "sonar-pro"
       );
 
-      // LOG: Perplexity API response (FULL)
-      debugLogger.logPerplexityResponse(
-        "CompetitiveIntelligenceAgent",
-        response
-      );
+      debugLogger.logPerplexityResponse("EnhancedCompetitiveIntelligenceAgent", response);
 
       if (!response?.choices?.[0]?.message?.content) {
         debugLogger.logError(
-          "CompetitiveIntelligenceAgent",
+          "EnhancedCompetitiveIntelligenceAgent",
           new Error("No response from Perplexity"),
           { response }
         );
@@ -512,24 +685,14 @@ Extract the key problems and market gaps from this analysis and format them as v
       }
 
       const content = response.choices[0].message.content;
-      console.log(
-        "🔍 Competitive Intelligence raw response length:",
-        content.length
-      );
+      console.log("🔍 Enhanced Competitive Intelligence raw response length:", content.length);
       console.log("🔍 Response preview:", `${content.substring(0, 200)}...`);
 
-      // LOG: Content analysis (is it JSON or needs structuring)
-      const isAlreadyJson =
-        content.trim().startsWith("{") && content.trim().endsWith("}");
-      debugLogger.logContentAnalysis(
-        "CompetitiveIntelligenceAgent",
-        content,
-        isAlreadyJson
-      );
+      const isAlreadyJson = content.trim().startsWith("{") && content.trim().endsWith("}");
+      debugLogger.logContentAnalysis("EnhancedCompetitiveIntelligenceAgent", content, isAlreadyJson);
 
-      // LLM structuring function for when content is not already JSON
       const structureWithLLM = async (content: string): Promise<string> => {
-        const structuringPrompt = `You are a data structuring expert. Convert the following competitive intelligence research into the exact JSON structure requested.
+        const structuringPrompt = `You are an expert competitive analyst. Convert the following competitive intelligence research into the exact JSON structure requested.
 
 REQUIRED JSON STRUCTURE:
 {
@@ -547,15 +710,15 @@ REQUIRED JSON STRUCTURE:
     "indirectCompetitors": [
       {
         "name": "string",
-        "justification": "string",
+        "justification": "string", 
         "strengths": ["s1", "s2"],
         "weaknesses": ["w1", "w2"]
       }
     ],
     "competitorFailurePoints": ["point1", "point2"],
-    "unfairAdvantage": ["adv1", "adv2"],
+    "unfairAdvantage": ["adv1", "adv2"], 
     "moat": ["moat1", "moat2"],
-    "competitivePositioningScore": "number (1-10)"
+    "competitivePositioningScore": number
   },
   "positioning": {
     "name": "string",
@@ -565,176 +728,109 @@ REQUIRED JSON STRUCTURE:
   }
 }
 
-RESEARCH CONTENT TO CONVERT:
+COMPETITIVE ANALYSIS CONTENT:
 ${content}
 
-Extract the competitive analysis data and strategic positioning from this research and format them as valid JSON. Return ONLY the JSON object, no additional text.`;
+Extract competitive data and positioning strategy. Ensure all competitive advantages are realistic for software startups. Return ONLY the JSON object.`;
 
-        // LOG: LLM structuring request
-        debugLogger.logLLMStructuring(
-          "CompetitiveIntelligenceAgent",
-          structuringPrompt,
-          content
-        );
+        debugLogger.logLLMStructuring("EnhancedCompetitiveIntelligenceAgent", structuringPrompt, content);
 
         const { text: structuredJson } = await generateText({
-          model: openrouter("openai/gpt-4o-mini"),
+          model: openrouter("openai/gpt-4.1-mini"),
           prompt: structuringPrompt,
           temperature: 0.1,
-          maxTokens: 1000,
+          maxTokens: 1200,
         });
 
-        // LOG: LLM structuring response
-        debugLogger.logLLMStructuringResponse(
-          "CompetitiveIntelligenceAgent",
-          structuredJson
-        );
-
+        debugLogger.logLLMStructuringResponse("EnhancedCompetitiveIntelligenceAgent", structuredJson);
         return structuredJson;
       };
 
       const parseResult = await parsePerplexityResponse<CompetitiveData>(
         content,
         structureWithLLM,
-        ["competition", "positioning"] // Required fields
+        ["competition", "positioning"]
       );
 
-      // LOG: Parsing attempt and result
-      debugLogger.logParsingAttempt(
-        "CompetitiveIntelligenceAgent",
-        content,
-        parseResult
-      );
+      debugLogger.logParsingAttempt("EnhancedCompetitiveIntelligenceAgent", content, parseResult);
 
       if (!parseResult.success) {
-        console.error(
-          "❌ Failed to parse competitive data:",
-          parseResult.error
-        );
+        console.error("❌ Failed to parse enhanced competitive data:", parseResult.error);
         debugLogger.logError(
-          "CompetitiveIntelligenceAgent",
-          new Error(
-            `Failed to parse Perplexity response: ${parseResult.error}`
-          ),
-          {
-            parseResult,
-            originalContent: content,
-          }
+          "EnhancedCompetitiveIntelligenceAgent",
+          new Error(`Failed to parse Perplexity response: ${parseResult.error}`),
+          { parseResult, originalContent: content }
         );
-        throw new Error(
-          `Failed to parse Perplexity response: ${parseResult.error}`
-        );
+        throw new Error(`Failed to parse Perplexity response: ${parseResult.error}`);
       }
 
       const competitiveData = parseResult.data as CompetitiveData;
 
-      console.log("✅ Successfully structured competitive data:", {
-        marketConcentration:
-          competitiveData.competition?.marketConcentrationLevel,
-        directCompetitorCount:
-          competitiveData.competition?.directCompetitors?.length || 0,
+      console.log("✅ Step 4: Enhanced Competitive Intelligence Completed:", {
+        marketConcentration: competitiveData.competition?.marketConcentrationLevel,
+        directCompetitorCount: competitiveData.competition?.directCompetitors?.length || 0,
         positioningName: competitiveData.positioning?.name,
+        competitiveScore: competitiveData.competition?.competitivePositioningScore
       });
 
-      // LOG: Final agent result
-      debugLogger.logAgentResult(
-        "CompetitiveIntelligenceAgent",
-        competitiveData,
-        true
-      );
-
+      debugLogger.logAgentResult("EnhancedCompetitiveIntelligenceAgent", competitiveData, true);
       return competitiveData;
+
     } catch (error) {
-      console.error("CompetitiveIntelligenceAgent error:", error);
-      debugLogger.logError("CompetitiveIntelligenceAgent", error as Error, {
-        agent: "CompetitiveIntelligenceAgent",
+      console.error("EnhancedCompetitiveIntelligenceAgent error:", error);
+      debugLogger.logError("EnhancedCompetitiveIntelligenceAgent", error as Error, {
+        agent: "EnhancedCompetitiveIntelligenceAgent",
         fallbackUsed: true,
       });
 
-      // Return mock data as fallback for development/testing
-      console.log(
-        "🔄 Using fallback mock competitive intelligence data for development"
-      );
+      console.log("🔄 Using enhanced fallback competitive intelligence data");
       return {
         competition: {
-          marketConcentrationLevel: "MEDIUM" as const,
-          marketConcentrationJustification:
-            "Several established players but room for differentiation in SMB segment",
+          marketConcentrationLevel: "LOW" as const,
+          marketConcentrationJustification: "Emerging market focus creates opportunities for specialized solutions targeting underserved segments with mobile-first, locally-adapted approaches",
           directCompetitors: [
             {
-              name: "Zapier",
-              justification: "Leading workflow automation platform",
-              strengths: [
-                "Extensive integrations",
-                "Brand recognition",
-                "Large ecosystem",
-              ],
-              weaknesses: [
-                "Complex for non-technical users",
-                "Expensive for SMBs",
-                "Generic automation",
-              ],
-            },
-            {
-              name: "Make.com",
-              justification: "Visual workflow automation tool",
-              strengths: [
-                "Visual interface",
-                "Advanced features",
-                "Developer-friendly",
-              ],
-              weaknesses: [
-                "Steep learning curve",
-                "Pricing model",
-                "Limited SMB focus",
-              ],
-            },
+              name: "Generic Global Platforms",
+              justification: "Large platforms that attempt to serve the target market but lack regional customization",
+              strengths: ["Brand recognition", "Extensive features", "Large user base"],
+              weaknesses: ["No local platform integrations", "Western-centric design", "Complex pricing for emerging markets", "Poor mobile optimization"]
+            }
           ],
           indirectCompetitors: [
             {
-              name: "Microsoft Power Automate",
-              justification: "Enterprise automation within Microsoft ecosystem",
-              strengths: [
-                "Microsoft integration",
-                "Enterprise features",
-                "Bundled pricing",
-              ],
-              weaknesses: [
-                "Microsoft ecosystem lock-in",
-                "Complex setup",
-                "Poor SMB experience",
-              ],
-            },
+              name: "Manual/Traditional Methods",
+              justification: "Current manual processes and traditional tools used by target personas",
+              strengths: ["Familiar workflows", "No technology barriers", "Full control"],
+              weaknesses: ["Time-intensive", "Error-prone", "No scalability", "Missing automation opportunities"]
+            }
           ],
           competitorFailurePoints: [
-            "Over-complicated interfaces for simple business needs",
-            "Pricing models that don't scale with SMB growth",
-            "Lack of industry-specific templates and workflows",
+            "Lack of regional platform integrations and local payment support",
+            "Complex interfaces designed for desktop users, not mobile-first workflows",
+            "Pricing models that don't scale with emerging market budgets"
           ],
           unfairAdvantage: [
-            "AI-powered setup that learns business patterns",
-            "SMB-specific workflow templates",
-            "Transparent, usage-based pricing",
+            "Native integrations with regional platforms and payment systems",
+            "Mobile-first design optimized for emerging market usage patterns",
+            "Local market expertise and community-driven feature development"
           ],
           moat: [
-            "Proprietary AI that understands SMB workflows",
-            "Network effects from workflow marketplace",
-            "Integration partnerships with SMB-focused tools",
+            "Exclusive partnerships with regional platforms and local service providers",
+            "Network effects within specific geographic communities",
+            "Data advantages from understanding regional user behavior patterns"
           ],
-          competitivePositioningScore: 7,
+          competitivePositioningScore: 8
         },
         positioning: {
-          name: "FlowGenius",
-          targetSegment:
-            "Growing SMBs (10-100 employees) in service industries",
-          valueProposition:
-            "The first workflow automation tool designed specifically for growing businesses - setup in minutes, not months",
+          name: "Regional Creator Tools for Mobile Markets",
+          targetSegment: "Independent content creators and small business owners in Southeast Asia, Latin America, and Africa",
+          valueProposition: "The only platform designed specifically for emerging market creators, with native regional integrations, mobile-first workflows, and local payment support that global platforms ignore",
           keyDifferentiators: [
-            "AI-powered workflow suggestions based on business type",
-            "SMB-optimized pricing that grows with your business",
-            "Industry-specific templates and best practices",
-          ],
-        },
+            "Native integration with regional social platforms and payment gateways",
+            "Mobile-optimized interface designed for smartphone-primary users",
+            "Community-driven feature development with regional market expertise"
+          ]
+        }
       };
     }
   },
@@ -790,17 +886,57 @@ Extract the competitive analysis data and strategic positioning from this resear
 				Clearly define the primary revenue model, pricing strategy, and how it delivers clear, quantifiable ROI for our specific target persona. Include realistic revenue streams, key metrics (LTV, CAC, payback period), and simplified 3-year financial projections that reflect a laser-focused MVP with potential for scale within its niche.`;
 
       const { text } = await generateText({
-        model: openrouter("openai/gpt-4o-mini"),
+        model: openrouter("openai/gpt-4.1-mini"),
         prompt: userPrompt,
         system: systemPrompt,
         temperature: 0.1,
         maxTokens: 1000,
       });
 
-      // Clean the response to remove markdown code blocks if present
-      const cleanedText = text.replace(/```json\s*|```\s*$/g, '').trim();
+      // Use enhanced JSON parser to handle markdown code blocks and formatting issues
+      const parseResult = await EnhancedJsonParser.parseWithFallback<MonetizationData>(
+        text,
+        ["primaryModel", "pricingStrategy", "revenueStreams", "keyMetrics"],
+        {
+          primaryModel: "SaaS Subscription",
+          pricingStrategy: "Tiered SaaS pricing based on number of integrations and automations",
+          businessScore: 8,
+          confidence: 7,
+          revenueModelValidation: "Validated by similar tools in market with proven demand",
+          pricingSensitivity: "Target market is price-sensitive but will pay for proven ROI",
+          revenueStreams: [
+            { name: "Monthly Subscriptions", description: "Core SaaS platform access", percentage: 70 },
+            { name: "Setup & Consulting", description: "Implementation services", percentage: 20 },
+            { name: "Premium Integrations", description: "Enterprise-grade connectors", percentage: 10 }
+          ],
+          keyMetrics: {
+            ltv: 1800,
+            ltvDescription: "Average customer lifetime value based on 18-month retention",
+            cac: 180,
+            cacDescription: "Customer acquisition cost through digital marketing",
+            ltvCacRatio: 10,
+            ltvCacRatioDescription: "Healthy 10:1 LTV:CAC ratio indicating profitable growth",
+            paybackPeriod: 6,
+            paybackPeriodDescription: "6 months to recover customer acquisition cost",
+            runway: 18,
+            runwayDescription: "18 months of operating expenses covered",
+            breakEvenPoint: "Month 14 at 500 customers",
+            breakEvenPointDescription: "Break-even when MRR reaches $25K"
+          },
+          financialProjections: [
+            { year: 1, revenue: 120000, costs: 200000, netMargin: -40, revenueGrowth: 0 },
+            { year: 2, revenue: 480000, costs: 350000, netMargin: 27, revenueGrowth: 300 },
+            { year: 3, revenue: 1200000, costs: 720000, netMargin: 40, revenueGrowth: 150 }
+          ]
+        }
+      );
 
-      const monetizationData = JSON.parse(cleanedText) as MonetizationData;
+      if (!parseResult.success) {
+        console.error("❌ Monetization Agent JSON parsing failed:", parseResult.error);
+        console.log("📝 Original response:", parseResult.originalText?.substring(0, 500));
+      }
+
+      const monetizationData = parseResult.data as MonetizationData;
       return monetizationData;
     } catch (error) {
       console.error("MonetizationAgent error:", error);
@@ -931,14 +1067,44 @@ Design a software-first platform that:
 Focus on specificity - provide exact feature descriptions, precise integration recommendations, and clear technical approaches that eliminate guesswork for the development team.`;
 
       const { text } = await generateText({
-        model: openrouter("openai/gpt-4o-mini"),
+        model: openrouter("openai/gpt-4.1-mini"),
         prompt: userPrompt,
         system: systemPrompt,
         temperature: 0.1,
         maxTokens: 1200,
       });
 
-      const whatToBuildData = JSON.parse(text) as import("../../types/apps/idea-generation-agent").WhatToBuildData;
+      // Use enhanced JSON parser to handle markdown code blocks and formatting issues
+      const parseResult = await EnhancedJsonParser.parseWithFallback<import("../../types/apps/idea-generation-agent").WhatToBuildData>(
+        text,
+        ["platformDescription", "coreFeaturesSummary", "userInterfaces", "keyIntegrations"],
+        {
+          platformDescription: "A cloud-based SaaS platform with web dashboard and mobile companion app, featuring workflow builder and real-time monitoring for small business operations.",
+          coreFeaturesSummary: [
+            "Visual workflow builder with pre-built business templates",
+            "Real-time business data integration dashboard", 
+            "AI-powered automation recommendations engine"
+          ],
+          userInterfaces: [
+            "Business Owner Dashboard - Main workflow management interface",
+            "Team Member Mobile App - Task execution and approvals",
+            "Admin Panel - User management and billing controls"
+          ],
+          keyIntegrations: [
+            "Stripe for subscription billing and payment processing",
+            "QuickBooks/Xero for financial data integration",
+            "Slack/Microsoft Teams for team notifications"
+          ],
+          pricingStrategyBuildRecommendation: "Implement freemium SaaS model with Stripe: Free tier (basic features), Pro tier $99/month (advanced features), Enterprise tier $299/month (custom integrations)"
+        }
+      );
+
+      if (!parseResult.success) {
+        console.error("❌ WhatToBuild Agent JSON parsing failed:", parseResult.error);
+        console.log("📝 Original response:", parseResult.originalText?.substring(0, 500));
+      }
+
+      const whatToBuildData = parseResult.data as import("../../types/apps/idea-generation-agent").WhatToBuildData;
       return whatToBuildData;
     } catch (error) {
       console.error("WhatToBuildAgent error:", error);
@@ -973,269 +1139,395 @@ Focus on specificity - provide exact feature descriptions, precise integration r
   },
 
   /**
-   * IdeaSynthesisAgent - Combine all research into final structured idea with scoring
-   * Uses OpenRouter GPT-4.1-nano for deterministic synthesis
+   * Critic Agent - Silent critic that analyzes generated ideas and creates refinement prompts
+   * Uses advanced reasoning to critique and improve idea quality
    */
-  async ideaSynthesisAgent(
-    context: AgentContext
-  ): Promise<SynthesizedIdea | null> {
+  async criticAgent(ideas: SynthesizedIdea[], context: AgentContext): Promise<string | null> {
     try {
-      const systemPrompt = `You are the ultimate founder and chief storyteller, responsible for synthesizing all the research into a single, irresistible startup idea that feels *real, human, and immediately actionable for a lean, SOFTWARE-FOCUSED startup team*. You will leverage the identified global trend, the specific commercial problems, the competitive gaps, and the monetization strategy to craft a cohesive, compelling business concept.
+      console.log("🔍 Step 6: Activating Critic Agent");
 
-			**Your core responsibility: Articulate a precise problem solved for a specific group of people with a uniquely compelling, *primarily SOFTWARE-BASED (SaaS, API, web/mobile app)* or *LIGHT SERVICE* solution. The solution MUST be realistic for a focused, early-stage team to develop and bring to market. This means:**
-				*   **NO custom hardware, robotics, medical devices, or advanced physical products.**
-				*   **NO solutions requiring massive R&D, clinical trials, or multi-year regulatory approvals (e.g., FDA).**
-				*   **Focus on leveraging existing, commercially available tech, APIs, or data.**
-				*   **AVOID any core solution that is primarily about 'compliance' or complex legal frameworks.** These tend to be niche, slow-moving, and less broadly appealing for a lean startup.
-			
-			**Tone & Narrative:** Absolutely **NO abstract jargon, corporate buzzwords, or "LinkedIn influencer" speak.** Use vivid, relatable, and *intriguing* language that makes someone *feel* the problem and *see* the solution in action. Every part of the output should read like a concise, inspiring blueprint for a real product launch, delivered with the persuasive, human tone of a visionary founder talking to their early team.
-			
-			**Title Format:** The title should be descriptive, clearly indicating the product's function, target, or key benefit. It should be immediately understandable and compelling, like a catchy product name or a direct solution statement. **DO NOT ALWAYS INCLUDE '($XM ARR potential)'. Only add it if the ARR estimate is truly outstanding and makes the title significantly more compelling; otherwise, omit it for brevity and authenticity.**
-			- DO NOT INCLUDE STARTUP OR PRODUCT NAMES	
-      *Examples:* 'AI Inventory Manager for Small Retailers', 'Smart Task Orchestrator for Event Planners', 'Local Farmers Market Digitizer'.
-			
-			**Narrative Quality:** The 'description', 'problemSolution', and 'executiveSummary' fields must tell a compelling, empathetic story.
-				- Introduce the *specific user archetype* (e.g., 'a busy e-commerce manager' or 'a small accounting firm owner') and their *acute pain* using honest, direct language.
-				- Describe *how your software/service uniquely and delightfully solves it* with clear, tangible benefits.
-				- Implicitly convey the 'why now' (how the larger trend makes this solution critical) and the honest vision for growth.
-			
-			**Actionability & Next Steps:**
-			- For 'executionPlan': Provide concrete, exciting, and *realistic for a software startup* next steps for building and launching the MVP, including honest initial user acquisition strategy.
-			- For 'tractionSignals': Suggest tangible, *achievable for a software product* early indicators of success to look for in the first 3-6 months. Use specific, quantifiable metrics that matter. No vanity metrics.
-			- For 'frameworkFit': Explain, in plain language, how this *software-focused idea* strategically makes sense or fits a known path to success, avoiding academic or overly complex frameworks if they don't simplify understanding.
-			
-			**FINAL DIVERSITY CHECK:** After synthesizing, perform one last check. If the generated idea's core theme, industry, or primary problem directly overlaps with any 'Previously Generated Ideas', significantly reframe or choose an alternative problem/solution path from the earlier agents that ensures this idea is truly unique. This is paramount to avoiding repetitive outputs.
-			
-			Return JSON in this exact shape:
-			{
-			  "title": "string (FORMAT: Descriptive title. Optionally, add '($XM ARR potential)' ONLY if exceptionally compelling.) DO NOT HAVE A STARTUP OR A PRODUCT NAME",
-			  "description": "string (A captivating, human-like narrative (~3-5 sentences) introducing the *user archetype*, their pain, and how the *software/service* genuinely solves it. Weave in 'why now', simple GTM hints, and growth vision. No LinkedIn prose.)",
-			  "executiveSummary": "string (a concise, compelling pitch for *this focused software/service idea*, highlighting the core problem, unique value, and main benefit. Keep it sharp, human.)",
-			  "problemSolution": "string (Honest, direct story format: 'A small business owner spends hours on X. This *software/service* fixes that by Y, saving them Z and making them genuinely happy by A.')",
-			  "problemStatement": "string (A sharp, empathetic, and *authentic* statement of the specific pain for the narrow target.)",
-			  "innovationLevel": number (1-10),
-			  "timeToMarket": number (months, realistic for a focused software MVP),
-			  "confidenceScore": number (1-10),
-			  "narrativeHook": "string (a punchy, memorable, and human tagline that truly grabs attention and promises a clear benefit. No corporate slogans. e.g., 'Stop guessing. Start growing with actual data.')",
-			  "targetKeywords": ["niche software keyword 1", "niche software keyword 2", "niche software keyword 3"],
-			  "urgencyLevel": number (1-10),
-			  "executionComplexity": number (1-10, for the FOCUSED SOFTWARE MVP and initial value proposition, keep it real),
-			  "tags": ["SaaS", "Niche", "AI", "specific-industry-tag"],
-			  "scoring": {
-				"totalScore": number,
-				"problemSeverity": number (1-10),
-				"founderMarketFit": number (1-10),
-				"technicalFeasibility": number (1-10),
-				"monetizationPotential": number (1-10),
-				"urgencyScore": number (1-10),
-				"marketTimingScore": number (1-10),
-				"executionDifficulty": number (1-10),
-				"moatStrength": number (1-10),
-				"regulatoryRisk": number (1-10)
-			  },
-			  "executionPlan": "string (Concrete, exciting, and *founder-level realistic for a software startup* next steps for building and launching the MVP, including honest initial user acquisition strategy.)",
-			  "tractionSignals": "string (Tangible, *achievable for a software product* early indicators of success to look for in the first 3-6 months. Use specific, quantifiable metrics that matter. No vanity metrics.)",
-			  "frameworkFit": "string (An honest, plain-language explanation of how this *software-focused idea* strategically makes sense or fits a known path to success. Avoid complex academic jargon unless it simplifies understanding. e.g., 'This is a straightforward 'Pickaxe for Gold Rush' play by providing...')"
-			}
-			
-			The final idea should be so clear, compelling, and *brutally realistic for a software startup* that someone could literally start building its core MVP tomorrow morning. Make it undeniably real, inspiring, and completely devoid of LinkedIn-style posturing or sci-fi promises.`;
+      const criticPrompt = `You are a world-class startup critic and strategic advisor with deep expertise in evaluating early-stage business opportunities. Your role is to conduct a silent, comprehensive critique of generated startup ideas and create targeted refinement recommendations.
 
-      const userPrompt = `Synthesize all this detailed research into a single, utterly compelling, and *immediately actionable* startup idea. This isn't just a report; it's a blueprint for a product someone would *love* to build and *pay* for.
+**Critique Framework:**
 
-			**Your mission:** Transform the raw data below into a vivid, human-centric story that clearly showcases:
-			1.  **Who** has this painful problem (a specific user archetype).
-			2.  **What** their daily struggle feels like.
-			3.  **How** your product uniquely and delightfully solves it.
-			4.  **Why** now is the perfect time to build this.
-			5.  **How** it will grow and make money, implicitly including the go-to-market.
-			
-			**Think: "Smart Sunscreen Wristband for Kids" or "AI Inventory Manager for Small Retailers" for the title and overall narrative style.** Make it relatable, exciting, and concrete.
-			
-			---
-			**Raw Research Inputs:**
-			TREND: ${context.trends?.title} - ${context.trends?.description}
-			PROBLEMS: ${context.problemGaps?.problems.join(", ")}
-			POSITIONING: ${context.competitive?.positioning.valueProposition}
-			MONETIZATION: ${context.monetization?.primaryModel}
-			---
-			
-			**Previously Generated Ideas (CRITICAL for diversity - DO NOT generate ideas that have similar core themes, industries, or primary problem types as these):**
-			${context.previousIdeas && context.previousIdeas.length > 0 ? context.previousIdeas.map((idea) => `- Title: "${idea.title}"\n  Description: "${idea.description}"`).join("\n") : "- None to consider."}
+**Idea Quality Assessment:**
+1. **Market Opportunity**: Is the market real, urgent, and sizeable enough for venture success?
+2. **Problem-Solution Fit**: Does the solution genuinely address the identified problem for the specific persona?
+3. **Execution Feasibility**: Can this realistically be built and launched by a small team within 6 months?
+4. **Competitive Advantage**: Are the differentiators strong enough to create lasting value?
+5. **Business Model Viability**: Will the target persona actually pay for this solution?
 
-			`; // Added previous ideas to the user prompt for synthesis
+**Strategic Weaknesses to Identify:**
+- Overly broad or vague targeting that reduces focus
+- Solutions that are "nice to have" rather than "must have"
+- Competitive advantages that can be easily replicated
+- Business models that don't align with target persona behavior
+- Technical complexity that exceeds startup execution capacity
 
-      const { text } = await generateText({
-        model: openrouter("openai/gpt-4o-mini"),
-        prompt: userPrompt,
-        system: systemPrompt,
-        temperature: 0.1,
-        maxTokens: 1500,
+**Refinement Areas:**
+- Persona specificity and pain point clarity
+- Solution uniqueness and defensibility
+- Go-to-market strategy optimization
+- Revenue model alignment with user value
+- Execution roadmap realism
+
+**Input Ideas for Critique:**
+${ideas.map((idea, idx) => `
+Idea ${idx + 1}: ${idea.title}
+Description: ${idea.description}
+Problem Statement: ${idea.problemStatement}
+Target Keywords: ${idea.targetKeywords.join(', ')}
+Execution Complexity: ${idea.executionComplexity}/10
+Confidence Score: ${idea.confidenceScore}/10
+Narrative Hook: ${idea.narrativeHook}
+`).join('\n')}
+
+**Context Information:**
+- Research Theme: ${context.trends?.title}
+- Geographic Focus: Research targeted specific regions/markets
+- Competitive Landscape: ${context.competitive?.competition.marketConcentrationLevel} concentration
+
+Conduct a thorough critique focusing on the most critical weaknesses that could prevent startup success. Generate specific, actionable refinement recommendations that will strengthen the ideas while maintaining their core viability.
+
+Return a focused refinement prompt that addresses the most important improvements needed:`;
+
+      const { text: refinementPrompt } = await generateText({
+        model: openrouter("openai/gpt-4.1-mini"),
+        prompt: criticPrompt,
+        temperature: 0.2,
+        maxTokens: 800,
       });
 
-      const synthesizedIdea = JSON.parse(text) as SynthesizedIdea;
-      
+      console.log("✅ Step 6: Critic Agent Generated Refinement Recommendations");
+      console.log("🔍 Refinement focus areas identified:", refinementPrompt.substring(0, 200) + "...");
+
+      return refinementPrompt;
+
+    } catch (error) {
+      console.error("Critic Agent error:", error);
+      return null;
+    }
+  },
+
+  /**
+   * Enhanced IdeaSynthesisAgent - Uses Trend Architect logic with critic feedback
+   * Implements markdown-style output format and strategic refinement
+   */
+  async ideaSynthesisAgent(
+    context: AgentContext,
+    refinementPrompt?: string
+  ): Promise<SynthesizedIdea | null> {
+    try {
+      console.log("🧠 Step 7: Enhanced Idea Synthesis with Trend Architect Logic");
+
+      const trendArchitectPrompt = `You are the Trend Architect - a world-class startup idea synthesizer who transforms market research into compelling, immediately actionable business opportunities. Your expertise lies in combining trend analysis, problem identification, and competitive intelligence into cohesive startup concepts that feel inevitable and urgent.
+
+**Enhanced Synthesis Mission:**
+
+**Core Responsibilities:**
+1. **Trend-Problem Synthesis**: Connect the identified trend directly to specific persona pain points
+2. **Solution Architecture**: Design software-first solutions that leverage the trend's momentum
+3. **Strategic Positioning**: Position the solution to make competitors irrelevant for the target niche
+4. **Execution Clarity**: Provide clear, actionable next steps for immediate implementation
+
+**Enhanced Description Format:**
+Create a flowing narrative that naturally integrates all elements without explicit section headers:
+
+The description should weave together the trend context, specific problem, target users, signal evidence, solution overview, timing rationale, and urgency in a cohesive narrative that reads naturally. Avoid using "Trend:", "Problem:", "Solution:", or other explicit section markers within the description text.
+
+Structure as a compelling story that:
+- Opens with the market context and why it's emerging now
+- Identifies the specific user pain points with quantified impact  
+- Describes the target user archetype clearly
+- Provides evidence of market signals and validation
+- Explains the solution approach and unique value
+- Concludes with why timing is critical for success
+
+The result should be a smooth, engaging narrative that covers all strategic elements without formatted sections.
+
+**Enhanced Quality Criteria:**
+- Software-first solution buildable within 3-6 months
+- Target persona would pay within first trial week  
+- Trend amplifies problem urgency significantly
+- Solution creates network effects or data advantages
+- Clear path to $1M+ ARR within 18 months
+
+${refinementPrompt ? `
+**CRITICAL REFINEMENT REQUIREMENTS:**
+${refinementPrompt}
+
+Apply these refinement recommendations to strengthen the final synthesis.
+` : ''}
+
+**Research Inputs to Synthesize:**
+TREND: ${context.trends?.title} - ${context.trends?.description}
+PROBLEMS: ${context.problemGaps?.problems.join(", ")}
+COMPETITIVE POSITIONING: ${context.competitive?.positioning.valueProposition}
+MONETIZATION MODEL: ${context.monetization?.primaryModel}
+
+**Diversity Requirements (ensure novelty):**
+${context.previousIdeas && context.previousIdeas.length > 0 ? 
+  context.previousIdeas.map((idea) => `- Avoid themes similar to: "${idea.title}"`).join('\n') : 
+  '- No restrictions - create breakthrough opportunity'}
+
+**Output Requirements:**
+Generate a single, irresistible startup idea using the enhanced narrative format above, then structure it into the required JSON format. The idea should feel so compelling and obvious that someone would start building it immediately.
+
+**CRITICAL TITLE REQUIREMENTS:**
+- NO startup names, company names, or product names (avoid names like "ChatOrderSync", "FlowGenius", "Nordic Platform", etc.)
+- Focus on the SOLUTION CATEGORY and TARGET MARKET (e.g., "Multi-Channel Inventory Management for Nordic Artisans" instead of "Nordic Ceramicists Platform")
+- Describe WHAT the solution does and WHO it serves, not what it's called
+- Keep titles descriptive and professional, focusing on the business value
+
+**CRITICAL DESCRIPTION REQUIREMENTS:**
+- NO section headers like "Trend:", "Problem:", "Solution:", "Why Novel Now:", "Time-Sensitive:"
+- Write as a flowing, cohesive narrative that naturally covers all elements
+- Integrate trend context, problem description, user details, evidence, solution, and timing into smooth prose
+- Make it read like a compelling business case, not a structured template
+
+Return JSON structure:
+{
+  "title": "string (Descriptive solution category + target market, NO product/company names)",
+  "description": "string (Compelling narrative without section headers, flowing story format)",
+  "executiveSummary": "string (Sharp pitch highlighting core problem, unique value, and main benefit)",
+  "problemSolution": "string (Direct story: 'Target persona spends X on Y. This solution fixes it by Z, saving them W and enabling V.')",
+  "problemStatement": "string (Authentic statement of specific pain for narrow target)",
+  "innovationLevel": number (1-10),
+  "timeToMarket": number (months for focused software MVP),
+  "confidenceScore": number (1-10),
+  "narrativeHook": "string (Memorable tagline promising clear benefit)",
+  "targetKeywords": ["software keyword 1", "niche keyword 2", "industry keyword 3"],
+  "urgencyLevel": number (1-10),
+  "executionComplexity": number (1-10 for focused software MVP),
+  "tags": ["SaaS", "specific-industry", "geographic-region", "trend-category"],
+  "scoring": {
+    "totalScore": number,
+    "problemSeverity": number (1-10),
+    "founderMarketFit": number (1-10),
+    "technicalFeasibility": number (1-10),
+    "monetizationPotential": number (1-10),
+    "urgencyScore": number (1-10),
+    "marketTimingScore": number (1-10),
+    "executionDifficulty": number (1-10),
+    "moatStrength": number (1-10),
+    "regulatoryRisk": number (1-10)
+  },
+  "executionPlan": "string (Concrete next steps for building and launching MVP with user acquisition strategy)",
+  "tractionSignals": "string (Specific, achievable metrics for 3-6 month validation)",
+  "frameworkFit": "string (Strategic framework explaining why this approach leads to success)"
+}
+
+Create an idea so compelling that it becomes impossible to ignore - the kind of opportunity that makes everything else feel like a distraction.`;
+
+      const { text } = await generateText({
+        model: openrouter("openai/gpt-4.1-mini"),
+        prompt: trendArchitectPrompt,
+        temperature: 0.1,
+        maxTokens: 2000,
+      });
+
+      // Use enhanced JSON parser to handle markdown code blocks and complex responses
+      const parseResult = await EnhancedJsonParser.parseWithFallback<SynthesizedIdea>(
+        text,
+        ["title", "description", "problemStatement", "scoring"],
+        {
+          title: "Multi-Platform Content Management for Emerging Market Creators",
+          description: "Mobile-first content creation in emerging markets is experiencing explosive growth, driven by increased smartphone penetration and local social platform adoption. Independent creators in Southeast Asia and Latin America face a critical challenge: managing content across fragmented regional platforms while dealing with limited local monetization options. These creators, typically with 1K-50K followers, waste 15+ hours weekly manually distributing content across platforms and lose $600+ monthly because existing global tools lack regional integrations and local payment support. Active discussions in regional creator communities highlight frustration with platform fragmentation, while market data shows 300% growth in regional social platform usage. Current solutions either ignore local markets entirely or fail to provide the mobile-first, locally-adapted workflows these creators need. A specialized platform that unifies regional platform management, automates cross-posting, and enables local payment integration would capture this underserved market during a critical growth phase, before global platforms adapt their offerings.",
+          executiveSummary: "A mobile-first creator management platform designed specifically for emerging market creators, solving platform fragmentation and local monetization challenges.",
+          problemSolution: "Emerging market creators spend 15+ hours weekly manually managing content across regional platforms. This platform automates cross-platform posting and enables local payment integration, saving 12 hours weekly.",
+          problemStatement: "Independent content creators in emerging markets face platform fragmentation and lack local monetization tools.",
+          innovationLevel: 8,
+          timeToMarket: 5,
+          confidenceScore: 9,
+          narrativeHook: "Turn regional platform chaos into creator success",
+          targetKeywords: ["creator tools", "emerging markets", "mobile-first platform"],
+          urgencyLevel: 9,
+          executionComplexity: 6,
+          tags: ["SaaS", "Creator-Economy", "Emerging-Markets"],
+          scoring: {
+            totalScore: 85,
+            problemSeverity: 9,
+            founderMarketFit: 8,
+            technicalFeasibility: 8,
+            monetizationPotential: 9,
+            urgencyScore: 9,
+            marketTimingScore: 9,
+            executionDifficulty: 6,
+            moatStrength: 8,
+            regulatoryRisk: 3,
+          },
+          executionPlan: "Build MVP with regional platform integrations, launch beta with 50 creators in target markets.",
+          tractionSignals: "Achieve 200 creator sign-ups with 60% monthly active usage within 3 months.",
+          frameworkFit: "Geographic Arbitrage framework solving global problems with regional solutions.",
+        }
+      );
+
+      if (!parseResult.success) {
+        console.error("❌ Enhanced Idea Synthesis JSON parsing failed:", parseResult.error);
+        console.log("📝 Original response:", parseResult.originalText?.substring(0, 500));
+        if (parseResult.cleanedText) {
+          console.log("🧹 Cleaned response:", parseResult.cleanedText.substring(0, 500));
+        }
+      }
+
+      const synthesizedIdea = parseResult.data as SynthesizedIdea;
+
       // Add WhatToBuild data if available in context
       if (context.whatToBuild) {
         synthesizedIdea.whatToBuild = context.whatToBuild;
       }
 
-      return synthesizedIdea;
-    } catch (error) {
-      console.error("IdeaSynthesisAgent error:", error);
+      console.log("✅ Step 7: Enhanced Idea Synthesis Completed:", {
+        title: synthesizedIdea.title,
+        confidenceScore: synthesizedIdea.confidenceScore,
+        urgencyLevel: synthesizedIdea.urgencyLevel,
+        totalScore: synthesizedIdea.scoring.totalScore
+      });
 
-      // Return mock data as fallback for development/testing
-      console.log("🔄 Using fallback mock synthesis data for development");
+      return synthesizedIdea;
+
+    } catch (error) {
+      console.error("Enhanced IdeaSynthesisAgent error:", error);
+
+      console.log("🔄 Using enhanced fallback synthesis data");
       return {
-        title: "FlowGenius - AI-Powered Workflow Automation for Growing SMBs",
+        title: "Multi-Platform Content Management for Emerging Market Creators",
         description:
-          "An intelligent workflow automation platform designed specifically for small-to-medium businesses, featuring AI-powered setup, industry-specific templates, and SMB-optimized pricing.",
+          "Mobile-first content creation in emerging markets is experiencing explosive growth, driven by increased smartphone penetration and local social platform adoption. Independent creators in Southeast Asia and Latin America face a critical challenge: managing content across fragmented regional platforms while dealing with limited local monetization options. These creators, typically with 1K-50K followers, waste 15+ hours weekly manually distributing content across platforms and lose $600+ monthly because existing global tools lack regional integrations and local payment support. Active discussions in regional creator communities highlight this frustration, while market data shows 300% growth in regional social platform usage. Current solutions either ignore local markets entirely or fail to provide the mobile-first, locally-adapted workflows these creators need. A specialized platform that unifies regional platform management, automates cross-posting, and enables local payment integration would capture this underserved market during a critical growth phase, before global platforms adapt their offerings.",
         executiveSummary:
-          "FlowGenius addresses the critical gap in workflow automation for growing SMBs by providing an AI-powered platform that learns business patterns and suggests relevant automations. Unlike complex enterprise tools or basic single-app connectors, FlowGenius offers the perfect middle ground with smart templates, transparent pricing, and setup that takes minutes instead of months.",
+          "A mobile-first creator management platform designed specifically for emerging market creators, solving platform fragmentation and local monetization challenges that global tools ignore, enabling 3x faster content distribution and 2x revenue growth.",
         problemSolution:
-          "SMB owners waste 15+ hours per week manually switching between CRM, inventory, and scheduling systems. FlowGenius solves this with AI-powered multi-system integration that learns business patterns and suggests contextually relevant automations, reducing setup time from weeks to minutes.",
+          "Emerging market creators spend 15+ hours weekly manually managing content across regional platforms and lose $600+ monthly from poor monetization tools. This platform automates cross-platform posting, enables local payment integration, and provides regional analytics, saving 12 hours weekly and increasing revenue by 50-100%.",
         problemStatement:
-          "Growing businesses (10-100 employees) struggle with workflow automation tools that are either too basic or too complex, leading to productivity losses and disconnected business processes.",
-        innovationLevel: 7,
-        timeToMarket: 8,
-        confidenceScore: 8,
+          "Independent content creators in emerging markets face platform fragmentation and lack local monetization tools, limiting their growth and revenue potential.",
+        innovationLevel: 8,
+        timeToMarket: 5,
+        confidenceScore: 9,
         narrativeHook:
-          "The first workflow automation tool that actually understands your business",
+          "Turn regional platform chaos into creator success",
         targetKeywords: [
-          "workflow automation",
-          "SMB productivity",
-          "business process automation",
-          "AI workflow",
+          "creator tools",
+          "emerging markets",
+          "mobile-first platform",
+          "regional social media"
         ],
-        urgencyLevel: 8,
+        urgencyLevel: 9,
         executionComplexity: 6,
-        tags: ["SaaS", "B2B", "Productivity", "AI", "Automation"],
+        tags: ["SaaS", "Creator-Economy", "Emerging-Markets", "Mobile-First"],
         scoring: {
-          totalScore: 78,
-          problemSeverity: 8,
-          founderMarketFit: 7,
+          totalScore: 85,
+          problemSeverity: 9,
+          founderMarketFit: 8,
           technicalFeasibility: 8,
-          monetizationPotential: 8,
-          urgencyScore: 8,
+          monetizationPotential: 9,
+          urgencyScore: 9,
           marketTimingScore: 9,
           executionDifficulty: 6,
-          moatStrength: 7,
-          regulatoryRisk: 2,
+          moatStrength: 8,
+          regulatoryRisk: 3,
         },
         executionPlan:
-          "Build MVP with Zapier-like visual workflow builder, integrate 5 core SMB tools (QuickBooks, Shopify, MailChimp, Slack, Google Workspace), launch beta with 50 SMBs through direct outreach, iterate based on feedback, and scale through content marketing targeting SMB pain points.",
+          "Build MVP with 3 core regional platforms (TikTok regional, local social networks), implement basic cross-posting and analytics. Launch beta with 50 creators in target markets through direct outreach in regional creator communities. Integrate local payment systems in month 3. Scale through creator referral program and regional platform partnerships.",
         tractionSignals:
-          "Achieve 100 beta sign-ups with 40% weekly active usage, convert 15% of free trial users to $99/month paid plans, receive 25 unsolicited testimonials highlighting time savings, and secure 10 pilot customers who renew after 3-month trials.",
+          "Achieve 200 creator sign-ups with 60% monthly active usage, 25% of beta users upgrade to paid plans within 2 months, creators report 40%+ time savings in first week, secure partnerships with 2 regional platforms for enhanced integrations.",
         frameworkFit:
-          "This aligns with the 'Picks and Shovels' framework by providing essential automation tools for the booming SMB digital transformation market, positioned as a 'Unbundling Zapier for SMBs' play that focuses on ease-of-use over enterprise complexity.",
+          "This follows the 'Geographic Arbitrage' framework by providing essential automation tools for the booming SMB digital transformation market, positioned as a 'Unbundling Zapier for SMBs' play that focuses on ease-of-use over enterprise complexity.",
       };
     }
   },
 
-  /**
-   * Master orchestration function - Runs the complete idea generation pipeline
+    /**
+   * Enhanced Master Orchestration - Runs complete enhanced idea generation pipeline
+   * Implements modern multi-agent architecture with critique and refinement
    */
   async generateDailyIdea(): Promise<string | null> {
     try {
-      console.log("🔍 Starting daily idea generation...");
-      debugLogger.info("🔍 Starting daily idea generation...", {
+      console.log("🚀 Starting Enhanced Daily Idea Generation Pipeline");
+      debugLogger.info("🚀 Enhanced daily idea generation started", {
         timestamp: new Date().toISOString(),
         sessionId: Date.now().toString(),
+        version: "2.0-enhanced"
       });
 
-      // Get previous ideas for context
+      // Get previous ideas for diversity enforcement
       const previousIdeas = await IdeaGenerationAgentService.getDailyIdeas();
-      debugLogger.info("📚 Retrieved previous ideas for context", {
+      debugLogger.info("📚 Retrieved previous ideas for diversity context", {
         previousIdeasCount: previousIdeas.length,
-        previousIdeas: previousIdeas,
       });
 
-      // Create lightweight summary for context
       const previousIdeaSummaries = previousIdeas.map((idea: any) => ({
         title: idea.title,
-        description: idea.description, // Ensure description is also passed
+        description: idea.description,
       }));
 
-      // Initialize agent context
+      // Initialize enhanced agent context
       const agentContext: AgentContext = {
         previousIdeas: previousIdeaSummaries,
       };
 
-      // 1. Research trends
-      console.log("📈 Researching trends...");
-      debugLogger.info("📈 Starting trend research...");
-      const trends = await this.trendResearchAgent(agentContext);
+      // Step 1: Master Research Director - Set today's research parameters
+      console.log("🎯 Step 1: Activating Master Research Director");
+      const researchDirection = await this.masterResearchDirector(agentContext);
+      
+      // Step 2: Enhanced Trend Research - Guided by research director
+      console.log("📈 Step 2: Enhanced Trend Research");
+      debugLogger.info("📈 Starting enhanced trend research with research direction");
+      const trends = await this.trendResearchAgent(agentContext, researchDirection || undefined);
       if (!trends) {
-        debugLogger.logError(
-          "generateDailyIdea",
-          new Error("Failed to research trends"),
-          { step: "trendResearch" }
-        );
+        debugLogger.logError("generateDailyIdea", new Error("Failed to research trends"), { step: "enhancedTrendResearch" });
         throw new Error("Failed to research trends");
       }
-      debugLogger.info("✅ Trend research completed", { trends });
-
-      // 2. Identify problems and gaps
-      console.log("🎯 Analyzing problems and gaps...");
-      debugLogger.info("🎯 Starting problem gap analysis...", {
-        trendsContext: trends,
-      });
-      // Update context with trends
       agentContext.trends = trends;
+      debugLogger.info("✅ Enhanced trend research completed", { trends });
+
+      // Step 3: Enhanced Problem Gap Analysis - Deep persona-specific problems
+      console.log("🎯 Step 3: Enhanced Problem Gap Analysis");
+      debugLogger.info("🎯 Starting enhanced problem gap analysis");
       const problemGaps = await this.problemGapAgent(agentContext);
       if (!problemGaps) {
-        debugLogger.logError(
-          "generateDailyIdea",
-          new Error("Failed to analyze problems"),
-          { step: "problemGapAnalysis", trends }
-        );
+        debugLogger.logError("generateDailyIdea", new Error("Failed to analyze problems"), { step: "enhancedProblemAnalysis", trends });
         throw new Error("Failed to analyze problems");
       }
-      debugLogger.info("✅ Problem gap analysis completed", { problemGaps });
-
-      // 3. Research competitive landscape
-      console.log("🏆 Researching competition...");
-      debugLogger.info("🏆 Starting competitive intelligence...", {
-        trends,
-        problemGaps,
-      });
-      // Update context with problem gaps
       agentContext.problemGaps = problemGaps;
+      debugLogger.info("✅ Enhanced problem gap analysis completed", { problemGaps });
+
+      // Step 4: Enhanced Competitive Intelligence - Strategic positioning
+      console.log("🏆 Step 4: Enhanced Competitive Intelligence");
+      debugLogger.info("🏆 Starting enhanced competitive intelligence");
       const competitive = await this.competitiveIntelligenceAgent(agentContext);
       if (!competitive) {
-        debugLogger.logError(
-          "generateDailyIdea",
-          new Error("Failed to research competition"),
-          { step: "competitiveIntelligence", trends, problemGaps }
-        );
+        debugLogger.logError("generateDailyIdea", new Error("Failed to research competition"), { step: "enhancedCompetitive" });
         throw new Error("Failed to research competition");
       }
-      debugLogger.info("✅ Competitive intelligence completed", {
-        competitive,
-      });
-
-      // 4. Design monetization strategy
-      console.log("💰 Designing monetization...");
-      // Update context with competitive data
       agentContext.competitive = competitive;
+      debugLogger.info("✅ Enhanced competitive intelligence completed", { competitive });
+
+      // Step 5: Enhanced Monetization Strategy
+      console.log("💰 Step 5: Enhanced Monetization Strategy");
       const monetization = await this.monetizationAgent(agentContext);
       if (!monetization) throw new Error("Failed to design monetization");
-
-      // 5. Generate technical implementation guide
-      console.log("🔧 Generating technical implementation guide...");
-      // Update context with monetization data
       agentContext.monetization = monetization;
+
+      // Step 6: Generate initial idea synthesis
+      console.log("🧠 Step 6: Initial Idea Synthesis");
       const whatToBuild = await this.whatToBuildAgent(agentContext);
-      if (!whatToBuild) throw new Error("Failed to generate technical guide");
+      agentContext.whatToBuild = whatToBuild || undefined;
+      const initialIdea = await this.ideaSynthesisAgent(agentContext);
+      if (!initialIdea) throw new Error("Failed to synthesize initial idea");
 
-      // 6. Synthesize final idea
-      console.log("🧠 Synthesizing idea...");
-      // Update context with whatToBuild data
-      agentContext.whatToBuild = whatToBuild;
-      const idea = await this.ideaSynthesisAgent(agentContext);
-      if (!idea) throw new Error("Failed to synthesize idea");
+      // Step 7: Critic Agent - Analyze and create refinement prompt
+      console.log("🔍 Step 7: Critic Agent Analysis");
+      const refinementPrompt = await this.criticAgent([initialIdea], agentContext);
 
-      // 7. Save to database
-      console.log("💾 Saving to database...");
+      // Step 8: Final Refined Synthesis - Apply critic feedback
+      console.log("🎨 Step 8: Final Refined Idea Synthesis");
+      const finalIdea = await this.ideaSynthesisAgent(agentContext, refinementPrompt || undefined);
+      if (!finalIdea) throw new Error("Failed to create final refined idea");
+
+      const idea = finalIdea;
+
+      // Step 9: Save to database
+      console.log("💾 Step 9: Saving Enhanced Idea to Database");
       const whyNow = await IdeaGenerationAgentService.createWhyNow(trends);
       const ideaScore = await IdeaGenerationAgentService.createIdeaScore(
         idea.scoring
@@ -1342,10 +1634,34 @@ Focus on specificity - provide exact feature descriptions, precise integration r
         );
       }
 
-      console.log("✅ Daily idea generated successfully:", dailyIdea.id);
+      console.log("🎉 Enhanced Daily Idea Generated Successfully:", dailyIdea.id);
+      console.log("📊 Final Idea Summary:", {
+        title: idea.title,
+        confidenceScore: idea.confidenceScore,
+        urgencyLevel: idea.urgencyLevel,
+        totalScore: idea.scoring.totalScore,
+        timeToMarket: idea.timeToMarket,
+        tags: idea.tags
+      });
+      
+      debugLogger.info("🎉 Enhanced daily idea generation completed successfully", {
+        ideaId: dailyIdea.id,
+        pipelineVersion: "2.0-enhanced",
+        totalSteps: 9,
+        idea: {
+          title: idea.title,
+          confidenceScore: idea.confidenceScore,
+          urgencyLevel: idea.urgencyLevel
+        }
+      });
+
       return dailyIdea.id;
     } catch (error) {
-      console.error("❌ Daily idea generation failed:", error);
+      console.error("❌ Enhanced Daily Idea Generation Failed:", error);
+      debugLogger.logError("Enhanced Daily Idea Generation", error as Error, {
+        pipelineVersion: "2.0-enhanced",
+        failurePoint: "pipeline execution"
+      });
       return null;
     }
   },
