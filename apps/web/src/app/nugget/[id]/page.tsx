@@ -13,6 +13,69 @@ import StructuredData from "@/components/StructuredData";
 // Force dynamic rendering since we use cookies for authentication
 export const dynamic = 'force-dynamic';
 
+// Generate dynamic metadata for each nugget page
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  
+  try {
+    // Try to get idea data for metadata (simplified version for performance)
+    const session = await getServerSession();
+    if (session?.user) {
+      const idea = await getAuthenticatedIdeaById(id);
+      if (idea) {
+        return {
+          title: `${idea.title} | Startup Opportunity Analysis`,
+          description: `${idea.narrativeHook || idea.problemSolution?.substring(0, 155) || 'Comprehensive startup idea analysis including market research, competitive landscape, and execution strategy.'}`,
+          openGraph: {
+            title: `${idea.title} | Nugget Finder`,
+            description: idea.narrativeHook || idea.problemSolution?.substring(0, 155) || 'AI-analyzed startup opportunity with market validation',
+            url: `https://nuggetfinder.ai/nugget/${id}`,
+            type: 'article',
+            images: [
+              {
+                url: '/logo.webp',
+                width: 1200,
+                height: 630,
+                alt: `${idea.title} - Startup Opportunity`,
+              },
+            ],
+          },
+          twitter: {
+            card: 'summary_large_image',
+            title: `${idea.title} | Nugget Finder`,
+            description: idea.narrativeHook || 'AI-analyzed startup opportunity with market validation',
+            images: ['/logo.webp'],
+          },
+          keywords: [
+            'startup idea',
+            'business opportunity',
+            'market analysis',
+            'competitive research',
+            'startup validation',
+            idea.title?.toLowerCase().replace(/\s+/g, ' ') || '',
+            ...(idea.tags || []).map(tag => tag.toLowerCase())
+          ].filter(Boolean),
+        };
+      }
+    }
+  } catch (error) {
+    // Fall back to generic metadata if we can't fetch the idea
+    console.log('[DEBUG] Metadata generation failed, using fallback');
+  }
+
+  // Fallback metadata
+  return {
+    title: 'Startup Opportunity Analysis | Nugget Finder',
+    description: 'Discover comprehensive startup idea analysis including market research, competitive landscape, technical feasibility, and execution strategy powered by AI.',
+    openGraph: {
+      title: 'Startup Opportunity Analysis | Nugget Finder',
+      description: 'AI-powered startup idea analysis with market validation and competitive research',
+             url: `https://nuggetfinder.ai/nugget/${id}`,
+      type: 'article',
+    },
+  };
+}
+
 // Helper function to ensure all required arrays exist
 function transformIdeaData(idea: any): IdeaDetailsViewProps['idea'] {
   return {
@@ -136,6 +199,27 @@ function transformIdeaData(idea: any): IdeaDetailsViewProps['idea'] {
   };
 }
 
+// Generate multiple schema types for comprehensive SEO coverage
+function generateComprehensiveSchemas(idea: any, id: string) {
+  const ideaData: IdeaData = {
+    id,
+    title: idea.title,
+    narrativeHook: idea.narrativeHook,
+    problemSolution: idea.problemSolution,
+    createdAt: idea.createdAt,
+    updatedAt: idea.updatedAt,
+    tags: idea.tags,
+    ideaScore: idea.ideaScore,
+    marketOpportunity: idea.marketOpportunity,
+    monetizationStrategy: idea.monetizationStrategy
+  };
+
+  return {
+    article: SchemaFactory.generateIdeaSchema(ideaData),
+    product: SchemaFactory.generateProductSchema(ideaData),
+    howTo: SchemaFactory.generateHowToSchema(ideaData)
+  };
+}
 
 // Export generateStaticParams for static generation
 export { generateStaticParams };

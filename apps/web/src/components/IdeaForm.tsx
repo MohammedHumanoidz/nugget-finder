@@ -8,12 +8,16 @@ import { ArrowUpRight, Settings } from "lucide-react";
 import { useForm } from "@tanstack/react-form";
 import Image from "next/image";
 import { toast } from "sonner";
-import PersonalizationModal, { type PersonalizationData } from "./PersonalizationModal";
+import PersonalizationModal, {
+  type PersonalizationData,
+} from "./PersonalizationModal";
 
 const IdeaForm = () => {
   const router = useRouter();
-  const [personalizationData, setPersonalizationData] = useState<PersonalizationData | null>(null);
-  const [showPersonalizationModal, setShowPersonalizationModal] = useState(false);
+  const [personalizationData, setPersonalizationData] =
+    useState<PersonalizationData | null>(null);
+  const [showPersonalizationModal, setShowPersonalizationModal] =
+    useState(false);
 
   const form = useForm({
     defaultValues: {
@@ -21,22 +25,19 @@ const IdeaForm = () => {
     },
     onSubmit: async ({ value }) => {
       if (!value.idea.trim()) return;
-      
+
       // Store personalization data in sessionStorage if available
       if (personalizationData) {
-        sessionStorage.setItem('personalizationData', JSON.stringify(personalizationData));
+        sessionStorage.setItem(
+          "personalizationData",
+          JSON.stringify(personalizationData)
+        );
       }
-      
+
       // Redirect immediately to browse page with search query
       router.push(`/browse?q=${encodeURIComponent(value.idea)}`);
     },
   });
-
-  const defaultIdeas = [
-    "I want to build a new social media platform",
-    "I want to create a new AI assistant",
-    "I want to build a new fitness tracker",
-  ];
 
   const handleDefaultIdeaClick = (idea: string) => {
     form.setFieldValue("idea", idea);
@@ -88,7 +89,7 @@ const IdeaForm = () => {
           {(field) => (
             <div className="relative">
               <Textarea
-                placeholder="What should we mine today?"
+                placeholder="I'll dig for opportunities that match you! Tell me about yourself or type 'discover' to see what's trending"
                 className="min-h-40 pr-20 rounded-3xl p-6 backdrop-blur-xs border-primary dark:border-primary/20"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
@@ -112,20 +113,6 @@ const IdeaForm = () => {
           )}
         </form.Field>
       </form>
-
-      {/* Default Ideas Section */}
-      <div className="flex flex-wrap items-center justify-center gap-2">
-        {defaultIdeas.map((idea) => (
-          <Button
-            key={idea}
-            variant="outline"
-            onClick={() => handleDefaultIdeaClick(idea)}
-            className="h-auto justify-start whitespace-normal rounded-full p-3 text-left text-muted-foreground text-sm backdrop-blur-xl hover:bg-primary/10"
-          >
-            {idea}
-          </Button>
-        ))}
-      </div>
 
       {/* Personalization Modal */}
       <PersonalizationModal
