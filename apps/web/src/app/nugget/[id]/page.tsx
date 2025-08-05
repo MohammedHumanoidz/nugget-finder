@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import type { Metadata } from 'next';
 import ClientFallback from "@/components/ClientFallback";
 import IdeaDetailsView from "@/components/IdeaDetailsView";
-import { generateStaticParams, getIdeaById } from "@/lib/server-api";
+import { getIdeaById, getDailyIdeas } from "@/lib/server-api";
 import { getAuthenticatedIdeaById, getUserLimits } from "@/lib/server-auth";
 import { getServerSession } from "@/lib/auth-server";
 import type { IdeaDetailsViewProps } from "@/types/idea-details";
@@ -137,8 +137,20 @@ function transformIdeaData(idea: any): IdeaDetailsViewProps['idea'] {
 }
 
 
-// Export generateStaticParams for static generation
-export { generateStaticParams };
+// Generate static params for static generation
+export async function generateStaticParams() {
+  try {
+    const response = await getDailyIdeas();
+    if (!response?.ideas) return [];
+    
+    return response.ideas.slice(0, 10).map((idea: any) => ({
+      id: idea.id,
+    }));
+  } catch (error) {
+    console.error('Error generating static params:', error);
+    return [];
+  }
+}
 
 interface NuggetPageProps {
   params: Promise<{
