@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import AnimatedHowItWorks from "@/components/AnimatedHowItWorks";
-import { Scene } from "@/components/BoxedAnimation";
+// import { Scene } from "@/components/BoxedAnimation";
 import FAQSection from "@/components/FaqSection";
 import IdeaActions from "@/components/IdeaActions";
 import IdeaForm from "@/components/IdeaForm";
@@ -53,9 +53,9 @@ export default async function Page() {
       <div className="z-10 flex flex-col items-center justify-center gap-12">
         <IdeaForm />
       </div>
-      <div className="absolute inset-0 opacity-10 dark:opacity-30">
+      {/* <div className="absolute inset-0 opacity-10 dark:opacity-30">
         <Scene />
-      </div>
+      </div> */}
 
       {/* Today's Nuggets Section */}
       <div className="relative z-10 mt-20 w-full flex flex-col items-center justify-center gap-12">
