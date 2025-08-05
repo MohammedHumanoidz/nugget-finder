@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "AI-Powered Startup Ideas & Market Intelligence | Nugget Finder",
     description: "Find validated startup opportunities 5x faster with AI-powered market analysis. Join 10,000+ entrepreneurs building the future.",
-    url: "https://nugget-finder.com",
+    url: "https://nuggetfinder.ai",
     images: [
       {
         url: "/logo.webp",

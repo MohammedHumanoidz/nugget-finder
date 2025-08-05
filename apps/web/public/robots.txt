@@ -55,8 +55,8 @@ Disallow: /
 User-agent: MJ12bot
 Disallow: /
 
-# Sitemap location (will be created in Phase 2)
-Sitemap: https://nugget-finder.com/sitemap.xml
+# Dynamic sitemap with all nuggets and pages
+Sitemap: https://nuggetfinder.ai/sitemap.xml
 
 # Crawl-delay for all bots to prevent overload
 Crawl-delay: 1 

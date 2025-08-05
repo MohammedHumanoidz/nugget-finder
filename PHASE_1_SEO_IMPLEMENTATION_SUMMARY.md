@@ -134,8 +134,8 @@ Phase 1 focused on implementing foundational SEO and GEO (Generative Engine Opti
 
 To verify Phase 1 implementation:
 
-1. **Check robots.txt**: Visit `https://nugget-finder.com/robots.txt`
-2. **Test AI context**: Visit `https://nugget-finder.com/llms.txt`  
+1. **Check robots.txt**: Visit `https://nuggetfinder.ai/robots.txt`
+2. **Test AI context**: Visit `https://nuggetfinder.ai/llms.txt`  
 3. **Validate schemas**: Use Google's Rich Results Test
 4. **Mobile experience**: Test PWA installation
 5. **Page speed**: Run Lighthouse audit

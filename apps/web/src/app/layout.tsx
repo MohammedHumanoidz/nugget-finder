@@ -36,14 +36,14 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://nugget-finder.com"),
+  metadataBase: new URL("https://nuggetfinder.ai"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://nugget-finder.com",
+    url: "https://nuggetfinder.ai",
     title: "Nugget Finder | AI-Powered Startup Ideas & Market Intelligence",
     description: "Discover validated startup opportunities with AI-powered market analysis. Get comprehensive business ideas, competitive research, and execution plans.",
     siteName: "Nugget Finder",
@@ -88,8 +88,8 @@ const organizationSchema = {
   "@type": "Organization",
   "name": "Nugget Finder",
   "description": "AI-powered platform for discovering and validating startup ideas through intelligent market analysis",
-  "url": "https://nugget-finder.com",
-  "logo": "https://nugget-finder.com/logo.webp",
+  "url": "https://nuggetfinder.ai",
+  "logo": "https://nuggetfinder.ai/logo.webp",
   "foundingDate": "2024",
   "industry": "Technology, Artificial Intelligence, Market Research",
   "serviceArea": "Global",
@@ -145,12 +145,12 @@ const websiteSchema = {
   "@type": "WebSite",
   "name": "Nugget Finder",
   "description": "AI-powered startup idea discovery and market intelligence platform",
-  "url": "https://nugget-finder.com",
+  "url": "https://nuggetfinder.ai",
   "potentialAction": {
     "@type": "SearchAction",
     "target": {
       "@type": "EntryPoint",
-      "urlTemplate": "https://nugget-finder.com/browse?search={search_term_string}"
+              "urlTemplate": "https://nuggetfinder.ai/browse?search={search_term_string}"
     },
     "query-input": "required name=search_term_string"
   },

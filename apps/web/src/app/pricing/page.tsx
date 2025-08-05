@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Pricing Plans | Nugget Finder",
     description: "Free startup ideas with Pro features for serious entrepreneurs. API access, unlimited ideas, and advanced market intelligence.",
-    url: "https://nugget-finder.com/pricing",
+    url: "https://nuggetfinder.ai/pricing",
     type: "website",
     images: [
       {

@@ -9,6 +9,7 @@ import type { IdeaDetailsViewProps } from "@/types/idea-details";
 import NonAuthIdeaWrapper from "@/components/NonAuthIdeaWrapper";
 import StructuredData from "@/components/StructuredData";
 import type { Metadata } from "next";
+import { SchemaFactory, type IdeaData } from "@/lib/schema-factory";
 
 // Force dynamic rendering since we use cookies for authentication
 export const dynamic = 'force-dynamic';
@@ -29,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
           openGraph: {
             title: `${idea.title} | Nugget Finder`,
             description: idea.narrativeHook || idea.problemSolution?.substring(0, 155) || 'AI-analyzed startup opportunity with market validation',
-            url: `https://nugget-finder.com/nugget/${id}`,
+            url: `https://nuggetfinder.ai/nugget/${id}`,
             type: 'article',
             images: [
               {
@@ -70,7 +71,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     openGraph: {
       title: 'Startup Opportunity Analysis | Nugget Finder',
       description: 'AI-powered startup idea analysis with market validation and competitive research',
-      url: `https://nugget-finder.com/nugget/${id}`,
+             url: `https://nuggetfinder.ai/nugget/${id}`,
       type: 'article',
     },
   };
@@ -199,47 +200,25 @@ function transformIdeaData(idea: any): IdeaDetailsViewProps['idea'] {
   };
 }
 
-// Generate structured data for the idea
-function generateIdeaSchema(idea: any, id: string) {
+// Generate multiple schema types for comprehensive SEO coverage
+function generateComprehensiveSchemas(idea: any, id: string) {
+  const ideaData: IdeaData = {
+    id,
+    title: idea.title,
+    narrativeHook: idea.narrativeHook,
+    problemSolution: idea.problemSolution,
+    createdAt: idea.createdAt,
+    updatedAt: idea.updatedAt,
+    tags: idea.tags,
+    ideaScore: idea.ideaScore,
+    marketOpportunity: idea.marketOpportunity,
+    monetizationStrategy: idea.monetizationStrategy
+  };
+
   return {
-    "@context": "https://schema.org",
-    "@type": "CreativeWork",
-    "name": idea.title,
-    "description": idea.narrativeHook || idea.problemSolution,
-    "url": `https://nugget-finder.com/nugget/${id}`,
-    "dateCreated": idea.createdAt,
-    "dateModified": idea.updatedAt,
-    "creator": {
-      "@type": "Organization",
-      "name": "Nugget Finder"
-    },
-    "publisher": {
-      "@type": "Organization", 
-      "name": "Nugget Finder",
-      "url": "https://nugget-finder.com"
-    },
-    "about": {
-      "@type": "Thing",
-      "name": "Startup Opportunity",
-      "description": "AI-analyzed business opportunity with market validation"
-    },
-    "keywords": [
-      "startup idea",
-      "business opportunity", 
-      "market analysis",
-      idea.title?.toLowerCase().replace(/\s+/g, ' '),
-      ...(idea.tags || []).map((tag: string) => tag.toLowerCase())
-    ].filter(Boolean).join(', '),
-    "mainEntity": {
-      "@type": "Product",
-      "name": idea.title,
-      "description": idea.problemSolution,
-      "category": "Business Opportunity",
-      "audience": {
-        "@type": "Audience",
-        "audienceType": "Entrepreneurs"
-      }
-    }
+    article: SchemaFactory.generateIdeaSchema(ideaData),
+    product: SchemaFactory.generateProductSchema(ideaData),
+    howTo: SchemaFactory.generateHowToSchema(ideaData)
   };
 }
 
@@ -294,13 +273,17 @@ export default async function NuggetDetailPage({ params }: { params: Promise<{ i
       // Transform the data to ensure all required arrays exist
       const ideaWithFullData = transformIdeaData(idea);
 
-      return (
-        <div className="min-h-screen bg-background">
-          {/* Structured data for AI understanding */}
-          <StructuredData data={generateIdeaSchema(idea, id)} />
-          
-          <IdeaDetailsView idea={ideaWithFullData} />
-        </div>
+             const schemas = generateComprehensiveSchemas(idea, id);
+
+       return (
+         <div className="min-h-screen bg-background">
+           {/* Multiple structured data schemas for comprehensive SEO */}
+           <StructuredData data={schemas.article} />
+           <StructuredData data={schemas.product} />
+           <StructuredData data={schemas.howTo} />
+           
+           <IdeaDetailsView idea={ideaWithFullData} />
+         </div>
       );
     }
     
