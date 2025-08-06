@@ -52,6 +52,10 @@ class ServerTRPCClient {
     return this.makeRequest('ideas.getActivityTrends');
   }
 
+  async getIdeas(input?: { limit?: number; offset?: number }) {
+    return this.makeRequest('ideas.getIdeas', input);
+  }
+
   // Agent endpoints
   agents = {
     getDailyIdeas: {

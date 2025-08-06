@@ -1,8 +1,32 @@
 import { Suspense } from "react";
-import BrowseClient from "@/components/BrowseClient";
+import BrowseServerClient from "@/components/BrowseServerClient";
 import { Loader2 } from "lucide-react";
+import { serverTRPC } from "@/lib/server-trpc";
 
-export default function BrowsePage() {
+async function getInitialData() {
+  try {
+    // Fetch initial data in parallel
+    const [initialIdeas, initialLimits] = await Promise.all([
+      serverTRPC.getIdeas({ limit: 12, offset: 0 }),
+      serverTRPC.getUserLimits().catch(() => null), // Don't fail if user not authenticated
+    ]);
+    
+    return {
+      initialIdeas: initialIdeas || [],
+      initialLimits,
+    };
+  } catch (error) {
+    console.error("Error fetching initial browse data:", error);
+    return {
+      initialIdeas: [],
+      initialLimits: null,
+    };
+  }
+}
+
+export default async function BrowsePage() {
+  const { initialIdeas, initialLimits } = await getInitialData();
+
   return (
     <div className="min-h-screen bg-background">      
       <Suspense 
@@ -15,7 +39,10 @@ export default function BrowsePage() {
           </div>
         }
       >
-        <BrowseClient />
+        <BrowseServerClient 
+          initialIdeas={initialIdeas}
+          initialLimits={initialLimits}
+        />
       </Suspense>
     </div>
   );

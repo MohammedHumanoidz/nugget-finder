@@ -28,7 +28,9 @@ const IdeaGenerationAgentController = {
    * Master Research Director - Creates diverse research themes per day
    * Influences trend research with rotating diversity across industry + geography
    */
-  async masterResearchDirector(context: AgentContext): Promise<ResearchDirectorData | null> {
+  async masterResearchDirector(
+    context: AgentContext
+  ): Promise<ResearchDirectorData | null> {
     try {
       console.log("🎯 Step 1: Activating Master Research Director");
 
@@ -43,73 +45,92 @@ const IdeaGenerationAgentController = {
 - Business model approach (B2B vs B2C vs Creative/Original)
 - Technology stack or approach
 
-**Geographic Rotation Strategy:** Rotate research focus across:
-- North America (US/Canada startup ecosystems)
-- Europe (Nordic innovation, German engineering, UK fintech)
-- Asia-Pacific (Japan efficiency, Singapore trade, Australia resources)
-- Emerging Markets (Latin America, Southeast Asia, Africa)
-- Global Remote/Digital-First opportunities
+**Geographic Rotation Strategy (More Tech-Centric & Broad):** Rotate research focus across:
+- **Major Innovation Hubs:** Silicon Valley, New York, London, Berlin, Tel Aviv, Bangalore, Singapore, Tokyo.
+- **Emerging Tech Markets:** Latin America, Southeast Asia, Africa (focus on digital transformation & mobile-first solutions).
+- **Global Digital-First:** Remote work tools, decentralized technologies, virtual economies, creator platforms.
+- **Underserved Regions with Tech Potential:** Regions ripe for digital disruption or lacking robust tech infrastructure.
 
-**Industry Rotation Mandates:**
-- If previous: Enterprise/B2B → Focus on: Consumer/Creator/Local Business
-- If previous: Consumer/B2C → Focus on: SMB/Professional Services/Creative Tools
-- If previous: AI/Tech → Focus on: Traditional Industries + Digital Transformation
-- If previous: Local/Physical → Focus on: Remote/Digital/Global
+**Industry Rotation Mandates (More Tech & Diversity Focused):**
+- If previous: Enterprise SaaS → Focus on: Developer Tools, Creator Economy, AI Infrastructure, Deep Tech
+- If previous: Consumer Apps → Focus on: B2B SaaS, Vertical SaaS for SMBs, Web3 Applications, Bio/Health Tech
+- If previous: AI/ML Focus → Focus on: Climate Tech, Space Tech, Advanced Robotics, Quantum Computing, Cybersecurity
+- If previous: Web/Mobile Apps → Focus on: API-First Solutions, Blockchain/Decentralized Apps, Hardware-Software Integration
 
 Return this exact JSON structure:
 {
-  "researchTheme": "string (Today's focused research direction, e.g., 'Independent Creator Economy Tools in Southeast Asia' or 'Rural SMB Digital Infrastructure in Latin America')",
-  "geographicFocus": "string (Specific region/market context that influences user needs and competitive landscape)",
-  "industryRotation": "string (The industry vertical to explore today, ensuring diversity from previous)",
+  "researchTheme": "string (Today's focused research direction, e.g., 'Decentralized Identity Solutions for African Startups' or 'AI-Powered Drug Discovery Platforms in Major Innovation Hubs')",
+  "geographicFocus": "string (Broader region/market context, e.g., 'Emerging Tech Markets - Southeast Asia' or 'Major Innovation Hubs - Europe')",
+  "industryRotation": "string (The industry vertical to explore today, ensuring diversity from previous, focusing on tech-forward areas)",
   "diversityMandates": ["mandate 1: avoid X from previous ideas", "mandate 2: focus on Y demographic not covered before", "mandate 3: explore Z business model not used recently"],
   "researchApproach": "string (How the trend research should be conducted - what communities, signals, and validation sources to prioritize)"
 }
 
-**Previous Research Context (MUST AVOID THESE PATTERNS):**
-${context.previousIdeas && context.previousIdeas.length > 0 ? 
-  context.previousIdeas.map((idea, idx) => `${idx + 1}. "${idea.title}" - Industry: ${this.extractIndustry(idea.description)}, Target: ${this.extractTarget(idea.description)}`).join('\n') : 
-  'No previous ideas - establish initial research direction focusing on underserved global markets'}
+**Previous Research Context (MUST AVOID THESE PATTERNS to ensure diversity):**
+${
+  context.previousIdeas && context.previousIdeas.length > 0
+    ? context.previousIdeas
+        .map(
+          (idea, idx) =>
+            `${idx + 1}. "${idea.title}" - Industry: ${this.extractIndustry(
+              idea.description
+            )}, Target: ${this.extractTarget(idea.description)}`
+        )
+        .join("\n")
+    : "No previous ideas - establish initial research direction focusing on underserved global markets with high tech potential"
+}
 
-Today's research must explore completely new territory. Be specific and actionable.`;
+Today's research must explore completely new territory, pushing boundaries in technology and market application. Be specific and actionable, ensuring the diversity mandates are strictly followed.`;
 
-                    const { text } = await generateText({
-         model: openrouter("openai/gpt-4.1-mini"),
-         prompt: directorPrompt,
-         temperature: 0.3,
-         maxTokens: 600,
-       });
+      const { text } = await generateText({
+        model: openrouter("openai/gpt-4.1-mini"),
+        prompt: directorPrompt,
+        temperature: 0.3,
+        maxTokens: 600,
+      });
 
-       // Use enhanced JSON parser to handle markdown code blocks and formatting issues
-       const parseResult = await EnhancedJsonParser.parseWithFallback<ResearchDirectorData>(
-         text,
-         ["researchTheme", "geographicFocus", "industryRotation"],
-         {
-           researchTheme: "Global Remote Work Tools for Emerging Markets",
-           geographicFocus: "Southeast Asia and Latin America",
-           industryRotation: "SMB Productivity and Operations",
-           diversityMandates: [
-             "Avoid enterprise/large corporation focus",
-             "Target independent professionals and small teams",
-             "Explore mobile-first, low-bandwidth solutions"
-           ],
-           researchApproach: "Focus on remote work communities, startup hubs in emerging markets, and mobile-first productivity discussions"
-         }
-       );
+      // Use enhanced JSON parser to handle markdown code blocks and formatting issues
+      const parseResult =
+        await EnhancedJsonParser.parseWithFallback<ResearchDirectorData>(
+          text,
+          ["researchTheme", "geographicFocus", "industryRotation"],
+          {
+            researchTheme: "AI-Powered Developer Tools for Global Remote Teams",
+            geographicFocus: "Global Digital-First opportunities",
+            industryRotation: "Developer Productivity and AI Infrastructure",
+            diversityMandates: [
+              "Avoid consumer social apps",
+              "Target software developers and engineering teams",
+              "Explore B2B SaaS models for deep tech",
+            ],
+            researchApproach:
+              "Focus on developer communities, open-source trends, and AI research papers",
+          }
+        );
 
-       if (!parseResult.success) {
-         console.error("❌ Master Research Director JSON parsing failed:", parseResult.error);
-         console.log("📝 Original response:", parseResult.originalText?.substring(0, 500));
-         if (parseResult.cleanedText) {
-           console.log("🧹 Cleaned response:", parseResult.cleanedText.substring(0, 500));
-         }
-       }
+      if (!parseResult.success) {
+        console.error(
+          "❌ Master Research Director JSON parsing failed:",
+          parseResult.error
+        );
+        console.log(
+          "📝 Original response:",
+          parseResult.originalText?.substring(0, 500)
+        );
+        if (parseResult.cleanedText) {
+          console.log(
+            "🧹 Cleaned response:",
+            parseResult.cleanedText.substring(0, 500)
+          );
+        }
+      }
 
-       const directorData = parseResult.data as ResearchDirectorData;
-      
+      const directorData = parseResult.data as ResearchDirectorData;
+
       console.log("✅ Step 1: Research Director Set Research Parameters:", {
         theme: directorData.researchTheme,
         geography: directorData.geographicFocus,
-        industry: directorData.industryRotation
+        industry: directorData.industryRotation,
       });
 
       return directorData;
@@ -117,15 +138,16 @@ Today's research must explore completely new territory. Be specific and actionab
       console.error("Master Research Director error:", error);
       // Return fallback research direction
       return {
-        researchTheme: "Global Remote Work Tools for Emerging Markets",
-        geographicFocus: "Southeast Asia and Latin America",
-        industryRotation: "SMB Productivity and Operations",
+        researchTheme: "AI-Powered Developer Tools for Global Remote Teams",
+        geographicFocus: "Global Digital-First opportunities",
+        industryRotation: "Developer Productivity and AI Infrastructure",
         diversityMandates: [
-          "Avoid enterprise/large corporation focus",
-          "Target independent professionals and small teams",
-          "Explore mobile-first, low-bandwidth solutions"
+          "Avoid consumer social apps",
+          "Target software developers and engineering teams",
+          "Explore B2B SaaS models for deep tech",
         ],
-        researchApproach: "Focus on remote work communities, startup hubs in emerging markets, and mobile-first productivity discussions"
+        researchApproach:
+          "Focus on developer communities, open-source trends, and AI research papers",
       };
     }
   },
@@ -133,63 +155,80 @@ Today's research must explore completely new territory. Be specific and actionab
   // Helper functions for extracting patterns from previous ideas
   extractIndustry(description: string): string {
     const industryKeywords = {
-      'enterprise': ['enterprise', 'corporate', 'large business'],
-      'smb': ['small business', 'SMB', 'local business'],
-      'consumer': ['consumer', 'individual', 'personal'],
-      'creator': ['creator', 'artist', 'content'],
-      'healthcare': ['health', 'medical', 'wellness'],
-      'fintech': ['finance', 'payment', 'banking'],
-      'edtech': ['education', 'learning', 'student']
+      enterprise: ["enterprise", "corporate", "large business"],
+      smb: ["small business", "SMB", "local business"],
+      consumer: ["consumer", "individual", "personal"],
+      creator: ["creator", "artist", "content"],
+      healthcare: ["health", "medical", "wellness"],
+      fintech: ["finance", "payment", "banking"],
+      edtech: ["education", "learning", "student"],
+      ai: ["AI", "artificial intelligence", "machine learning"],
+      developer_tools: ["developer", "coding", "API", "toolchain"],
+      web3: ["blockchain", "decentralized", "crypto"],
+      climate_tech: ["climate", "sustainability", "environmental"],
     };
-    
+
     for (const [industry, keywords] of Object.entries(industryKeywords)) {
-      if (keywords.some(keyword => description.toLowerCase().includes(keyword))) {
+      if (
+        keywords.some((keyword) => description.toLowerCase().includes(keyword))
+      ) {
         return industry;
       }
     }
-    return 'general';
+    return "general";
   },
 
   extractTarget(description: string): string {
     const targetKeywords = {
-      'enterprise': ['enterprise', 'corporation', 'large company'],
-      'smb': ['small business', 'SMB', 'local shop'],
-      'individual': ['individual', 'personal', 'consumer'],
-      'professional': ['professional', 'freelancer', 'consultant'],
-      'creator': ['creator', 'artist', 'influencer']
+      enterprise: ["enterprise", "corporation", "large company"],
+      smb: ["small business", "SMB", "local shop"],
+      individual: ["individual", "personal", "consumer"],
+      professional: ["professional", "freelancer", "consultant"],
+      creator: ["creator", "artist", "influencer"],
+      developer: ["developer", "engineer", "programmer"],
+      scientist: ["scientist", "researcher", "analyst"],
     };
-    
+
     for (const [target, keywords] of Object.entries(targetKeywords)) {
-      if (keywords.some(keyword => description.toLowerCase().includes(keyword))) {
+      if (
+        keywords.some((keyword) => description.toLowerCase().includes(keyword))
+      ) {
         return target;
       }
     }
-    return 'general';
+    return "general";
   },
 
   /**
    * Enhanced TrendResearchAgent - Now guided by Master Research Director
    * Uses Perplexity Deep Research with Director's research theme
    */
-  async trendResearchAgent(context: AgentContext, researchDirection?: ResearchDirectorData): Promise<TrendData | null> {
+  async trendResearchAgent(
+    context: AgentContext,
+    researchDirection?: ResearchDirectorData
+  ): Promise<TrendData | null> {
     try {
       console.log("📈 Step 2: Enhanced Trend Research");
 
       const systemPrompt = `You are an elite trend research specialist with deep expertise in identifying emerging patterns that create immediate software startup opportunities. Your research is guided by today's strategic research direction.
 
 **Research Mission Parameters:**
-${researchDirection ? `
+${
+  researchDirection
+    ? `
 - Research Theme: ${researchDirection.researchTheme}
 - Geographic Focus: ${researchDirection.geographicFocus}  
 - Industry Focus: ${researchDirection.industryRotation}
-- Diversity Mandates: ${researchDirection.diversityMandates.join(', ')}
-` : 'General global technology and market trend research'}
+- Diversity Mandates: ${researchDirection.diversityMandates.join(", ")}
+`
+    : "General global technology and market trend research"
+}
 
 **Critical Requirements:**
 1. **Human-Validated Signals**: The trend MUST be backed by genuine online community engagement (Reddit threads with 500+ comments, viral Twitter discussions, Product Hunt buzz, active forum debates)
 2. **Software-Solvable**: Focus on trends creating immediate opportunities for SaaS, APIs, web/mobile apps, or lightweight services
 3. **Timing-Sensitive**: Identify trends in the "early adopter" phase - not too early (theoretical) or too late (saturated)
-4. **Geographic Relevance**: Consider how the trend manifests differently in the target geographic region
+4. **Geographic Relevance**: Consider how the trend manifests differently in the target geographic region (even if broad, how does it apply there?)
 5. **Buildable Solutions**: Ensure the trend opens paths to <$10K MVP, 3-6 month development cycle solutions
 
 **Validation Framework:**
@@ -213,18 +252,26 @@ Focus on trends that are currently generating genuine excitement and discussion 
       const userPrompt = `Conduct deep research to identify one powerful emerging trend that is generating significant buzz in online communities and creating immediate opportunities for software-based solutions.
 
 **Strategic Research Direction:**
-${researchDirection ? `
+${
+  researchDirection
+    ? `
 Focus your research on: ${researchDirection.researchTheme}
 Geographic context: ${researchDirection.geographicFocus}
 Industry vertical: ${researchDirection.industryRotation}
 
 Research approach: ${researchDirection.researchApproach}
-` : 'Conduct broad global technology and market trend research'}
+`
+    : "Conduct broad global technology and market trend research"
+}
 
 **Diversity Requirements - MUST AVOID:**
-${context.previousIdeas && context.previousIdeas.length > 0 ? 
-  context.previousIdeas.map((idea) => `- Theme: "${idea.title}" - Focus area already covered`).join('\n') : 
-  '- No restrictions - establish new research territory'}
+${
+  context.previousIdeas && context.previousIdeas.length > 0
+    ? context.previousIdeas
+        .map((idea) => `- Theme: "${idea.title}" - Focus area already covered`)
+        .join("\n")
+    : "- No restrictions - establish new research territory"
+}
 
 Find a trend that is genuinely creating conversation, excitement, and early market movement. Provide evidence of real human engagement and community validation.`;
 
@@ -310,16 +357,27 @@ Extract the core trend information and format as valid JSON. Ensure all supporti
         ["title", "description"] // Required fields
       );
 
-      debugLogger.logParsingAttempt("EnhancedTrendResearchAgent", content, parseResult);
+      debugLogger.logParsingAttempt(
+        "EnhancedTrendResearchAgent",
+        content,
+        parseResult
+      );
 
       if (!parseResult.success) {
-        console.error("❌ Failed to parse enhanced trend data:", parseResult.error);
+        console.error(
+          "❌ Failed to parse enhanced trend data:",
+          parseResult.error
+        );
         debugLogger.logError(
           "EnhancedTrendResearchAgent",
-          new Error(`Failed to parse Perplexity response: ${parseResult.error}`),
+          new Error(
+            `Failed to parse Perplexity response: ${parseResult.error}`
+          ),
           { parseResult, originalContent: content }
         );
-        throw new Error(`Failed to parse Perplexity response: ${parseResult.error}`);
+        throw new Error(
+          `Failed to parse Perplexity response: ${parseResult.error}`
+        );
       }
 
       const trendData = parseResult.data as TrendData;
@@ -328,12 +386,11 @@ Extract the core trend information and format as valid JSON. Ensure all supporti
         title: trendData.title,
         trendStrength: trendData.trendStrength,
         catalystType: trendData.catalystType,
-        timingUrgency: trendData.timingUrgency
+        timingUrgency: trendData.timingUrgency,
       });
 
       debugLogger.logAgentResult("EnhancedTrendResearchAgent", trendData, true);
       return trendData;
-
     } catch (error) {
       console.error("EnhancedTrendResearchAgent error:", error);
       debugLogger.logError("EnhancedTrendResearchAgent", error as Error, {
@@ -344,12 +401,12 @@ Extract the core trend information and format as valid JSON. Ensure all supporti
       // Enhanced fallback with research direction context
       console.log("🔄 Using enhanced fallback trend data");
       return {
-        title: researchDirection ? 
-          `${researchDirection.industryRotation} Innovation in ${researchDirection.geographicFocus}` :
-          "AI-Powered Workflow Automation for SMBs",
-        description: researchDirection ?
-          `Emerging trend in ${researchDirection.geographicFocus} focused on ${researchDirection.industryRotation} digital transformation.` :
-          "Small to medium businesses are increasingly adopting AI-powered tools to automate repetitive workflows, driven by labor shortages and cost pressures.",
+        title: researchDirection
+          ? `${researchDirection.industryRotation} Innovation in ${researchDirection.geographicFocus}`
+          : "AI-Powered Workflow Automation for SMBs",
+        description: researchDirection
+          ? `Emerging trend in ${researchDirection.geographicFocus} focused on ${researchDirection.industryRotation} digital transformation.`
+          : "Small to medium businesses are increasingly adopting AI-powered tools to automate repetitive workflows, driven by labor shortages and cost pressures.",
         trendStrength: 8,
         catalystType: "TECHNOLOGY_BREAKTHROUGH" as const,
         timingUrgency: 7,
@@ -430,30 +487,39 @@ Conduct deep systemic analysis to identify 2-3 excruciatingly specific commercia
 - Ensure problems lead to <$10K MVP, 3-6 month development solutions
 
 **Diversity Requirements (avoid these problem spaces):**
-${context.previousIdeas && context.previousIdeas.length > 0 ? 
-  context.previousIdeas.map((idea) => `- Avoid: Problems similar to "${idea.title}" - ${idea.description?.substring(0, 100)}...`).join('\n') : 
-  '- No restrictions - explore new problem territory'}
+${
+  context.previousIdeas && context.previousIdeas.length > 0
+    ? context.previousIdeas
+        .map(
+          (idea) =>
+            `- Avoid: Problems similar to "${
+              idea.title
+            }" - ${idea.description?.substring(0, 100)}...`
+        )
+        .join("\n")
+    : "- No restrictions - explore new problem territory"
+}
 
 Focus on immediate, specific, financially painful problems that create urgent demand for software solutions.`;
 
-             // Use sonar-pro for enhanced analysis
-       debugLogger.logPerplexityRequest(
-         "EnhancedProblemGapAgent",
-         userPrompt,
-         systemPrompt,
-         {
-           reasoning_effort: "high",  // Enhanced reasoning
-           model: "sonar-pro",   // Better model for analysis
-           context: context.trends,
-         }
-       );
+      // Use sonar-pro for enhanced analysis
+      debugLogger.logPerplexityRequest(
+        "EnhancedProblemGapAgent",
+        userPrompt,
+        systemPrompt,
+        {
+          reasoning_effort: "high", // Enhanced reasoning
+          model: "sonar-pro", // Better model for analysis
+          context: context.trends,
+        }
+      );
 
-       const response = await perplexity(
-         userPrompt,
-         systemPrompt,
-         "high",  // High reasoning effort
-         "sonar-pro"  // Use pro model
-       );
+      const response = await perplexity(
+        userPrompt,
+        systemPrompt,
+        "high", // High reasoning effort
+        "sonar-pro" // Use pro model
+      );
 
       debugLogger.logPerplexityResponse("EnhancedProblemGapAgent", response);
 
@@ -467,11 +533,19 @@ Focus on immediate, specific, financially painful problems that create urgent de
       }
 
       const content = response.choices[0].message.content;
-      console.log("🔍 Enhanced ProblemGap raw response length:", content.length);
+      console.log(
+        "🔍 Enhanced ProblemGap raw response length:",
+        content.length
+      );
       console.log("🔍 Response preview:", `${content.substring(0, 200)}...`);
 
-      const isAlreadyJson = content.trim().startsWith("{") && content.trim().endsWith("}");
-      debugLogger.logContentAnalysis("EnhancedProblemGapAgent", content, isAlreadyJson);
+      const isAlreadyJson =
+        content.trim().startsWith("{") && content.trim().endsWith("}");
+      debugLogger.logContentAnalysis(
+        "EnhancedProblemGapAgent",
+        content,
+        isAlreadyJson
+      );
 
       const structureWithLLM = async (content: string): Promise<string> => {
         const structuringPrompt = `You are an expert business analyst. Convert the following problem and gap analysis into the exact JSON structure.
@@ -495,16 +569,23 @@ ${content}
 
 Extract problems and gaps with maximum specificity and business impact quantification. Return ONLY the JSON object.`;
 
-        debugLogger.logLLMStructuring("EnhancedProblemGapAgent", structuringPrompt, content);
+        debugLogger.logLLMStructuring(
+          "EnhancedProblemGapAgent",
+          structuringPrompt,
+          content
+        );
 
-                 const { text: structuredJson } = await generateText({
-           model: openrouter("openai/gpt-4.1-mini"),
-           prompt: structuringPrompt,
-           temperature: 0.1,
-           maxTokens: 1000,
-         });
+        const { text: structuredJson } = await generateText({
+          model: openrouter("openai/gpt-4.1-mini"),
+          prompt: structuringPrompt,
+          temperature: 0.1,
+          maxTokens: 1000,
+        });
 
-        debugLogger.logLLMStructuringResponse("EnhancedProblemGapAgent", structuredJson);
+        debugLogger.logLLMStructuringResponse(
+          "EnhancedProblemGapAgent",
+          structuredJson
+        );
         return structuredJson;
       };
 
@@ -514,16 +595,27 @@ Extract problems and gaps with maximum specificity and business impact quantific
         ["problems", "gaps"]
       );
 
-      debugLogger.logParsingAttempt("EnhancedProblemGapAgent", content, parseResult);
+      debugLogger.logParsingAttempt(
+        "EnhancedProblemGapAgent",
+        content,
+        parseResult
+      );
 
       if (!parseResult.success) {
-        console.error("❌ Failed to parse enhanced problem gap data:", parseResult.error);
+        console.error(
+          "❌ Failed to parse enhanced problem gap data:",
+          parseResult.error
+        );
         debugLogger.logError(
           "EnhancedProblemGapAgent",
-          new Error(`Failed to parse Perplexity response: ${parseResult.error}`),
+          new Error(
+            `Failed to parse Perplexity response: ${parseResult.error}`
+          ),
           { parseResult, originalContent: content }
         );
-        throw new Error(`Failed to parse Perplexity response: ${parseResult.error}`);
+        throw new Error(
+          `Failed to parse Perplexity response: ${parseResult.error}`
+        );
       }
 
       const problemGapData = parseResult.data as ProblemGapData;
@@ -533,9 +625,12 @@ Extract problems and gaps with maximum specificity and business impact quantific
         gapCount: problemGapData.gaps?.length || 0,
       });
 
-      debugLogger.logAgentResult("EnhancedProblemGapAgent", problemGapData, true);
+      debugLogger.logAgentResult(
+        "EnhancedProblemGapAgent",
+        problemGapData,
+        true
+      );
       return problemGapData;
-
     } catch (error) {
       console.error("EnhancedProblemGapAgent error:", error);
       debugLogger.logError("EnhancedProblemGapAgent", error as Error, {
@@ -553,17 +648,25 @@ Extract problems and gaps with maximum specificity and business impact quantific
         gaps: [
           {
             title: "Multi-Platform Content Distribution for Emerging Markets",
-            description: "Current content management tools are built for Western platforms and payment systems, failing to integrate with regional social platforms, local payment gateways, and mobile-first workflows prevalent in emerging markets",
-            impact: "Content creators lose 40-60% of potential revenue from regional sponsorships and audience monetization",
-            target: "Independent content creators and influencers in Southeast Asia, Latin America, and Africa",
-            opportunity: "Regional-first content management platform with native integrations for local platforms, mobile-optimized workflows, and emerging market payment systems",
+            description:
+              "Current content management tools are built for Western platforms and payment systems, failing to integrate with regional social platforms, local payment gateways, and mobile-first workflows prevalent in emerging markets",
+            impact:
+              "Content creators lose 40-60% of potential revenue from regional sponsorships and audience monetization",
+            target:
+              "Independent content creators and influencers in Southeast Asia, Latin America, and Africa",
+            opportunity:
+              "Regional-first content management platform with native integrations for local platforms, mobile-optimized workflows, and emerging market payment systems",
           },
           {
             title: "Hybrid Commerce Inventory Intelligence",
-            description: "Existing inventory tools assume pure online or pure offline operations, creating blind spots for businesses operating across channels, particularly in markets where offline-to-online transition is rapid",
-            impact: "15-25% revenue loss from stock-outs and overstocking, plus 8+ hours weekly manual reconciliation",
-            target: "Small to medium e-commerce businesses in tier-2 cities with hybrid online/offline operations",
-            opportunity: "AI-powered inventory assistant that learns from both online analytics and offline sales patterns to predict demand across channels",
+            description:
+              "Existing inventory tools assume pure online or pure offline operations, creating blind spots for businesses operating across channels, particularly in markets where offline-to-online transition is rapid",
+            impact:
+              "15-25% revenue loss from stock-outs and overstocking, plus 8+ hours weekly manual reconciliation",
+            target:
+              "Small to medium e-commerce businesses in tier-2 cities with hybrid online/offline operations",
+            opportunity:
+              "AI-powered inventory assistant that learns from both online analytics and offline sales patterns to predict demand across channels",
           },
         ],
       };
@@ -673,7 +776,10 @@ Provide actionable competitive intelligence that guides strategic positioning an
         "sonar-pro"
       );
 
-      debugLogger.logPerplexityResponse("EnhancedCompetitiveIntelligenceAgent", response);
+      debugLogger.logPerplexityResponse(
+        "EnhancedCompetitiveIntelligenceAgent",
+        response
+      );
 
       if (!response?.choices?.[0]?.message?.content) {
         debugLogger.logError(
@@ -685,11 +791,19 @@ Provide actionable competitive intelligence that guides strategic positioning an
       }
 
       const content = response.choices[0].message.content;
-      console.log("🔍 Enhanced Competitive Intelligence raw response length:", content.length);
+      console.log(
+        "🔍 Enhanced Competitive Intelligence raw response length:",
+        content.length
+      );
       console.log("🔍 Response preview:", `${content.substring(0, 200)}...`);
 
-      const isAlreadyJson = content.trim().startsWith("{") && content.trim().endsWith("}");
-      debugLogger.logContentAnalysis("EnhancedCompetitiveIntelligenceAgent", content, isAlreadyJson);
+      const isAlreadyJson =
+        content.trim().startsWith("{") && content.trim().endsWith("}");
+      debugLogger.logContentAnalysis(
+        "EnhancedCompetitiveIntelligenceAgent",
+        content,
+        isAlreadyJson
+      );
 
       const structureWithLLM = async (content: string): Promise<string> => {
         const structuringPrompt = `You are an expert competitive analyst. Convert the following competitive intelligence research into the exact JSON structure requested.
@@ -733,7 +847,11 @@ ${content}
 
 Extract competitive data and positioning strategy. Ensure all competitive advantages are realistic for software startups. Return ONLY the JSON object.`;
 
-        debugLogger.logLLMStructuring("EnhancedCompetitiveIntelligenceAgent", structuringPrompt, content);
+        debugLogger.logLLMStructuring(
+          "EnhancedCompetitiveIntelligenceAgent",
+          structuringPrompt,
+          content
+        );
 
         const { text: structuredJson } = await generateText({
           model: openrouter("openai/gpt-4.1-mini"),
@@ -742,7 +860,10 @@ Extract competitive data and positioning strategy. Ensure all competitive advant
           maxTokens: 1200,
         });
 
-        debugLogger.logLLMStructuringResponse("EnhancedCompetitiveIntelligenceAgent", structuredJson);
+        debugLogger.logLLMStructuringResponse(
+          "EnhancedCompetitiveIntelligenceAgent",
+          structuredJson
+        );
         return structuredJson;
       };
 
@@ -752,85 +873,129 @@ Extract competitive data and positioning strategy. Ensure all competitive advant
         ["competition", "positioning"]
       );
 
-      debugLogger.logParsingAttempt("EnhancedCompetitiveIntelligenceAgent", content, parseResult);
+      debugLogger.logParsingAttempt(
+        "EnhancedCompetitiveIntelligenceAgent",
+        content,
+        parseResult
+      );
 
       if (!parseResult.success) {
-        console.error("❌ Failed to parse enhanced competitive data:", parseResult.error);
+        console.error(
+          "❌ Failed to parse enhanced competitive data:",
+          parseResult.error
+        );
         debugLogger.logError(
           "EnhancedCompetitiveIntelligenceAgent",
-          new Error(`Failed to parse Perplexity response: ${parseResult.error}`),
+          new Error(
+            `Failed to parse Perplexity response: ${parseResult.error}`
+          ),
           { parseResult, originalContent: content }
         );
-        throw new Error(`Failed to parse Perplexity response: ${parseResult.error}`);
+        throw new Error(
+          `Failed to parse Perplexity response: ${parseResult.error}`
+        );
       }
 
       const competitiveData = parseResult.data as CompetitiveData;
 
       console.log("✅ Step 4: Enhanced Competitive Intelligence Completed:", {
-        marketConcentration: competitiveData.competition?.marketConcentrationLevel,
-        directCompetitorCount: competitiveData.competition?.directCompetitors?.length || 0,
+        marketConcentration:
+          competitiveData.competition?.marketConcentrationLevel,
+        directCompetitorCount:
+          competitiveData.competition?.directCompetitors?.length || 0,
         positioningName: competitiveData.positioning?.name,
-        competitiveScore: competitiveData.competition?.competitivePositioningScore
+        competitiveScore:
+          competitiveData.competition?.competitivePositioningScore,
       });
 
-      debugLogger.logAgentResult("EnhancedCompetitiveIntelligenceAgent", competitiveData, true);
+      debugLogger.logAgentResult(
+        "EnhancedCompetitiveIntelligenceAgent",
+        competitiveData,
+        true
+      );
       return competitiveData;
-
     } catch (error) {
       console.error("EnhancedCompetitiveIntelligenceAgent error:", error);
-      debugLogger.logError("EnhancedCompetitiveIntelligenceAgent", error as Error, {
-        agent: "EnhancedCompetitiveIntelligenceAgent",
-        fallbackUsed: true,
-      });
+      debugLogger.logError(
+        "EnhancedCompetitiveIntelligenceAgent",
+        error as Error,
+        {
+          agent: "EnhancedCompetitiveIntelligenceAgent",
+          fallbackUsed: true,
+        }
+      );
 
       console.log("🔄 Using enhanced fallback competitive intelligence data");
       return {
         competition: {
           marketConcentrationLevel: "LOW" as const,
-          marketConcentrationJustification: "Emerging market focus creates opportunities for specialized solutions targeting underserved segments with mobile-first, locally-adapted approaches",
+          marketConcentrationJustification:
+            "Emerging market focus creates opportunities for specialized solutions targeting underserved segments with mobile-first, locally-adapted approaches",
           directCompetitors: [
             {
               name: "Generic Global Platforms",
-              justification: "Large platforms that attempt to serve the target market but lack regional customization",
-              strengths: ["Brand recognition", "Extensive features", "Large user base"],
-              weaknesses: ["No local platform integrations", "Western-centric design", "Complex pricing for emerging markets", "Poor mobile optimization"]
-            }
+              justification:
+                "Large platforms that attempt to serve the target market but lack regional customization",
+              strengths: [
+                "Brand recognition",
+                "Extensive features",
+                "Large user base",
+              ],
+              weaknesses: [
+                "No local platform integrations",
+                "Western-centric design",
+                "Complex pricing for emerging markets",
+                "Poor mobile optimization",
+              ],
+            },
           ],
           indirectCompetitors: [
             {
               name: "Manual/Traditional Methods",
-              justification: "Current manual processes and traditional tools used by target personas",
-              strengths: ["Familiar workflows", "No technology barriers", "Full control"],
-              weaknesses: ["Time-intensive", "Error-prone", "No scalability", "Missing automation opportunities"]
-            }
+              justification:
+                "Current manual processes and traditional tools used by target personas",
+              strengths: [
+                "Familiar workflows",
+                "No technology barriers",
+                "Full control",
+              ],
+              weaknesses: [
+                "Time-intensive",
+                "Error-prone",
+                "No scalability",
+                "Missing automation opportunities",
+              ],
+            },
           ],
           competitorFailurePoints: [
             "Lack of regional platform integrations and local payment support",
             "Complex interfaces designed for desktop users, not mobile-first workflows",
-            "Pricing models that don't scale with emerging market budgets"
+            "Pricing models that don't scale with emerging market budgets",
           ],
           unfairAdvantage: [
             "Native integrations with regional platforms and payment systems",
             "Mobile-first design optimized for emerging market usage patterns",
-            "Local market expertise and community-driven feature development"
+            "Local market expertise and community-driven feature development",
           ],
           moat: [
             "Exclusive partnerships with regional platforms and local service providers",
             "Network effects within specific geographic communities",
-            "Data advantages from understanding regional user behavior patterns"
+            "Data advantages from understanding regional user behavior patterns",
           ],
-          competitivePositioningScore: 8
+          competitivePositioningScore: 8,
         },
         positioning: {
           name: "Regional Creator Tools for Mobile Markets",
-          targetSegment: "Independent content creators and small business owners in Southeast Asia, Latin America, and Africa",
-          valueProposition: "The only platform designed specifically for emerging market creators, with native regional integrations, mobile-first workflows, and local payment support that global platforms ignore",
+          targetSegment:
+            "Independent content creators and small business owners in Southeast Asia, Latin America, and Africa",
+          valueProposition:
+            "The only platform designed specifically for emerging market creators, with native regional integrations, mobile-first workflows, and local payment support that global platforms ignore",
           keyDifferentiators: [
             "Native integration with regional social platforms and payment gateways",
             "Mobile-optimized interface designed for smartphone-primary users",
-            "Community-driven feature development with regional market expertise"
-          ]
-        }
+            "Community-driven feature development with regional market expertise",
+          ],
+        },
       };
     }
   },
@@ -894,46 +1059,90 @@ Extract competitive data and positioning strategy. Ensure all competitive advant
       });
 
       // Use enhanced JSON parser to handle markdown code blocks and formatting issues
-      const parseResult = await EnhancedJsonParser.parseWithFallback<MonetizationData>(
-        text,
-        ["primaryModel", "pricingStrategy", "revenueStreams", "keyMetrics"],
-        {
-          primaryModel: "SaaS Subscription",
-          pricingStrategy: "Tiered SaaS pricing based on number of integrations and automations",
-          businessScore: 8,
-          confidence: 7,
-          revenueModelValidation: "Validated by similar tools in market with proven demand",
-          pricingSensitivity: "Target market is price-sensitive but will pay for proven ROI",
-          revenueStreams: [
-            { name: "Monthly Subscriptions", description: "Core SaaS platform access", percentage: 70 },
-            { name: "Setup & Consulting", description: "Implementation services", percentage: 20 },
-            { name: "Premium Integrations", description: "Enterprise-grade connectors", percentage: 10 }
-          ],
-          keyMetrics: {
-            ltv: 1800,
-            ltvDescription: "Average customer lifetime value based on 18-month retention",
-            cac: 180,
-            cacDescription: "Customer acquisition cost through digital marketing",
-            ltvCacRatio: 10,
-            ltvCacRatioDescription: "Healthy 10:1 LTV:CAC ratio indicating profitable growth",
-            paybackPeriod: 6,
-            paybackPeriodDescription: "6 months to recover customer acquisition cost",
-            runway: 18,
-            runwayDescription: "18 months of operating expenses covered",
-            breakEvenPoint: "Month 14 at 500 customers",
-            breakEvenPointDescription: "Break-even when MRR reaches $25K"
-          },
-          financialProjections: [
-            { year: 1, revenue: 120000, costs: 200000, netMargin: -40, revenueGrowth: 0 },
-            { year: 2, revenue: 480000, costs: 350000, netMargin: 27, revenueGrowth: 300 },
-            { year: 3, revenue: 1200000, costs: 720000, netMargin: 40, revenueGrowth: 150 }
-          ]
-        }
-      );
+      const parseResult =
+        await EnhancedJsonParser.parseWithFallback<MonetizationData>(
+          text,
+          ["primaryModel", "pricingStrategy", "revenueStreams", "keyMetrics"],
+          {
+            primaryModel: "SaaS Subscription",
+            pricingStrategy:
+              "Tiered SaaS pricing based on number of integrations and automations",
+            businessScore: 8,
+            confidence: 7,
+            revenueModelValidation:
+              "Validated by similar tools in market with proven demand",
+            pricingSensitivity:
+              "Target market is price-sensitive but will pay for proven ROI",
+            revenueStreams: [
+              {
+                name: "Monthly Subscriptions",
+                description: "Core SaaS platform access",
+                percentage: 70,
+              },
+              {
+                name: "Setup & Consulting",
+                description: "Implementation services",
+                percentage: 20,
+              },
+              {
+                name: "Premium Integrations",
+                description: "Enterprise-grade connectors",
+                percentage: 10,
+              },
+            ],
+            keyMetrics: {
+              ltv: 1800,
+              ltvDescription:
+                "Average customer lifetime value based on 18-month retention",
+              cac: 180,
+              cacDescription:
+                "Customer acquisition cost through digital marketing",
+              ltvCacRatio: 10,
+              ltvCacRatioDescription:
+                "Healthy 10:1 LTV:CAC ratio indicating profitable growth",
+              paybackPeriod: 6,
+              paybackPeriodDescription:
+                "6 months to recover customer acquisition cost",
+              runway: 18,
+              runwayDescription: "18 months of operating expenses covered",
+              breakEvenPoint: "Month 14 at 500 customers",
+              breakEvenPointDescription: "Break-even when MRR reaches $25K",
+            },
+            financialProjections: [
+              {
+                year: 1,
+                revenue: 120000,
+                costs: 200000,
+                netMargin: -40,
+                revenueGrowth: 0,
+              },
+              {
+                year: 2,
+                revenue: 480000,
+                costs: 350000,
+                netMargin: 27,
+                revenueGrowth: 300,
+              },
+              {
+                year: 3,
+                revenue: 1200000,
+                costs: 720000,
+                netMargin: 40,
+                revenueGrowth: 150,
+              },
+            ],
+          }
+        );
 
       if (!parseResult.success) {
-        console.error("❌ Monetization Agent JSON parsing failed:", parseResult.error);
-        console.log("📝 Original response:", parseResult.originalText?.substring(0, 500));
+        console.error(
+          "❌ Monetization Agent JSON parsing failed:",
+          parseResult.error
+        );
+        console.log(
+          "📝 Original response:",
+          parseResult.originalText?.substring(0, 500)
+        );
       }
 
       const monetizationData = parseResult.data as MonetizationData;
@@ -1020,7 +1229,9 @@ Extract competitive data and positioning strategy. Ensure all competitive advant
    */
   async whatToBuildAgent(
     context: AgentContext
-  ): Promise<import("../../types/apps/idea-generation-agent").WhatToBuildData | null> {
+  ): Promise<
+    import("../../types/apps/idea-generation-agent").WhatToBuildData | null
+  > {
     try {
       const systemPrompt = `You are a product strategist focused on enabling solo founders and small teams to build a Minimal Viable Product (MVP) quickly and affordably. Your job is to provide a concise, high-level recommendation of "what to build" for a given business idea.
 
@@ -1045,12 +1256,12 @@ Return this exact JSON structure:
 
 Focus on providing a practical, confidence-boosting blueprint that clearly shows a founder what they can *start building tomorrow* with existing tools and skills. No complex or speculative tech.`;
 
-const ideaContext = context.monetization ?
-`Business Idea: ${context.competitive?.positioning?.valueProposition || 'Not specified'}
- Target Market: ${context.competitive?.positioning?.targetSegment || 'Not specified'}
+      const ideaContext = context.monetization
+        ? `Business Idea: ${context.competitive?.positioning?.valueProposition || "Not specified"}
+ Target Market: ${context.competitive?.positioning?.targetSegment || "Not specified"}
  Recommended Revenue Model: ${context.monetization.primaryModel} (Pricing Strategy: ${context.monetization.pricingStrategy})
- Key Problems Solved: ${context.problemGaps?.problems?.join(', ') || 'Not specified'}` :
-'Context not fully available';
+ Key Problems Solved: ${context.problemGaps?.problems?.join(", ") || "Not specified"}`
+        : "Context not fully available";
 
       const userPrompt = `Create a comprehensive technical implementation guide for this validated business opportunity:
 
@@ -1075,36 +1286,52 @@ Focus on specificity - provide exact feature descriptions, precise integration r
       });
 
       // Use enhanced JSON parser to handle markdown code blocks and formatting issues
-      const parseResult = await EnhancedJsonParser.parseWithFallback<import("../../types/apps/idea-generation-agent").WhatToBuildData>(
+      const parseResult = await EnhancedJsonParser.parseWithFallback<
+        import("../../types/apps/idea-generation-agent").WhatToBuildData
+      >(
         text,
-        ["platformDescription", "coreFeaturesSummary", "userInterfaces", "keyIntegrations"],
+        [
+          "platformDescription",
+          "coreFeaturesSummary",
+          "userInterfaces",
+          "keyIntegrations",
+        ],
         {
-          platformDescription: "A cloud-based SaaS platform with web dashboard and mobile companion app, featuring workflow builder and real-time monitoring for small business operations.",
+          platformDescription:
+            "A cloud-based SaaS platform with web dashboard and mobile companion app, featuring workflow builder and real-time monitoring for small business operations.",
           coreFeaturesSummary: [
             "Visual workflow builder with pre-built business templates",
-            "Real-time business data integration dashboard", 
-            "AI-powered automation recommendations engine"
+            "Real-time business data integration dashboard",
+            "AI-powered automation recommendations engine",
           ],
           userInterfaces: [
             "Business Owner Dashboard - Main workflow management interface",
             "Team Member Mobile App - Task execution and approvals",
-            "Admin Panel - User management and billing controls"
+            "Admin Panel - User management and billing controls",
           ],
           keyIntegrations: [
             "Stripe for subscription billing and payment processing",
             "QuickBooks/Xero for financial data integration",
-            "Slack/Microsoft Teams for team notifications"
+            "Slack/Microsoft Teams for team notifications",
           ],
-          pricingStrategyBuildRecommendation: "Implement freemium SaaS model with Stripe: Free tier (basic features), Pro tier $99/month (advanced features), Enterprise tier $299/month (custom integrations)"
+          pricingStrategyBuildRecommendation:
+            "Implement a tiered subscription model (Basic/Pro) using Stripe Subscriptions, with feature flags to gate Pro features.",
         }
       );
 
       if (!parseResult.success) {
-        console.error("❌ WhatToBuild Agent JSON parsing failed:", parseResult.error);
-        console.log("📝 Original response:", parseResult.originalText?.substring(0, 500));
+        console.error(
+          "❌ WhatToBuild Agent JSON parsing failed:",
+          parseResult.error
+        );
+        console.log(
+          "📝 Original response:",
+          parseResult.originalText?.substring(0, 500)
+        );
       }
 
-      const whatToBuildData = parseResult.data as import("../../types/apps/idea-generation-agent").WhatToBuildData;
+      const whatToBuildData =
+        parseResult.data as import("../../types/apps/idea-generation-agent").WhatToBuildData;
       return whatToBuildData;
     } catch (error) {
       console.error("WhatToBuildAgent error:", error);
@@ -1112,28 +1339,30 @@ Focus on specificity - provide exact feature descriptions, precise integration r
       // Return mock data as fallback for development/testing
       console.log("🔄 Using fallback mock WhatToBuild data for development");
       return {
-        platformDescription: "A cloud-based SaaS automation platform with web dashboard and mobile companion app, featuring drag-and-drop workflow builder, real-time monitoring, and AI-powered optimization suggestions for small business operations.",
+        platformDescription:
+          "A cloud-based SaaS automation platform with web dashboard and mobile companion app, featuring drag-and-drop workflow builder, real-time monitoring, and AI-powered optimization suggestions for small business operations.",
         coreFeaturesSummary: [
           "Visual workflow builder with pre-built business templates",
           "Real-time business data integration dashboard",
           "AI-powered automation recommendations engine",
           "Mobile app for workflow monitoring and approvals",
           "Team collaboration and notification system",
-          "Analytics and ROI tracking for automated processes"
+          "Analytics and ROI tracking for automated processes",
         ],
         userInterfaces: [
           "Business Owner Dashboard - Main workflow management interface",
           "Team Member Mobile App - Task execution and approvals",
-          "Admin Panel - User management and billing controls"
+          "Admin Panel - User management and billing controls",
         ],
         keyIntegrations: [
           "Stripe for subscription billing and payment processing",
           "Zapier/Make API for extended workflow capabilities",
           "QuickBooks/Xero for financial data integration",
           "Slack/Microsoft Teams for team notifications",
-          "Google Workspace/Office 365 for document automation"
+          "Google Workspace/Office 365 for document automation",
         ],
-        pricingStrategyBuildRecommendation: "Implement freemium SaaS model with Stripe: Free tier (3 workflows, basic templates), Starter tier $29/month (unlimited workflows, advanced templates), Pro tier $99/month (AI suggestions, team collaboration, analytics), Enterprise tier $299/month (custom integrations, white-label, priority support)"
+        pricingStrategyBuildRecommendation:
+          "Implement freemium SaaS model with Stripe: Free tier (3 workflows, basic templates), Starter tier $29/month (unlimited workflows, advanced templates), Pro tier $99/month (AI suggestions, team collaboration, analytics), Enterprise tier $299/month (custom integrations, white-label, priority support)",
       };
     }
   },
@@ -1142,7 +1371,10 @@ Focus on specificity - provide exact feature descriptions, precise integration r
    * Critic Agent - Silent critic that analyzes generated ideas and creates refinement prompts
    * Uses advanced reasoning to critique and improve idea quality
    */
-  async criticAgent(ideas: SynthesizedIdea[], context: AgentContext): Promise<string | null> {
+  async criticAgent(
+    ideas: SynthesizedIdea[],
+    context: AgentContext
+  ): Promise<string | null> {
     try {
       console.log("🔍 Step 6: Activating Critic Agent");
 
@@ -1172,15 +1404,19 @@ Focus on specificity - provide exact feature descriptions, precise integration r
 - Execution roadmap realism
 
 **Input Ideas for Critique:**
-${ideas.map((idea, idx) => `
+${ideas
+  .map(
+    (idea, idx) => `
 Idea ${idx + 1}: ${idea.title}
 Description: ${idea.description}
 Problem Statement: ${idea.problemStatement}
-Target Keywords: ${idea.targetKeywords.join(', ')}
+Target Keywords: ${idea.targetKeywords.join(", ")}
 Execution Complexity: ${idea.executionComplexity}/10
 Confidence Score: ${idea.confidenceScore}/10
 Narrative Hook: ${idea.narrativeHook}
-`).join('\n')}
+`
+  )
+  .join("\n")}
 
 **Context Information:**
 - Research Theme: ${context.trends?.title}
@@ -1198,11 +1434,15 @@ Return a focused refinement prompt that addresses the most important improvement
         maxTokens: 800,
       });
 
-      console.log("✅ Step 6: Critic Agent Generated Refinement Recommendations");
-      console.log("🔍 Refinement focus areas identified:", refinementPrompt.substring(0, 200) + "...");
+      console.log(
+        "✅ Step 6: Critic Agent Generated Refinement Recommendations"
+      );
+      console.log(
+        "🔍 Refinement focus areas identified:",
+        refinementPrompt.substring(0, 200) + "..."
+      );
 
       return refinementPrompt;
-
     } catch (error) {
       console.error("Critic Agent error:", error);
       return null;
@@ -1218,7 +1458,9 @@ Return a focused refinement prompt that addresses the most important improvement
     refinementPrompt?: string
   ): Promise<SynthesizedIdea | null> {
     try {
-      console.log("🧠 Step 7: Enhanced Idea Synthesis with Trend Architect Logic");
+      console.log(
+        "🧠 Step 7: Enhanced Idea Synthesis with Trend Architect Logic"
+      );
 
       const trendArchitectPrompt = `You are the Trend Architect - a world-class startup idea synthesizer who transforms market research into compelling, immediately actionable business opportunities. Your expertise lies in combining trend analysis, problem identification, and competitive intelligence into cohesive startup concepts that feel inevitable and urgent.
 
@@ -1252,12 +1494,16 @@ The result should be a smooth, engaging narrative that covers all strategic elem
 - Solution creates network effects or data advantages
 - Clear path to $1M+ ARR within 18 months
 
-${refinementPrompt ? `
+${
+  refinementPrompt
+    ? `
 **CRITICAL REFINEMENT REQUIREMENTS:**
 ${refinementPrompt}
 
 Apply these refinement recommendations to strengthen the final synthesis.
-` : ''}
+`
+    : ""
+}
 
 **Research Inputs to Synthesize:**
 TREND: ${context.trends?.title} - ${context.trends?.description}
@@ -1266,9 +1512,13 @@ COMPETITIVE POSITIONING: ${context.competitive?.positioning.valueProposition}
 MONETIZATION MODEL: ${context.monetization?.primaryModel}
 
 **Diversity Requirements (ensure novelty):**
-${context.previousIdeas && context.previousIdeas.length > 0 ? 
-  context.previousIdeas.map((idea) => `- Avoid themes similar to: "${idea.title}"`).join('\n') : 
-  '- No restrictions - create breakthrough opportunity'}
+${
+  context.previousIdeas && context.previousIdeas.length > 0
+    ? context.previousIdeas
+        .map((idea) => `- Avoid themes similar to: "${idea.title}"`)
+        .join("\n")
+    : "- No restrictions - create breakthrough opportunity"
+}
 
 **Output Requirements:**
 Generate a single, irresistible startup idea using the enhanced narrative format above, then structure it into the required JSON format. The idea should feel so compelling and obvious that someone would start building it immediately.
@@ -1327,46 +1577,68 @@ Create an idea so compelling that it becomes impossible to ignore - the kind of 
       });
 
       // Use enhanced JSON parser to handle markdown code blocks and complex responses
-      const parseResult = await EnhancedJsonParser.parseWithFallback<SynthesizedIdea>(
-        text,
-        ["title", "description", "problemStatement", "scoring"],
-        {
-          title: "Multi-Platform Content Management for Emerging Market Creators",
-          description: "Mobile-first content creation in emerging markets is experiencing explosive growth, driven by increased smartphone penetration and local social platform adoption. Independent creators in Southeast Asia and Latin America face a critical challenge: managing content across fragmented regional platforms while dealing with limited local monetization options. These creators, typically with 1K-50K followers, waste 15+ hours weekly manually distributing content across platforms and lose $600+ monthly because existing global tools lack regional integrations and local payment support. Active discussions in regional creator communities highlight frustration with platform fragmentation, while market data shows 300% growth in regional social platform usage. Current solutions either ignore local markets entirely or fail to provide the mobile-first, locally-adapted workflows these creators need. A specialized platform that unifies regional platform management, automates cross-posting, and enables local payment integration would capture this underserved market during a critical growth phase, before global platforms adapt their offerings.",
-          executiveSummary: "A mobile-first creator management platform designed specifically for emerging market creators, solving platform fragmentation and local monetization challenges.",
-          problemSolution: "Emerging market creators spend 15+ hours weekly manually managing content across regional platforms. This platform automates cross-platform posting and enables local payment integration, saving 12 hours weekly.",
-          problemStatement: "Independent content creators in emerging markets face platform fragmentation and lack local monetization tools.",
-          innovationLevel: 8,
-          timeToMarket: 5,
-          confidenceScore: 9,
-          narrativeHook: "Turn regional platform chaos into creator success",
-          targetKeywords: ["creator tools", "emerging markets", "mobile-first platform"],
-          urgencyLevel: 9,
-          executionComplexity: 6,
-          tags: ["SaaS", "Creator-Economy", "Emerging-Markets"],
-          scoring: {
-            totalScore: 85,
-            problemSeverity: 9,
-            founderMarketFit: 8,
-            technicalFeasibility: 8,
-            monetizationPotential: 9,
-            urgencyScore: 9,
-            marketTimingScore: 9,
-            executionDifficulty: 6,
-            moatStrength: 8,
-            regulatoryRisk: 3,
-          },
-          executionPlan: "Build MVP with regional platform integrations, launch beta with 50 creators in target markets.",
-          tractionSignals: "Achieve 200 creator sign-ups with 60% monthly active usage within 3 months.",
-          frameworkFit: "Geographic Arbitrage framework solving global problems with regional solutions.",
-        }
-      );
+      const parseResult =
+        await EnhancedJsonParser.parseWithFallback<SynthesizedIdea>(
+          text,
+          ["title", "description", "problemStatement", "scoring"],
+          {
+            title:
+              "Multi-Platform Content Management for Emerging Market Creators",
+            description:
+              "Mobile-first content creation in emerging markets is experiencing explosive growth, driven by increased smartphone penetration and local social platform adoption. Independent creators in Southeast Asia and Latin America face a critical challenge: managing content across fragmented regional platforms while dealing with limited local monetization options. These creators, typically with 1K-50K followers, waste 15+ hours weekly manually distributing content across platforms and lose $600+ monthly because existing global tools lack regional integrations and local payment support. Active discussions in regional creator communities highlight frustration with platform fragmentation, while market data shows 300% growth in regional social platform usage. Current solutions either ignore local markets entirely or fail to provide the mobile-first, locally-adapted workflows these creators need. A specialized platform that unifies regional platform management, automates cross-posting, and enables local payment integration would capture this underserved market during a critical growth phase, before global platforms adapt their offerings.",
+            executiveSummary:
+              "A mobile-first creator management platform designed specifically for emerging market creators, solving platform fragmentation and local monetization challenges.",
+            problemSolution:
+              "Emerging market creators spend 15+ hours weekly manually managing content across regional platforms. This platform automates cross-platform posting and enables local payment integration, saving 12 hours weekly.",
+            problemStatement:
+              "Independent content creators in emerging markets face platform fragmentation and lack local monetization tools.",
+            innovationLevel: 8,
+            timeToMarket: 5,
+            confidenceScore: 9,
+            narrativeHook: "Turn regional platform chaos into creator success",
+            targetKeywords: [
+              "creator tools",
+              "emerging markets",
+              "mobile-first platform",
+            ],
+            urgencyLevel: 9,
+            executionComplexity: 6,
+            tags: ["SaaS", "Creator-Economy", "Emerging-Markets"],
+            scoring: {
+              totalScore: 85,
+              problemSeverity: 9,
+              founderMarketFit: 8,
+              technicalFeasibility: 8,
+              monetizationPotential: 9,
+              urgencyScore: 9,
+              marketTimingScore: 9,
+              executionDifficulty: 6,
+              moatStrength: 8,
+              regulatoryRisk: 3,
+            },
+            executionPlan:
+              "Build MVP with regional platform integrations, launch beta with 50 creators in target markets.",
+            tractionSignals:
+              "Achieve 200 creator sign-ups with 60% monthly active usage within 3 months.",
+            frameworkFit:
+              "Geographic Arbitrage framework solving global problems with regional solutions.",
+          }
+        );
 
       if (!parseResult.success) {
-        console.error("❌ Enhanced Idea Synthesis JSON parsing failed:", parseResult.error);
-        console.log("📝 Original response:", parseResult.originalText?.substring(0, 500));
+        console.error(
+          "❌ Enhanced Idea Synthesis JSON parsing failed:",
+          parseResult.error
+        );
+        console.log(
+          "📝 Original response:",
+          parseResult.originalText?.substring(0, 500)
+        );
         if (parseResult.cleanedText) {
-          console.log("🧹 Cleaned response:", parseResult.cleanedText.substring(0, 500));
+          console.log(
+            "🧹 Cleaned response:",
+            parseResult.cleanedText.substring(0, 500)
+          );
         }
       }
 
@@ -1381,11 +1653,10 @@ Create an idea so compelling that it becomes impossible to ignore - the kind of 
         title: synthesizedIdea.title,
         confidenceScore: synthesizedIdea.confidenceScore,
         urgencyLevel: synthesizedIdea.urgencyLevel,
-        totalScore: synthesizedIdea.scoring.totalScore
+        totalScore: synthesizedIdea.scoring.totalScore,
       });
 
       return synthesizedIdea;
-
     } catch (error) {
       console.error("Enhanced IdeaSynthesisAgent error:", error);
 
@@ -1403,13 +1674,12 @@ Create an idea so compelling that it becomes impossible to ignore - the kind of 
         innovationLevel: 8,
         timeToMarket: 5,
         confidenceScore: 9,
-        narrativeHook:
-          "Turn regional platform chaos into creator success",
+        narrativeHook: "Turn regional platform chaos into creator success",
         targetKeywords: [
           "creator tools",
           "emerging markets",
           "mobile-first platform",
-          "regional social media"
+          "regional social media",
         ],
         urgencyLevel: 9,
         executionComplexity: 6,
@@ -1436,7 +1706,7 @@ Create an idea so compelling that it becomes impossible to ignore - the kind of 
     }
   },
 
-    /**
+  /**
    * Enhanced Master Orchestration - Runs complete enhanced idea generation pipeline
    * Implements modern multi-agent architecture with critique and refinement
    */
@@ -1446,7 +1716,7 @@ Create an idea so compelling that it becomes impossible to ignore - the kind of 
       debugLogger.info("🚀 Enhanced daily idea generation started", {
         timestamp: new Date().toISOString(),
         sessionId: Date.now().toString(),
-        version: "2.0-enhanced"
+        version: "2.0-enhanced",
       });
 
       // Get previous ideas for diversity enforcement
@@ -1468,13 +1738,22 @@ Create an idea so compelling that it becomes impossible to ignore - the kind of 
       // Step 1: Master Research Director - Set today's research parameters
       console.log("🎯 Step 1: Activating Master Research Director");
       const researchDirection = await this.masterResearchDirector(agentContext);
-      
+
       // Step 2: Enhanced Trend Research - Guided by research director
       console.log("📈 Step 2: Enhanced Trend Research");
-      debugLogger.info("📈 Starting enhanced trend research with research direction");
-      const trends = await this.trendResearchAgent(agentContext, researchDirection || undefined);
+      debugLogger.info(
+        "📈 Starting enhanced trend research with research direction"
+      );
+      const trends = await this.trendResearchAgent(
+        agentContext,
+        researchDirection || undefined
+      );
       if (!trends) {
-        debugLogger.logError("generateDailyIdea", new Error("Failed to research trends"), { step: "enhancedTrendResearch" });
+        debugLogger.logError(
+          "generateDailyIdea",
+          new Error("Failed to research trends"),
+          { step: "enhancedTrendResearch" }
+        );
         throw new Error("Failed to research trends");
       }
       agentContext.trends = trends;
@@ -1485,22 +1764,34 @@ Create an idea so compelling that it becomes impossible to ignore - the kind of 
       debugLogger.info("🎯 Starting enhanced problem gap analysis");
       const problemGaps = await this.problemGapAgent(agentContext);
       if (!problemGaps) {
-        debugLogger.logError("generateDailyIdea", new Error("Failed to analyze problems"), { step: "enhancedProblemAnalysis", trends });
+        debugLogger.logError(
+          "generateDailyIdea",
+          new Error("Failed to analyze problems"),
+          { step: "enhancedProblemAnalysis", trends }
+        );
         throw new Error("Failed to analyze problems");
       }
       agentContext.problemGaps = problemGaps;
-      debugLogger.info("✅ Enhanced problem gap analysis completed", { problemGaps });
+      debugLogger.info("✅ Enhanced problem gap analysis completed", {
+        problemGaps,
+      });
 
       // Step 4: Enhanced Competitive Intelligence - Strategic positioning
       console.log("🏆 Step 4: Enhanced Competitive Intelligence");
       debugLogger.info("🏆 Starting enhanced competitive intelligence");
       const competitive = await this.competitiveIntelligenceAgent(agentContext);
       if (!competitive) {
-        debugLogger.logError("generateDailyIdea", new Error("Failed to research competition"), { step: "enhancedCompetitive" });
+        debugLogger.logError(
+          "generateDailyIdea",
+          new Error("Failed to research competition"),
+          { step: "enhancedCompetitive" }
+        );
         throw new Error("Failed to research competition");
       }
       agentContext.competitive = competitive;
-      debugLogger.info("✅ Enhanced competitive intelligence completed", { competitive });
+      debugLogger.info("✅ Enhanced competitive intelligence completed", {
+        competitive,
+      });
 
       // Step 5: Enhanced Monetization Strategy
       console.log("💰 Step 5: Enhanced Monetization Strategy");
@@ -1517,11 +1808,17 @@ Create an idea so compelling that it becomes impossible to ignore - the kind of 
 
       // Step 7: Critic Agent - Analyze and create refinement prompt
       console.log("🔍 Step 7: Critic Agent Analysis");
-      const refinementPrompt = await this.criticAgent([initialIdea], agentContext);
+      const refinementPrompt = await this.criticAgent(
+        [initialIdea],
+        agentContext
+      );
 
       // Step 8: Final Refined Synthesis - Apply critic feedback
       console.log("🎨 Step 8: Final Refined Idea Synthesis");
-      const finalIdea = await this.ideaSynthesisAgent(agentContext, refinementPrompt || undefined);
+      const finalIdea = await this.ideaSynthesisAgent(
+        agentContext,
+        refinementPrompt || undefined
+      );
       if (!finalIdea) throw new Error("Failed to create final refined idea");
 
       const idea = finalIdea;
@@ -1572,7 +1869,8 @@ Create an idea so compelling that it becomes impossible to ignore - the kind of 
               coreFeaturesSummary: whatToBuild.coreFeaturesSummary,
               userInterfaces: whatToBuild.userInterfaces,
               keyIntegrations: whatToBuild.keyIntegrations,
-              pricingStrategyBuildRecommendation: whatToBuild.pricingStrategyBuildRecommendation,
+              pricingStrategyBuildRecommendation:
+                whatToBuild.pricingStrategyBuildRecommendation,
               dailyIdeaId: createdIdea.id,
             },
           });
@@ -1634,33 +1932,39 @@ Create an idea so compelling that it becomes impossible to ignore - the kind of 
         );
       }
 
-      console.log("🎉 Enhanced Daily Idea Generated Successfully:", dailyIdea.id);
+      console.log(
+        "🎉 Enhanced Daily Idea Generated Successfully:",
+        dailyIdea.id
+      );
       console.log("📊 Final Idea Summary:", {
         title: idea.title,
         confidenceScore: idea.confidenceScore,
         urgencyLevel: idea.urgencyLevel,
         totalScore: idea.scoring.totalScore,
         timeToMarket: idea.timeToMarket,
-        tags: idea.tags
+        tags: idea.tags,
       });
-      
-      debugLogger.info("🎉 Enhanced daily idea generation completed successfully", {
-        ideaId: dailyIdea.id,
-        pipelineVersion: "2.0-enhanced",
-        totalSteps: 9,
-        idea: {
-          title: idea.title,
-          confidenceScore: idea.confidenceScore,
-          urgencyLevel: idea.urgencyLevel
+
+      debugLogger.info(
+        "🎉 Enhanced daily idea generation completed successfully",
+        {
+          ideaId: dailyIdea.id,
+          pipelineVersion: "2.0-enhanced",
+          totalSteps: 9,
+          idea: {
+            title: idea.title,
+            confidenceScore: idea.confidenceScore,
+            urgencyLevel: idea.urgencyLevel,
+          },
         }
-      });
+      );
 
       return dailyIdea.id;
     } catch (error) {
       console.error("❌ Enhanced Daily Idea Generation Failed:", error);
       debugLogger.logError("Enhanced Daily Idea Generation", error as Error, {
         pipelineVersion: "2.0-enhanced",
-        failurePoint: "pipeline execution"
+        failurePoint: "pipeline execution",
       });
       return null;
     }
