@@ -6,14 +6,30 @@ import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { ArrowUpRight, Settings } from "lucide-react";
 import { useForm } from "@tanstack/react-form";
+import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import { toast } from "sonner";
 import PersonalizationModal, { type PersonalizationData } from "./PersonalizationModal";
+import { trpc } from "@/utils/trpc";
 
 const IdeaForm = () => {
   const router = useRouter();
   const [personalizationData, setPersonalizationData] = useState<PersonalizationData | null>(null);
   const [showPersonalizationModal, setShowPersonalizationModal] = useState(false);
+
+  // Use trpc mutation for generating ideas on demand
+  const generateIdeasMutation = useMutation(trpc.ideas.generateOnDemand.mutationOptions({
+    onSuccess: (data: any[]) => {
+      toast.success(`🎉 We've found ${data.length} golden nuggets for you!`);
+      // Redirect to results page with the generated idea IDs
+      const ideaIds = data.map((idea: any) => idea.id).join(',');
+      router.push(`/browse/results?ids=${ideaIds}`);
+    },
+    onError: (error: any) => {
+      toast.error("❌ An unexpected error occurred while digging for ideas. Please try again.");
+      console.error("Generate ideas error:", error);
+    },
+  }));
 
   const form = useForm({
     defaultValues: {
@@ -27,8 +43,8 @@ const IdeaForm = () => {
         sessionStorage.setItem('personalizationData', JSON.stringify(personalizationData));
       }
       
-      // Redirect immediately to browse page with search query
-      router.push(`/browse?q=${encodeURIComponent(value.idea)}`);
+      // Call the generate ideas mutation instead of redirecting to browse
+      generateIdeasMutation.mutate({ query: value.idea });
     },
   });
 
@@ -95,9 +111,9 @@ const IdeaForm = () => {
                   <Button
                     type="submit"
                     className="absolute right-4 bottom-4"
-                    disabled={!canSubmit || !field.state.value.trim()}
+                    disabled={!canSubmit || !field.state.value.trim() || generateIdeasMutation.isPending}
                   >
-                    {isSubmitting ? "Mining..." : "Start Mining"}
+                    {generateIdeasMutation.isPending ? "Mining..." : "Start Mining"}
                     <ArrowUpRight className="h-4 w-4" />
                   </Button>
                 )}

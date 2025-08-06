@@ -35,6 +35,7 @@ model User {
   savedIdeas SavedIdeas[]
   claimedIdeas ClaimedIdeas[]
   viewedIdeas ViewedIdeas[]
+  userGeneratedIdeas UserGeneratedIdea[]
   @@unique([email])
   @@map("user")
 }
@@ -470,4 +471,29 @@ model ViewedIdeas {
   idea DailyIdea @relation(fields: [ideaId], references: [id], onDelete: Cascade)
   
   @@unique([userId, ideaId])
+}
+
+model UserGeneratedIdea {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prompt    String   // The user's original prompt
+
+  // Core idea fields for quick access and display
+  title             String
+  description       String
+  executiveSummary  String
+  problemStatement  String
+  narrativeHook     String
+  tags              String[]
+  confidenceScore   Int
+
+  // Store the full, deeply nested idea object as JSON.
+  // This avoids creating 10+ new tables for this feature.
+  fullIdeaDataJson String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 } 

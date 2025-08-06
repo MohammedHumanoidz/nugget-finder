@@ -11,6 +11,7 @@ import {
   getUserClaimedIdeas,
   getIdeasForUser,
 } from "../utils/idea-management";
+import IdeaGenerationAgentController from "../apps/idea-generation-agent/idea-generation-agent.controller";
 
 export const ideasRouter = router({
   // Get user's idea limits and remaining quotas
@@ -296,4 +297,111 @@ export const ideasRouter = router({
       return [];
     }
   }),
+
+  // Generate ideas on demand based on user prompt
+  generateOnDemand: protectedProcedure
+    .input(
+      z.object({
+        query: z.string().min(1, "Query cannot be empty"),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      console.log(`[DEBUG] generateOnDemand called with userId: ${userId}, query: "${input.query}"`);
+      
+      try {
+        // Call the controller to run the generation pipeline
+        const generatedIdeas = await IdeaGenerationAgentController.generateIdeasOnDemand(
+          input.query,
+          userId
+        );
+        
+        console.log(`[DEBUG] Generated ${generatedIdeas.length} ideas for user ${userId}`);
+        return generatedIdeas;
+      } catch (error) {
+        console.error("[ERROR] Failed to generate ideas on demand:", error);
+        throw new Error("Failed to generate ideas. Please try again.");
+      }
+    }),
+
+  // Get user's generated ideas
+  getGeneratedIdeas: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).default(20),
+        offset: z.number().min(0).default(0),
+      }).optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const { limit = 20, offset = 0 } = input || {};
+      
+      try {
+        const generatedIdeas = await prisma.userGeneratedIdea.findMany({
+          where: { userId },
+          orderBy: { createdAt: 'desc' },
+          take: limit,
+          skip: offset,
+          select: {
+            id: true,
+            prompt: true,
+            title: true,
+            description: true,
+            executiveSummary: true,
+            problemStatement: true,
+            narrativeHook: true,
+            tags: true,
+            confidenceScore: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        });
+
+        return generatedIdeas;
+      } catch (error) {
+        console.error("Error getting generated ideas:", error);
+        return [];
+      }
+    }),
+
+  // Get full details of a user-generated idea by ID
+  getGeneratedIdeaById: protectedProcedure
+    .input(
+      z.object({
+        ideaId: z.string().uuid(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const { ideaId } = input;
+      
+      try {
+        const idea = await prisma.userGeneratedIdea.findFirst({
+          where: {
+            id: ideaId,
+            userId, // Ensure user can only access their own generated ideas
+          },
+        });
+
+        if (!idea) {
+          throw new Error('Generated idea not found or access denied');
+        }
+
+        // Parse the full idea data from JSON
+        let fullIdeaData = null;
+        try {
+          fullIdeaData = JSON.parse(idea.fullIdeaDataJson);
+        } catch (parseError) {
+          console.error("Error parsing full idea data JSON:", parseError);
+        }
+
+        return {
+          ...idea,
+          fullIdeaData,
+        };
+      } catch (error) {
+        console.error("Error getting generated idea by ID:", error);
+        throw new Error("Failed to retrieve idea details");
+      }
+    }),
 });

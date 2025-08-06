@@ -124,4 +124,5 @@ export interface AgentContext {
 	monetization?: MonetizationData;
 	whatToBuild?: WhatToBuildData;
 	previousIdeas?: any[];
+	userPrompt?: string; // For on-demand idea generation based on user query
 }
