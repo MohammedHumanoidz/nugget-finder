@@ -9,6 +9,9 @@ type AnimationState = 'scavenging' | 'mining' | 'found';
 interface AnimatedSearchLoaderProps {
   searchQuery: string;
   onAnimationComplete?: () => void;
+  progressMessage?: string;
+  imageState?: string;
+  currentStep?: string;
 }
 
 // Simple particle component for subtle effects
@@ -48,49 +51,83 @@ const Particles = ({ show, type }: { show: boolean; type: 'dust' | 'sparkle' }) 
 
 export default function AnimatedSearchLoader({ 
   searchQuery, 
-  onAnimationComplete 
+  onAnimationComplete,
+  progressMessage,
+  imageState,
+  currentStep
 }: AnimatedSearchLoaderProps) {
   const [animationState, setAnimationState] = useState<AnimationState>('scavenging');
 
+  // Update animation state based on current step or use timer fallback
   useEffect(() => {
-    const timer1 = setTimeout(() => {
-      setAnimationState('mining');
-    }, 1500);
-
-    const timer2 = setTimeout(() => {
-      setAnimationState('found');
-    }, 4000);
-
-    const timer3 = setTimeout(() => {
-      if (onAnimationComplete) {
-        onAnimationComplete();
+    if (currentStep) {
+      // Use real data to determine animation state
+      if (currentStep.includes('Research') || currentStep === 'Initializing') {
+        setAnimationState('scavenging');
+      } else if (currentStep.includes('Analysis') || currentStep.includes('Mining') || currentStep.includes('Generation')) {
+        setAnimationState('mining');
+      } else if (currentStep.includes('Complete') || currentStep.includes('Finished')) {
+        setAnimationState('found');
       }
-    }, 6500);
+    } else {
+      // Fallback to timer-based animation if no real data
+      const timer1 = setTimeout(() => {
+        setAnimationState('mining');
+      }, 1500);
 
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-    };
-  }, [onAnimationComplete]);
+      const timer2 = setTimeout(() => {
+        setAnimationState('found');
+      }, 4000);
+
+      const timer3 = setTimeout(() => {
+        if (onAnimationComplete) {
+          onAnimationComplete();
+        }
+      }, 6500);
+
+      return () => {
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+        clearTimeout(timer3);
+      };
+    }
+  }, [currentStep, onAnimationComplete]);
+
+  // Map imageState to image files
+  const getImageForState = (state?: string) => {
+    switch (state) {
+      case 'confused': return "/nuggetfinder-confused.png";
+      case 'digging': return "/nuggetfinder-digging-hard.png";
+      case 'happy': return "/nuggetfinder-super-happy.png";
+      case 'found': return "/checkout-this-nugget.png";
+      default: return "/nuggetfinder-confused.png";
+    }
+  };
 
   const content = {
     scavenging: {
-      image: "/nuggetfinder-confused.png",
-      title: "Scavenging the cave...",
-      description: "Looking for the best opportunities"
+      image: imageState ? getImageForState(imageState) : "/nuggetfinder-confused.png",
+      title: currentStep || "Scavenging the cave...",
+      description: progressMessage || "Looking for the best opportunities"
     },
     mining: {
-      image: "/nuggetfinder-digging-hard.png", 
-      title: "Mining the nuggets...",
-      description: "Analyzing thousands of startup ideas"
+      image: imageState ? getImageForState(imageState) : "/nuggetfinder-digging-hard.png",
+      title: currentStep || "Mining the nuggets...",
+      description: progressMessage || "Analyzing thousands of startup ideas"
     },
     found: {
-      image: "/nuggetfinder-super-happy.png",
-      title: "Nuggets found!",
-      description: "These nuggets look good, might just run away with them!"
+      image: imageState ? getImageForState(imageState) : "/nuggetfinder-super-happy.png",
+      title: currentStep || "Nuggets found!",
+      description: progressMessage || "These nuggets look good, might just run away with them!"
     }
   };
+
+  // If we have dynamic data, use the current state directly
+  const currentContent = progressMessage || currentStep ? {
+    image: getImageForState(imageState),
+    title: currentStep || "Processing...",
+    description: progressMessage || "Working on your request..."
+  } : content[animationState];
 
   const getCharacterAnimation = () => {
     switch (animationState) {
@@ -153,8 +190,8 @@ export default function AnimatedSearchLoader({
                 }}
               >
                 <Image
-                  src={content[animationState].image}
-                  alt={content[animationState].title}
+                  src={currentContent.image}
+                  alt={currentContent.title}
                   width={250}
                   height={250}
                   className="mx-auto"
@@ -181,10 +218,10 @@ export default function AnimatedSearchLoader({
               className="space-y-3"
             >
               <h2 className="text-3xl md:text-4xl font-bold text-primary">
-                {content[animationState].title}
+                {currentContent.title}
               </h2>
               <p className="text-lg text-muted-foreground">
-                {content[animationState].description}
+                {currentContent.description}
               </p>
             </motion.div>
 

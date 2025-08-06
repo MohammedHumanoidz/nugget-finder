@@ -19,7 +19,7 @@ export class ProblemGapAgent {
 
 **Problem Identification Criteria:**
 1. **Acute & Present**: Problems happening RIGHT NOW, costing real money/time/opportunities daily
-2. **Persona-Specific**: Focus on specific archetypes (e.g., "independent podcast creators in Southeast Asia" vs "content creators generally")
+2. **Persona-Specific**: Focus on specific archetypes (e.g., "independent podcast creators with limited resources" vs "content creators generally")
 3. **Software-Solvable**: Problems that can be addressed with SaaS, APIs, web/mobile apps, or lightweight services within <$10K MVP budget
 4. **Trend-Amplified**: Problems that are intensified or newly created by the identified trend
 5. **Quantifiable Impact**: Problems with measurable business impact (lost revenue, wasted time, competitive disadvantage)
@@ -239,9 +239,9 @@ Extract problems and gaps with maximum specificity and business impact quantific
             impact:
               "Content creators lose 40-60% of potential revenue from regional sponsorships and audience monetization",
             target:
-              "Independent content creators and influencers in Southeast Asia, Latin America, and Africa",
+              "Independent content creators and influencers with limited resources",
             opportunity:
-              "Regional-first content management platform with native integrations for local platforms, mobile-optimized workflows, and emerging market payment systems",
+              "Creator-focused content management platform with native integrations for multiple platforms, mobile-optimized workflows, and streamlined monetization systems",
           },
           {
             title: "Hybrid Commerce Inventory Intelligence",

@@ -36,7 +36,7 @@ ${
 1. **Human-Validated Signals**: The trend MUST be backed by genuine online community engagement (Reddit threads with 500+ comments, viral Twitter discussions, Product Hunt buzz, active forum debates)
 2. **Software-Solvable**: Focus on trends creating immediate opportunities for SaaS, APIs, web/mobile apps, or lightweight services
 3. **Timing-Sensitive**: Identify trends in the "early adopter" phase - not too early (theoretical) or too late (saturated)
-4. **Geographic Relevance**: Consider how the trend manifests differently in the target geographic region (even if broad, how does it apply there?)
+4. **Global Applicability**: Focus on trends that can create opportunities across different markets and regions worldwide
 5. **Buildable Solutions**: Ensure the trend opens paths to <$10K MVP, 3-6 month development cycle solutions
 
 **Validation Framework:**
@@ -47,12 +47,12 @@ ${
 
 Return structured JSON with enhanced data:
 {
-  "title": "string (Compelling, specific trend title that captures the essence and geographic/industry context)",
-  "description": "string (Rich narrative explaining the trend's emergence, current traction, and implications for the target region/industry. Include specific examples of online community engagement)",
+  "title": "string (Compelling, specific trend title that captures the essence and industry context)",
+  "description": "string (Rich narrative explaining the trend's emergence, current traction, and global implications. Include specific examples of online community engagement)",
   "trendStrength": number (1-10, weighted for current market momentum),
   "catalystType": "TECHNOLOGY_BREAKTHROUGH" | "REGULATORY_CHANGE" | "MARKET_SHIFT" | "SOCIAL_TREND" | "ECONOMIC_FACTOR",
   "timingUrgency": number (1-10, how time-sensitive this opportunity window is),
-  "supportingData": ["Specific Reddit thread or community discussion", "Key news event or policy change", "Quantitative metrics if available", "Geographic-specific evidence"]
+  "supportingData": ["Specific Reddit thread or community discussion", "Key news event or policy change", "Quantitative metrics if available", "Global market evidence and adoption signals"]
 }
 
 Focus on trends that are currently generating genuine excitement and discussion in real communities, not theoretical future possibilities.`;
@@ -64,7 +64,7 @@ ${
   researchDirection
     ? `
 Focus your research on: ${researchDirection.researchTheme}
-Geographic context: ${researchDirection.geographicFocus}
+Market context: Global market opportunities
 Industry vertical: ${researchDirection.industryRotation}
 
 Research approach: ${researchDirection.researchApproach}

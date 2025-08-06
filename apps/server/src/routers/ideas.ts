@@ -12,6 +12,7 @@ import {
   getIdeasForUser,
 } from "../utils/idea-management";
 import IdeaGenerationAgentController from "../apps/idea-generation-agent/idea-generation-agent.controller";
+import { onDemandIdeaGenerationJob } from "../trigger/on-demand-idea-generation";
 
 export const ideasRouter = router({
   // Get user's idea limits and remaining quotas
@@ -298,7 +299,7 @@ export const ideasRouter = router({
     }
   }),
 
-  // Generate ideas on demand based on user prompt
+  // Generate ideas on demand based on user prompt (background job version)
   generateOnDemand: protectedProcedure
     .input(
       z.object({
@@ -310,17 +311,121 @@ export const ideasRouter = router({
       console.log(`[DEBUG] generateOnDemand called with userId: ${userId}, query: "${input.query}"`);
       
       try {
-        // Call the controller to run the generation pipeline
-        const generatedIdeas = await IdeaGenerationAgentController.generateIdeasOnDemand(
-          input.query,
-          userId
-        );
+        console.log(`[DEBUG] Creating idea generation request for user ${userId}`);
         
-        console.log(`[DEBUG] Generated ${generatedIdeas.length} ideas for user ${userId}`);
-        return generatedIdeas;
+        // Create a new idea generation request record
+        const ideaGenerationRequest = await prisma.ideaGenerationRequest.create({
+          data: {
+            userId,
+            prompt: input.query,
+            status: "PENDING",
+            currentStep: "Initializing",
+            progressMessage: "Preparing to generate your business ideas...",
+            imageState: "confused"
+          }
+        });
+
+        console.log(`[DEBUG] Created request ${ideaGenerationRequest.id}, triggering background job`);
+
+        // For now, skip background job and go directly to fallback execution for testing  
+        console.log("[DEBUG] Executing fallback generation directly");
+        
+        // Execute the generation directly in the background (fire and forget)
+        setImmediate(async () => {
+          try {
+            console.log("[DEBUG] Starting fallback execution...");
+            await prisma.ideaGenerationRequest.update({
+              where: { id: ideaGenerationRequest.id },
+              data: {
+                status: "RUNNING",
+                currentStep: "Direct Execution", 
+                progressMessage: "Running idea generation directly...",
+                imageState: "digging"
+              }
+            });
+
+            console.log("[DEBUG] Updated status to RUNNING, calling generateIdeasOnDemand...");
+            // Use the existing controller method
+            const generatedIdeas = await IdeaGenerationAgentController.generateIdeasOnDemand(
+              input.query,
+              userId
+            );
+
+            console.log(`[DEBUG] Generated ${generatedIdeas.length} ideas, updating to COMPLETED...`);
+            await prisma.ideaGenerationRequest.update({
+              where: { id: ideaGenerationRequest.id },
+              data: {
+                status: "COMPLETED",
+                currentStep: "Complete",
+                progressMessage: `🎉 Found ${generatedIdeas.length} amazing business opportunities for you!`,
+                imageState: "found",
+                generatedIdeaIds: generatedIdeas.map((idea: any) => idea.id)
+              }
+            });
+            console.log("[DEBUG] Fallback execution completed successfully!");
+          } catch (fallbackError) {
+            console.error("[ERROR] Fallback execution failed", fallbackError);
+            await prisma.ideaGenerationRequest.update({
+              where: { id: ideaGenerationRequest.id },
+              data: {
+                status: "FAILED",
+                currentStep: "Failed",
+                progressMessage: "Failed to generate ideas. Please try again.",
+                imageState: "confused",
+                errorMessage: fallbackError instanceof Error ? fallbackError.message : "Unknown error"
+              }
+            });
+          }
+        });
+        
+        return { requestId: ideaGenerationRequest.id };
       } catch (error) {
         console.error("[ERROR] Failed to generate ideas on demand:", error);
         throw new Error("Failed to generate ideas. Please try again.");
+      }
+    }),
+
+  // Get the status of an idea generation request
+  getGenerationStatus: protectedProcedure
+    .input(
+      z.object({
+        requestId: z.string().uuid("Invalid request ID"),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      
+      try {
+        console.log(`[DEBUG] Getting generation status for request ${input.requestId}, user ${userId}`);
+        
+        const request = await prisma.ideaGenerationRequest.findFirst({
+          where: {
+            id: input.requestId,
+            userId // Ensure user can only access their own requests
+          }
+        });
+
+        if (!request) {
+          console.log(`[DEBUG] Request ${input.requestId} not found for user ${userId}`);
+          throw new Error("Request not found or access denied");
+        }
+
+        console.log(`[DEBUG] Found request ${input.requestId}, status: ${request.status}, step: ${request.currentStep}`);
+
+        return {
+          requestId: request.id,
+          status: request.status,
+          currentStep: request.currentStep,
+          progressMessage: request.progressMessage,
+          imageState: request.imageState,
+          generatedIdeaIds: request.generatedIdeaIds,
+          errorMessage: request.errorMessage,
+          createdAt: request.createdAt,
+          updatedAt: request.updatedAt
+        };
+      } catch (error) {
+        console.error("[ERROR] Failed to get generation status:", error);
+        throw new Error("Failed to get generation status");
       }
     }),
 

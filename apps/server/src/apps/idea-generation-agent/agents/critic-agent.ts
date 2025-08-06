@@ -56,7 +56,7 @@ Narrative Hook: ${idea.narrativeHook}
 
 **Context Information:**
 - Research Theme: ${context.trends?.title}
-- Geographic Focus: Research targeted specific regions/markets
+- Market Focus: Global market opportunities
 - Competitive Landscape: ${context.competitive?.competition.marketConcentrationLevel} concentration
 
 Conduct a thorough critique focusing on the most critical weaknesses that could prevent startup success. Generate specific, actionable refinement recommendations that will strengthen the ideas while maintaining their core viability.

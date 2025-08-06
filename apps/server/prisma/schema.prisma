@@ -36,6 +36,7 @@ model User {
   claimedIdeas ClaimedIdeas[]
   viewedIdeas ViewedIdeas[]
   userGeneratedIdeas UserGeneratedIdea[]
+  ideaGenerationRequests IdeaGenerationRequest[]
   @@unique([email])
   @@map("user")
 }
@@ -496,4 +497,34 @@ model UserGeneratedIdea {
   updatedAt DateTime @updatedAt
 
   @@index([userId])
+}
+
+enum IdeaGenerationStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+model IdeaGenerationRequest {
+  id              String                @id @default(uuid())
+  userId          String
+  user            User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prompt          String                // The user's original prompt
+  status          IdeaGenerationStatus  @default(PENDING)
+  
+  // Progress tracking
+  currentStep     String?               // Current step being executed
+  progressMessage String?               // User-friendly progress message
+  imageState      String?               // Which image to show (confused, digging, happy, found)
+  
+  // Results
+  generatedIdeaIds String[]             // Array of generated idea IDs when completed
+  errorMessage     String?              // Error message if failed
+  
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  
+  @@index([userId])
+  @@index([status])
 } 

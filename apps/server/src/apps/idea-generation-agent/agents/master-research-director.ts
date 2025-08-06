@@ -43,7 +43,7 @@ export class MasterResearchDirector {
 Return this exact JSON structure:
 {
   "researchTheme": "string (Research direction tailored to user's prompt, e.g., 'AI-Powered Healthcare Solutions for Mental Health' or 'Sustainable Energy Management Platforms for Small Businesses')",
-  "geographicFocus": "string (Target market context relevant to user's domain, e.g., 'Global Market - Remote-First Solutions' or 'North American Healthcare Market')",
+  "geographicFocus": "string (Always use 'Global Market' to ensure worldwide applicability)",
   "industryRotation": "string (The industry vertical that aligns with user's interests and expertise)",
   "diversityMandates": ["mandate 1: focus on user's specific domain", "mandate 2: align with user's apparent expertise level", "mandate 3: explore both technical and business opportunities in their area"],
   "researchApproach": "string (How the trend research should be conducted specific to user's domain - what communities, signals, and validation sources to prioritize)"
@@ -53,9 +53,9 @@ Return this exact JSON structure:
 - Potential professional background or expertise
 - Specific problems or industries they're interested in
 - Level of technical vs business focus
-- Geographic or market preferences (if any)
+- Solution scalability and global applicability
 
-Tailor your research theme to generate ideas that would be actionable and relevant for this user.`
+Focus on creating globally applicable solutions that can work across different markets and regions. Avoid region-specific constraints or dependencies.`
         : `You are the Master Research Director for a world-class startup opportunity discovery system. Your role is to establish today's research parameters that will drive the entire pipeline toward discovering genuinely novel, diverse startup opportunities.
 
 **Core Mission:** Generate a research theme for today that ensures maximum diversity from previously generated ideas while maintaining commercial viability and software-first focus.
@@ -63,15 +63,15 @@ Tailor your research theme to generate ideas that would be actionable and releva
 **CRITICAL DIVERSITY ENFORCEMENT:** Based on the previously generated ideas, you MUST choose a research direction that is fundamentally different in:
 - Industry/vertical focus
 - Target user demographic  
-- Geographic/cultural context
 - Business model approach (B2B vs B2C vs Creative/Original)
 - Technology stack or approach
+- Problem scale and complexity
 
-**Geographic Rotation Strategy (More Tech-Centric & Broad):** Rotate research focus across:
-- **Major Innovation Hubs:** Silicon Valley, New York, London, Berlin, Tel Aviv, Bangalore, Singapore, Tokyo.
-- **Emerging Tech Markets:** Latin America, Southeast Asia, Africa (focus on digital transformation & mobile-first solutions).
-- **Global Digital-First:** Remote work tools, decentralized technologies, virtual economies, creator platforms.
-- **Underserved Regions with Tech Potential:** Regions ripe for digital disruption or lacking robust tech infrastructure.
+**Global Market Strategy (Tech-Centric & Universally Applicable):** Focus on solutions that work across markets:
+- **Digital-First Solutions:** Remote work tools, decentralized technologies, virtual economies, creator platforms.
+- **Universal Business Problems:** Productivity, communication, data management, security, automation.
+- **Scalable Technologies:** Cloud-based platforms, API-first solutions, mobile-native applications.
+- **Cross-Cultural Applications:** Solutions that transcend geographic and cultural boundaries.
 
 **Industry Rotation Mandates (More Tech & Diversity Focused):**
 - If previous: Enterprise SaaS → Focus on: Developer Tools, Creator Economy, AI Infrastructure, Deep Tech
@@ -81,8 +81,8 @@ Tailor your research theme to generate ideas that would be actionable and releva
 
 Return this exact JSON structure:
 {
-  "researchTheme": "string (Today's focused research direction, e.g., 'Decentralized Identity Solutions for African Startups' or 'AI-Powered Drug Discovery Platforms in Major Innovation Hubs')",
-  "geographicFocus": "string (Broader region/market context, e.g., 'Emerging Tech Markets - Southeast Asia' or 'Major Innovation Hubs - Europe')",
+  "researchTheme": "string (Today's focused research direction, e.g., 'AI-Powered Identity Verification for Digital Platforms' or 'Automated Drug Discovery Platforms for Pharmaceutical Research')",
+  "geographicFocus": "string (Always use 'Global Market' to ensure worldwide applicability)",
   "industryRotation": "string (The industry vertical to explore today, ensuring diversity from previous, focusing on tech-forward areas)",
   "diversityMandates": ["mandate 1: avoid X from previous ideas", "mandate 2: focus on Y demographic not covered before", "mandate 3: explore Z business model not used recently"],
   "researchApproach": "string (How the trend research should be conducted - what communities, signals, and validation sources to prioritize)"

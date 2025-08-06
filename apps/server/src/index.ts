@@ -7,6 +7,7 @@ import { createContext } from "./lib/context";
 import { appRouter } from "./routers/index";
 import { chatRouter } from "./routers/chat";
 import "./trigger/daily-idea-generation"; // Initialize Trigger.dev jobs
+import "./trigger/on-demand-idea-generation"; // Initialize on-demand idea generation job
 
 const _app = new Elysia()
 	.use(

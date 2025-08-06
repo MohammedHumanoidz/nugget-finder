@@ -80,7 +80,7 @@ Generate a single, irresistible startup idea using the enhanced narrative format
 
 **CRITICAL TITLE REQUIREMENTS:**
 - NO startup names, company names, or product names (avoid names like "ChatOrderSync", "FlowGenius", "Nordic Platform", etc.)
-- Focus on the SOLUTION CATEGORY and TARGET MARKET (e.g., "Multi-Channel Inventory Management for Nordic Artisans" instead of "Nordic Ceramicists Platform")
+- Focus on the SOLUTION CATEGORY and TARGET MARKET (e.g., "Multi-Channel Inventory Management for Independent Artisans" instead of "Artisan Platform")
 - Describe WHAT the solution does and WHO it serves, not what it's called
 - Keep titles descriptive and professional, focusing on the business value
 
@@ -104,7 +104,7 @@ Return JSON structure:
   "targetKeywords": ["software keyword 1", "niche keyword 2", "industry keyword 3"],
   "urgencyLevel": number (1-10),
   "executionComplexity": number (1-10 for focused software MVP),
-  "tags": ["SaaS", "specific-industry", "geographic-region", "trend-category"],
+  "tags": ["SaaS", "specific-industry", "global-market", "trend-category"],
   "scoring": {
     "totalScore": number,
     "problemSeverity": number (1-10),
@@ -138,15 +138,15 @@ Create an idea so compelling that it becomes impossible to ignore - the kind of 
           ["title", "description", "problemStatement", "scoring"],
           {
             title:
-              "Multi-Platform Content Management for Emerging Market Creators",
+              "Multi-Platform Content Management for Independent Creators",
             description:
-              "Mobile-first content creation in emerging markets is experiencing explosive growth, driven by increased smartphone penetration and local social platform adoption. Independent creators in Southeast Asia and Latin America face a critical challenge: managing content across fragmented regional platforms while dealing with limited local monetization options. These creators, typically with 1K-50K followers, waste 15+ hours weekly manually distributing content across platforms and lose $600+ monthly because existing global tools lack regional integrations and local payment support. Active discussions in regional creator communities highlight frustration with platform fragmentation, while market data shows 300% growth in regional social platform usage. Current solutions either ignore local markets entirely or fail to provide the mobile-first, locally-adapted workflows these creators need. A specialized platform that unifies regional platform management, automates cross-posting, and enables local payment integration would capture this underserved market during a critical growth phase, before global platforms adapt their offerings.",
+              "Mobile-first content creation is experiencing explosive growth globally, driven by increased smartphone penetration and diverse social platform adoption. Independent creators worldwide face a critical challenge: managing content across multiple platforms while dealing with complex monetization workflows. These creators, typically with 1K-50K followers, waste 15+ hours weekly manually distributing content across platforms and lose $600+ monthly because existing tools lack unified platform integrations and streamlined payment processing. Active discussions in creator communities highlight frustration with platform fragmentation, while market data shows 300% growth in mobile content creation. Current solutions either focus on enterprise clients or fail to provide the mobile-first, creator-focused workflows that independent creators need. A specialized platform that unifies multi-platform management, automates cross-posting, and enables seamless monetization integration would capture this underserved market during a critical growth phase, before enterprise platforms adapt their offerings.",
             executiveSummary:
-              "A mobile-first creator management platform designed specifically for emerging market creators, solving platform fragmentation and local monetization challenges.",
+              "A mobile-first creator management platform designed specifically for independent creators, solving platform fragmentation and monetization challenges.",
             problemSolution:
-              "Emerging market creators spend 15+ hours weekly manually managing content across regional platforms. This platform automates cross-platform posting and enables local payment integration, saving 12 hours weekly.",
+              "Independent creators spend 15+ hours weekly manually managing content across multiple platforms. This platform automates cross-platform posting and enables streamlined monetization, saving 12 hours weekly.",
             problemStatement:
-              "Independent content creators in emerging markets face platform fragmentation and lack local monetization tools.",
+              "Independent content creators face platform fragmentation and lack unified monetization tools.",
             innovationLevel: 8,
             timeToMarket: 5,
             confidenceScore: 9,
@@ -217,15 +217,15 @@ Create an idea so compelling that it becomes impossible to ignore - the kind of 
 
       console.log("🔄 Using enhanced fallback synthesis data");
       return {
-        title: "Multi-Platform Content Management for Emerging Market Creators",
+        title: "Multi-Platform Content Management for Independent Creators",
         description:
-          "Mobile-first content creation in emerging markets is experiencing explosive growth, driven by increased smartphone penetration and local social platform adoption. Independent creators in Southeast Asia and Latin America face a critical challenge: managing content across fragmented regional platforms while dealing with limited local monetization options. These creators, typically with 1K-50K followers, waste 15+ hours weekly manually distributing content across platforms and lose $600+ monthly because existing global tools lack regional integrations and local payment support. Active discussions in regional creator communities highlight this frustration, while market data shows 300% growth in regional social platform usage. Current solutions either ignore local markets entirely or fail to provide the mobile-first, locally-adapted workflows these creators need. A specialized platform that unifies regional platform management, automates cross-posting, and enables local payment integration would capture this underserved market during a critical growth phase, before global platforms adapt their offerings.",
+          "Mobile-first content creation is experiencing explosive growth globally, driven by increased smartphone penetration and diverse social platform adoption. Independent creators worldwide face a critical challenge: managing content across multiple platforms while dealing with complex monetization workflows. These creators, typically with 1K-50K followers, waste 15+ hours weekly manually distributing content across platforms and lose $600+ monthly because existing tools lack unified platform integrations and streamlined payment processing. Active discussions in creator communities highlight this frustration, while market data shows 300% growth in mobile content creation. Current solutions either focus on enterprise clients or fail to provide the mobile-first, creator-focused workflows that independent creators need. A specialized platform that unifies multi-platform management, automates cross-posting, and enables seamless monetization integration would capture this underserved market during a critical growth phase, before enterprise platforms adapt their offerings.",
         executiveSummary:
-          "A mobile-first creator management platform designed specifically for emerging market creators, solving platform fragmentation and local monetization challenges that global tools ignore, enabling 3x faster content distribution and 2x revenue growth.",
+          "A mobile-first creator management platform designed specifically for independent creators, solving platform fragmentation and monetization challenges that existing tools ignore, enabling 3x faster content distribution and 2x revenue growth.",
         problemSolution:
-          "Emerging market creators spend 15+ hours weekly manually managing content across regional platforms and lose $600+ monthly from poor monetization tools. This platform automates cross-platform posting, enables local payment integration, and provides regional analytics, saving 12 hours weekly and increasing revenue by 50-100%.",
+          "Independent creators spend 15+ hours weekly manually managing content across multiple platforms and lose $600+ monthly from poor monetization tools. This platform automates cross-platform posting, enables streamlined payment integration, and provides unified analytics, saving 12 hours weekly and increasing revenue by 50-100%.",
         problemStatement:
-          "Independent content creators in emerging markets face platform fragmentation and lack local monetization tools, limiting their growth and revenue potential.",
+          "Independent content creators face platform fragmentation and lack unified monetization tools, limiting their growth and revenue potential.",
         innovationLevel: 8,
         timeToMarket: 5,
         confidenceScore: 9,
