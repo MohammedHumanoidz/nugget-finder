@@ -16,7 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getTodaysTopIdeas } from "@/lib/server-api";
+import { getTodaysTopIdeas, getLatestIdeasForDiscover } from "@/lib/server-api";
 import {
   ArrowUpRight,
   Github,
@@ -42,6 +42,7 @@ function PricingFallback() {
 // Server component with SSR
 export default async function Page() {
   const todaysIdeas = await getTodaysTopIdeas();
+  const discoverIdeas = await getLatestIdeasForDiscover();
 
   // Calculate market intelligence metrics
   const aiTrendsTracked = 12764;
@@ -57,10 +58,10 @@ export default async function Page() {
         <Scene />
       </div> */}
 
-      {/* Today's Nuggets Section */}
+      {/* Latest Nuggets Section */}
       <div className="relative z-10 mt-20 w-full flex flex-col items-center justify-center gap-12">
         <p className="text-center font-medium text-2xl">
-          Today&apos;s finest nuggets
+          Latest finest nuggets
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4 w-full">
           {Array.isArray(todaysIdeas) && todaysIdeas.length > 0 ? (
@@ -103,7 +104,7 @@ export default async function Page() {
             ))
           ) : (
             <p className="text-gray-300 text-center w-full">
-              No ideas generated today yet
+              No ideas available yet
             </p>
           )}
         </div>
@@ -361,7 +362,7 @@ export default async function Page() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {todaysIdeas?.slice(0, 6).map((idea) => (
+            {discoverIdeas?.map((idea) => (
               <Card
                 key={`discover-${idea.id}`}
                 className="hover:shadow-xl transition-all duration-300 border-l-4 border-l-primary/50"

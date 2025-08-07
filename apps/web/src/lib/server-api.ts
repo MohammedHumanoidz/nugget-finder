@@ -122,10 +122,10 @@ export const semanticSearchIdeas = cache(async (query: string, limit = 12, offse
   }
 });
 
-// Get today's top 3 ideas for homepage - fallback to mock data for now
+// Get latest 3 ideas for homepage - sorted by creation date and score
 export const getTodaysTopIdeas = cache(async () => {
   try {
-    console.log('Fetching today\'s top 3 ideas...');
+    console.log('Fetching latest 3 ideas...');
     
     // Try the tRPC client first
     try {
@@ -135,34 +135,71 @@ export const getTodaysTopIdeas = cache(async () => {
       });
       
       if (result?.ideas?.length > 0) {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        
-        // Filter and sort today's ideas
-        const todaysIdeas = result.ideas
-          .filter((idea: any) => {
-            const createdAt = new Date(idea.createdAt);
-            return createdAt >= today && createdAt < tomorrow;
-          })
+        // Sort by creation date (most recent first) and score
+        const latestIdeas = result.ideas
           .sort((a: any, b: any) => {
+            // First sort by creation date (most recent first)
+            const dateA = new Date(a.createdAt).getTime();
+            const dateB = new Date(b.createdAt).getTime();
+            if (dateB !== dateA) {
+              return dateB - dateA;
+            }
+            // Then by score if dates are the same
             const scoreA = a.ideaScore?.overallScore || 0;
             const scoreB = b.ideaScore?.overallScore || 0;
             return scoreB - scoreA;
           })
           .slice(0, 3);
         
-        if (todaysIdeas.length > 0) {
-          console.log(`Found ${todaysIdeas.length} ideas from today`);
-          return todaysIdeas;
-        }
+        console.log(`Found ${latestIdeas.length} latest ideas`);
+        return latestIdeas;
       }
     } catch (error) {
       console.error('tRPC fetch failed:', error);
     }
   } catch (error) {
-    console.error('Error fetching today\'s top ideas:', error);
+    console.error('Error fetching latest ideas:', error);
+    return [];
+  }
+});
+
+// Get latest 6 ideas for discover section
+export const getLatestIdeasForDiscover = cache(async () => {
+  try {
+    console.log('Fetching latest 6 ideas for discover section...');
+    
+    // Try the tRPC client first
+    try {
+      const result = await serverTrpcClient.agents.getDailyIdeas.query({
+        limit: 50,
+        offset: 0
+      });
+      
+      if (result?.ideas?.length > 0) {
+        // Sort by creation date (most recent first) and score
+        const latestIdeas = result.ideas
+          .sort((a: any, b: any) => {
+            // First sort by creation date (most recent first)
+            const dateA = new Date(a.createdAt).getTime();
+            const dateB = new Date(b.createdAt).getTime();
+            if (dateB !== dateA) {
+              return dateB - dateA;
+            }
+            // Then by score if dates are the same
+            const scoreA = a.ideaScore?.overallScore || 0;
+            const scoreB = b.ideaScore?.overallScore || 0;
+            return scoreB - scoreA;
+          })
+          .slice(0, 6);
+        
+        console.log(`Found ${latestIdeas.length} latest ideas for discover`);
+        return latestIdeas;
+      }
+    } catch (error) {
+      console.error('tRPC fetch failed:', error);
+    }
+  } catch (error) {
+    console.error('Error fetching latest ideas for discover:', error);
     return [];
   }
 });
