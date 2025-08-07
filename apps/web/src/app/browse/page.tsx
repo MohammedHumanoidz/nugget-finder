@@ -37,9 +37,6 @@ export default async function BrowsePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="px-4 pt-8">
-        <h1 className="text-2xl md:text-3xl font-bold">Discover AI Startup Ideas</h1>
-      </div>
       <Suspense 
         fallback={
           <div className="flex items-center justify-center py-12">
