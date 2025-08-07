@@ -113,7 +113,7 @@ async function GeneratedIdeasResults({ ideaIds }: { ideaIds: string[] }) {
 
                   <div className="pt-4">
                     <Button asChild variant="outline" className="w-full">
-                      <Link href={`/browse/results/${idea.id}`}>
+                      <Link href={`/nugget/mined/${idea.id}`}>
                         View Full Details
                       </Link>
                     </Button>

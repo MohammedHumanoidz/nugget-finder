@@ -592,3 +592,706 @@ Looking at the search results, I see several key pa...🔍 Checking if Perplexit
   systemPromptLength: 2949,
   userPromptLength: 3675
 }
+○ Aug 08, 00:20:07.444 run_2tamr48mdrzm8kvnk9yhk.1 TypeError: fetch failed
+    at node:internal/deps/undici/undici:13510:13
+    at perplexity (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/utils/configs/ai.config.ts:43:20)
+    at Function.execute (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/agents/trend-research-agent.ts:106:24)
+    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:345:22)
+    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
+    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
+    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
+    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18 {
+  [cause]: HeadersTimeoutError: Headers Timeout Error
+      at FastTimer.onParserTimeout [as _onTimeout] (node:internal/deps/undici/undici:6249:32)
+      at Timeout.onTick [as _onTimeout] (node:internal/deps/undici/undici:2210:17)
+      at listOnTimeout (node:internal/timers:588:17)
+      at processTimers (node:internal/timers:523:7) {
+    code: 'UND_ERR_HEADERS_TIMEOUT'
+  }
+}
+○ Aug 08, 00:20:07.444 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:20:07.444] [32minfo[39m: 📥 EnhancedTrendResearchAgent - Perplexity API Response (FULL)
+
+○ Aug 08, 00:20:07.445 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:20:07.445] [31merror[39m: ❌ EnhancedTrendResearchAgent - Error
+
+○ Aug 08, 00:20:07.446 run_2tamr48mdrzm8kvnk9yhk.1 EnhancedTrendResearchAgent error: Error: No response from Perplexity
+    at Function.execute (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/agents/trend-research-agent.ts:122:15)
+    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:345:22)
+    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
+    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
+    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
+    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
+    at TaskExecutor.execute (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:87:20)
+    at EXECUTE_TASK_RUN (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/trigger.dev/src/entryPoints/dev-run-worker.ts:357:28)
+○ Aug 08, 00:20:07.446 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:20:07.446] [31merror[39m: ❌ EnhancedTrendResearchAgent - Error
+
+○ Aug 08, 00:20:07.446 run_2tamr48mdrzm8kvnk9yhk.1 🔄 Using enhanced fallback trend data
+○ Aug 08, 00:20:07.446 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:20:07.446] [32minfo[39m: ✅ Enhanced trend research completed
+
+○ Aug 08, 00:20:07.446 run_2tamr48mdrzm8kvnk9yhk.1 🎯 Step 3: Enhanced Problem Gap Analysis
+○ Aug 08, 00:20:07.446 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:20:07.446] [32minfo[39m: 🎯 Starting enhanced problem gap analysis
+
+○ Aug 08, 00:20:07.446 run_2tamr48mdrzm8kvnk9yhk.1 🎯 Step 3: Enhanced Problem Gap Analysis
+○ Aug 08, 00:20:07.447 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:20:07.447] [32minfo[39m: 🔍 EnhancedProblemGapAgent - Perplexity API Request
+
+○ Aug 08, 00:20:07.447 run_2tamr48mdrzm8kvnk9yhk.1 🔍 Perplexity API request: {
+  model: 'sonar-pro',
+  reasoning_effort: 'high',
+  messageCount: 2,
+  systemPromptLength: 2634,
+  userPromptLength: 5830
+}
+○ Aug 08, 00:20:20.918 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:20:20.918] [32minfo[39m: 📥 EnhancedProblemGapAgent - Perplexity API Response (FULL)
+
+○ Aug 08, 00:20:20.919 run_2tamr48mdrzm8kvnk9yhk.1 🔍 Enhanced ProblemGap raw response length: 4530🔍 Response preview: {
+  "problems": [
+    "Security-conscious property managers waste 8+ hours every week manually reviewing outdated incident reports and scattered safety notifications because current personal safety ap...
+○ Aug 08, 00:20:20.919 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:20:20.918] [32minfo[39m: 🔍 EnhancedProblemGapAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...
+○ Aug 08, 00:20:20.919 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Content is already valid JSON, using directly
+○ Aug 08, 00:20:20.919 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:20:20.919] [32minfo[39m: 🔧 EnhancedProblemGapAgent - Parsing Attempt
+
+○ Aug 08, 00:20:20.919 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Step 3: Enhanced Problem Gap Analysis Completed: { problemCount: 3, gapCount: 3 }
+○ Aug 08, 00:20:20.920 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:20:20.919] [32minfo[39m: ✅ EnhancedProblemGapAgent - Final Result
+
+○ Aug 08, 00:20:20.920 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:20:20.920] [32minfo[39m: ✅ Enhanced problem gap analysis completed
+
+○ Aug 08, 00:20:20.920 run_2tamr48mdrzm8kvnk9yhk.1 🏆 Step 4: Enhanced Competitive Intelligence
+○ Aug 08, 00:20:20.920 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:20:20.920] [32minfo[39m: 🏆 Starting enhanced competitive intelligence
+
+○ Aug 08, 00:20:20.920 run_2tamr48mdrzm8kvnk9yhk.1 🏆 Step 4: Enhanced Competitive Intelligence
+○ Aug 08, 00:20:20.920 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:20:20.920] [32minfo[39m: 🔍 EnhancedCompetitiveIntelligenceAgent - Perplexity API Request
+
+○ Aug 08, 00:20:20.921 run_2tamr48mdrzm8kvnk9yhk.1 🔍 Perplexity API request: {
+  model: 'sonar-pro',
+  reasoning_effort: 'medium',
+  messageCount: 2,
+  systemPromptLength: 3651,
+  userPromptLength: 1736
+}
+○ Aug 08, 00:20:36.444 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:20:36.443] [32minfo[39m: 📥 EnhancedCompetitiveIntelligenceAgent - Perplexity API Response (FULL)
+
+○ Aug 08, 00:20:36.444 run_2tamr48mdrzm8kvnk9yhk.1 🔍 Enhanced Competitive Intelligence raw response length: 6746🔍 Response preview: {
+  "competition": {
+    "marketConcentrationLevel": "HIGH",
+    "marketConcentrationJustification": "The property management and corporate safety markets are saturated with large, well-funded players...
+○ Aug 08, 00:20:36.444 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:20:36.444] [32minfo[39m: 🔍 EnhancedCompetitiveIntelligenceAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...✅ Content is already valid JSON, using directly
+○ Aug 08, 00:20:36.445 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:20:36.445] [32minfo[39m: 🔧 EnhancedCompetitiveIntelligenceAgent - Parsing Attempt
+
+○ Aug 08, 00:20:36.445 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Step 4: Enhanced Competitive Intelligence Completed: {
+  marketConcentration: 'HIGH',
+  directCompetitorCount: 3,
+  positioningName: 'Safety Communication, Verified. Hassle-Free.',
+  competitiveScore: 9
+}
+○ Aug 08, 00:20:36.445 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:20:36.445] [32minfo[39m: ✅ EnhancedCompetitiveIntelligenceAgent - Final Result
+[2025-08-08 00:20:36.445] [32minfo[39m: ✅ Enhanced competitive intelligence completed
+
+○ Aug 08, 00:20:36.445 run_2tamr48mdrzm8kvnk9yhk.1 💰 Step 5: Enhanced Monetization Strategy
+○ Aug 08, 00:20:57.843 run_2tamr48mdrzm8kvnk9yhk.1 🧠 Step 6: Initial Idea Synthesis
+○ Aug 08, 00:21:04.942 run_2tamr48mdrzm8kvnk9yhk.1 🧠 Step 7: Enhanced Idea Synthesis with Trend Architect Logic
+○ Aug 08, 00:21:26.352 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Step 7: Enhanced Idea Synthesis Completed: {
+  title: 'Automated Real-Time Incident Aggregation and Verified Safety Communication Platform for Property Managers and Team Leads Ensuring Immediate Risk Awareness',
+  confidenceScore: 8.9,
+  urgencyLevel: 9.1,
+  totalScore: 8.5
+}🔍 Step 7: Critic Agent Analysis
+○ Aug 08, 00:21:26.352 run_2tamr48mdrzm8kvnk9yhk.1 🔍 Step 6: Activating Critic Agent
+○ Aug 08, 00:21:39.301 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Step 6: Critic Agent Generated Refinement Recommendations
+○ Aug 08, 00:21:39.301 run_2tamr48mdrzm8kvnk9yhk.1 🔍 Refinement focus areas identified: **Critical Weaknesses Identified:**
+
+1. **Overly Broad Targeting and Persona Ambiguity:**  
+   The idea attempts to serve multiple distinct personas simultaneously—property managers, corporate team le...🎨 Step 8: Final Refined Idea Synthesis🧠 Step 7: Enhanced Idea Synthesis with Trend Architect Logic
+○ Aug 08, 00:21:56.255 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Step 7: Enhanced Idea Synthesis Completed: {
+  title: 'Automated Real-Time Incident Aggregation and Verified Alerts for Commercial Property Managers Reducing Safety Review Time',
+  confidenceScore: 8.9,
+  urgencyLevel: 9.1,
+  totalScore: 8.4
+}
+○ Aug 08, 00:21:56.255 run_2tamr48mdrzm8kvnk9yhk.1 💾 Step 9: Saving Enhanced Idea to Database
+○ Aug 08, 00:22:04.974 run_2tamr48mdrzm8kvnk9yhk.1 🎉 Enhanced Daily Idea Generated Successfully: d8f5d42c-55ec-420a-b351-138e5bdb2c6b
+○ Aug 08, 00:22:04.975 run_2tamr48mdrzm8kvnk9yhk.1 📊 Final Idea Summary: {
+  title: 'Automated Real-Time Incident Aggregation and Verified Alerts for Commercial Property Managers Reducing Safety Review Time',
+  confidenceScore: 8.9,
+  urgencyLevel: 9.1,
+  totalScore: 8.4,
+  timeToMarket: 6,
+  tags: [
+    'SaaS',
+    'property-management',
+    'global-market',
+    'safety-technology'
+  ]
+}
+○ Aug 08, 00:22:04.975 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:22:04.975] [32minfo[39m: 🎉 Enhanced daily idea generation completed successfully
+
+○ Aug 08, 00:22:04.975 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Idea 1 generated successfully { ideaId: 'd8f5d42c-55ec-420a-b351-138e5bdb2c6b' }
+○ Aug 08, 00:22:04.975 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:22:04.975] [32minfo[39m: Daily idea generation successful
+⏳ Waiting 10 seconds before next generation...
+○ Aug 08, 00:22:14.975 run_2tamr48mdrzm8kvnk9yhk.1 💡 Generating idea 2/4...
+○ Aug 08, 00:22:14.976 run_2tamr48mdrzm8kvnk9yhk.1 🚀 Starting Enhanced Daily Idea Generation Pipeline[2025-08-08 00:22:14.976] [32minfo[39m: 🚀 Enhanced daily idea generation started
+
+○ Aug 08, 00:22:19.088 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:22:19.087] [32minfo[39m: 📚 Retrieved previous ideas for diversity context
+
+○ Aug 08, 00:22:19.088 run_2tamr48mdrzm8kvnk9yhk.1 🎯 Step 1: Activating Master Research Director🎯 Step 1: Activating Master Research Director
+○ Aug 08, 00:22:23.828 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Step 1: Research Director Set Research Parameters: {
+  theme: 'Simple Online Platforms for Everyday Creative Collaboration and Hobby Sharing',
+  geography: 'Global Digital Market',
+  industry: 'Creative Tools and Community Platforms'
+}
+○ Aug 08, 00:22:23.829 run_2tamr48mdrzm8kvnk9yhk.1 📈 Step 2: Enhanced Trend Research[2025-08-08 00:22:23.828] [32minfo[39m: 📈 Starting enhanced trend research with research direction
+📈 Step 2: Enhanced Trend Research
+○ Aug 08, 00:22:23.829 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:22:23.829] [32minfo[39m: 🔍 EnhancedTrendResearchAgent - Perplexity API Request
+🔍 Perplexity API request: {
+  model: 'sonar-deep-research',
+  reasoning_effort: 'high',
+  messageCount: 2,
+  systemPromptLength: 2891,
+  userPromptLength: 3961
+}
+○ Aug 08, 00:26:40.169 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:26:40.168] [32minfo[39m: 📥 EnhancedTrendResearchAgent - Perplexity API Response (FULL)
+
+○ Aug 08, 00:26:40.170 run_2tamr48mdrzm8kvnk9yhk.1 🔍 Enhanced Trend raw response length: 52529🔍 Response preview: <think>
+I need to analyze the search results to identify an emerging trend in creative tools and community platforms that:
+
+1. Is focused on global online hobbyist/creative communities
+2. Creates oppo...🔍 Checking if Perplexity response is already JSON...🔄 Content is not JSON, using LLM to structure...
+○ Aug 08, 00:26:40.170 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:26:40.170] [32minfo[39m: 🔄 EnhancedTrendResearchAgent - LLM Structuring Request
+
+○ Aug 08, 00:26:44.080 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:26:44.080] [32minfo[39m: 📤 EnhancedTrendResearchAgent - LLM Structuring Response (FULL)
+
+○ Aug 08, 00:26:44.080 run_2tamr48mdrzm8kvnk9yhk.1 🔍 LLM structured response: {
+  "title": "The Rise of Social Crafting Communities: How Everyday Creative Collaboration is Reshaping Digital Connection in 2025",
+  "description": "Social crafting communities represent a global shift from large social media platforms to intimate, hobby-focused digital spaces where everyday indiv...
+○ Aug 08, 00:26:44.081 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:26:44.080] [32minfo[39m: 🔧 EnhancedTrendResearchAgent - Parsing Attempt
+
+○ Aug 08, 00:26:44.081 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Step 2: Enhanced Trend Research Completed: {
+  title: 'The Rise of Social Crafting Communities: How Everyday Creative Collaboration is Reshaping Digital Connection in 2025',
+  trendStrength: 9,
+  catalystType: 'SOCIAL_TREND',
+  timingUrgency: 8
+}[2025-08-08 00:26:44.081] [32minfo[39m: ✅ EnhancedTrendResearchAgent - Final Result
+
+○ Aug 08, 00:26:44.081 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:26:44.081] [32minfo[39m: ✅ Enhanced trend research completed
+🎯 Step 3: Enhanced Problem Gap Analysis[2025-08-08 00:26:44.081] [32minfo[39m: 🎯 Starting enhanced problem gap analysis
+🎯 Step 3: Enhanced Problem Gap Analysis
+○ Aug 08, 00:26:44.082 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:26:44.081] [32minfo[39m: 🔍 EnhancedProblemGapAgent - Perplexity API Request
+
+○ Aug 08, 00:26:44.082 run_2tamr48mdrzm8kvnk9yhk.1 🔍 Perplexity API request: {
+  model: 'sonar-pro',
+  reasoning_effort: 'high',
+  messageCount: 2,
+  systemPromptLength: 2634,
+  userPromptLength: 6662
+}
+○ Aug 08, 00:26:58.730 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:26:58.730] [32minfo[39m: 📥 EnhancedProblemGapAgent - Perplexity API Response (FULL)
+
+○ Aug 08, 00:26:58.731 run_2tamr48mdrzm8kvnk9yhk.1 🔍 Enhanced ProblemGap raw response length: 4368🔍 Response preview: {
+  "problems": [
+    "Moderators and organizers of social crafting communities lose 6–10 hours per week manually tracking project participation, skill exchanges, and event attendance across fragmente...[2025-08-08 00:26:58.731] [32minfo[39m: 🔍 EnhancedProblemGapAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...✅ Content is already valid JSON, using directly
+○ Aug 08, 00:26:58.731 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:26:58.731] [32minfo[39m: 🔧 EnhancedProblemGapAgent - Parsing Attempt
+✅ Step 3: Enhanced Problem Gap Analysis Completed: { problemCount: 3, gapCount: 3 }
+○ Aug 08, 00:26:58.731 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:26:58.731] [32minfo[39m: ✅ EnhancedProblemGapAgent - Final Result
+[2025-08-08 00:26:58.731] [32minfo[39m: ✅ Enhanced problem gap analysis completed
+
+○ Aug 08, 00:26:58.731 run_2tamr48mdrzm8kvnk9yhk.1 🏆 Step 4: Enhanced Competitive Intelligence[2025-08-08 00:26:58.731] [32minfo[39m: 🏆 Starting enhanced competitive intelligence
+🏆 Step 4: Enhanced Competitive Intelligence
+○ Aug 08, 00:26:58.732 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:26:58.731] [32minfo[39m: 🔍 EnhancedCompetitiveIntelligenceAgent - Perplexity API Request
+
+○ Aug 08, 00:26:58.732 run_2tamr48mdrzm8kvnk9yhk.1 🔍 Perplexity API request: {
+  model: 'sonar-pro',
+  reasoning_effort: 'medium',
+  messageCount: 2,
+  systemPromptLength: 3651,
+  userPromptLength: 1915
+}
+○ Aug 08, 00:27:13.331 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:27:13.331] [32minfo[39m: 📥 EnhancedCompetitiveIntelligenceAgent - Perplexity API Response (FULL)
+
+○ Aug 08, 00:27:13.332 run_2tamr48mdrzm8kvnk9yhk.1 🔍 Enhanced Competitive Intelligence raw response length: 6521🔍 Response preview: {
+  "competition": {
+    "marketConcentrationLevel": "MEDIUM",
+    "marketConcentrationJustification": "While there is a large and growing ecosystem of community management, e-commerce, and event soft...[2025-08-08 00:27:13.331] [32minfo[39m: 🔍 EnhancedCompetitiveIntelligenceAgent - Content Analysis
+🔍 Checking if Perplexity response is already JSON...
+○ Aug 08, 00:27:13.332 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Content is already valid JSON, using directly[2025-08-08 00:27:13.332] [32minfo[39m: 🔧 EnhancedCompetitiveIntelligenceAgent - Parsing Attempt
+✅ Step 4: Enhanced Competitive Intelligence Completed: {
+  marketConcentration: 'MEDIUM',
+  directCompetitorCount: 3,
+  positioningName: 'Craft Community ROI, Automated',
+  competitiveScore: 9
+}
+○ Aug 08, 00:27:13.332 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:27:13.332] [32minfo[39m: ✅ EnhancedCompetitiveIntelligenceAgent - Final Result
+[2025-08-08 00:27:13.332] [32minfo[39m: ✅ Enhanced competitive intelligence completed
+💰 Step 5: Enhanced Monetization Strategy
+○ Aug 08, 00:27:25.899 run_2tamr48mdrzm8kvnk9yhk.1 🧠 Step 6: Initial Idea Synthesis
+○ Aug 08, 00:27:31.400 run_2tamr48mdrzm8kvnk9yhk.1 🧠 Step 7: Enhanced Idea Synthesis with Trend Architect Logic
+○ Aug 08, 00:27:54.984 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Step 7: Enhanced Idea Synthesis Completed: {
+  title: 'Automated Member Engagement, Learning Impact, and In-Session Commerce Platform for Social Crafting Community Leaders Driving Growth and Retention',
+  confidenceScore: 8.9,
+  urgencyLevel: 9.1,
+  totalScore: 8.5
+}🔍 Step 7: Critic Agent Analysis🔍 Step 6: Activating Critic Agent
+○ Aug 08, 00:28:10.475 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Step 6: Critic Agent Generated Refinement Recommendations🔍 Refinement focus areas identified: **Critical Weaknesses Identified:**
+
+1. **Persona and Market Focus Too Broad and Diffuse**  
+The idea targets multiple distinct personas simultaneously—community leaders, expert crafters, and small cr...
+○ Aug 08, 00:28:10.476 run_2tamr48mdrzm8kvnk9yhk.1 🎨 Step 8: Final Refined Idea Synthesis🧠 Step 7: Enhanced Idea Synthesis with Trend Architect Logic
+○ Aug 08, 00:28:30.189 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Step 7: Enhanced Idea Synthesis Completed: {
+  title: 'Automated Engagement Tracking and In-Session Commerce Checkout for Social Crafting Workshop Leaders Driving Revenue and Retention',
+  confidenceScore: 8.9,
+  urgencyLevel: 9.1,
+  totalScore: 8.4
+}
+○ Aug 08, 00:28:30.189 run_2tamr48mdrzm8kvnk9yhk.1 💾 Step 9: Saving Enhanced Idea to Database
+○ Aug 08, 00:28:39.524 run_2tamr48mdrzm8kvnk9yhk.1 🎉 Enhanced Daily Idea Generated Successfully: 0dd15ef1-aa3d-4fd1-91ff-1a069489dc76
+○ Aug 08, 00:28:39.524 run_2tamr48mdrzm8kvnk9yhk.1 📊 Final Idea Summary: {
+  title: 'Automated Engagement Tracking and In-Session Commerce Checkout for Social Crafting Workshop Leaders Driving Revenue and Retention',
+  confidenceScore: 8.9,
+  urgencyLevel: 9.1,
+  totalScore: 8.4,
+  timeToMarket: 3,
+  tags: [
+    'SaaS',
+    'social-crafting',
+    'live-commerce',
+    'community-management'
+  ]
+}
+○ Aug 08, 00:28:39.524 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:28:39.524] [32minfo[39m: 🎉 Enhanced daily idea generation completed successfully
+✅ Idea 2 generated successfully { ideaId: '0dd15ef1-aa3d-4fd1-91ff-1a069489dc76' }
+○ Aug 08, 00:28:39.524 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:28:39.524] [32minfo[39m: Daily idea generation successful
+⏳ Waiting 10 seconds before next generation...
+○ Aug 08, 00:28:49.525 run_2tamr48mdrzm8kvnk9yhk.1 💡 Generating idea 3/4...
+○ Aug 08, 00:28:49.525 run_2tamr48mdrzm8kvnk9yhk.1 🚀 Starting Enhanced Daily Idea Generation Pipeline[2025-08-08 00:28:49.525] [32minfo[39m: 🚀 Enhanced daily idea generation started
+
+○ Aug 08, 00:28:54.248 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:28:54.247] [32minfo[39m: 📚 Retrieved previous ideas for diversity context
+
+○ Aug 08, 00:28:54.249 run_2tamr48mdrzm8kvnk9yhk.1 🎯 Step 1: Activating Master Research Director🎯 Step 1: Activating Master Research Director
+○ Aug 08, 00:28:58.707 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Step 1: Research Director Set Research Parameters: {
+  theme: 'Simple Online Platforms for Everyday Language Learning and Cultural Exchange',
+  geography: 'Global Digital Market',
+  industry: 'Learning platforms and communication apps'
+}
+○ Aug 08, 00:28:58.707 run_2tamr48mdrzm8kvnk9yhk.1 📈 Step 2: Enhanced Trend Research[2025-08-08 00:28:58.707] [32minfo[39m: 📈 Starting enhanced trend research with research direction
+📈 Step 2: Enhanced Trend Research
+○ Aug 08, 00:28:58.708 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:28:58.707] [32minfo[39m: 🔍 EnhancedTrendResearchAgent - Perplexity API Request
+
+○ Aug 08, 00:28:58.708 run_2tamr48mdrzm8kvnk9yhk.1 🔍 Perplexity API request: {
+  model: 'sonar-deep-research',
+  reasoning_effort: 'high',
+  messageCount: 2,
+  systemPromptLength: 2974,
+  userPromptLength: 4026
+}
+○ Aug 08, 00:28:59.173 run_2tamr48mdrzm8kvnk9yhk.1 Perplexity API error response: <html>
+<head><title>401 Authorization Required</title></head>
+<body>
+<center><h1>401 Authorization Required</h1></center>
+<hr><center>openresty/1.27.4</center>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96b9dde73bcf9dd1',t:'MTc1NDYwMjEzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+
+○ Aug 08, 00:28:59.174 run_2tamr48mdrzm8kvnk9yhk.1 Error: Perplexity API error: 401 Unauthorized
+    at perplexity (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/utils/configs/ai.config.ts:51:10)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Function.execute (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/agents/trend-research-agent.ts:106:24)
+    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:345:22)
+    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
+    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
+    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
+    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
+○ Aug 08, 00:28:59.174 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:28:59.174] [32minfo[39m: 📥 EnhancedTrendResearchAgent - Perplexity API Response (FULL)
+
+○ Aug 08, 00:28:59.174 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:28:59.174] [31merror[39m: ❌ EnhancedTrendResearchAgent - Error
+
+○ Aug 08, 00:28:59.175 run_2tamr48mdrzm8kvnk9yhk.1 EnhancedTrendResearchAgent error: Error: No response from Perplexity
+    at Function.execute (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/agents/trend-research-agent.ts:122:15)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:345:22)
+    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
+    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
+    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
+    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
+    at TaskExecutor.execute (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:87:20)
+○ Aug 08, 00:28:59.175 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:28:59.175] [31merror[39m: ❌ EnhancedTrendResearchAgent - Error
+
+○ Aug 08, 00:28:59.175 run_2tamr48mdrzm8kvnk9yhk.1 🔄 Using enhanced fallback trend data
+○ Aug 08, 00:28:59.175 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:28:59.175] [32minfo[39m: ✅ Enhanced trend research completed
+🎯 Step 3: Enhanced Problem Gap Analysis[2025-08-08 00:28:59.175] [32minfo[39m: 🎯 Starting enhanced problem gap analysis
+
+○ Aug 08, 00:28:59.175 run_2tamr48mdrzm8kvnk9yhk.1 🎯 Step 3: Enhanced Problem Gap Analysis
+○ Aug 08, 00:28:59.175 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:28:59.175] [32minfo[39m: 🔍 EnhancedProblemGapAgent - Perplexity API Request
+
+○ Aug 08, 00:28:59.175 run_2tamr48mdrzm8kvnk9yhk.1 🔍 Perplexity API request: {
+  model: 'sonar-pro',
+  reasoning_effort: 'high',
+  messageCount: 2,
+  systemPromptLength: 2634,
+  userPromptLength: 6310
+}
+○ Aug 08, 00:28:59.393 run_2tamr48mdrzm8kvnk9yhk.1 Perplexity API error response: <html>
+<head><title>401 Authorization Required</title></head>
+<body>
+<center><h1>401 Authorization Required</h1></center>
+<hr><center>openresty/1.27.4</center>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96b9ddea0cf64b73',t:'MTc1NDYwMjEzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+
+○ Aug 08, 00:28:59.393 run_2tamr48mdrzm8kvnk9yhk.1 Error: Perplexity API error: 401 Unauthorized
+    at perplexity (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/utils/configs/ai.config.ts:51:10)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Function.execute (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/agents/problem-gap-agent.ts:111:24)
+    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:363:27)
+    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
+    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
+    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
+    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
+○ Aug 08, 00:28:59.393 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:28:59.393] [32minfo[39m: 📥 EnhancedProblemGapAgent - Perplexity API Response (FULL)
+
+○ Aug 08, 00:28:59.393 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:28:59.393] [31merror[39m: ❌ EnhancedProblemGapAgent - Error
+
+○ Aug 08, 00:28:59.394 run_2tamr48mdrzm8kvnk9yhk.1 EnhancedProblemGapAgent error: Error: No response from Perplexity
+    at Function.execute (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/agents/problem-gap-agent.ts:126:15)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:363:27)
+    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
+    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
+    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
+    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
+    at TaskExecutor.execute (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:87:20)
+○ Aug 08, 00:28:59.394 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:28:59.394] [31merror[39m: ❌ EnhancedProblemGapAgent - Error
+🔄 Using enhanced fallback problem gap data
+○ Aug 08, 00:28:59.394 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:28:59.394] [32minfo[39m: ✅ Enhanced problem gap analysis completed
+🏆 Step 4: Enhanced Competitive Intelligence[2025-08-08 00:28:59.394] [32minfo[39m: 🏆 Starting enhanced competitive intelligence
+🏆 Step 4: Enhanced Competitive Intelligence
+○ Aug 08, 00:28:59.394 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:28:59.394] [32minfo[39m: 🔍 EnhancedCompetitiveIntelligenceAgent - Perplexity API Request
+
+○ Aug 08, 00:28:59.394 run_2tamr48mdrzm8kvnk9yhk.1 🔍 Perplexity API request: {
+  model: 'sonar-pro',
+  reasoning_effort: 'medium',
+  messageCount: 2,
+  systemPromptLength: 3651,
+  userPromptLength: 1605
+}
+○ Aug 08, 00:28:59.588 run_2tamr48mdrzm8kvnk9yhk.1 Perplexity API error response: <html>
+<head><title>401 Authorization Required</title></head>
+<body>
+<center><h1>401 Authorization Required</h1></center>
+<hr><center>openresty/1.27.4</center>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96b9ddeb3fe19dd1',t:'MTc1NDYwMjEzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+
+○ Aug 08, 00:28:59.588 run_2tamr48mdrzm8kvnk9yhk.1 Error: Perplexity API error: 401 Unauthorized
+    at perplexity (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/utils/configs/ai.config.ts:51:10)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Function.execute (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/agents/competitive-intelligence-agent.ts:112:24)
+    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:380:27)
+    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
+    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
+    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
+    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
+○ Aug 08, 00:28:59.589 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:28:59.588] [32minfo[39m: 📥 EnhancedCompetitiveIntelligenceAgent - Perplexity API Response (FULL)
+
+○ Aug 08, 00:28:59.589 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:28:59.589] [31merror[39m: ❌ EnhancedCompetitiveIntelligenceAgent - Error
+
+○ Aug 08, 00:28:59.590 run_2tamr48mdrzm8kvnk9yhk.1 EnhancedCompetitiveIntelligenceAgent error: Error: No response from Perplexity
+    at Function.execute (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/agents/competitive-intelligence-agent.ts:130:15)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:380:27)
+    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
+    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
+    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
+    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
+    at TaskExecutor.execute (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:87:20)
+○ Aug 08, 00:28:59.590 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:28:59.590] [31merror[39m: ❌ EnhancedCompetitiveIntelligenceAgent - Error
+
+○ Aug 08, 00:28:59.591 run_2tamr48mdrzm8kvnk9yhk.1 🔄 Using enhanced fallback competitive intelligence data
+○ Aug 08, 00:28:59.591 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:28:59.591] [32minfo[39m: ✅ Enhanced competitive intelligence completed
+💰 Step 5: Enhanced Monetization Strategy
+○ Aug 08, 00:29:14.757 run_2tamr48mdrzm8kvnk9yhk.1 🧠 Step 6: Initial Idea Synthesis
+○ Aug 08, 00:29:21.605 run_2tamr48mdrzm8kvnk9yhk.1 🧠 Step 7: Enhanced Idea Synthesis with Trend Architect Logic
+○ Aug 08, 00:29:35.113 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Step 7: Enhanced Idea Synthesis Completed: {
+  title: 'Unified Multi-Platform Content Distribution and Monetization Workflow for Independent Creators Increasing Revenue and Efficiency',
+  confidenceScore: 9.1,
+  urgencyLevel: 9.2,
+  totalScore: 8.5
+}
+○ Aug 08, 00:29:35.114 run_2tamr48mdrzm8kvnk9yhk.1 🔍 Step 7: Critic Agent Analysis🔍 Step 6: Activating Critic Agent
+○ Aug 08, 00:29:52.779 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Step 6: Critic Agent Generated Refinement Recommendations
+○ Aug 08, 00:29:52.780 run_2tamr48mdrzm8kvnk9yhk.1 🔍 Refinement focus areas identified: **Critical Weaknesses Identified:**
+
+1. **Persona and Market Segmentation Too Broad:**  
+   The target “independent content creators worldwide” is a vast and highly heterogeneous group spanning differ...🎨 Step 8: Final Refined Idea Synthesis🧠 Step 7: Enhanced Idea Synthesis with Trend Architect Logic
+○ Aug 08, 00:30:10.341 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Step 7: Enhanced Idea Synthesis Completed: {
+  title: 'Automated Multi-Platform Distribution and Monetization Workflow for Mid-Tier Video Creators Increasing Sponsorship Revenue and Efficiency',
+  confidenceScore: 8.9,
+  urgencyLevel: 9.1,
+  totalScore: 8.4
+}
+○ Aug 08, 00:30:10.342 run_2tamr48mdrzm8kvnk9yhk.1 💾 Step 9: Saving Enhanced Idea to Database
+○ Aug 08, 00:30:18.024 run_2tamr48mdrzm8kvnk9yhk.1 🎉 Enhanced Daily Idea Generated Successfully: e5b05d1b-d8cd-48f0-979e-c339f7f5eae1
+○ Aug 08, 00:30:18.024 run_2tamr48mdrzm8kvnk9yhk.1 📊 Final Idea Summary: {
+  title: 'Automated Multi-Platform Distribution and Monetization Workflow for Mid-Tier Video Creators Increasing Sponsorship Revenue and Efficiency',
+  confidenceScore: 8.9,
+  urgencyLevel: 9.1,
+  totalScore: 8.4,
+  timeToMarket: 4,
+  tags: [
+    'SaaS',
+    'video-creator-tools',
+    'global-market',
+    'digital-content-monetization'
+  ]
+}
+○ Aug 08, 00:30:18.024 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:30:18.024] [32minfo[39m: 🎉 Enhanced daily idea generation completed successfully
+
+○ Aug 08, 00:30:18.024 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Idea 3 generated successfully { ideaId: 'e5b05d1b-d8cd-48f0-979e-c339f7f5eae1' }
+○ Aug 08, 00:30:18.025 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:30:18.024] [32minfo[39m: Daily idea generation successful
+
+○ Aug 08, 00:30:18.025 run_2tamr48mdrzm8kvnk9yhk.1 ⏳ Waiting 10 seconds before next generation...
+○ Aug 08, 00:30:28.026 run_2tamr48mdrzm8kvnk9yhk.1 💡 Generating idea 4/4...
+○ Aug 08, 00:30:28.026 run_2tamr48mdrzm8kvnk9yhk.1 🚀 Starting Enhanced Daily Idea Generation Pipeline[2025-08-08 00:30:28.026] [32minfo[39m: 🚀 Enhanced daily idea generation started
+
+○ Aug 08, 00:30:32.824 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:30:32.824] [32minfo[39m: 📚 Retrieved previous ideas for diversity context
+
+○ Aug 08, 00:30:32.824 run_2tamr48mdrzm8kvnk9yhk.1 🎯 Step 1: Activating Master Research Director🎯 Step 1: Activating Master Research Director
+○ Aug 08, 00:30:37.325 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Step 1: Research Director Set Research Parameters: {
+  theme: 'Simple Online Platforms for Everyday People to Share and Learn Practical Life Skills Together',
+  geography: 'Global Digital Market',
+  industry: 'Creative tools and learning platforms focused on peer-to-peer knowledge sharing'
+}
+○ Aug 08, 00:30:37.325 run_2tamr48mdrzm8kvnk9yhk.1 📈 Step 2: Enhanced Trend Research[2025-08-08 00:30:37.325] [32minfo[39m: 📈 Starting enhanced trend research with research direction
+📈 Step 2: Enhanced Trend Research
+○ Aug 08, 00:30:37.325 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:30:37.325] [32minfo[39m: 🔍 EnhancedTrendResearchAgent - Perplexity API Request
+
+○ Aug 08, 00:30:37.325 run_2tamr48mdrzm8kvnk9yhk.1 🔍 Perplexity API request: {
+  model: 'sonar-deep-research',
+  reasoning_effort: 'high',
+  messageCount: 2,
+  systemPromptLength: 2930,
+  userPromptLength: 4254
+}
+○ Aug 08, 00:30:37.698 run_2tamr48mdrzm8kvnk9yhk.1 Perplexity API error response: <html>
+<head><title>401 Authorization Required</title></head>
+<body>
+<center><h1>401 Authorization Required</h1></center>
+<hr><center>openresty/1.27.4</center>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96b9e04f8802fbc6',t:'MTc1NDYwMjIzNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+
+○ Aug 08, 00:30:37.699 run_2tamr48mdrzm8kvnk9yhk.1 Error: Perplexity API error: 401 Unauthorized
+    at perplexity (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/utils/configs/ai.config.ts:51:10)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Function.execute (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/agents/trend-research-agent.ts:106:24)
+    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:345:22)
+    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
+    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
+    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
+    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
+○ Aug 08, 00:30:37.699 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:30:37.699] [32minfo[39m: 📥 EnhancedTrendResearchAgent - Perplexity API Response (FULL)
+
+○ Aug 08, 00:30:37.699 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:30:37.699] [31merror[39m: ❌ EnhancedTrendResearchAgent - Error
+
+○ Aug 08, 00:30:37.700 run_2tamr48mdrzm8kvnk9yhk.1 EnhancedTrendResearchAgent error: Error: No response from Perplexity
+    at Function.execute (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/agents/trend-research-agent.ts:122:15)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:345:22)
+    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
+    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
+    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
+    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
+    at TaskExecutor.execute (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:87:20)
+○ Aug 08, 00:30:37.700 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:30:37.700] [31merror[39m: ❌ EnhancedTrendResearchAgent - Error
+
+○ Aug 08, 00:30:37.700 run_2tamr48mdrzm8kvnk9yhk.1 🔄 Using enhanced fallback trend data
+○ Aug 08, 00:30:37.700 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:30:37.700] [32minfo[39m: ✅ Enhanced trend research completed
+
+○ Aug 08, 00:30:37.701 run_2tamr48mdrzm8kvnk9yhk.1 🎯 Step 3: Enhanced Problem Gap Analysis
+○ Aug 08, 00:30:37.701 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:30:37.701] [32minfo[39m: 🎯 Starting enhanced problem gap analysis
+🎯 Step 3: Enhanced Problem Gap Analysis
+○ Aug 08, 00:30:37.701 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:30:37.701] [32minfo[39m: 🔍 EnhancedProblemGapAgent - Perplexity API Request
+
+○ Aug 08, 00:30:37.701 run_2tamr48mdrzm8kvnk9yhk.1 🔍 Perplexity API request: {
+  model: 'sonar-pro',
+  reasoning_effort: 'high',
+  messageCount: 2,
+  systemPromptLength: 2634,
+  userPromptLength: 6661
+}
+○ Aug 08, 00:30:38.273 run_2tamr48mdrzm8kvnk9yhk.1 Perplexity API error response: <html>
+<head><title>401 Authorization Required</title></head>
+<body>
+<center><h1>401 Authorization Required</h1></center>
+<hr><center>openresty/1.27.4</center>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96b9e0537f711bcc',t:'MTc1NDYwMjIzOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+
+○ Aug 08, 00:30:38.273 run_2tamr48mdrzm8kvnk9yhk.1 Error: Perplexity API error: 401 Unauthorized
+    at perplexity (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/utils/configs/ai.config.ts:51:10)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Function.execute (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/agents/problem-gap-agent.ts:111:24)
+    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:363:27)
+    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
+    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
+    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
+    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
+○ Aug 08, 00:30:38.273 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:30:38.273] [32minfo[39m: 📥 EnhancedProblemGapAgent - Perplexity API Response (FULL)
+
+○ Aug 08, 00:30:38.274 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:30:38.274] [31merror[39m: ❌ EnhancedProblemGapAgent - Error
+
+○ Aug 08, 00:30:38.275 run_2tamr48mdrzm8kvnk9yhk.1 EnhancedProblemGapAgent error: Error: No response from Perplexity
+    at Function.execute (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/agents/problem-gap-agent.ts:126:15)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:363:27)
+    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
+    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
+    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
+    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
+    at TaskExecutor.execute (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:87:20)
+○ Aug 08, 00:30:38.275 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:30:38.275] [31merror[39m: ❌ EnhancedProblemGapAgent - Error
+🔄 Using enhanced fallback problem gap data
+○ Aug 08, 00:30:38.275 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:30:38.275] [32minfo[39m: ✅ Enhanced problem gap analysis completed
+🏆 Step 4: Enhanced Competitive Intelligence
+○ Aug 08, 00:30:38.275 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:30:38.275] [32minfo[39m: 🏆 Starting enhanced competitive intelligence
+🏆 Step 4: Enhanced Competitive Intelligence
+○ Aug 08, 00:30:38.275 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:30:38.275] [32minfo[39m: 🔍 EnhancedCompetitiveIntelligenceAgent - Perplexity API Request
+🔍 Perplexity API request: {
+  model: 'sonar-pro',
+  reasoning_effort: 'medium',
+  messageCount: 2,
+  systemPromptLength: 3651,
+  userPromptLength: 1605
+}
+○ Aug 08, 00:30:38.526 run_2tamr48mdrzm8kvnk9yhk.1 Perplexity API error response: <html>
+<head><title>401 Authorization Required</title></head>
+<body>
+<center><h1>401 Authorization Required</h1></center>
+<hr><center>openresty/1.27.4</center>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96b9e0554edafbc6',t:'MTc1NDYwMjIzOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+
+○ Aug 08, 00:30:38.526 run_2tamr48mdrzm8kvnk9yhk.1 Error: Perplexity API error: 401 Unauthorized
+    at perplexity (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/utils/configs/ai.config.ts:51:10)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Function.execute (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/agents/competitive-intelligence-agent.ts:112:24)
+    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:380:27)
+    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
+    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
+    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
+    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
+○ Aug 08, 00:30:38.527 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:30:38.526] [32minfo[39m: 📥 EnhancedCompetitiveIntelligenceAgent - Perplexity API Response (FULL)
+
+○ Aug 08, 00:30:38.527 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:30:38.527] [31merror[39m: ❌ EnhancedCompetitiveIntelligenceAgent - Error
+
+○ Aug 08, 00:30:38.528 run_2tamr48mdrzm8kvnk9yhk.1 EnhancedCompetitiveIntelligenceAgent error: Error: No response from Perplexity
+    at Function.execute (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/agents/competitive-intelligence-agent.ts:130:15)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Object.generateDailyIdea (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/apps/idea-generation-agent/idea-generation-agent.controller.ts:380:27)
+    at run (file:///home/doughnut/Documents/Github/work/humanoidz/nugget-finder/apps/server/src/trigger/daily-idea-generation.ts:24:24)
+    at _RunTimelineMetricsAPI.measureMetric (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/runTimelineMetrics/index.ts:67:22)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:128:28
+    at ConsoleInterceptor.intercept (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/consoleInterceptor.ts:36:14)
+    at result._tracer.startActiveSpan.kind (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:90:16)
+    at file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/tracer.ts:132:18
+    at TaskExecutor.execute (file:///tmp/bunx-1000-trigger.dev@latest/node_modules/@trigger.dev/core/src/v3/workers/taskExecutor.ts:87:20)
+○ Aug 08, 00:30:38.528 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:30:38.528] [31merror[39m: ❌ EnhancedCompetitiveIntelligenceAgent - Error
+
+○ Aug 08, 00:30:38.528 run_2tamr48mdrzm8kvnk9yhk.1 🔄 Using enhanced fallback competitive intelligence data
+○ Aug 08, 00:30:38.528 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:30:38.528] [32minfo[39m: ✅ Enhanced competitive intelligence completed
+💰 Step 5: Enhanced Monetization Strategy
+○ Aug 08, 00:30:48.466 run_2tamr48mdrzm8kvnk9yhk.1 🧠 Step 6: Initial Idea Synthesis
+○ Aug 08, 00:30:54.983 run_2tamr48mdrzm8kvnk9yhk.1 🧠 Step 7: Enhanced Idea Synthesis with Trend Architect Logic
+○ Aug 08, 00:31:09.712 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Step 7: Enhanced Idea Synthesis Completed: {
+  title: 'Unified Multi-Platform Content Distribution and Monetization Workflow for Independent Creators Increasing Revenue and Efficiency',
+  confidenceScore: 8.9,
+  urgencyLevel: 9.1,
+  totalScore: 8.5
+}
+○ Aug 08, 00:31:09.713 run_2tamr48mdrzm8kvnk9yhk.1 🔍 Step 7: Critic Agent Analysis🔍 Step 6: Activating Critic Agent
+○ Aug 08, 00:31:21.248 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Step 6: Critic Agent Generated Refinement Recommendations
+○ Aug 08, 00:31:21.249 run_2tamr48mdrzm8kvnk9yhk.1 🔍 Refinement focus areas identified: **Critical Weaknesses Identified:**
+
+1. **Persona and Pain Point Specificity:**  
+   The target “independent content creators worldwide” is very broad, spanning diverse content types (video, audio, te...🎨 Step 8: Final Refined Idea Synthesis🧠 Step 7: Enhanced Idea Synthesis with Trend Architect Logic
+○ Aug 08, 00:31:38.690 run_2tamr48mdrzm8kvnk9yhk.1 ✅ Step 7: Enhanced Idea Synthesis Completed: {
+  title: 'Automated Localized Monetization and Payment Integration Platform for Mid-Tier Video Creators Increasing Sponsorship Revenue and Cash Flow',
+  confidenceScore: 8.9,
+  urgencyLevel: 9.1,
+  totalScore: 8.4
+}
+○ Aug 08, 00:31:38.692 run_2tamr48mdrzm8kvnk9yhk.1 💾 Step 9: Saving Enhanced Idea to Database
+○ Aug 08, 00:31:46.224 run_2tamr48mdrzm8kvnk9yhk.1 🎉 Enhanced Daily Idea Generated Successfully: 0ea3a645-57d8-484c-a3a0-5878f096c079
+○ Aug 08, 00:31:46.224 run_2tamr48mdrzm8kvnk9yhk.1 📊 Final Idea Summary: {
+  title: 'Automated Localized Monetization and Payment Integration Platform for Mid-Tier Video Creators Increasing Sponsorship Revenue and Cash Flow',
+  confidenceScore: 8.9,
+  urgencyLevel: 9.1,
+  totalScore: 8.4,
+  timeToMarket: 4,
+  tags: [
+    'SaaS',
+    'creator-economy',
+    'global-market',
+    'monetization-automation'
+  ]
+}
+○ Aug 08, 00:31:46.224 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:31:46.224] [32minfo[39m: 🎉 Enhanced daily idea generation completed successfully
+✅ Idea 4 generated successfully { ideaId: '0ea3a645-57d8-484c-a3a0-5878f096c079' }
+○ Aug 08, 00:31:46.224 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:31:46.224] [32minfo[39m: Daily idea generation successful
+
+○ Aug 08, 00:31:46.225 run_2tamr48mdrzm8kvnk9yhk.1 🎉 Daily idea generation completed {
+  totalRequested: 4,
+  successCount: 4,
+  errorCount: 0,
+  duration: '1011464ms',
+  results: [
+    {
+      attempt: 1,
+      success: true,
+      ideaId: 'd8f5d42c-55ec-420a-b351-138e5bdb2c6b'
+    },
+    {
+      attempt: 2,
+      success: true,
+      ideaId: '0dd15ef1-aa3d-4fd1-91ff-1a069489dc76'
+    },
+    {
+      attempt: 3,
+      success: true,
+      ideaId: 'e5b05d1b-d8cd-48f0-979e-c339f7f5eae1'
+    },
+    {
+      attempt: 4,
+      success: true,
+      ideaId: '0ea3a645-57d8-484c-a3a0-5878f096c079'
+    }
+  ]
+}
+○ Aug 08, 00:31:46.225 run_2tamr48mdrzm8kvnk9yhk.1 [2025-08-08 00:31:46.224] [32minfo[39m: Daily idea generation job completed
+
+○ Aug 08, 00:31:46.905 ->  20250807.22 | daily-idea-generator | run_2tamr48mdrzm8kvnk9yhk.1 | Success (16m, 52.3s)
