@@ -552,7 +552,7 @@ export default function BrowseServerClient({ initialIdeas, initialLimits }: Brow
                 >
                   <CardHeader className="flex-1">
                     <div className="mb-2 flex items-start justify-between gap-2">
-                      <CardTitle className="line-clamp-2 flex-1 text-lg">
+                      <CardTitle className="flex-1 text-lg">
                         {baseIdea.title || "Untitled Idea"}
                       </CardTitle>
                     </div>
@@ -590,7 +590,7 @@ export default function BrowseServerClient({ initialIdeas, initialLimits }: Brow
                   </CardHeader>
 
                   <CardContent className="flex-1">
-                    <p className="line-clamp-3 text-muted-foreground">
+                    <p className="line-clamp-4 text-muted-foreground">
                       {baseIdea.description ||
                         "No description available for this startup opportunity."}
                     </p>
