@@ -23,7 +23,7 @@ export const onDemandIdeaGenerationJob = task({
         where: { id: requestId },
         data: {
           status: "RUNNING",
-          currentStep: "Starting pipeline",
+          currentStep: "Starting Research",
           progressMessage: "Initializing idea generation pipeline...",
           imageState: "confused"
         }
@@ -85,7 +85,7 @@ export const onDemandIdeaGenerationJob = task({
             where: { id: requestId },
             data: {
               currentStep: "Problem Analysis",
-              progressMessage: "Identifying market gaps and customer pain points...",
+              progressMessage: "Uncovering critical market gaps and pain points...",
               imageState: "digging"
             }
           });
@@ -101,7 +101,7 @@ export const onDemandIdeaGenerationJob = task({
             where: { id: requestId },
             data: {
               currentStep: "Competitive Analysis",
-              progressMessage: "Researching competitive landscape and positioning...",
+              progressMessage: "Mapping competitive landscape and strategic positioning...",
               imageState: "digging"
             }
           });
@@ -117,7 +117,7 @@ export const onDemandIdeaGenerationJob = task({
             where: { id: requestId },
             data: {
               currentStep: "Monetization Strategy",
-              progressMessage: "Designing revenue models and financial projections...",
+              progressMessage: "Architecting sustainable monetization strategies...",
               imageState: "digging"
             }
           });
@@ -133,7 +133,7 @@ export const onDemandIdeaGenerationJob = task({
             where: { id: requestId },
             data: {
               currentStep: "Technical Planning",
-              progressMessage: "Creating technical implementation roadmap...",
+              progressMessage: "Blueprinting technical implementation and MVP roadmap...",
               imageState: "digging"
             }
           });
@@ -146,7 +146,7 @@ export const onDemandIdeaGenerationJob = task({
             where: { id: requestId },
             data: {
               currentStep: "Idea Synthesis",
-              progressMessage: "Synthesizing all research into a coherent business idea...",
+              progressMessage: "Weaving insights into breakthrough business opportunities...",
               imageState: "happy"
             }
           });
@@ -161,7 +161,7 @@ export const onDemandIdeaGenerationJob = task({
             where: { id: requestId },
             data: {
               currentStep: "Critical Review",
-              progressMessage: "Applying critical analysis to refine the opportunity...",
+              progressMessage: "Examining opportunity through expert critical lens...",
               imageState: "happy"
             }
           });
@@ -173,7 +173,7 @@ export const onDemandIdeaGenerationJob = task({
             where: { id: requestId },
             data: {
               currentStep: "Final Refinement",
-              progressMessage: "Creating the final polished business opportunity...",
+              progressMessage: "Crafting your final breakthrough opportunity...",
               imageState: "happy"
             }
           });
@@ -188,7 +188,7 @@ export const onDemandIdeaGenerationJob = task({
             where: { id: requestId },
             data: {
               currentStep: "Saving Results",
-              progressMessage: `Saving business opportunity ${i + 1} to your collection...`,
+              progressMessage: `Securing golden nugget ${i + 1} in your treasure vault...`,
               imageState: "found"
             }
           });
@@ -237,7 +237,7 @@ export const onDemandIdeaGenerationJob = task({
           data: {
             status: "COMPLETED",
             currentStep: "Complete",
-            progressMessage: `🎉 Found ${generatedIdeas.length} amazing business opportunities for you!`,
+            progressMessage: `🎉 Discovery complete! Found ${generatedIdeas.length} golden business nuggets for you!`,
             imageState: "found",
             generatedIdeaIds: generatedIdeas.map(idea => idea.id)
           }

@@ -14,6 +14,52 @@ interface AnimatedSearchLoaderProps {
   currentStep?: string;
 }
 
+// Dynamic word lists for each step to make it feel alive
+const STEP_WORD_LISTS = {
+  "Starting": [
+    "Initializing", "Preparing", "Loading", "Starting", "Beginning", "Launching", "Activating", "Booting", "Setting up", "Powering up"
+  ],
+  "Research Direction": [
+    "Strategizing", "Planning", "Analyzing direction", "Setting course", "Mapping strategy", "Defining scope", "Outlining approach", "Charting path", "Designing framework", "Establishing focus"
+  ],
+  "Trend Research": [
+    "Scanning markets", "Tracking trends", "Analyzing patterns", "Monitoring signals", "Studying movements", "Observing shifts", "Detecting changes", "Mapping dynamics", "Exploring frontiers", "Investigating waves"
+  ],
+  "Problem Analysis": [
+    "Identifying gaps", "Finding problems", "Uncovering pain points", "Discovering opportunities", "Spotting issues", "Detecting friction", "Analyzing bottlenecks", "Exploring challenges", "Mapping inefficiencies", "Investigating barriers"
+  ],
+  "Competitive Analysis": [
+    "Analyzing competitors", "Studying landscape", "Mapping players", "Researching market", "Evaluating competition", "Investigating rivals", "Assessing market position", "Benchmarking solutions", "Profiling leaders", "Examining strategies"
+  ],
+  "Monetization Strategy": [
+    "Designing revenue", "Planning monetization", "Structuring pricing", "Building business model", "Creating value streams", "Optimizing revenue", "Calculating pricing", "Modeling financials", "Strategizing income", "Forecasting earnings"
+  ],
+  "Technical Planning": [
+    "Architecting solution", "Designing system", "Planning features", "Blueprinting platform", "Structuring product", "Outlining MVP", "Mapping functionality", "Defining specs", "Creating roadmap", "Building framework"
+  ],
+  "Idea Synthesis": [
+    "Synthesizing insights", "Combining elements", "Creating concepts", "Merging findings", "Generating ideas", "Crafting solutions", "Blending research", "Forming opportunities", "Weaving together", "Connecting dots"
+  ],
+  "Evaluation": [
+    "Scoring opportunities", "Evaluating potential", "Ranking ideas", "Assessing viability", "Measuring impact", "Calculating scores", "Analyzing feasibility", "Reviewing concepts", "Validating ideas", "Testing assumptions"
+  ],
+  "Critical Review": [
+    "Evaluating feasibility", "Testing assumptions", "Challenging ideas", "Refining concepts", "Validating approaches", "Scrutinizing details", "Improving quality", "Strengthening position", "Enhancing value", "Optimizing potential"
+  ],
+  "Final Refinement": [
+    "Polishing concepts", "Perfecting details", "Finalizing structure", "Enhancing clarity", "Optimizing presentation", "Completing synthesis", "Adding finishing touches", "Ensuring quality", "Maximizing impact", "Preparing delivery"
+  ],
+  "Saving Results": [
+    "Securing nuggets", "Preserving insights", "Storing treasures", "Cataloging gems", "Archiving discoveries", "Safeguarding ideas", "Banking opportunities", "Collecting results", "Vaulting findings", "Harvesting gold"
+  ],
+  "Complete": [
+    "Mission accomplished", "Discovery complete", "Nuggets secured", "Treasures found", "Goals achieved", "Success delivered", "Opportunities unlocked", "Gold discovered", "Value created", "Ready to explore"
+  ],
+  "Failed": [
+    "Encountered obstacles", "Facing challenges", "Temporary setback", "Need to regroup", "Adjusting approach", "Exploring alternatives", "Refining strategy", "Learning from data", "Preparing retry", "Analyzing feedback"
+  ]
+};
+
 // Simple particle component for subtle effects
 const Particles = ({ show, type }: { show: boolean; type: 'dust' | 'sparkle' }) => {
   if (!show) return null;
@@ -49,6 +95,68 @@ const Particles = ({ show, type }: { show: boolean; type: 'dust' | 'sparkle' }) 
   );
 };
 
+// Dynamic word animation component
+const DynamicWordAnimation = ({ step, isActive }: { step: string; isActive: boolean }) => {
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [displayText, setDisplayText] = useState("");
+  
+  // Get words for the current step
+  const getWordsForStep = (stepName: string) => {
+    // Find matching key in STEP_WORD_LISTS
+    const matchingKey = Object.keys(STEP_WORD_LISTS).find(key => 
+      stepName.toLowerCase().includes(key.toLowerCase())
+    );
+    return matchingKey ? STEP_WORD_LISTS[matchingKey as keyof typeof STEP_WORD_LISTS] : STEP_WORD_LISTS["Starting"];
+  };
+
+  const words = getWordsForStep(step);
+
+  useEffect(() => {
+    if (!isActive) {
+      setDisplayText(step);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setCurrentWordIndex((prev) => (prev + 1) % words.length);
+    }, 1500); // Change word every 1.5 seconds
+
+    return () => clearInterval(interval);
+  }, [words, isActive, step]);
+
+  useEffect(() => {
+    if (isActive && words.length > 0) {
+      setDisplayText(words[currentWordIndex]);
+    }
+  }, [currentWordIndex, words, isActive]);
+
+  if (!isActive) {
+    return <span>{step}</span>;
+  }
+
+  return (
+    <AnimatePresence mode="wait">
+      <motion.span
+        key={displayText}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -10 }}
+        transition={{ duration: 0.3 }}
+        className="inline-block"
+      >
+        {displayText}
+        <motion.span
+          animate={{ opacity: [1, 0, 1] }}
+          transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY }}
+          className="ml-1"
+        >
+          •••
+        </motion.span>
+      </motion.span>
+    </AnimatePresence>
+  );
+};
+
 export default function AnimatedSearchLoader({ 
   searchQuery, 
   onAnimationComplete,
@@ -62,11 +170,11 @@ export default function AnimatedSearchLoader({
   useEffect(() => {
     if (currentStep) {
       // Use real data to determine animation state
-      if (currentStep.includes('Research') || currentStep === 'Initializing') {
+      if (currentStep.includes('Research') || currentStep.includes('Starting') || currentStep.includes('Direction')) {
         setAnimationState('scavenging');
-      } else if (currentStep.includes('Analysis') || currentStep.includes('Mining') || currentStep.includes('Generation')) {
+      } else if (currentStep.includes('Analysis') || currentStep.includes('Mining') || currentStep.includes('Generation') || currentStep.includes('Intelligence') || currentStep.includes('Monetization') || currentStep.includes('Build') || currentStep.includes('Synthesis')) {
         setAnimationState('mining');
-      } else if (currentStep.includes('Complete') || currentStep.includes('Finished')) {
+      } else if (currentStep.includes('Complete') || currentStep.includes('Finished') || currentStep.includes('Evaluation') || currentStep.includes('Completion')) {
         setAnimationState('found');
       }
     } else {
@@ -151,6 +259,9 @@ export default function AnimatedSearchLoader({
     }
   };
 
+  // Determine if we should show dynamic word animation
+  const isCurrentlyProcessing = currentStep && !currentStep.includes('Complete') && !currentStep.includes('Finished');
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
       <div className="w-full max-w-4xl space-y-8 text-center px-4">
@@ -210,7 +321,7 @@ export default function AnimatedSearchLoader({
               />
             </div>
             
-            {/* Status text */}
+            {/* Status text with dynamic word animation */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -218,7 +329,10 @@ export default function AnimatedSearchLoader({
               className="space-y-3"
             >
               <h2 className="text-3xl md:text-4xl font-bold text-primary">
-                {currentContent.title}
+                <DynamicWordAnimation 
+                  step={currentContent.title} 
+                  isActive={isCurrentlyProcessing || false} 
+                />
               </h2>
               <p className="text-lg text-muted-foreground">
                 {currentContent.description}

@@ -35,7 +35,7 @@ export class CompetitiveIntelligenceAgent {
 - Focus on positioning around software capabilities (APIs, data processing, workflow automation)
 - Avoid hardware-dependent or deep R&D advantages
 - Emphasize network effects, data advantages, or unique integrations possible for startups
-- Consider geographic/demographic advantages in emerging markets
+- Consider demographic advantages in underserved global market segments
 
 Return enhanced competitive analysis:
 {
@@ -65,7 +65,7 @@ Return enhanced competitive analysis:
   },
   "positioning": {
     "name": "string (Memorable positioning statement that captures the unique value for target persona - PROBLEM + SOLUTION in ≤8 words)",
-    "targetSegment": "string (Extremely specific target persona with geographic/industry context)",
+    "targetSegment": "string (Extremely specific target persona with industry/vertical context)",
     "valueProposition": "string (Sharp pitch emphasizing unique insight and direct problem resolution with software solution)",
     "keyDifferentiators": ["unique capability tied to unfair advantage", "niche-specific feature competitors can't replicate", "software advantage that scales"]
   }
@@ -262,12 +262,12 @@ Extract competitive data and positioning strategy. Ensure all competitive advant
         competition: {
           marketConcentrationLevel: "LOW" as const,
           marketConcentrationJustification:
-            "Emerging market focus creates opportunities for specialized solutions targeting underserved segments with mobile-first, locally-adapted approaches",
+            "Global market focus creates opportunities for specialized solutions targeting underserved segments with digital-first, universally-adapted approaches",
           directCompetitors: [
             {
               name: "Generic Global Platforms",
               justification:
-                "Large platforms that attempt to serve the target market but lack regional customization",
+                                  "Large platforms that attempt to serve the target market but lack specialized customization",
               strengths: [
                 "Brand recognition",
                 "Extensive features",
@@ -300,19 +300,19 @@ Extract competitive data and positioning strategy. Ensure all competitive advant
             },
           ],
           competitorFailurePoints: [
-            "Lack of regional platform integrations and local payment support",
+                              "Lack of specialized platform integrations and diverse payment support",
             "Complex interfaces designed for desktop users, not mobile-first workflows",
             "Pricing models that don't scale with emerging market budgets",
           ],
           unfairAdvantage: [
-            "Native integrations with regional platforms and payment systems",
-            "Mobile-first design optimized for emerging market usage patterns",
+                          "Native integrations with specialized platforms and diverse payment systems",
+              "Mobile-first design optimized for global digital-first usage patterns",
             "Local market expertise and community-driven feature development",
           ],
           moat: [
-            "Exclusive partnerships with regional platforms and local service providers",
-            "Network effects within specific geographic communities",
-            "Data advantages from understanding regional user behavior patterns",
+                          "Exclusive partnerships with specialized platforms and niche service providers",
+              "Network effects within specific industry communities",
+              "Data advantages from understanding specialized user behavior patterns",
           ],
           competitivePositioningScore: 8,
         },

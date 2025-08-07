@@ -40,7 +40,7 @@ export class ProblemGapAgent {
 Return enhanced JSON structure:
 {
   "problems": [
-    "Specific persona spends X hours/week on manual process Y, losing $Z in revenue/opportunities because existing tools fail to address [specific limitation] in their workflow, particularly acute in [geographic/industry context]",
+    "Specific persona spends X hours/week on manual process Y, losing $Z in revenue/opportunities because existing tools fail to address [specific limitation] in their workflow, particularly acute in [industry/vertical context]",
     "Second persona problem with quantified impact and clear gap in current solutions",
     "Third persona problem if applicable, same specificity and business impact focus"
   ],
@@ -49,7 +49,7 @@ Return enhanced JSON structure:
       "title": "string (Precise gap title that hints at the missing software capability)",
       "description": "string (Detailed explanation of WHY existing software/methods fail for this specific persona in this trend context, including the mechanism of failure)",
       "impact": "string (Quantified business impact with specific metrics where possible)",
-      "target": "string (Extremely narrow persona definition with geographic/industry context)",
+      "target": "string (Extremely narrow persona definition with industry/vertical context)",
       "opportunity": "string (Specific software solution that leverages the trend to solve this gap uniquely)"
     }
   ]
@@ -235,9 +235,9 @@ Extract problems and gaps with maximum specificity and business impact quantific
           {
             title: "Multi-Platform Content Distribution for Emerging Markets",
             description:
-              "Current content management tools are built for Western platforms and payment systems, failing to integrate with regional social platforms, local payment gateways, and mobile-first workflows prevalent in emerging markets",
+              "Current content management tools are built for mainstream platforms and limited payment systems, failing to integrate with specialized social platforms, diverse payment gateways, and mobile-first workflows prevalent in global digital markets",
             impact:
-              "Content creators lose 40-60% of potential revenue from regional sponsorships and audience monetization",
+                              "Content creators lose 40-60% of potential revenue from specialized sponsorships and audience monetization",
             target:
               "Independent content creators and influencers with limited resources",
             opportunity:

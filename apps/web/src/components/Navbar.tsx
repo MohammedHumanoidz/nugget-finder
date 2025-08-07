@@ -82,6 +82,7 @@ export default function Navbar() {
   const authenticatedLinks = [
     { href: "/saved-ideas", label: "Saved Ideas" },
     { href: "/claimed-ideas", label: "Claimed Ideas" },
+    { href: "/mined-nuggets", label: "Mined Nuggets" },
   ];
 
   return (

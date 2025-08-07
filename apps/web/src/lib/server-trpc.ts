@@ -44,6 +44,10 @@ class ServerTRPCClient {
     return this.makeRequest('ideas.getClaimedIdeas');
   }
 
+  async getMinedIdeas(input?: { limit?: number; offset?: number }) {
+    return this.makeRequest('ideas.getMinedIdeas', input);
+  }
+
   async getUserLimits() {
     return this.makeRequest('ideas.getLimits');
   }

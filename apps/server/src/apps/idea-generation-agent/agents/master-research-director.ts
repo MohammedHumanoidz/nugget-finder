@@ -6,7 +6,7 @@ import { EnhancedJsonParser } from "../../../utils/enhanced-json-parser";
 // Interface for Master Research Director
 interface ResearchDirectorData {
   researchTheme: string;
-  geographicFocus: string;
+  globalMarketFocus: string;
   industryRotation: string;
   diversityMandates: string[];
   researchApproach: string;
@@ -43,7 +43,7 @@ export class MasterResearchDirector {
 Return this exact JSON structure:
 {
   "researchTheme": "string (Research direction tailored to user's prompt, e.g., 'AI-Powered Healthcare Solutions for Mental Health' or 'Sustainable Energy Management Platforms for Small Businesses')",
-  "geographicFocus": "string (Always use 'Global Market' to ensure worldwide applicability)",
+  "globalMarketFocus": "string (Always use 'Global Digital Market' to ensure worldwide applicability)",
   "industryRotation": "string (The industry vertical that aligns with user's interests and expertise)",
   "diversityMandates": ["mandate 1: focus on user's specific domain", "mandate 2: align with user's apparent expertise level", "mandate 3: explore both technical and business opportunities in their area"],
   "researchApproach": "string (How the trend research should be conducted specific to user's domain - what communities, signals, and validation sources to prioritize)"
@@ -55,7 +55,7 @@ Return this exact JSON structure:
 - Level of technical vs business focus
 - Solution scalability and global applicability
 
-Focus on creating globally applicable solutions that can work across different markets and regions. Avoid region-specific constraints or dependencies.`
+Focus on creating globally applicable solutions that work universally across different markets worldwide. Emphasize digital-first opportunities that transcend boundaries.`
         : `You are the Master Research Director for a world-class startup opportunity discovery system. Your role is to establish today's research parameters that will drive the entire pipeline toward discovering genuinely novel, diverse startup opportunities.
 
 **Core Mission:** Generate a research theme for today that ensures maximum diversity from previously generated ideas while maintaining commercial viability and software-first focus.
@@ -82,7 +82,7 @@ Focus on creating globally applicable solutions that can work across different m
 Return this exact JSON structure:
 {
   "researchTheme": "string (Today's focused research direction, e.g., 'AI-Powered Identity Verification for Digital Platforms' or 'Automated Drug Discovery Platforms for Pharmaceutical Research')",
-  "geographicFocus": "string (Always use 'Global Market' to ensure worldwide applicability)",
+  "globalMarketFocus": "string (Always use 'Global Digital Market' to ensure worldwide applicability)",
   "industryRotation": "string (The industry vertical to explore today, ensuring diversity from previous, focusing on tech-forward areas)",
   "diversityMandates": ["mandate 1: avoid X from previous ideas", "mandate 2: focus on Y demographic not covered before", "mandate 3: explore Z business model not used recently"],
   "researchApproach": "string (How the trend research should be conducted - what communities, signals, and validation sources to prioritize)"
@@ -99,7 +99,7 @@ ${
             )}, Target: ${this.extractTarget(idea.description)}`
         )
         .join("\n")
-    : "No previous ideas - establish initial research direction focusing on underserved global markets with high tech potential"
+    : "No previous ideas - establish initial research direction focusing on underserved global digital markets with high tech potential"
 }
 
 Today's research must explore completely new territory, pushing boundaries in technology and market application. Be specific and actionable, ensuring the diversity mandates are strictly followed.`;
@@ -115,10 +115,10 @@ Today's research must explore completely new territory, pushing boundaries in te
       const parseResult =
         await EnhancedJsonParser.parseWithFallback<ResearchDirectorData>(
           text,
-          ["researchTheme", "geographicFocus", "industryRotation"],
+          ["researchTheme", "globalMarketFocus", "industryRotation"],
           {
             researchTheme: "AI-Powered Developer Tools for Global Remote Teams",
-            geographicFocus: "Global Digital-First opportunities",
+            globalMarketFocus: "Global Digital Market",
             industryRotation: "Developer Productivity and AI Infrastructure",
             diversityMandates: [
               "Avoid consumer social apps",
@@ -151,7 +151,7 @@ Today's research must explore completely new territory, pushing boundaries in te
 
       console.log("✅ Step 1: Research Director Set Research Parameters:", {
         theme: directorData.researchTheme,
-        geography: directorData.geographicFocus,
+        geography: directorData.globalMarketFocus,
         industry: directorData.industryRotation,
       });
 
@@ -161,7 +161,7 @@ Today's research must explore completely new territory, pushing boundaries in te
       // Return fallback research direction
       return {
         researchTheme: "AI-Powered Developer Tools for Global Remote Teams",
-        geographicFocus: "Global Digital-First opportunities",
+        globalMarketFocus: "Global Digital Market",
         industryRotation: "Developer Productivity and AI Infrastructure",
         diversityMandates: [
           "Avoid consumer social apps",

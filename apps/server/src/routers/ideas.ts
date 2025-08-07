@@ -86,6 +86,46 @@ export const ideasRouter = router({
     return await getUserClaimedIdeas(ctx.session.user.id);
   }),
 
+  // Get user's mined ideas (user-generated ideas)
+  getMinedIdeas: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).default(20),
+        offset: z.number().min(0).default(0),
+      }).optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const { limit = 20, offset = 0 } = input || {};
+      
+      try {
+        const minedIdeas = await prisma.userGeneratedIdea.findMany({
+          where: { userId },
+          orderBy: { createdAt: 'desc' },
+          take: limit,
+          skip: offset,
+          select: {
+            id: true,
+            prompt: true,
+            title: true,
+            description: true,
+            executiveSummary: true,
+            problemStatement: true,
+            narrativeHook: true,
+            tags: true,
+            confidenceScore: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        });
+
+        return minedIdeas;
+      } catch (error) {
+        console.error("Error getting mined ideas:", error);
+        return [];
+      }
+    }),
+
   // Get individual idea by ID with view tracking and limits check
   getIdeaById: protectedProcedure
     .input(

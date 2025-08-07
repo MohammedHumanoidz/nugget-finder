@@ -25,7 +25,7 @@ ${
   researchDirection
     ? `
 - Research Theme: ${researchDirection.researchTheme}
-- Geographic Focus: ${researchDirection.geographicFocus}  
+- Global Market Focus: ${researchDirection.globalMarketFocus}  
 - Industry Focus: ${researchDirection.industryRotation}
 - Diversity Mandates: ${researchDirection.diversityMandates.join(", ")}
 `
@@ -36,7 +36,7 @@ ${
 1. **Human-Validated Signals**: The trend MUST be backed by genuine online community engagement (Reddit threads with 500+ comments, viral Twitter discussions, Product Hunt buzz, active forum debates)
 2. **Software-Solvable**: Focus on trends creating immediate opportunities for SaaS, APIs, web/mobile apps, or lightweight services
 3. **Timing-Sensitive**: Identify trends in the "early adopter" phase - not too early (theoretical) or too late (saturated)
-4. **Global Applicability**: Focus on trends that can create opportunities across different markets and regions worldwide
+4. **Global Applicability**: Focus on trends that can create opportunities across different markets worldwide
 5. **Buildable Solutions**: Ensure the trend opens paths to <$10K MVP, 3-6 month development cycle solutions
 
 **Validation Framework:**
@@ -210,17 +210,17 @@ Extract the core trend information and format as valid JSON. Ensure all supporti
       console.log("🔄 Using enhanced fallback trend data");
       return {
         title: researchDirection
-          ? `${researchDirection.industryRotation} Innovation in ${researchDirection.geographicFocus}`
+          ? `${researchDirection.industryRotation} Innovation in ${researchDirection.globalMarketFocus}`
           : "AI-Powered Workflow Automation for SMBs",
         description: researchDirection
-          ? `Emerging trend in ${researchDirection.geographicFocus} focused on ${researchDirection.industryRotation} digital transformation.`
+                      ? `Emerging trend in ${researchDirection.globalMarketFocus} focused on ${researchDirection.industryRotation} digital transformation.`
           : "Small to medium businesses are increasingly adopting AI-powered tools to automate repetitive workflows, driven by labor shortages and cost pressures.",
         trendStrength: 8,
         catalystType: "TECHNOLOGY_BREAKTHROUGH" as const,
         timingUrgency: 7,
         supportingData: [
-          "Active discussions in target region startup communities",
-          "Growing investment in regional digital infrastructure",
+                      "Active discussions in global digital startup communities",
+            "Growing investment in global digital infrastructure",
           "Increasing adoption metrics for relevant software categories",
         ],
       };

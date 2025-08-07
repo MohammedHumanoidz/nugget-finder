@@ -79,7 +79,7 @@ ${
 Generate a single, irresistible startup idea using the enhanced narrative format above, then structure it into the required JSON format. The idea should feel so compelling and obvious that someone would start building it immediately.
 
 **CRITICAL TITLE REQUIREMENTS:**
-- NO startup names, company names, or product names (avoid names like "ChatOrderSync", "FlowGenius", "Nordic Platform", etc.)
+- NO startup names, company names, or product names (avoid names like "ChatOrderSync", "FlowGenius", "GlobalSync", etc.)
 - Focus on the SOLUTION CATEGORY and TARGET MARKET (e.g., "Multi-Channel Inventory Management for Independent Artisans" instead of "Artisan Platform")
 - Describe WHAT the solution does and WHO it serves, not what it's called
 - Keep titles descriptive and professional, focusing on the business value
@@ -150,7 +150,7 @@ Create an idea so compelling that it becomes impossible to ignore - the kind of 
             innovationLevel: 8,
             timeToMarket: 5,
             confidenceScore: 9,
-            narrativeHook: "Turn regional platform chaos into creator success",
+            narrativeHook: "Turn multi-platform chaos into creator success",
             targetKeywords: [
               "creator tools",
               "emerging markets",
@@ -172,7 +172,7 @@ Create an idea so compelling that it becomes impossible to ignore - the kind of 
               regulatoryRisk: 3,
             },
             executionPlan:
-              "Build MVP with regional platform integrations, launch beta with 50 creators in target markets.",
+              "Build MVP with specialized platform integrations, launch beta with 50 creators in target verticals.",
             tractionSignals:
               "Achieve 200 creator sign-ups with 60% monthly active usage within 3 months.",
             frameworkFit:
@@ -234,7 +234,7 @@ Create an idea so compelling that it becomes impossible to ignore - the kind of 
           "creator tools",
           "emerging markets",
           "mobile-first platform",
-          "regional social media",
+                        "specialized social media",
         ],
         urgencyLevel: 9,
         executionComplexity: 6,
@@ -252,11 +252,11 @@ Create an idea so compelling that it becomes impossible to ignore - the kind of 
           regulatoryRisk: 3,
         },
         executionPlan:
-          "Build MVP with 3 core regional platforms (TikTok regional, local social networks), implement basic cross-posting and analytics. Launch beta with 50 creators in target markets through direct outreach in regional creator communities. Integrate local payment systems in month 3. Scale through creator referral program and regional platform partnerships.",
+                      "Build MVP with 3 core specialized platforms (TikTok, niche social networks), implement basic cross-posting and analytics. Launch beta with 50 creators in target verticals through direct outreach in specialized creator communities. Integrate diverse payment systems in month 3. Scale through creator referral program and specialized platform partnerships.",
         tractionSignals:
-          "Achieve 200 creator sign-ups with 60% monthly active usage, 25% of beta users upgrade to paid plans within 2 months, creators report 40%+ time savings in first week, secure partnerships with 2 regional platforms for enhanced integrations.",
+                      "Achieve 200 creator sign-ups with 60% monthly active usage, 25% of beta users upgrade to paid plans within 2 months, creators report 40%+ time savings in first week, secure partnerships with 2 specialized platforms for enhanced integrations.",
         frameworkFit:
-          "This follows the 'Geographic Arbitrage' framework by providing essential automation tools for the booming SMB digital transformation market, positioned as a 'Unbundling Zapier for SMBs' play that focuses on ease-of-use over enterprise complexity.",
+            "This follows the 'Specialized Solutions' framework by providing essential automation tools for the booming SMB digital transformation market, positioned as a 'Unbundling Zapier for SMBs' play that focuses on ease-of-use over enterprise complexity.",
       };
     }
   }
