@@ -38,11 +38,21 @@ const IdeaForm = () => {
     },
   }));
 
-  // Poll for generation status using trpc query
+  // Poll for generation status using trpc query with adaptive intervals
   const { data: generationStatus } = useQuery({
     ...trpc.ideas.getGenerationStatus.queryOptions({ requestId: requestId || "" }),
     enabled: !!requestId && isGenerating,
-    refetchInterval: 2000, // Poll every 2 seconds
+    refetchInterval: (query) => {
+      // Use faster polling during active generation, slower for completed states
+      const data = query.state.data;
+      if (!data || data.status === 'RUNNING') {
+        return 1000; // Poll every 1 second during generation
+      }
+      if (data.status === 'COMPLETED' || data.status === 'FAILED') {
+        return false; // Stop polling when done
+      }
+      return 2000; // Default fallback
+    },
     refetchIntervalInBackground: true,
   });
 

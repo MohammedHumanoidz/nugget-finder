@@ -377,18 +377,16 @@ export const ideasRouter = router({
             await prisma.ideaGenerationRequest.update({
               where: { id: ideaGenerationRequest.id },
               data: {
-                status: "RUNNING",
-                currentStep: "Direct Execution", 
-                progressMessage: "Running idea generation directly...",
-                imageState: "digging"
+                status: "RUNNING"
               }
             });
 
             console.log("[DEBUG] Updated status to RUNNING, calling generateIdeasOnDemand...");
-            // Use the existing controller method
+            // Use the existing controller method with requestId for progress tracking
             const generatedIdeas = await IdeaGenerationAgentController.generateIdeasOnDemand(
               input.query,
-              userId
+              userId,
+              ideaGenerationRequest.id
             );
 
             console.log(`[DEBUG] Generated ${generatedIdeas.length} ideas, updating to COMPLETED...`);

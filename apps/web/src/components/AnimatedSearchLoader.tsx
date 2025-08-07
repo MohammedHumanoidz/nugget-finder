@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
-type AnimationState = 'scavenging' | 'mining' | 'found';
+type AnimationState = 'preparing' | 'researching' | 'building' | 'finalizing' | 'found';
 
 interface AnimatedSearchLoaderProps {
   searchQuery: string;
@@ -16,6 +16,9 @@ interface AnimatedSearchLoaderProps {
 
 // Dynamic word lists for each step to make it feel alive
 const STEP_WORD_LISTS = {
+  "Initializing": [
+    "Initializing", "Preparing", "Loading", "Starting", "Beginning", "Launching", "Activating", "Booting", "Setting up", "Powering up"
+  ],
   "Starting": [
     "Initializing", "Preparing", "Loading", "Starting", "Beginning", "Launching", "Activating", "Booting", "Setting up", "Powering up"
   ],
@@ -57,6 +60,16 @@ const STEP_WORD_LISTS = {
   ],
   "Failed": [
     "Encountered obstacles", "Facing challenges", "Temporary setback", "Need to regroup", "Adjusting approach", "Exploring alternatives", "Refining strategy", "Learning from data", "Preparing retry", "Analyzing feedback"
+  ],
+  // New mappings for idea generation steps
+  "Generating idea 1/3": [
+    "Crafting first opportunity", "Building concept 1", "Developing idea 1", "Creating first nugget", "Forging opportunity 1", "Sculpting concept 1", "Engineering idea 1", "Designing solution 1", "Constructing vision 1", "Innovating concept 1"
+  ],
+  "Generating idea 2/3": [
+    "Crafting second opportunity", "Building concept 2", "Developing idea 2", "Creating second nugget", "Forging opportunity 2", "Sculpting concept 2", "Engineering idea 2", "Designing solution 2", "Constructing vision 2", "Innovating concept 2"
+  ],
+  "Generating idea 3/3": [
+    "Crafting final opportunity", "Building concept 3", "Developing idea 3", "Creating final nugget", "Forging opportunity 3", "Sculpting concept 3", "Engineering idea 3", "Designing solution 3", "Constructing vision 3", "Innovating concept 3"
   ]
 };
 
@@ -102,11 +115,28 @@ const DynamicWordAnimation = ({ step, isActive }: { step: string; isActive: bool
   
   // Get words for the current step
   const getWordsForStep = (stepName: string) => {
-    // Find matching key in STEP_WORD_LISTS
+    // First try exact match
+    if (STEP_WORD_LISTS[stepName as keyof typeof STEP_WORD_LISTS]) {
+      return STEP_WORD_LISTS[stepName as keyof typeof STEP_WORD_LISTS];
+    }
+
+    // Handle idea generation steps with pattern matching
+    if (stepName.includes("Generating idea") && /\d\/\d/.test(stepName)) {
+      const matchingKey = Object.keys(STEP_WORD_LISTS).find(key => 
+        key.includes("Generating idea") && stepName.includes(key.split("/")[0].split(" ").pop() || "")
+      );
+      if (matchingKey) {
+        return STEP_WORD_LISTS[matchingKey as keyof typeof STEP_WORD_LISTS];
+      }
+    }
+
+    // Find matching key with fuzzy matching
     const matchingKey = Object.keys(STEP_WORD_LISTS).find(key => 
-      stepName.toLowerCase().includes(key.toLowerCase())
+      stepName.toLowerCase().includes(key.toLowerCase()) || 
+      key.toLowerCase().includes(stepName.toLowerCase())
     );
-    return matchingKey ? STEP_WORD_LISTS[matchingKey as keyof typeof STEP_WORD_LISTS] : STEP_WORD_LISTS["Starting"];
+    
+    return matchingKey ? STEP_WORD_LISTS[matchingKey as keyof typeof STEP_WORD_LISTS] : STEP_WORD_LISTS["Initializing"];
   };
 
   const words = getWordsForStep(step);
@@ -164,23 +194,25 @@ export default function AnimatedSearchLoader({
   imageState,
   currentStep
 }: AnimatedSearchLoaderProps) {
-  const [animationState, setAnimationState] = useState<AnimationState>('scavenging');
+  const [animationState, setAnimationState] = useState<AnimationState>('preparing');
 
   // Update animation state based on current step or use timer fallback
   useEffect(() => {
     if (currentStep) {
       // Use real data to determine animation state
-      if (currentStep.includes('Research') || currentStep.includes('Starting') || currentStep.includes('Direction')) {
-        setAnimationState('scavenging');
-      } else if (currentStep.includes('Analysis') || currentStep.includes('Mining') || currentStep.includes('Generation') || currentStep.includes('Intelligence') || currentStep.includes('Monetization') || currentStep.includes('Build') || currentStep.includes('Synthesis')) {
-        setAnimationState('mining');
+      if (currentStep.includes('Research') || currentStep.includes('Starting') || currentStep.includes('Direction') || currentStep.includes('Initializing')) {
+        setAnimationState('researching');
+      } else if (currentStep.includes('Analysis') || currentStep.includes('Generation') || currentStep.includes('Intelligence') || currentStep.includes('Monetization') || currentStep.includes('Technical') || currentStep.includes('Synthesis')) {
+        setAnimationState('building');
+      } else if (currentStep.includes('Critical') || currentStep.includes('Final') || currentStep.includes('Refinement') || currentStep.includes('Saving')) {
+        setAnimationState('finalizing');
       } else if (currentStep.includes('Complete') || currentStep.includes('Finished') || currentStep.includes('Evaluation') || currentStep.includes('Completion')) {
         setAnimationState('found');
       }
     } else {
       // Fallback to timer-based animation if no real data
       const timer1 = setTimeout(() => {
-        setAnimationState('mining');
+        setAnimationState('building');
       }, 1500);
 
       const timer2 = setTimeout(() => {
@@ -213,15 +245,25 @@ export default function AnimatedSearchLoader({
   };
 
   const content = {
-    scavenging: {
+    preparing: {
       image: imageState ? getImageForState(imageState) : "/nuggetfinder-confused.png",
-      title: currentStep || "Scavenging the cave...",
+      title: currentStep || "Preparing for discovery...",
+      description: progressMessage || "Getting ready to find amazing opportunities"
+    },
+    researching: {
+      image: imageState ? getImageForState(imageState) : "/nuggetfinder-confused.png",
+      title: currentStep || "Researching the market...",
       description: progressMessage || "Looking for the best opportunities"
     },
-    mining: {
+    building: {
       image: imageState ? getImageForState(imageState) : "/nuggetfinder-digging-hard.png",
-      title: currentStep || "Mining the nuggets...",
-      description: progressMessage || "Analyzing thousands of startup ideas"
+      title: currentStep || "Building your ideas...",
+      description: progressMessage || "Analyzing and crafting business opportunities"
+    },
+    finalizing: {
+      image: imageState ? getImageForState(imageState) : "/nuggetfinder-happy.png",
+      title: currentStep || "Finalizing discoveries...",
+      description: progressMessage || "Polishing your golden nuggets"
     },
     found: {
       image: imageState ? getImageForState(imageState) : "/nuggetfinder-super-happy.png",
@@ -239,15 +281,25 @@ export default function AnimatedSearchLoader({
 
   const getCharacterAnimation = () => {
     switch (animationState) {
-      case 'scavenging':
+      case 'preparing':
+        return {
+          y: [0, -3, 0],
+          rotate: [0, 0.5, -0.5, 0],
+        };
+      case 'researching':
         return {
           y: [0, -5, 0],
           rotate: [0, 1, -1, 0],
         };
-      case 'mining':
+      case 'building':
         return {
           y: [0, -10, 0],
           rotate: [0, 3, -3, 0],
+        };
+      case 'finalizing':
+        return {
+          y: [0, -8, 0],
+          scale: [1, 1.02, 1],
         };
       case 'found':
         return {
@@ -294,8 +346,8 @@ export default function AnimatedSearchLoader({
               <motion.div
                 animate={getCharacterAnimation()}
                 transition={{ 
-                  duration: animationState === 'mining' ? 1.0 : 1.5,
-                  repeat: animationState === 'mining' ? Number.POSITIVE_INFINITY : animationState === 'found' ? 2 : 0,
+                  duration: animationState === 'building' ? 1.0 : 1.5,
+                  repeat: animationState === 'building' ? Number.POSITIVE_INFINITY : animationState === 'found' ? 2 : 0,
                   repeatType: "loop",
                   ease: "easeInOut"
                 }}
@@ -312,7 +364,7 @@ export default function AnimatedSearchLoader({
               
               {/* Subtle particles */}
               <Particles 
-                show={animationState === 'mining'} 
+                show={animationState === 'building'} 
                 type="dust" 
               />
               <Particles 
@@ -351,17 +403,19 @@ export default function AnimatedSearchLoader({
                   className="h-full bg-primary rounded-full"
                   initial={{ width: 0 }}
                   animate={{ 
-                    width: animationState === 'scavenging' ? '33%' : 
-                           animationState === 'mining' ? '66%' : '100%' 
+                    width: animationState === 'preparing' ? '20%' : 
+                           animationState === 'researching' ? '40%' : 
+                           animationState === 'building' ? '60%' : 
+                           animationState === 'finalizing' ? '80%' : '100%' 
                   }}
                   transition={{ duration: 0.8, ease: "easeInOut" }}
                 />
               </div>
               <div className="flex justify-between text-xs text-muted-foreground mt-2">
-                <span className={animationState === 'scavenging' ? 'text-primary font-medium' : ''}>
+                <span className={animationState === 'preparing' || animationState === 'researching' ? 'text-primary font-medium' : ''}>
                   Searching
                 </span>
-                <span className={animationState === 'mining' ? 'text-primary font-medium' : ''}>
+                <span className={animationState === 'building' ? 'text-primary font-medium' : ''}>
                   Analyzing
                 </span>
                 <span className={animationState === 'found' ? 'text-primary font-medium' : ''}>

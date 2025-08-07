@@ -5,6 +5,7 @@ import type {
 } from "../../types/apps/idea-generation-agent";
 import { debugLogger } from "../../utils/logger";
 import { prisma } from "../../utils/configs/db.config";
+import { GENERATION_STEPS, getStepForIdeaGeneration } from "../../constants/generation-steps";
 
 // Import all the agents
 import { MasterResearchDirector, type ResearchDirectorData } from "./agents/master-research-director";
@@ -15,6 +16,24 @@ import { MonetizationAgent } from "./agents/monetization-agent";
 import { WhatToBuildAgent } from "./agents/what-to-build-agent";
 import { CriticAgent } from "./agents/critic-agent";
 import { IdeaSynthesisAgent } from "./agents/idea-synthesis-agent";
+
+// Helper function to update progress
+const updateProgress = async (requestId: string | undefined, step: string, message: string, imageState: string) => {
+  if (!requestId) return;
+  
+  try {
+    await prisma.ideaGenerationRequest.update({
+      where: { id: requestId },
+      data: {
+        currentStep: step,
+        progressMessage: message,
+        imageState: imageState
+      }
+    });
+  } catch (error) {
+    console.error("Failed to update progress:", error);
+  }
+};
 
 const IdeaGenerationAgentController = {
   /**
@@ -99,7 +118,7 @@ const IdeaGenerationAgentController = {
    * On-Demand Idea Generation - Generates 3 ideas based on user prompt
    * Uses the same agent pipeline but driven by user input
    */
-  async generateIdeasOnDemand(userPrompt: string, userId: string): Promise<any[]> {
+  async generateIdeasOnDemand(userPrompt: string, userId: string, requestId?: string): Promise<any[]> {
     try {
       console.log(`🚀 Starting On-Demand Idea Generation for prompt: "${userPrompt}"`);
       debugLogger.info("🚀 On-demand idea generation started", {
@@ -117,6 +136,10 @@ const IdeaGenerationAgentController = {
         console.log(`🎯 Generating idea ${i + 1} of 3 for prompt: "${userPrompt}"`);
         
         try {
+          // Update progress for this idea iteration
+          const ideaStep = getStepForIdeaGeneration(i + 1, 3);
+          await updateProgress(requestId, ideaStep.step, ideaStep.message, ideaStep.imageState);
+
           // Initialize agent context with user prompt
           const agentContext: AgentContext = {
             userPrompt,
@@ -125,10 +148,12 @@ const IdeaGenerationAgentController = {
 
           // Step 1: Master Research Director - Set research parameters based on user prompt
           console.log(`🎯 Step 1: Activating Master Research Director (Idea ${i + 1})`);
+          await updateProgress(requestId, GENERATION_STEPS.RESEARCH_DIRECTION.step, GENERATION_STEPS.RESEARCH_DIRECTION.message, GENERATION_STEPS.RESEARCH_DIRECTION.imageState);
           const researchDirection = await this.masterResearchDirector(agentContext);
 
           // Step 2: Enhanced Trend Research - Guided by research director and user prompt
           console.log(`📈 Step 2: Enhanced Trend Research (Idea ${i + 1})`);
+          await updateProgress(requestId, GENERATION_STEPS.TREND_RESEARCH.step, GENERATION_STEPS.TREND_RESEARCH.message, GENERATION_STEPS.TREND_RESEARCH.imageState);
           const trends = await this.trendResearchAgent(agentContext, researchDirection || undefined);
           if (!trends) {
             debugLogger.logError(
@@ -142,6 +167,7 @@ const IdeaGenerationAgentController = {
 
           // Step 3: Enhanced Problem Gap Analysis
           console.log(`🎯 Step 3: Enhanced Problem Gap Analysis (Idea ${i + 1})`);
+          await updateProgress(requestId, GENERATION_STEPS.PROBLEM_ANALYSIS.step, GENERATION_STEPS.PROBLEM_ANALYSIS.message, GENERATION_STEPS.PROBLEM_ANALYSIS.imageState);
           const problemGaps = await this.problemGapAgent(agentContext);
           if (!problemGaps) {
             debugLogger.logError(
@@ -155,6 +181,7 @@ const IdeaGenerationAgentController = {
 
           // Step 4: Enhanced Competitive Intelligence
           console.log(`🏆 Step 4: Enhanced Competitive Intelligence (Idea ${i + 1})`);
+          await updateProgress(requestId, GENERATION_STEPS.COMPETITIVE_ANALYSIS.step, GENERATION_STEPS.COMPETITIVE_ANALYSIS.message, GENERATION_STEPS.COMPETITIVE_ANALYSIS.imageState);
           const competitive = await this.competitiveIntelligenceAgent(agentContext);
           if (!competitive) {
             debugLogger.logError(
@@ -168,6 +195,7 @@ const IdeaGenerationAgentController = {
 
           // Step 5: Enhanced Monetization Strategy
           console.log(`💰 Step 5: Enhanced Monetization Strategy (Idea ${i + 1})`);
+          await updateProgress(requestId, GENERATION_STEPS.MONETIZATION_STRATEGY.step, GENERATION_STEPS.MONETIZATION_STRATEGY.message, GENERATION_STEPS.MONETIZATION_STRATEGY.imageState);
           const monetization = await this.monetizationAgent(agentContext);
           if (!monetization) {
             debugLogger.logError(
@@ -181,11 +209,13 @@ const IdeaGenerationAgentController = {
 
           // Step 6: Generate what to build
           console.log(`🛠️ Step 6: What To Build Analysis (Idea ${i + 1})`);
+          await updateProgress(requestId, GENERATION_STEPS.TECHNICAL_PLANNING.step, GENERATION_STEPS.TECHNICAL_PLANNING.message, GENERATION_STEPS.TECHNICAL_PLANNING.imageState);
           const whatToBuild = await this.whatToBuildAgent(agentContext);
           agentContext.whatToBuild = whatToBuild || undefined;
 
           // Step 7: Initial idea synthesis
           console.log(`🧠 Step 7: Initial Idea Synthesis (Idea ${i + 1})`);
+          await updateProgress(requestId, GENERATION_STEPS.IDEA_SYNTHESIS.step, GENERATION_STEPS.IDEA_SYNTHESIS.message, GENERATION_STEPS.IDEA_SYNTHESIS.imageState);
           const initialIdea = await this.ideaSynthesisAgent(agentContext);
           if (!initialIdea) {
             debugLogger.logError(
@@ -198,10 +228,12 @@ const IdeaGenerationAgentController = {
 
           // Step 8: Critic Agent - Analyze and create refinement prompt
           console.log(`🔍 Step 8: Critic Agent Analysis (Idea ${i + 1})`);
+          await updateProgress(requestId, GENERATION_STEPS.CRITICAL_REVIEW.step, GENERATION_STEPS.CRITICAL_REVIEW.message, GENERATION_STEPS.CRITICAL_REVIEW.imageState);
           const refinementPrompt = await this.criticAgent([initialIdea], agentContext);
 
           // Step 9: Final Refined Synthesis - Apply critic feedback
           console.log(`🎨 Step 9: Final Refined Idea Synthesis (Idea ${i + 1})`);
+          await updateProgress(requestId, GENERATION_STEPS.FINAL_REFINEMENT.step, GENERATION_STEPS.FINAL_REFINEMENT.message, GENERATION_STEPS.FINAL_REFINEMENT.imageState);
           const finalIdea = await this.ideaSynthesisAgent(agentContext, refinementPrompt || undefined);
           if (!finalIdea) {
             debugLogger.logError(
@@ -214,6 +246,7 @@ const IdeaGenerationAgentController = {
 
           // Step 10: Save to UserGeneratedIdea table
           console.log(`💾 Step 10: Saving User Generated Idea ${i + 1} to Database`);
+          await updateProgress(requestId, GENERATION_STEPS.SAVING_RESULTS.step, `Securing golden nugget ${i + 1} in your treasure vault...`, GENERATION_STEPS.SAVING_RESULTS.imageState);
           const savedIdea = await prisma.userGeneratedIdea.create({
             data: {
               userId,

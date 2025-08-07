@@ -3,6 +3,7 @@ import IdeaGenerationAgentController from "../apps/idea-generation-agent/idea-ge
 import { debugLogger } from "../utils/logger";
 import { prisma } from "../utils/configs/db.config";
 import type { AgentContext } from "../types/apps/idea-generation-agent";
+import { GENERATION_STEPS, getStepForIdeaGeneration, getCompletionStep } from "../constants/generation-steps";
 
 export const onDemandIdeaGenerationJob = task({
   id: "on-demand-idea-generator",
