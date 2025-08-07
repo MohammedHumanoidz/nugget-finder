@@ -19,12 +19,6 @@ interface MinedIdeaItem {
   updatedAt: string;
 }
 
-function getConfidenceColor(score: number) {
-  if (score >= 80) return "text-green-600 bg-green-100";
-  if (score >= 60) return "text-yellow-600 bg-yellow-100";
-  return "text-red-600 bg-red-100";
-}
-
 export default async function MinedNuggets() {
   // Fetch data server-side
   const [minedIdeas, limits] = await Promise.all([
@@ -64,21 +58,13 @@ export default async function MinedNuggets() {
             return (
               <Card 
                 key={idea.id} 
-                className="hover:shadow-lg transition-all h-full flex flex-col border-amber-200 bg-gradient-to-br from-amber-50/50 to-yellow-50/50"
+                className="hover:shadow-lg transition-all h-full flex flex-col"
               >
                 <CardHeader className="flex-1">
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <CardTitle className="text-lg line-clamp-2 flex-1">
+                  <div className="flex flex-col items-start justify-between gap-2 mb-2">
+                    <CardTitle className="text-xl flex-1">
                       {idea.title || "Untitled Idea"}
                     </CardTitle>
-                    <div className="flex items-center gap-2">
-                      <div className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded font-medium">
-                        MINED
-                      </div>
-                      <div className={`text-xs px-2 py-1 rounded font-medium ${getConfidenceColor(idea.confidenceScore)}`}>
-                        {idea.confidenceScore}% confidence
-                      </div>
-                    </div>
                   </div>
                   
                   {/* Tags */}
@@ -104,8 +90,8 @@ export default async function MinedNuggets() {
                   </p>
                   
                   {/* Original Prompt */}
-                  <div className="mt-3 p-2 bg-amber-50 rounded-md border border-amber-200">
-                    <div className="flex items-center gap-2 text-xs text-amber-700 mb-1">
+                  <div className="mt-3 p-2 rounded-md border">
+                    <div className="flex items-center gap-2 text-xs mb-1">
                       <Lightbulb className="h-3 w-3" />
                       <span className="font-medium">Original Prompt</span>
                     </div>

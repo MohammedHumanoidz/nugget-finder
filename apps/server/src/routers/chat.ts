@@ -18,7 +18,8 @@ export const chatRouter = new Elysia({ prefix: "/api" })
       
       if (ideaId) {
         try {
-          const idea = await prisma.dailyIdea.findUnique({
+          // First try to find it as a daily idea
+          let idea = await prisma.dailyIdea.findUnique({
             where: { id: ideaId },
             include: {
               whyNow: true,
@@ -48,8 +49,9 @@ export const chatRouter = new Elysia({ prefix: "/api" })
           });
 
           if (idea) {
+            // Handle daily idea context
             ideaContext = `
-BUSINESS IDEA CONTEXT:
+BUSINESS IDEA CONTEXT (Daily Idea):
 Title: ${idea.title}
 Description: ${idea.description}
 
@@ -113,6 +115,95 @@ ${idea.whyNow ? `
 - Timing Urgency: ${idea.whyNow.timingUrgency}/10
 ` : 'No timing analysis available.'}
             `;
+          } else {
+            // If not found as daily idea, try as user-generated idea (mined nugget)
+            const minedIdea = await prisma.userGeneratedIdea.findUnique({
+              where: { id: ideaId }
+            });
+
+            if (minedIdea) {
+              // Parse the full idea data
+              let fullIdeaData = null;
+              try {
+                fullIdeaData = JSON.parse(minedIdea.fullIdeaDataJson);
+              } catch (parseError) {
+                console.error("Error parsing full idea data JSON:", parseError);
+              }
+
+              // Handle mined nugget context
+              ideaContext = `
+BUSINESS IDEA CONTEXT (Mined Nugget - User Generated):
+Title: ${minedIdea.title}
+Description: ${minedIdea.description}
+Original Prompt: "${minedIdea.prompt}"
+
+CORE DETAILS:
+- Executive Summary: ${minedIdea.executiveSummary}
+- Problem Statement: ${minedIdea.problemStatement}
+- Narrative Hook: ${minedIdea.narrativeHook}
+- Confidence Score: ${minedIdea.confidenceScore}%
+- Tags: ${minedIdea.tags?.join(', ') || 'N/A'}
+
+${fullIdeaData ? `
+DETAILED ANALYSIS:
+
+SCORING:
+- Total Score: ${fullIdeaData.scoring?.totalScore || 'N/A'}/100
+- Problem Severity: ${fullIdeaData.scoring?.problemSeverity || 'N/A'}/10
+- Technical Feasibility: ${fullIdeaData.scoring?.technicalFeasibility || 'N/A'}/10
+- Monetization Potential: ${fullIdeaData.scoring?.monetizationPotential || 'N/A'}/10
+- Market Timing Score: ${fullIdeaData.scoring?.marketTimingScore || 'N/A'}/10
+- Moat Strength: ${fullIdeaData.scoring?.moatStrength || 'N/A'}/10
+
+WHAT TO BUILD:
+${fullIdeaData.whatToBuild ? `
+- Platform Description: ${fullIdeaData.whatToBuild.platformDescription}
+- Core Features: ${fullIdeaData.whatToBuild.coreFeaturesSummary?.join(', ') || 'N/A'}
+- User Interfaces: ${fullIdeaData.whatToBuild.userInterfaces?.join(', ') || 'N/A'}
+- Key Integrations: ${fullIdeaData.whatToBuild.keyIntegrations?.join(', ') || 'N/A'}
+- Pricing Strategy: ${fullIdeaData.whatToBuild.pricingStrategyBuildRecommendation || 'N/A'}
+` : 'No build details available.'}
+
+MONETIZATION STRATEGY:
+${fullIdeaData.monetization ? `
+- Primary Model: ${fullIdeaData.monetization.primaryModel}
+- Pricing Strategy: ${fullIdeaData.monetization.pricingStrategy}
+- Business Score: ${fullIdeaData.monetization.businessScore}/10
+- Revenue Streams: ${fullIdeaData.monetization.revenueStreams?.map((stream: any) => `${stream.name} (${stream.percentage}%)`).join(', ') || 'N/A'}
+- Key Metrics: LTV: $${fullIdeaData.monetization.keyMetrics?.ltv || 'N/A'}, CAC: $${fullIdeaData.monetization.keyMetrics?.cac || 'N/A'}
+` : 'No monetization strategy available.'}
+
+COMPETITIVE LANDSCAPE:
+${fullIdeaData.competitive ? `
+- Market Concentration: ${fullIdeaData.competitive.competition?.marketConcentrationLevel || 'N/A'}
+- Competitive Positioning Score: ${fullIdeaData.competitive.competition?.competitivePositioningScore || 'N/A'}/10
+- Direct Competitors: ${fullIdeaData.competitive.competition?.directCompetitors?.map((comp: any) => comp.name).join(', ') || 'N/A'}
+- Unfair Advantages: ${fullIdeaData.competitive.competition?.unfairAdvantage?.join(', ') || 'N/A'}
+` : 'No competition analysis available.'}
+
+MARKET TRENDS:
+${fullIdeaData.trends ? `
+- Trend Title: ${fullIdeaData.trends.title}
+- Trend Strength: ${fullIdeaData.trends.trendStrength}/10
+- Timing Urgency: ${fullIdeaData.trends.timingUrgency}/10
+- Catalyst Type: ${fullIdeaData.trends.catalystType}
+` : 'No trend analysis available.'}
+
+EXECUTION PLAN:
+${fullIdeaData.executionPlan ? fullIdeaData.executionPlan : 'No execution plan available.'}
+` : 'Limited detailed analysis available.'}
+              `;
+            }
+          }
+
+
+          
+          // If neither daily idea nor mined nugget found, provide limited context
+          if (!ideaContext) {
+            ideaContext = `Limited context available for idea: ${ideaTitle || ideaId}`;
+            if (ideaDescription) {
+              ideaContext += `\nDescription: ${ideaDescription}`;
+            }
           }
         } catch (error) {
           console.error("Error fetching idea context:", error);
