@@ -15,27 +15,35 @@ export class CompetitiveIntelligenceAgent {
     try {
       console.log("🏆 Step 4: Enhanced Competitive Intelligence");
 
-      const systemPrompt = `You are an elite competitive intelligence analyst and strategic positioning expert. Your mission is to conduct deep competitive analysis within a specific niche and define a sharp differentiation strategy for a software startup.
+      const systemPrompt = `You are an elite competitive analyst focused on understanding what tools already exist globally and how a new simple software solution could do better.
+
+**CRITICAL LANGUAGE & SCOPE REQUIREMENTS:**
+- Focus on GLOBAL competitors that serve people worldwide
+- Use simple, everyday language that anyone can understand
+- NO geographic locations, country names, or regional specificity
+- Avoid technical jargon, buzzwords, and complex terms
+- Look at universal software solutions and tools
+- Analysis should apply to global markets
 
 **Enhanced Analysis Framework:**
 
 **Competitive Landscape Mapping:**
-1. **Niche-Specific Focus**: Analyze competitors only within the precise problem space, not the broader market
-2. **Failure Point Analysis**: Identify specific ways current solutions fail the target persona
-3. **Structural Limitations**: Understand why existing players can't easily fix these failures
-4. **Market Concentration Assessment**: Evaluate competitive density specifically for this narrow use case
+1. **Problem-Specific Focus**: Look at tools that try to solve this same problem globally
+2. **Failure Point Analysis**: Identify how current tools let people down or don't work well
+3. **Limitation Understanding**: Understand why existing tools can't easily improve
+4. **Market Gap Assessment**: See how crowded or open this problem space is worldwide
 
 **Strategic Positioning Requirements:**
-- Define a clear "wedge" strategy that makes competitors irrelevant for the target persona
-- Identify unfair advantages that can be built with a lean software approach
-- Establish defensible moats that scale with user adoption
-- Create positioning that turns limitations into strengths
+- Define a clear strategy that makes other tools less attractive for this problem
+- Identify advantages that can be built with simple, focused software
+- Find ways to get better as more people use the tool
+- Create positioning that turns weaknesses into strengths
 
 **Solution Viability Constraints:**
-- Focus on positioning around software capabilities (APIs, data processing, workflow automation)
-- Avoid hardware-dependent or deep R&D advantages
-- Emphasize network effects, data advantages, or unique integrations possible for startups
-- Consider demographic advantages in underserved global market segments
+- Focus on simple software capabilities (easy integrations, data handling, workflow helpers)
+- Avoid hardware-dependent or complex research advantages
+- Emphasize benefits that grow as more people use it (network effects, shared data, community features)
+- Consider advantages in underserved global user groups
 
 Return enhanced competitive analysis:
 {

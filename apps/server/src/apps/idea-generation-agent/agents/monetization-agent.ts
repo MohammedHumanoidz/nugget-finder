@@ -12,16 +12,24 @@ export class MonetizationAgent {
     context: AgentContext
   ): Promise<MonetizationData | null> {
     try {
-      const systemPrompt = `Alright, revenue guru, let's design a money-making engine that *our specific customers actually love paying for*. Given a deeply validated problem and a laser-focused positioning for a *lean, software-focused MVP*, craft a monetization model that feels intuitive and fair to *our exact target*. This model should realistically scale to $1-10M ARR for a lean startup *focused on the initial product*.
+      const systemPrompt = `Let's design a simple money-making plan that customers worldwide actually love paying for. Given a real problem and a focused software solution, create a pricing model that feels fair and makes sense globally. This should realistically grow to meaningful revenue for a simple startup.
 
-		**The pricing HAS to directly tie into the *clear value* we provide for our niche with our *software MVP*. The financial projections should be realistic for *one, focused, buildable software product*, not some massive enterprise suite.**
+		**CRITICAL LANGUAGE & SCOPE REQUIREMENTS:**
+		- Focus on GLOBAL customers and universal pricing that works worldwide
+		- Use simple, everyday language that anyone can understand
+		- NO geographic locations, country names, or regional specificity
+		- Avoid technical jargon, buzzwords, and complex terms
+		- Create universal pricing that works for people everywhere
+		- Solutions should be globally accessible and fairly priced
+
+		**The pricing has to directly connect to the clear value we provide with our simple software. The financial projections should be realistic for one focused, easy-to-build software product.**
 		
-		Explain the revenue model like you're advising a friend on their real startup: clear, straightforward, and focused on the actual customer experience and the value they get from the *software solution*. No vague terms or financial wizardry.
+		Explain the revenue model like you're advising a friend on their real startup: clear, simple, and focused on what customers actually get from the software. No complicated terms or confusing strategies.
 		
 		Return this exact structure:
 		{
-		  "primaryModel": "string (e.g., 'Simple Monthly SaaS for Micro-Businesses' or 'Per-Transaction Fee for Specific Outcome of the Software')",
-		  "pricingStrategy": "string (A straightforward, customer-first explanation of how pricing works and how it clearly shows ROI for our target, specifically for the *software's value*. No confusing tiers unless absolutely necessary and directly tied to software features.)",
+		  "primaryModel": "string (e.g., 'Simple Monthly Subscription' or 'Pay Per Use' - describe in plain English)",
+		  "pricingStrategy": "string (A simple, clear explanation of how pricing works and why it's fair value for customers globally, specifically for the software's benefits. No confusing tiers unless absolutely necessary.)",
 		  "businessScore": number,
 		  "confidence": number,
 		  "revenueModelValidation": "string (Give honest, real-world examples of *similar niche tools* that successfully use this model, or explain simply why it's the right fit for our target's budget and willingness to pay for our *software solution*.)",

@@ -20,6 +20,14 @@ export class TrendResearchAgent {
 
       const systemPrompt = `You are an elite trend research specialist with deep expertise in identifying emerging patterns that create immediate software startup opportunities. Your research is guided by today's strategic research direction.
 
+**CRITICAL LANGUAGE & SCOPE REQUIREMENTS:**
+- Focus on GLOBAL trends that affect people worldwide
+- Use simple, everyday language that anyone can understand
+- NO geographic locations, country names, or regional specificity
+- Avoid technical jargon, buzzwords, and complex terms
+- Look for universal human behaviors and problems
+- Trends should be globally applicable, not region-specific
+
 **Research Mission Parameters:**
 ${
   researchDirection
@@ -33,11 +41,11 @@ ${
 }
 
 **Critical Requirements:**
-1. **Human-Validated Signals**: The trend MUST be backed by genuine online community engagement (Reddit threads with 500+ comments, viral Twitter discussions, Product Hunt buzz, active forum debates)
-2. **Software-Solvable**: Focus on trends creating immediate opportunities for SaaS, APIs, web/mobile apps, or lightweight services
-3. **Timing-Sensitive**: Identify trends in the "early adopter" phase - not too early (theoretical) or too late (saturated)
-4. **Global Applicability**: Focus on trends that can create opportunities across different markets worldwide
-5. **Buildable Solutions**: Ensure the trend opens paths to <$10K MVP, 3-6 month development cycle solutions
+1. **Human-Validated Signals**: The trend MUST be backed by genuine online community engagement worldwide
+2. **Simple Software Solutions**: Focus on trends creating opportunities for easy-to-use apps and web tools
+3. **Right Timing**: Identify trends that are growing but not overcrowded yet
+4. **Global Applicability**: Focus on trends that affect people everywhere, not just specific countries
+5. **Buildable Solutions**: Ensure the trend opens paths to simple, affordable software solutions
 
 **Validation Framework:**
 - Social Media Signals: Active discussions in target communities
@@ -47,8 +55,8 @@ ${
 
 Return structured JSON with enhanced data:
 {
-  "title": "string (Compelling, specific trend title that captures the essence and industry context)",
-  "description": "string (Rich narrative explaining the trend's emergence, current traction, and global implications. Include specific examples of online community engagement)",
+  "title": "string (Clear, simple trend title using everyday language, no jargon or locations)",
+  "description": "string (Plain English explanation of the trend, why it's happening globally, and what people are saying about it online)",
   "trendStrength": number (1-10, weighted for current market momentum),
   "catalystType": "TECHNOLOGY_BREAKTHROUGH" | "REGULATORY_CHANGE" | "MARKET_SHIFT" | "SOCIAL_TREND" | "ECONOMIC_FACTOR",
   "timingUrgency": number (1-10, how time-sensitive this opportunity window is),
