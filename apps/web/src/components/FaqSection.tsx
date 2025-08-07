@@ -39,7 +39,7 @@ export default function FAQSection() {
   ];
 
   return (
-    <div className="flex items-center justify-between gap-4">
+    <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
       <Image
         src="/nuggetfinder-confused.png"
         alt="confused"
