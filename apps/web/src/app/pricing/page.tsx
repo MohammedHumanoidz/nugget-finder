@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { PricingPage } from "@/components/PricingPage";
 import { Loader2 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Pricing for AI Startup Ideas",
+  description:
+    "Simple, fair pricing to explore AI startup ideas with clear market research and step-by-step plans.",
+  alternates: { canonical: "/pricing" },
+};
 
 function PricingPageFallback() {
   return (
@@ -15,7 +23,10 @@ function PricingPageFallback() {
 
 export default function Page() {
   return (
-    <div className="min-h-screen bg-background">      
+    <div className="min-h-screen bg-background">
+      <div className="px-4 pt-8">
+        <h1 className="text-2xl md:text-3xl font-bold">Pricing</h1>
+      </div>
       <Suspense fallback={<PricingPageFallback />}>
         <PricingPage showFreeOption={true} />
       </Suspense>

@@ -161,43 +161,27 @@ interface NuggetPageProps {
 // Dynamically generate metadata for this page
 export async function generateMetadata({ params }: NuggetPageProps): Promise<Metadata> {
   const { id } = await params;
-  
   try {
-    const ideaData = await getIdeaById(id);
-    if (!ideaData) {
+    const idea = await getIdeaById(id);
+    if (!idea) {
       return {
-        title: "Nugget Not Found | Nugget Finder",
+        title: "Startup Idea Not Found",
+        description: "Explore AI startup ideas with market research and practical next steps.",
       };
     }
-
-    const title = ideaData.title || 'Untitled Nugget';
-    const description = ideaData.executiveSummary || ideaData.description || 'Explore this unique startup opportunity on Nugget Finder.';
-    const url = `https://nuggetfinder.ai/nugget/${id}`;
+    const baseTitle = idea.title || "AI Startup Idea";
+    const rawDesc = idea.executiveSummary || idea.description || idea.problemSolution || "Explore validated AI startup ideas with clear insights and practical steps.";
+    const description = rawDesc.length > 160 ? `${rawDesc.slice(0, 157)}...` : rawDesc;
 
     return {
-      title: `${title} | Nugget Finder`,
+      title: `${baseTitle} | AI Startup Idea`,
       description,
-      alternates: {
-        canonical: url,
-      },
-      openGraph: {
-        title,
-        description,
-        url,
-        type: 'article',
-        publishedTime: ideaData.createdAt ? new Date(ideaData.createdAt).toISOString() : undefined,
-        authors: ['Nugget Finder AI'],
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title,
-        description,
-      },
+      alternates: { canonical: `/nugget/${id}` },
     };
-  } catch (error) {
-    console.error('Error generating metadata for nugget:', error);
+  } catch {
     return {
-      title: "Nugget | Nugget Finder",
+      title: "AI Startup Idea",
+      description: "Explore AI startup ideas with market research and practical next steps.",
     };
   }
 }

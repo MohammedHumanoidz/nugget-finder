@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { getDailyIdeas } from '@/lib/server-api'
 
-const baseUrl = 'https://nuggetfinder.ai'
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://nuggetfinder.ai'
 
 // This function generates the sitemap.xml file at build time.
 // It fetches all nuggets to create a comprehensive list of URLs.

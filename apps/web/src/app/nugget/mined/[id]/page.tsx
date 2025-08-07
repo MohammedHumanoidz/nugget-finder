@@ -21,21 +21,25 @@ export async function generateMetadata({ params }: MinedNuggetPageProps): Promis
     const idea = await serverTRPC.getGeneratedIdeaById({ ideaId: id });
     if (!idea) {
       return {
-        title: "Mined Nugget Not Found | NuggetFinder.io",
+        title: "Mined AI Startup Idea Not Found",
+        description: "Explore your mined AI startup ideas with clear insights and practical steps.",
       };
     }
 
-    const title = idea.title || 'Untitled Mined Nugget';
-    const description = idea.description || idea.executiveSummary || 'Your personally generated startup idea.';
+    const baseTitle = idea.title || 'AI Startup Idea';
+    const rawDesc = idea.executiveSummary || idea.description || 'Your personally generated AI startup idea.';
+    const description = rawDesc.length > 160 ? `${rawDesc.slice(0, 157)}...` : rawDesc;
 
     return {
-      title: `${title} | Your Mined Nuggets - NuggetFinder.io`,
+      title: `${baseTitle} | AI Startup Idea`,
       description,
+      alternates: { canonical: `/nugget/mined/${id}` },
     };
   } catch (error) {
     console.error('Error generating metadata for mined nugget:', error);
     return {
-      title: "Mined Nugget | NuggetFinder.io",
+      title: "Mined AI Startup Idea",
+      description: "Explore your mined AI startup ideas with clear insights and practical steps.",
     };
   }
 }

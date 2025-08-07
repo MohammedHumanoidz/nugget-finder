@@ -52,6 +52,7 @@ export default async function Page() {
     <div className="min-h-screen w-full">
       {/* Hero Section */}
       <div className="z-10 flex flex-col items-center justify-center gap-12">
+        <h1 className="sr-only">AI Startup Ideas, Validated by Real Market Signals</h1>
         <IdeaForm />
       </div>
       {/* <div className="absolute inset-0 opacity-10 dark:opacity-30">

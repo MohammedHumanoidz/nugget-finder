@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import BrowseServerClient from "@/components/BrowseServerClient";
 import { Loader2 } from "lucide-react";
@@ -24,11 +25,21 @@ async function getInitialData() {
   }
 }
 
+export const metadata: Metadata = {
+  title: "Discover AI Startup Ideas",
+  description:
+    "Explore validated AI startup ideas with market research, competitor insights, and practical next steps.",
+  alternates: { canonical: "/browse" },
+};
+
 export default async function BrowsePage() {
   const { initialIdeas, initialLimits } = await getInitialData();
 
   return (
-    <div className="min-h-screen bg-background">      
+    <div className="min-h-screen bg-background">
+      <div className="px-4 pt-8">
+        <h1 className="text-2xl md:text-3xl font-bold">Discover AI Startup Ideas</h1>
+      </div>
       <Suspense 
         fallback={
           <div className="flex items-center justify-center py-12">

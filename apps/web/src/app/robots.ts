@@ -4,7 +4,7 @@ import type { MetadataRoute } from 'next'
 // It is the recommended approach in Next.js App Router.
 // Documentation: https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://nuggetfinder.ai';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://nuggetfinder.ai';
 
   return {
     rules: [

@@ -14,33 +14,45 @@ const manrope = Manrope({
 // Pages can override these defaults by exporting their own metadata object.
 export const metadata: Metadata = {
   title: {
-    default: "Nugget Finder | AI-Powered Startup Ideas & Market Intelligence",
-    template: "%s | Nugget Finder", // Used for child pages, e.g., "Pricing | Nugget Finder"
+    default: "AI Startup Ideas, Validated by Real Market Signals",
+    template: "%s | NuggetFinder",
   },
-  description: "Discover validated startup opportunities with AI-powered market analysis. Get comprehensive business ideas, competitive research, and execution plans. Find your next big opportunity 5x faster.",
-  keywords: [ "startup ideas", "AI market analysis", "business opportunities", "competitive research", "market intelligence", "startup validation" ],
-  authors: [{ name: "Nugget Finder Team", url: "https://nuggetfinder.ai" }],
-  creator: "Nugget Finder",
-  publisher: "Nugget Finder",
-  metadataBase: new URL("https://nuggetfinder.ai"),
+  description:
+    "Discover AI startup ideas with simple, clear market analysis. Get validated business ideas, competitor insights, and step-by-step plans—fast.",
+  keywords: [
+    "AI startup ideas",
+    "startup ideas",
+    "market analysis",
+    "business opportunities",
+    "competitive research",
+    "startup validation",
+  ],
+  authors: [{ name: "NuggetFinder Team", url: process.env.NEXT_PUBLIC_SITE_URL || "https://nuggetfinder.ai" }],
+  creator: "NuggetFinder",
+  publisher: "NuggetFinder",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://nuggetfinder.ai"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://nuggetfinder.ai",
-    title: "Nugget Finder | AI-Powered Startup Ideas & Market Intelligence",
-    description: "Discover validated startup opportunities with AI-powered market analysis.",
-    siteName: "Nugget Finder",
-    images: [ { url: "/logo.webp", width: 1200, height: 630, alt: "Nugget Finder Logo" } ],
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://nuggetfinder.ai",
+    title: "AI Startup Ideas, Validated by Real Market Signals",
+    description:
+      "Discover AI startup ideas with simple, clear market analysis. Get validated business ideas, competitor insights, and step-by-step plans—fast.",
+    siteName: "NuggetFinder",
+    images: [
+      { url: "/logo.webp", width: 1200, height: 630, alt: "NuggetFinder Logo" },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nugget Finder | AI-Powered Startup Ideas & Market Intelligence",
-    description: "Discover validated startup opportunities with AI-powered market analysis.",
+    title: "AI Startup Ideas, Validated by Real Market Signals",
+    description:
+      "Discover AI startup ideas with simple, clear market analysis. Get validated business ideas, competitor insights, and step-by-step plans—fast.",
     images: ["/logo.webp"],
-    creator: "@nuggetfinder", // Replace with your actual Twitter handle
+    creator: "@nuggetfinder",
   },
   robots: {
     index: true,
