@@ -344,6 +344,7 @@ export const ideasRouter = router({
     .input(
       z.object({
         query: z.string().min(1, "Query cannot be empty"),
+        count: z.number().min(1).max(3).optional().default(1),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -386,7 +387,8 @@ export const ideasRouter = router({
             const generatedIdeas = await IdeaGenerationAgentController.generateIdeasOnDemand(
               input.query,
               userId,
-              ideaGenerationRequest.id
+              ideaGenerationRequest.id,
+              input.count
             );
 
             console.log(`[DEBUG] Generated ${generatedIdeas.length} ideas, updating to COMPLETED...`);

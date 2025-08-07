@@ -118,7 +118,7 @@ const IdeaGenerationAgentController = {
    * On-Demand Idea Generation - Generates 3 ideas based on user prompt
    * Uses the same agent pipeline but driven by user input
    */
-  async generateIdeasOnDemand(userPrompt: string, userId: string, requestId?: string): Promise<any[]> {
+  async generateIdeasOnDemand(userPrompt: string, userId: string, requestId?: string, count = 3): Promise<any[]> {
     try {
       console.log(`🚀 Starting On-Demand Idea Generation for prompt: "${userPrompt}"`);
       debugLogger.info("🚀 On-demand idea generation started", {
@@ -131,13 +131,13 @@ const IdeaGenerationAgentController = {
 
       const generatedIdeas = [];
 
-      // Generate 3 ideas for the user
-      for (let i = 0; i < 3; i++) {
-        console.log(`🎯 Generating idea ${i + 1} of 3 for prompt: "${userPrompt}"`);
+      // Generate ideas for the user
+      for (let i = 0; i < count; i++) {
+        console.log(`🎯 Generating idea ${i + 1} of ${count} for prompt: "${userPrompt}"`);
         
         try {
           // Update progress for this idea iteration
-          const ideaStep = getStepForIdeaGeneration(i + 1, 3);
+          const ideaStep = getStepForIdeaGeneration(i + 1, count);
           await updateProgress(requestId, ideaStep.step, ideaStep.message, ideaStep.imageState);
 
           // Initialize agent context with user prompt

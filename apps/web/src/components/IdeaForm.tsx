@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import { ArrowUpRight, Settings } from "lucide-react";
+import { ArrowUpRight, Settings, Info } from "lucide-react";
 import { useForm } from "@tanstack/react-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Image from "next/image";
@@ -13,6 +13,7 @@ import PersonalizationModal, { type PersonalizationData } from "./Personalizatio
 import { trpc } from "@/utils/trpc";
 import { authClient } from "@/lib/auth-client";
 import AnimatedSearchLoader from "./AnimatedSearchLoader";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
 const IdeaForm = () => {
   const router = useRouter();
@@ -21,6 +22,9 @@ const IdeaForm = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [requestId, setRequestId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [ideaCount, setIdeaCount] = useState("1");
+  const [startTime, setStartTime] = useState<Date | null>(null);
+  const [showTimeWarning, setShowTimeWarning] = useState(false);
   
   // Check authentication state
   const { data: session, isPending } = authClient.useSession();
@@ -64,8 +68,14 @@ const IdeaForm = () => {
     
     if (generationStatus?.status === 'COMPLETED' && generationStatus.generatedIdeaIds.length > 0) {
       console.log('[DEBUG] Generation completed, redirecting to results...');
+      const endTime = new Date();
+      const processingTime = startTime ? Math.round((endTime.getTime() - startTime.getTime()) / 1000) : 0;
+      
       setIsGenerating(false);
-      toast.success(`🎉 We've found ${generationStatus.generatedIdeaIds.length} golden nuggets for you!`);
+      
+      // Show success message with processing time
+      toast.success(`🎉 We've found ${generationStatus.generatedIdeaIds.length} golden nuggets for you! Processing time: ${processingTime}s`);
+      
       const ideaIds = generationStatus.generatedIdeaIds.join(',');
       router.push(`/browse/results?ids=${ideaIds}`);
     } else if (generationStatus?.status === 'FAILED') {
@@ -73,7 +83,7 @@ const IdeaForm = () => {
       setIsGenerating(false);
       toast.error(generationStatus.errorMessage || "Failed to generate ideas. Please try again.");
     }
-  }, [generationStatus, router]);
+  }, [generationStatus, router, startTime]);
 
   const form = useForm({
     defaultValues: {
@@ -95,15 +105,17 @@ const IdeaForm = () => {
       
       // Store the search query for the loading screen
       setSearchQuery(value.idea);
+      setStartTime(new Date());
+      
+      // Show warning for multiple ideas
+      if (Number.parseInt(ideaCount) > 1) {
+        toast.info(`⏳ Generating ${ideaCount} ideas will take longer. Please be patient!`);
+      }
       
       // Call the generate ideas mutation instead of redirecting to browse
-      generateIdeasMutation.mutate({ query: value.idea });
+      generateIdeasMutation.mutate({ query: value.idea, count: Number.parseInt(ideaCount) });
     },
   });
-
-  const handleDefaultIdeaClick = (idea: string) => {
-    form.setFieldValue("idea", idea);
-  };
 
   const handlePersonalizationSave = (data: PersonalizationData) => {
     setPersonalizationData(data);
@@ -141,8 +153,8 @@ const IdeaForm = () => {
         </p>
       </div>
 
-      {/* Personalization Button */}
-      <div className="flex justify-center">
+      {/* Settings Row */}
+      <div className="flex justify-center items-center gap-4 flex-wrap">
         <Button
           type="button"
           variant="outline"
@@ -152,7 +164,35 @@ const IdeaForm = () => {
           <Settings className="mr-2 h-4 w-4" />
           {personalizationData ? "Update Search Profile" : "Personalize Search"}
         </Button>
+        
+        {/* Idea Count Selector */}
+        <div className="flex items-center gap-2 text-sm">
+          <span className="text-muted-foreground">Ideas to generate:</span>
+          <Select value={ideaCount} onValueChange={(value) => {
+            setIdeaCount(value);
+            setShowTimeWarning(false);
+          }}>
+            <SelectTrigger className="w-20 h-9">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">1</SelectItem>
+              <SelectItem value="2">2</SelectItem>
+              <SelectItem value="3">3</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
+      
+      {/* Time Warning */}
+      {Number.parseInt(ideaCount) > 1 && (
+        <div className="flex justify-center">
+          <div className="border px-4 py-2 rounded-lg text-sm flex items-center gap-2 max-w-md">
+            <Info className="h-4 w-4" />
+            <span>Generating {ideaCount} ideas will take approximately {Number.parseInt(ideaCount) * 2}-{Number.parseInt(ideaCount) * 3} minutes</span>
+          </div>
+        </div>
+      )}
 
       <form
         onSubmit={(e) => {

@@ -122,11 +122,23 @@ const DynamicWordAnimation = ({ step, isActive }: { step: string; isActive: bool
 
     // Handle idea generation steps with pattern matching
     if (stepName.includes("Generating idea") && /\d\/\d/.test(stepName)) {
-      const matchingKey = Object.keys(STEP_WORD_LISTS).find(key => 
-        key.includes("Generating idea") && stepName.includes(key.split("/")[0].split(" ").pop() || "")
-      );
-      if (matchingKey) {
-        return STEP_WORD_LISTS[matchingKey as keyof typeof STEP_WORD_LISTS];
+      // Extract the current idea number
+      const match = stepName.match(/Generating idea (\d)\/(\d)/);
+      if (match) {
+        const currentIdea = match[1];
+        const totalIdeas = match[2];
+        
+        // Use dynamic generation words based on idea number
+        if (currentIdea === "1") {
+          return ["Crafting first opportunity", "Building concept 1", "Developing idea 1", "Creating first nugget", "Forging opportunity 1", "Sculpting concept 1", "Engineering idea 1", "Designing solution 1", "Constructing vision 1", "Innovating concept 1"];
+        }
+        if (currentIdea === "2") {
+          return ["Crafting second opportunity", "Building concept 2", "Developing idea 2", "Creating second nugget", "Forging opportunity 2", "Sculpting concept 2", "Engineering idea 2", "Designing solution 2", "Constructing vision 2", "Innovating concept 2"];
+        }
+        if (currentIdea === "3") {
+          return ["Crafting final opportunity", "Building concept 3", "Developing idea 3", "Creating final nugget", "Forging opportunity 3", "Sculpting concept 3", "Engineering idea 3", "Designing solution 3", "Constructing vision 3", "Innovating concept 3"];
+        }
+        return [`Crafting opportunity ${currentIdea}`, `Building concept ${currentIdea}`, `Developing idea ${currentIdea}`, `Creating nugget ${currentIdea}`, `Forging opportunity ${currentIdea}`, `Sculpting concept ${currentIdea}`, `Engineering idea ${currentIdea}`, `Designing solution ${currentIdea}`, `Constructing vision ${currentIdea}`, `Innovating concept ${currentIdea}`];
       }
     }
 
