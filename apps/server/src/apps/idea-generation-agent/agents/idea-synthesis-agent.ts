@@ -21,7 +21,8 @@ export class IdeaSynthesisAgent {
 
 **CRITICAL LANGUAGE REQUIREMENTS:**
 - Global applicability: NO geographic locations or country names (US, India, Southeast Asia, etc.)
-- Prefer precise, industry-relevant terms when they clarify value (e.g., "AI-Powered", "Real-Time", "Automated", "Compliance Automation")
+- Use simple, direct language that anyone can understand
+- AVOID technical prefixes like "AI-Powered", "Automated", "Real-Time" in titles
 - Avoid fluff and unnecessary buzzwords; be specific and concrete
 - Write clearly and directly; do not invent startup/product names
 
@@ -29,7 +30,7 @@ export class IdeaSynthesisAgent {
 - Focus on universal problems that exist worldwide
 - Use clear, high-signal phrasing that communicates problem, solution, audience, and outcome
 - Only use technical qualifiers if they help the reader immediately understand the value
-- Do not default to "AI-Powered". Only include it when intelligent model-driven capabilities are the core mechanism of value; otherwise omit it or use a different precise qualifier if necessary.
+- Never use "AI-Powered", "Automated", or technical prefixes in titles - focus on the core function and benefit instead
 
 **Enhanced Synthesis Mission:**
 
@@ -91,12 +92,13 @@ ${
 Generate a single, irresistible startup idea using the enhanced narrative format above, then structure it into the required JSON format. The idea should feel so compelling and obvious that someone would start building it immediately.
 
 **CRITICAL TITLE REQUIREMENTS:**
-- Compose a descriptive, high-signal title that states: Solution Approach + Core Function + Primary Audience + Outcome/Benefit
-- 12–22 words; Title Case; concise yet rich
+- Create concise titles: 8-10 words maximum that tell both problem and solution
+- Structure: [Solution Type] + [Core Function] + for + [Specific Target Audience]
+- Use descriptive, professional language that clearly communicates value
+- NO "Automated", "AI-Powered", or unnecessary technical prefixes
 - NO startup names, company names, or product names
 - NO geographic locations or country names
-- Use precise qualifiers sparingly and only when essential to understanding the value; avoid overusing "AI-Powered" and do not lead the title with it unless absolutely central.
-- Examples: "AI-Powered Testimonial Collection & Distribution for Growth-Focused Podcasters Building Listener Trust at Scale"; "Skill Exchange Tracker for Creative Communities Sharing Across Generations"; "Automated Micro-Grant Tracking and Token Issuance Platform for Regional Social Impact DAO Facilitators"; "Real-Time Swarm Command and Data Harmonization for Wildfire Incident Commanders"
+- Examples: "Real-Time Audit and Compliance Platform for Biotech Research"; "Unified Audit Trail and Conflict Detection for AI Research Leaders"; "Smart Monetization and Payment Tools for Video Creators Ready to Grow"
 
 **CRITICAL DESCRIPTION REQUIREMENTS:**
 - Write in clear English; avoid fluff and filler
@@ -108,7 +110,7 @@ Generate a single, irresistible startup idea using the enhanced narrative format
 
 Return JSON structure:
 {
-  "title": "string (12–22 words; Solution + Core Function + Audience + Outcome; avoid defaulting to 'AI-Powered'; no locations or product names)",
+  "title": "string (8-10 words maximum; [Solution Type] + [Core Function] + for + [Specific Target Audience]; tells both problem and solution; NO 'Automated' or 'AI-Powered')",
   "description": "string (Plain narrative, globally applicable, no fluff)",
   "executiveSummary": "string (Clear pitch highlighting problem and solution)",
   "problemSolution": "string (Plain story: 'People spend X on Y. This tool fixes it by Z, saving W.')",
@@ -154,7 +156,7 @@ Create an idea so compelling that it becomes impossible to ignore - the kind of 
           ["title", "description", "problemStatement", "scoring"],
           {
             title:
-              "Multi-Platform Content Management for Independent Creators",
+              "Content Management and Distribution Platform for Independent Creators",
             description:
               "Mobile-first content creation is experiencing explosive growth globally, driven by increased smartphone penetration and diverse social platform adoption. Independent creators worldwide face a critical challenge: managing content across multiple platforms while dealing with complex monetization workflows. These creators, typically with 1K-50K followers, waste 15+ hours weekly manually distributing content across platforms and lose $600+ monthly because existing tools lack unified platform integrations and streamlined payment processing. Active discussions in creator communities highlight frustration with platform fragmentation, while market data shows 300% growth in mobile content creation. Current solutions either focus on enterprise clients or fail to provide the mobile-first, creator-focused workflows that independent creators need. A specialized platform that unifies multi-platform management, automates cross-posting, and enables seamless monetization integration would capture this underserved market during a critical growth phase, before enterprise platforms adapt their offerings.",
             executiveSummary:
@@ -233,7 +235,7 @@ Create an idea so compelling that it becomes impossible to ignore - the kind of 
 
       console.log("🔄 Using enhanced fallback synthesis data");
       return {
-        title: "Multi-Platform Content Management for Independent Creators",
+        title: "Content Management and Distribution Platform for Independent Creators",
         description:
           "Mobile-first content creation is experiencing explosive growth globally, driven by increased smartphone penetration and diverse social platform adoption. Independent creators worldwide face a critical challenge: managing content across multiple platforms while dealing with complex monetization workflows. These creators, typically with 1K-50K followers, waste 15+ hours weekly manually distributing content across platforms and lose $600+ monthly because existing tools lack unified platform integrations and streamlined payment processing. Active discussions in creator communities highlight this frustration, while market data shows 300% growth in mobile content creation. Current solutions either focus on enterprise clients or fail to provide the mobile-first, creator-focused workflows that independent creators need. A specialized platform that unifies multi-platform management, automates cross-posting, and enables seamless monetization integration would capture this underserved market during a critical growth phase, before enterprise platforms adapt their offerings.",
         executiveSummary:
