@@ -24,9 +24,6 @@ function PricingPageFallback() {
 export default function Page() {
   return (
     <div className="min-h-screen bg-background">
-      <div className="px-4 pt-8">
-        <h1 className="text-2xl md:text-3xl font-bold">Pricing</h1>
-      </div>
       <Suspense fallback={<PricingPageFallback />}>
         <PricingPage showFreeOption={true} />
       </Suspense>

@@ -115,7 +115,7 @@ export async function updateUserLimitsFromPlan(userId: string): Promise<void> {
     
     let claims = 0;
     let saves = 0;
-    let views = 1;
+    let views = 1000;
     
     if (subscription && ["active", "trialing"].includes(subscription.status)) {
       // Get plan details

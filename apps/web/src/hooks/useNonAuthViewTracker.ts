@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 const STORAGE_KEY = 'nugget_views_non_auth';
-const MAX_FREE_VIEWS = 1;
+const MAX_FREE_VIEWS = 1000;
 
 interface ViewData {
   ideaIds: string[];

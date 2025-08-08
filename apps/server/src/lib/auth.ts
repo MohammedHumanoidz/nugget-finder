@@ -124,7 +124,7 @@ export const auth = betterAuth({
                 data: {
                   claimLimit: limits.claims ?? 0,
                   saveLimit: limits.saves ?? 0,
-                  viewLimit: limits.views ?? 1,
+                  viewLimit: limits.views ?? 1000,
                   // Reset usage counters when applying new plan
                   claimsUsed: 0,
                   savesUsed: 0,
@@ -136,7 +136,7 @@ export const auth = betterAuth({
               console.log(`🎯 User ${user.id} limits updated:`, {
                 claimLimit: limits.claims ?? 0,
                 saveLimit: limits.saves ?? 0,
-                viewLimit: limits.views ?? 1,
+                viewLimit: limits.views ?? 1000,
               });
             } else {
               console.warn(`⚠️ No limits found in metadata for plan ${subscription.planId}`);
@@ -160,7 +160,7 @@ export const auth = betterAuth({
                 data: {
                   claimLimit: limits.claims ?? 0,
                   saveLimit: limits.saves ?? 0,
-                  viewLimit: limits.views ?? 1,
+                  viewLimit: limits.views ?? 1000,
                   // Reset usage counters when plan changes
                   claimsUsed: 0,
                   savesUsed: 0,
@@ -172,7 +172,7 @@ export const auth = betterAuth({
               console.log(`🎯 User ${user.id} limits updated:`, {
                 claimLimit: limits.claims ?? 0,
                 saveLimit: limits.saves ?? 0,
-                viewLimit: limits.views ?? 1,
+                viewLimit: limits.views ?? 1000,
               });
             } else {
               console.warn(`⚠️ No limits found in metadata for plan ${subscription.planId}`);

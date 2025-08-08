@@ -211,10 +211,10 @@ export default async function NuggetDetailPage({ params }: NuggetPageProps) {
       
       // If user has no views remaining and this is a new idea they haven't viewed before,
       // redirect them to pricing page immediately
-      if (limits && !limits.canView && limits.viewsRemaining === 0) {
-        console.log('[DEBUG] Page: User has 0 views remaining, redirecting to pricing');
-        redirect('/pricing?reason=view_limit');
-      }
+      // if (limits && !limits.canView && limits.viewsRemaining === 0) {
+      //   console.log('[DEBUG] Page: User has 0 views remaining, redirecting to pricing');
+      //   redirect('/pricing?reason=view_limit');
+      // }
       
       // Fetch data server-side with authentication and view limits check
       const idea = await getAuthenticatedIdeaById(id);
