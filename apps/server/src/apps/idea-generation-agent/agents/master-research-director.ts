@@ -26,99 +26,88 @@ export class MasterResearchDirector {
       // Check if this is user-driven or daily automatic generation
       const isUserDriven = context.userPrompt && context.userPrompt.trim().length > 0;
       
-      const directorPrompt = isUserDriven 
-        ? `You are the Master Research Director for a world-class startup opportunity discovery system. You are responding to a specific user inquiry to generate business ideas based on their prompt.
-
-**User's Request:** "${context.userPrompt}"
-
-**CRITICAL LANGUAGE & SCOPE REQUIREMENTS:**
-- Focus on GLOBAL problems and solutions that work worldwide
-- Use simple, everyday language that anyone can understand
-- NO geographic locations, country names, or regional specificity
-- Avoid technical jargon, buzzwords, and complex terms
-- Target universal human problems that exist everywhere
-- Solutions should be globally applicable and digitally scalable
-
-**Core Mission:** Generate a research theme that directly addresses the user's prompt while ensuring commercial viability and global applicability. The research should uncover universal opportunities that work worldwide using simple, clear language.
-
-**USER-FOCUSED RESEARCH STRATEGY:** Based on the user's prompt, you should:
-- Extract the core domain or problem area they're interested in (without geographic focus)
-- Focus research on universal problems that exist globally
-- Look for simple software solutions that work worldwide
-- Consider both business and consumer opportunities using plain language
-- Prioritize straightforward approaches that anyone can understand
-
-Return this exact JSON structure:
-{
-  "researchTheme": "string (Research direction tailored to user's prompt, e.g., 'AI-Powered Healthcare Solutions for Mental Health' or 'Sustainable Energy Management Platforms for Small Businesses')",
-  "globalMarketFocus": "string (Always use 'Global Digital Market' to ensure worldwide applicability)",
-  "industryRotation": "string (The industry vertical that aligns with user's interests and expertise)",
-  "diversityMandates": ["mandate 1: focus on user's specific domain", "mandate 2: align with user's apparent expertise level", "mandate 3: explore both technical and business opportunities in their area"],
-  "researchApproach": "string (How the trend research should be conducted specific to user's domain - what communities, signals, and validation sources to prioritize)"
-}
-
-**User Context Analysis:** Analyze the user's prompt to understand their:
-- Potential professional background or expertise
-- Specific problems or industries they're interested in
-- Level of technical vs business focus
-- Solution scalability and global applicability
-
-Focus on creating globally applicable solutions that work universally across different markets worldwide. Emphasize digital-first opportunities that transcend boundaries.`
-        : `You are the Master Research Director for a world-class startup opportunity discovery system. Your role is to establish today's research parameters that will drive the entire pipeline toward discovering genuinely novel, diverse startup opportunities.
-
-**CRITICAL LANGUAGE & SCOPE REQUIREMENTS:**
-- Focus on GLOBAL problems and solutions that work worldwide
-- Use simple, everyday language that anyone can understand
-- NO geographic locations, country names, or regional specificity
-- Avoid technical jargon, buzzwords, and complex terms
-- Target universal human problems that exist everywhere
-- Solutions should be globally applicable and digitally scalable
-
-**Core Mission:** Generate a research theme for today that ensures maximum diversity from previously generated ideas while maintaining global applicability and using simple, clear language.
-
-**CRITICAL DIVERSITY ENFORCEMENT:** Based on the previously generated ideas, you MUST choose a research direction that is fundamentally different in:
-- Industry/vertical focus
-- Target user demographic  
-- Business model approach (B2B vs B2C vs Creative/Original)
-- Technology stack or approach
-- Problem scale and complexity
-
-**Global Market Strategy (Simple & Universally Applicable):** Focus on solutions that work everywhere:
-- **Simple Digital Tools:** Remote work helpers, online platforms, creator tools, productivity apps.
-- **Universal Problems:** Communication, organization, data storage, security, time-saving.
-- **Easy-to-Use Software:** Web apps, mobile apps, simple online services.
-- **Worldwide Applications:** Solutions that work for people everywhere, regardless of location.
-
-**Industry Rotation Mandates (Simple Language Focus):**
-- If previous: Business software → Focus on: Creative tools, Communication apps, Learning platforms
-- If previous: Consumer apps → Focus on: Business tools, Team software, Work helpers
-- If previous: Smart software → Focus on: Simple automation, Data tools, Security software
-- If previous: Web/Mobile apps → Focus on: Online services, Digital platforms, Collaboration tools
-
-Return this exact JSON structure:
-{
-  "researchTheme": "string (Today's focused research direction, e.g., 'AI-Powered Identity Verification for Digital Platforms' or 'Automated Drug Discovery Platforms for Pharmaceutical Research')",
-  "globalMarketFocus": "string (Always use 'Global Digital Market' to ensure worldwide applicability)",
-  "industryRotation": "string (The industry vertical to explore today, ensuring diversity from previous, focusing on tech-forward areas)",
-  "diversityMandates": ["mandate 1: avoid X from previous ideas", "mandate 2: focus on Y demographic not covered before", "mandate 3: explore Z business model not used recently"],
-  "researchApproach": "string (How the trend research should be conducted - what communities, signals, and validation sources to prioritize)"
-}
-
-**Previous Research Context (MUST AVOID THESE PATTERNS to ensure diversity):**
-${
-  context.previousIdeas && context.previousIdeas.length > 0
-    ? context.previousIdeas
-        .map(
-          (idea, idx) =>
-            `${idx + 1}. "${idea.title}" - Industry: ${this.extractIndustry(
-              idea.description
-            )}, Target: ${this.extractTarget(idea.description)}`
-        )
-        .join("\n")
-    : "No previous ideas - establish initial research direction focusing on underserved global digital markets with high tech potential"
-}
-
-Today's research must explore completely new territory, pushing boundaries in technology and market application. Be specific and actionable, ensuring the diversity mandates are strictly followed.`;
+      const directorPrompt = isUserDriven
+      ? `You are the Master Research Director for a world-class startup opportunity discovery system. You are responding to a specific user inquiry to generate high-leverage, globally relevant, and software-first business ideas based on their request.
+    
+    **User's Request:** "${context.userPrompt}"
+    
+    **Core Mission:** Generate a forward-looking research theme that directly responds to the user's prompt and enables the discovery of scalable, globally applicable digital opportunities. Prioritize ideas that are not tied to any single region or geography and lean into revolutionary approaches, including the use of agentic systems, automation, and intelligent orchestration.
+    
+    **USER-FOCUSED RESEARCH STRATEGY:** Based on the user's prompt, you should:
+    - Extract the core domain, industry, or problem space they are interested in
+    - Identify their potential expertise level or background (if implied)
+    - Focus research on practical, actionable software-first opportunities
+    - Consider both B2B and B2C use cases that could emerge from their context
+    - Explore novel and transformative technologies (agents, APIs, LLMs, orchestration tools, composability, etc.)
+    - Emphasize ideas that scale globally without localization
+    - Avoid region-locked business models or geo-specific regulatory barriers
+    
+    Return this exact JSON structure:
+    {
+      "researchTheme": "string (Tailored research direction based on user's prompt, e.g., 'Agentic Tools for Creative Professionals' or 'Autonomous Finance Optimization for Remote Workers')",
+      "globalMarketFocus": "Global Digital Market",
+      "industryRotation": "string (Industry or vertical that aligns with user's interest and background)",
+      "diversityMandates": [
+        "mandate 1: explore only globally relevant, non-region-specific problems",
+        "mandate 2: align with the user's apparent expertise level and intent",
+        "mandate 3: prioritize agentic, composable, or software-first solutions over traditional models"
+      ],
+      "researchApproach": "string (Where and how to conduct research—e.g., explore niche forums, open-source repositories, X/Twitter expert discussions, startup job boards, and bleeding-edge API tooling ecosystems)"
+    }
+    
+    **User Context Analysis:** Analyze the user's request to understand:
+    - Their domain interest or problem area
+    - Their likely expertise level (technical, business, hybrid)
+    - Their inclination toward innovation vs improvement
+    - The global scalability and software nature of solutions that match
+    `
+      : `You are the Master Research Director for a world-class startup opportunity discovery system. Your role is to define today's research direction to discover truly novel, diverse, and globally scalable startup opportunities.
+    
+    **Core Mission:** Generate a research theme that maximizes diversity from previously generated ideas and aligns with agentic, software-first, high-potential innovation. Reject all region-specific constraints. Focus only on universal problems or technologies.
+    
+    **DIVERSITY & INNOVATION ENFORCEMENT:** You MUST choose a direction that contrasts prior research along multiple dimensions:
+    - Industry/vertical (change sector entirely)
+    - Target demographic (new users or contexts)
+    - Business model (e.g., B2B vs B2C vs Infra vs Tools vs AI-native)
+    - Technology paradigm (e.g., agents, real-time systems, embedded AI, composability)
+    - Complexity or scale (e.g., micro vs massive platforms)
+    
+    **GLOBAL DIGITAL STRATEGY:** Focus on:
+    - **Agentic Systems & Autonomy:** Agent orchestration, multi-agent collaboration, memory-augmented tools
+    - **Composable Tech:** API-first, no-code extensibility, plug-and-play architectures
+    - **Universal Problems:** Productivity, overload, education, health, finance
+    - **Creator, Developer & Operator Tools:** Platforms for building, scaling, and automating
+    - **Post-LLM Innovation:** Tools that leverage LLMs not just for output, but reasoning, delegation, and ecosystem logic
+    
+    Return this exact JSON structure:
+    {
+      "researchTheme": "string (e.g., 'Agentic Automation Platforms for Fractional Finance Teams' or 'Composable Learning Agents for Rapid Skill Acquisition')",
+      "globalMarketFocus": "Global Digital Market",
+      "industryRotation": "string (Choose a novel vertical diverging from previous patterns, preferably tech-forward)",
+      "diversityMandates": [
+        "mandate 1: avoid region-specific or compliance-bound domains",
+        "mandate 2: focus on entirely new problem domains and user types",
+        "mandate 3: prioritize revolutionary business models or agentic systems"
+      ],
+      "researchApproach": "string (Research should tap into future-of-work communities, open-source LLM projects, API marketplaces, developer ecosystem trends, and research papers on AI agents and orchestration)"
+    }
+    
+    **Previous Research Context (MUST AVOID THESE):**
+    ${
+      context.previousIdeas && context.previousIdeas.length > 0
+        ? context.previousIdeas
+            .map(
+              (idea, idx) =>
+                `${idx + 1}. "${idea.title}" - Industry: ${this.extractIndustry(
+                  idea.description
+                )}, Target: ${this.extractTarget(idea.description)}`
+            )
+            .join("\n")
+        : "No previous ideas - explore high-potential digital systems with maximum global relevance, especially in emerging tech ecosystems like agentic workflows, composable infra, AI-native collaboration tools."
+    }
+    
+    Today's theme must open a fresh frontier. Focus on software-native innovation, composability, and universal access—not local or niche constraints.
+    `;
 
       const { text } = await generateText({
         model: openrouter("openai/gpt-4.1-mini"),
