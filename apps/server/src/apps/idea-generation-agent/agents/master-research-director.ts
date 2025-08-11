@@ -5,29 +5,30 @@ import { EnhancedJsonParser } from "../../../utils/enhanced-json-parser";
 
 // Interface for Master Research Director
 interface ResearchDirectorData {
-  researchTheme: string;
-  globalMarketFocus: string;
-  industryRotation: string;
-  diversityMandates: string[];
-  researchApproach: string;
+	researchTheme: string;
+	globalMarketFocus: string;
+	industryRotation: string;
+	diversityMandates: string[];
+	researchApproach: string;
 }
 
 export class MasterResearchDirector {
-  /**
-   * Master Research Director - Creates diverse research themes per day
-   * Influences trend research with rotating diversity across industry + geography
-   */
-  static async execute(
-    context: AgentContext
-  ): Promise<ResearchDirectorData | null> {
-    try {
-      console.log("🎯 Step 1: Activating Master Research Director");
+	/**
+	 * Master Research Director - Creates diverse research themes per day
+	 * Influences trend research with rotating diversity across industry + geography
+	 */
+	static async execute(
+		context: AgentContext,
+	): Promise<ResearchDirectorData | null> {
+		try {
+			console.log("🎯 Step 1: Activating Master Research Director");
 
-      // Check if this is user-driven or daily automatic generation
-      const isUserDriven = context.userPrompt && context.userPrompt.trim().length > 0;
-      
-      const directorPrompt = isUserDriven
-      ? `You are the Master Research Director for a world-class startup opportunity discovery system. You are responding to a specific user inquiry to generate high-leverage, globally relevant, and software-first business ideas based on their request.
+			// Check if this is user-driven or daily automatic generation
+			const isUserDriven =
+				context.userPrompt && context.userPrompt.trim().length > 0;
+
+			const directorPrompt = isUserDriven
+				? `You are the Master Research Director for a world-class startup opportunity discovery system. You are responding to a specific user inquiry to generate high-leverage, globally relevant, and software-first business ideas based on their request.
     
     **User's Request:** "${context.userPrompt}"
     
@@ -61,7 +62,7 @@ export class MasterResearchDirector {
     - Their inclination toward innovation vs improvement
     - The global scalability and software nature of solutions that match
     `
-      : `You are the Master Research Director for a world-class startup opportunity discovery system. Your role is to define today's research direction to discover truly novel, diverse, and globally scalable startup opportunities.
+				: `You are the Master Research Director for a world-class startup opportunity discovery system. Your role is to define today's research direction to discover truly novel, diverse, and globally scalable startup opportunities.
     
     **Core Mission:** Generate a research theme that maximizes diversity from previously generated ideas and aligns with agentic, software-first, high-potential innovation. Reject all region-specific constraints. Focus only on universal problems or technologies.
     
@@ -94,137 +95,137 @@ export class MasterResearchDirector {
     
     **Previous Research Context (MUST AVOID THESE):**
     ${
-      context.previousIdeas && context.previousIdeas.length > 0
-        ? context.previousIdeas
-            .map(
-              (idea, idx) =>
-                `${idx + 1}. "${idea.title}" - Industry: ${this.extractIndustry(
-                  idea.description
-                )}, Target: ${this.extractTarget(idea.description)}`
-            )
-            .join("\n")
-        : "No previous ideas - explore high-potential digital systems with maximum global relevance, especially in emerging tech ecosystems like agentic workflows, composable infra, AI-native collaboration tools."
-    }
+			context.previousIdeas && context.previousIdeas.length > 0
+				? context.previousIdeas
+						.map(
+							(idea, idx) =>
+								`${idx + 1}. "${idea.title}" - Industry: ${MasterResearchDirector.extractIndustry(
+									idea.description,
+								)}, Target: ${MasterResearchDirector.extractTarget(idea.description)}`,
+						)
+						.join("\n")
+				: "No previous ideas - explore high-potential digital systems with maximum global relevance, especially in emerging tech ecosystems like agentic workflows, composable infra, AI-native collaboration tools."
+		}
     
     Today's theme must open a fresh frontier. Focus on software-native innovation, composability, and universal access—not local or niche constraints.
     `;
 
-      const { text } = await generateText({
-        model: openrouter("openai/gpt-4.1-mini"),
-        prompt: directorPrompt,
-        temperature: 0.3,
-        maxTokens: 600,
-      });
+			const { text } = await generateText({
+				model: openrouter("openai/gpt-4.1-mini"),
+				prompt: directorPrompt,
+				temperature: 0.3,
+				maxTokens: 600,
+			});
 
-      // Use enhanced JSON parser to handle markdown code blocks and formatting issues
-      const parseResult =
-        await EnhancedJsonParser.parseWithFallback<ResearchDirectorData>(
-          text,
-          ["researchTheme", "globalMarketFocus", "industryRotation"],
-          {
-            researchTheme: "AI-Powered Developer Tools for Global Remote Teams",
-            globalMarketFocus: "Global Digital Market",
-            industryRotation: "Developer Productivity and AI Infrastructure",
-            diversityMandates: [
-              "Avoid consumer social apps",
-              "Target software developers and engineering teams",
-              "Explore B2B SaaS models for deep tech",
-            ],
-            researchApproach:
-              "Focus on developer communities, open-source trends, and AI research papers",
-          }
-        );
+			// Use enhanced JSON parser to handle markdown code blocks and formatting issues
+			const parseResult =
+				await EnhancedJsonParser.parseWithFallback<ResearchDirectorData>(
+					text,
+					["researchTheme", "globalMarketFocus", "industryRotation"],
+					{
+						researchTheme: "AI-Powered Developer Tools for Global Remote Teams",
+						globalMarketFocus: "Global Digital Market",
+						industryRotation: "Developer Productivity and AI Infrastructure",
+						diversityMandates: [
+							"Avoid consumer social apps",
+							"Target software developers and engineering teams",
+							"Explore B2B SaaS models for deep tech",
+						],
+						researchApproach:
+							"Focus on developer communities, open-source trends, and AI research papers",
+					},
+				);
 
-      if (!parseResult.success) {
-        console.error(
-          "❌ Master Research Director JSON parsing failed:",
-          parseResult.error
-        );
-        console.log(
-          "📝 Original response:",
-          parseResult.originalText?.substring(0, 500)
-        );
-        if (parseResult.cleanedText) {
-          console.log(
-            "🧹 Cleaned response:",
-            parseResult.cleanedText.substring(0, 500)
-          );
-        }
-      }
+			if (!parseResult.success) {
+				console.error(
+					"❌ Master Research Director JSON parsing failed:",
+					parseResult.error,
+				);
+				console.log(
+					"📝 Original response:",
+					parseResult.originalText?.substring(0, 500),
+				);
+				if (parseResult.cleanedText) {
+					console.log(
+						"🧹 Cleaned response:",
+						parseResult.cleanedText.substring(0, 500),
+					);
+				}
+			}
 
-      const directorData = parseResult.data as ResearchDirectorData;
+			const directorData = parseResult.data as ResearchDirectorData;
 
-      console.log("✅ Step 1: Research Director Set Research Parameters:", {
-        theme: directorData.researchTheme,
-        geography: directorData.globalMarketFocus,
-        industry: directorData.industryRotation,
-      });
+			console.log("✅ Step 1: Research Director Set Research Parameters:", {
+				theme: directorData.researchTheme,
+				geography: directorData.globalMarketFocus,
+				industry: directorData.industryRotation,
+			});
 
-      return directorData;
-    } catch (error) {
-      console.error("Master Research Director error:", error);
-      // Return fallback research direction
-      return {
-        researchTheme: "AI-Powered Developer Tools for Global Remote Teams",
-        globalMarketFocus: "Global Digital Market",
-        industryRotation: "Developer Productivity and AI Infrastructure",
-        diversityMandates: [
-          "Avoid consumer social apps",
-          "Target software developers and engineering teams",
-          "Explore B2B SaaS models for deep tech",
-        ],
-        researchApproach:
-          "Focus on developer communities, open-source trends, and AI research papers",
-      };
-    }
-  }
+			return directorData;
+		} catch (error) {
+			console.error("Master Research Director error:", error);
+			// Return fallback research direction
+			return {
+				researchTheme: "AI-Powered Developer Tools for Global Remote Teams",
+				globalMarketFocus: "Global Digital Market",
+				industryRotation: "Developer Productivity and AI Infrastructure",
+				diversityMandates: [
+					"Avoid consumer social apps",
+					"Target software developers and engineering teams",
+					"Explore B2B SaaS models for deep tech",
+				],
+				researchApproach:
+					"Focus on developer communities, open-source trends, and AI research papers",
+			};
+		}
+	}
 
-  // Helper functions for extracting patterns from previous ideas
-  static extractIndustry(description: string): string {
-    const industryKeywords = {
-      enterprise: ["enterprise", "corporate", "large business"],
-      smb: ["small business", "SMB", "local business"],
-      consumer: ["consumer", "individual", "personal"],
-      creator: ["creator", "artist", "content"],
-      healthcare: ["health", "medical", "wellness"],
-      fintech: ["finance", "payment", "banking"],
-      edtech: ["education", "learning", "student"],
-      ai: ["AI", "artificial intelligence", "machine learning"],
-      developer_tools: ["developer", "coding", "API", "toolchain"],
-      web3: ["blockchain", "decentralized", "crypto"],
-      climate_tech: ["climate", "sustainability", "environmental"],
-    };
+	// Helper functions for extracting patterns from previous ideas
+	static extractIndustry(description: string): string {
+		const industryKeywords = {
+			enterprise: ["enterprise", "corporate", "large business"],
+			smb: ["small business", "SMB", "local business"],
+			consumer: ["consumer", "individual", "personal"],
+			creator: ["creator", "artist", "content"],
+			healthcare: ["health", "medical", "wellness"],
+			fintech: ["finance", "payment", "banking"],
+			edtech: ["education", "learning", "student"],
+			ai: ["AI", "artificial intelligence", "machine learning"],
+			developer_tools: ["developer", "coding", "API", "toolchain"],
+			web3: ["blockchain", "decentralized", "crypto"],
+			climate_tech: ["climate", "sustainability", "environmental"],
+		};
 
-    for (const [industry, keywords] of Object.entries(industryKeywords)) {
-      if (
-        keywords.some((keyword) => description.toLowerCase().includes(keyword))
-      ) {
-        return industry;
-      }
-    }
-    return "general";
-  }
+		for (const [industry, keywords] of Object.entries(industryKeywords)) {
+			if (
+				keywords.some((keyword) => description.toLowerCase().includes(keyword))
+			) {
+				return industry;
+			}
+		}
+		return "general";
+	}
 
-  static extractTarget(description: string): string {
-    const targetKeywords = {
-      enterprise: ["enterprise", "corporation", "large company"],
-      smb: ["small business", "SMB", "local shop"],
-      individual: ["individual", "personal", "consumer"],
-      professional: ["professional", "freelancer", "consultant"],
-      creator: ["creator", "artist", "influencer"],
-      developer: ["developer", "engineer", "programmer"],
-      scientist: ["scientist", "researcher", "analyst"],
-    };
+	static extractTarget(description: string): string {
+		const targetKeywords = {
+			enterprise: ["enterprise", "corporation", "large company"],
+			smb: ["small business", "SMB", "local shop"],
+			individual: ["individual", "personal", "consumer"],
+			professional: ["professional", "freelancer", "consultant"],
+			creator: ["creator", "artist", "influencer"],
+			developer: ["developer", "engineer", "programmer"],
+			scientist: ["scientist", "researcher", "analyst"],
+		};
 
-    for (const [target, keywords] of Object.entries(targetKeywords)) {
-      if (
-        keywords.some((keyword) => description.toLowerCase().includes(keyword))
-      ) {
-        return target;
-      }
-    }
-    return "general";
-  }
+		for (const [target, keywords] of Object.entries(targetKeywords)) {
+			if (
+				keywords.some((keyword) => description.toLowerCase().includes(keyword))
+			) {
+				return target;
+			}
+		}
+		return "general";
+	}
 }
 
 export type { ResearchDirectorData };

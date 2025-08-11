@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
 interface StructuredDataProps {
-  data: Record<string, unknown>;
+	data: Record<string, unknown>;
 }
 
 /**
@@ -10,12 +10,12 @@ interface StructuredDataProps {
  * @param {StructuredDataProps} props The structured data object.
  */
 export default function StructuredData({ data }: StructuredDataProps) {
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(data),
-      }}
-    />
-  );
+	return (
+		<script
+			type="application/ld+json"
+			dangerouslySetInnerHTML={{
+				__html: JSON.stringify(data),
+			}}
+		/>
+	);
 }

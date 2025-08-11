@@ -18,7 +18,7 @@ export interface ParseResult<T = any> {
 function isAlreadyValidJson(content: string): boolean {
 	try {
 		const trimmed = content.trim();
-		if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+		if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
 			JSON.parse(trimmed);
 			return true;
 		}
@@ -36,13 +36,13 @@ function isAlreadyValidJson(content: string): boolean {
  */
 export function parseStructuredResponse<T = any>(
 	content: string,
-	fallbackData?: T
+	fallbackData?: T,
 ): ParseResult<T> {
-	if (!content || typeof content !== 'string') {
+	if (!content || typeof content !== "string") {
 		return {
 			success: false,
 			error: "Invalid content provided for JSON parsing",
-			rawContent: content
+			rawContent: content,
 		};
 	}
 
@@ -53,7 +53,7 @@ export function parseStructuredResponse<T = any>(
 			return {
 				success: true,
 				data: parsed,
-				rawContent: content
+				rawContent: content,
 			};
 		} catch (error) {
 			// Continue to other strategies if this fails
@@ -65,7 +65,7 @@ export function parseStructuredResponse<T = any>(
 		extractFromGenericCodeBlock,
 		extractFromJsonObject,
 		extractFromCleanedContent,
-		extractDirectParse
+		extractDirectParse,
 	];
 
 	for (const strategy of strategies) {
@@ -76,13 +76,10 @@ export function parseStructuredResponse<T = any>(
 				return {
 					success: true,
 					data: parsed,
-					rawContent: content
+					rawContent: content,
 				};
 			}
-		} catch (error) {
-			// Continue to next strategy
-			continue;
-		}
+		} catch (error) {}
 	}
 
 	// If all strategies fail, return fallback if provided
@@ -91,14 +88,14 @@ export function parseStructuredResponse<T = any>(
 			success: false,
 			data: fallbackData,
 			error: "Failed to parse JSON, using fallback data",
-			rawContent: content
+			rawContent: content,
 		};
 	}
 
 	return {
 		success: false,
 		error: "Failed to extract valid JSON from content using all strategies",
-		rawContent: content
+		rawContent: content,
 	};
 }
 
@@ -120,7 +117,7 @@ function extractFromJsonCodeBlock(content: string): string | null {
 function extractFromGenericCodeBlock(content: string): string | null {
 	const codeBlockPattern = /```\s*([\s\S]*?)\s*```/gi;
 	const matches = Array.from(content.matchAll(codeBlockPattern));
-	
+
 	for (const match of matches) {
 		const candidate = match[1]?.trim();
 		if (candidate && isLikelyJson(candidate)) {
@@ -135,9 +132,9 @@ function extractFromGenericCodeBlock(content: string): string | null {
  */
 function extractFromJsonObject(content: string): string | null {
 	// Find the first opening brace and the last closing brace
-	const firstBrace = content.indexOf('{');
-	const lastBrace = content.lastIndexOf('}');
-	
+	const firstBrace = content.indexOf("{");
+	const lastBrace = content.lastIndexOf("}");
+
 	if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
 		const candidate = content.substring(firstBrace, lastBrace + 1);
 		if (isLikelyJson(candidate)) {
@@ -152,24 +149,24 @@ function extractFromJsonObject(content: string): string | null {
  */
 function extractFromCleanedContent(content: string): string | null {
 	let cleaned = content;
-	
+
 	// Remove common non-JSON patterns
 	const cleaningPatterns = [
-		/<think>[\s\S]*?<\/think>/gi,     // Remove thinking blocks
-		/^[\s\S]*?(?=\{)/m,              // Remove everything before first {
-		/<[^>]*>/g,                       // Remove HTML tags
-		/^[^{]*$/gm,                      // Remove lines without {
+		/<think>[\s\S]*?<\/think>/gi, // Remove thinking blocks
+		/^[\s\S]*?(?=\{)/m, // Remove everything before first {
+		/<[^>]*>/g, // Remove HTML tags
+		/^[^{]*$/gm, // Remove lines without {
 	];
 
 	for (const pattern of cleaningPatterns) {
-		cleaned = cleaned.replace(pattern, '').trim();
+		cleaned = cleaned.replace(pattern, "").trim();
 	}
 
 	// Try to find JSON object in cleaned content
-	if (cleaned.startsWith('{') && cleaned.includes('}')) {
-		const firstBrace = cleaned.indexOf('{');
-		const lastBrace = cleaned.lastIndexOf('}');
-		
+	if (cleaned.startsWith("{") && cleaned.includes("}")) {
+		const firstBrace = cleaned.indexOf("{");
+		const lastBrace = cleaned.lastIndexOf("}");
+
 		if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
 			const candidate = cleaned.substring(firstBrace, lastBrace + 1);
 			if (isLikelyJson(candidate)) {
@@ -177,7 +174,7 @@ function extractFromCleanedContent(content: string): string | null {
 			}
 		}
 	}
-	
+
 	return null;
 }
 
@@ -196,32 +193,32 @@ function extractDirectParse(content: string): string | null {
  * Helper function to check if a string looks like JSON
  */
 function isLikelyJson(str: string): boolean {
-	if (!str || typeof str !== 'string') return false;
-	
+	if (!str || typeof str !== "string") return false;
+
 	const trimmed = str.trim();
-	
+
 	// Must start with { and end with }
-	if (!trimmed.startsWith('{') || !trimmed.endsWith('}')) {
+	if (!trimmed.startsWith("{") || !trimmed.endsWith("}")) {
 		return false;
 	}
-	
+
 	// Must contain quotes (JSON requires quoted strings)
 	if (!trimmed.includes('"')) {
 		return false;
 	}
-	
+
 	// Should be reasonably long (more than just {})
 	if (trimmed.length < 10) {
 		return false;
 	}
-	
+
 	// Count braces to ensure they're balanced
 	let braceCount = 0;
 	for (const char of trimmed) {
-		if (char === '{') braceCount++;
-		if (char === '}') braceCount--;
+		if (char === "{") braceCount++;
+		if (char === "}") braceCount--;
 	}
-	
+
 	return braceCount === 0;
 }
 
@@ -236,56 +233,75 @@ export async function parsePerplexityResponse<T = any>(
 	content: string,
 	structureWithLLM: (content: string) => Promise<string>,
 	expectedFields: string[] = [],
-	fallbackData?: T
+	fallbackData?: T,
 ): Promise<ParseResult<T>> {
 	console.log("🔍 Checking if Perplexity response is already JSON...");
-	
+
 	// First, check if content is already valid JSON
 	if (isAlreadyValidJson(content)) {
 		console.log("✅ Content is already valid JSON, using directly");
 		const result = parseStructuredResponse<T>(content, fallbackData);
-		
-		if (result.success && result.data && expectedFields.length > 0 && typeof result.data === 'object' && result.data !== null) {
+
+		if (
+			result.success &&
+			result.data &&
+			expectedFields.length > 0 &&
+			typeof result.data === "object" &&
+			result.data !== null
+		) {
 			// Validate that expected fields are present
-			const missingFields = expectedFields.filter(field => !(field in (result.data as Record<string, any>)));
-			
+			const missingFields = expectedFields.filter(
+				(field) => !(field in (result.data as Record<string, any>)),
+			);
+
 			if (missingFields.length > 0) {
-				console.log(`⚠️ Missing required fields: ${missingFields.join(', ')}`);
+				console.log(`⚠️ Missing required fields: ${missingFields.join(", ")}`);
 				return {
 					success: false,
 					data: fallbackData,
-					error: `Missing required fields: ${missingFields.join(', ')}`,
-					rawContent: content
+					error: `Missing required fields: ${missingFields.join(", ")}`,
+					rawContent: content,
 				};
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	// If not JSON, use LLM to structure it
 	console.log("🔄 Content is not JSON, using LLM to structure...");
 	try {
 		const structuredContent = await structureWithLLM(content);
-		console.log("🔍 LLM structured response:", `${structuredContent.substring(0, 300)}...`);
-		
+		console.log(
+			"🔍 LLM structured response:",
+			`${structuredContent.substring(0, 300)}...`,
+		);
+
 		const result = parseStructuredResponse<T>(structuredContent, fallbackData);
-		
-		if (result.success && result.data && expectedFields.length > 0 && typeof result.data === 'object' && result.data !== null) {
+
+		if (
+			result.success &&
+			result.data &&
+			expectedFields.length > 0 &&
+			typeof result.data === "object" &&
+			result.data !== null
+		) {
 			// Validate that expected fields are present
-			const missingFields = expectedFields.filter(field => !(field in (result.data as Record<string, any>)));
-			
+			const missingFields = expectedFields.filter(
+				(field) => !(field in (result.data as Record<string, any>)),
+			);
+
 			if (missingFields.length > 0) {
-				console.log(`⚠️ Missing required fields: ${missingFields.join(', ')}`);
+				console.log(`⚠️ Missing required fields: ${missingFields.join(", ")}`);
 				return {
 					success: false,
 					data: fallbackData,
-					error: `Missing required fields: ${missingFields.join(', ')}`,
-					rawContent: content
+					error: `Missing required fields: ${missingFields.join(", ")}`,
+					rawContent: content,
 				};
 			}
 		}
-		
+
 		return result;
 	} catch (error) {
 		console.error("❌ LLM structuring failed:", error);
@@ -293,7 +309,7 @@ export async function parsePerplexityResponse<T = any>(
 			success: false,
 			data: fallbackData,
 			error: `LLM structuring failed: ${(error as Error).message}`,
-			rawContent: content
+			rawContent: content,
 		};
 	}
 }
@@ -307,23 +323,31 @@ export async function parsePerplexityResponse<T = any>(
 export function parseLLMResponse<T = any>(
 	content: string,
 	expectedFields: string[] = [],
-	fallbackData?: T
+	fallbackData?: T,
 ): ParseResult<T> {
 	const result = parseStructuredResponse<T>(content, fallbackData);
-	
-	if (result.success && result.data && expectedFields.length > 0 && typeof result.data === 'object' && result.data !== null) {
+
+	if (
+		result.success &&
+		result.data &&
+		expectedFields.length > 0 &&
+		typeof result.data === "object" &&
+		result.data !== null
+	) {
 		// Validate that expected fields are present
-		const missingFields = expectedFields.filter(field => !(field in (result.data as Record<string, any>)));
-		
+		const missingFields = expectedFields.filter(
+			(field) => !(field in (result.data as Record<string, any>)),
+		);
+
 		if (missingFields.length > 0) {
 			return {
 				success: false,
 				data: fallbackData,
-				error: `Missing required fields: ${missingFields.join(', ')}`,
-				rawContent: content
+				error: `Missing required fields: ${missingFields.join(", ")}`,
+				rawContent: content,
 			};
 		}
 	}
-	
+
 	return result;
 }

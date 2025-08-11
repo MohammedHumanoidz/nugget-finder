@@ -1,20 +1,23 @@
 import { generateText } from "ai";
-import type { AgentContext, SynthesizedIdea } from "../../../types/apps/idea-generation-agent";
+import type {
+	AgentContext,
+	SynthesizedIdea,
+} from "../../../types/apps/idea-generation-agent";
 import { openrouter } from "../../../utils/configs/ai.config";
 
 export class CriticAgent {
-  /**
-   * Critic Agent - Silent critic that analyzes generated ideas and creates refinement prompts
-   * Uses advanced reasoning to critique and improve idea quality
-   */
-  static async execute(
-    ideas: SynthesizedIdea[],
-    context: AgentContext
-  ): Promise<string | null> {
-    try {
-      console.log("🔍 Step 6: Activating Critic Agent");
+	/**
+	 * Critic Agent - Silent critic that analyzes generated ideas and creates refinement prompts
+	 * Uses advanced reasoning to critique and improve idea quality
+	 */
+	static async execute(
+		ideas: SynthesizedIdea[],
+		context: AgentContext,
+	): Promise<string | null> {
+		try {
+			console.log("🔍 Step 6: Activating Critic Agent");
 
-      const criticPrompt = `You are a world-class startup critic and strategic advisor with deep expertise in evaluating early-stage business opportunities. Your role is to conduct a silent, comprehensive critique of generated startup ideas and create targeted refinement recommendations.
+			const criticPrompt = `You are a world-class startup critic and strategic advisor with deep expertise in evaluating early-stage business opportunities. Your role is to conduct a silent, comprehensive critique of generated startup ideas and create targeted refinement recommendations.
 
 **Critique Framework:**
 
@@ -41,8 +44,8 @@ export class CriticAgent {
 
 **Input Ideas for Critique:**
 ${ideas
-  .map(
-    (idea, idx) => `
+	.map(
+		(idea, idx) => `
 Idea ${idx + 1}: ${idea.title}
 Description: ${idea.description}
 Problem Statement: ${idea.problemStatement}
@@ -50,9 +53,9 @@ Target Keywords: ${idea.targetKeywords.join(", ")}
 Execution Complexity: ${idea.executionComplexity}/10
 Confidence Score: ${idea.confidenceScore}/10
 Narrative Hook: ${idea.narrativeHook}
-`
-  )
-  .join("\n")}
+`,
+	)
+	.join("\n")}
 
 **Context Information:**
 - Research Theme: ${context.trends?.title}
@@ -63,25 +66,25 @@ Conduct a thorough critique focusing on the most critical weaknesses that could 
 
 Return a focused refinement prompt that addresses the most important improvements needed:`;
 
-      const { text: refinementPrompt } = await generateText({
-        model: openrouter("openai/gpt-4.1-mini"),
-        prompt: criticPrompt,
-        temperature: 0.2,
-        maxTokens: 800,
-      });
+			const { text: refinementPrompt } = await generateText({
+				model: openrouter("openai/gpt-4.1-mini"),
+				prompt: criticPrompt,
+				temperature: 0.2,
+				maxTokens: 800,
+			});
 
-      console.log(
-        "✅ Step 6: Critic Agent Generated Refinement Recommendations"
-      );
-      console.log(
-        "🔍 Refinement focus areas identified:",
-        refinementPrompt.substring(0, 200) + "..."
-      );
+			console.log(
+				"✅ Step 6: Critic Agent Generated Refinement Recommendations",
+			);
+			console.log(
+				"🔍 Refinement focus areas identified:",
+				refinementPrompt.substring(0, 200) + "...",
+			);
 
-      return refinementPrompt;
-    } catch (error) {
-      console.error("Critic Agent error:", error);
-      return null;
-    }
-  }
+			return refinementPrompt;
+		} catch (error) {
+			console.error("Critic Agent error:", error);
+			return null;
+		}
+	}
 }

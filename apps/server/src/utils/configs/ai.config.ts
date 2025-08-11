@@ -28,7 +28,7 @@ const perplexity = async (
 			reasoning_effort,
 			messageCount: requestBody.messages.length,
 			systemPromptLength: systemPrompt.length,
-			userPromptLength: userPrompt.length
+			userPromptLength: userPrompt.length,
 		});
 
 		const options = {

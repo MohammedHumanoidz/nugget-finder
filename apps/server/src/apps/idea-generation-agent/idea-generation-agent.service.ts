@@ -199,14 +199,18 @@ export const IdeaGenerationAgentService = {
 		});
 	},
 
-	async createWhatToBuild(whatToBuildData: WhatToBuildData, dailyIdeaId: string) {
+	async createWhatToBuild(
+		whatToBuildData: WhatToBuildData,
+		dailyIdeaId: string,
+	) {
 		return await prisma.whatToBuild.create({
 			data: {
 				platformDescription: whatToBuildData.platformDescription,
 				coreFeaturesSummary: whatToBuildData.coreFeaturesSummary,
 				userInterfaces: whatToBuildData.userInterfaces,
 				keyIntegrations: whatToBuildData.keyIntegrations,
-				pricingStrategyBuildRecommendation: whatToBuildData.pricingStrategyBuildRecommendation,
+				pricingStrategyBuildRecommendation:
+					whatToBuildData.pricingStrategyBuildRecommendation,
 				dailyIdeaId,
 			},
 		});

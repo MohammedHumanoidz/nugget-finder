@@ -4,8 +4,8 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { Elysia } from "elysia";
 import { auth } from "./lib/auth";
 import { createContext } from "./lib/context";
-import { appRouter } from "./routers/index";
 import { chatRouter } from "./routers/chat";
+import { appRouter } from "./routers/index";
 import "./trigger/daily-idea-generation"; // Initialize Trigger.dev jobs
 import "./trigger/on-demand-idea-generation"; // Initialize on-demand idea generation job
 
@@ -36,9 +36,12 @@ const _app = new Elysia()
 		return res;
 	})
 	.get("/", () => "OK")
-	.listen({
-		port: 3000,
-		idleTimeout: 255,
-	}, () => {
-		console.log("Server is running on http://localhost:3000");
-	});
+	.listen(
+		{
+			port: 3000,
+			idleTimeout: 255,
+		},
+		() => {
+			console.log("Server is running on http://localhost:3000");
+		},
+	);

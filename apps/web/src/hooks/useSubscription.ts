@@ -1,239 +1,242 @@
-import { useState, useMemo } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import type {
-  UseSubscriptionReturn,
-  FormattedPlan,
-  BetterAuthSubscription,
-  SubscriptionStatus,
-  BetterAuthUpgradeOptions,
+	BetterAuthSubscription,
+	BetterAuthUpgradeOptions,
+	FormattedPlan,
+	SubscriptionStatus,
+	UseSubscriptionReturn,
 } from "@/types/subscription";
-import { useMutation, useQuery } from "@tanstack/react-query";
 
 export function useSubscription(): UseSubscriptionReturn {
-  const [checkoutError, setCheckoutError] = useState<string | null>(null);
-  const [cancelError, setCancelError] = useState<string | null>(null);
-  const [restoreError, setRestoreError] = useState<string | null>(null);
-  const [billingPortalError, setBillingPortalError] = useState<string | null>(null);
-  const [upgradeError, setUpgradeError] = useState<string | null>(null);
-  // Get authentication status
-  const { data: session } = authClient.useSession();
-  const isAuthenticated = !!session?.user;
+	const [checkoutError, setCheckoutError] = useState<string | null>(null);
+	const [cancelError, setCancelError] = useState<string | null>(null);
+	const [restoreError, setRestoreError] = useState<string | null>(null);
+	const [billingPortalError, setBillingPortalError] = useState<string | null>(
+		null,
+	);
+	const [upgradeError, setUpgradeError] = useState<string | null>(null);
+	// Get authentication status
+	const { data: session } = authClient.useSession();
+	const isAuthenticated = !!session?.user;
 
-  // Helper function to get current subscription from Better Auth
-  const getCurrentSubscription = async (): Promise<BetterAuthSubscription | null> => {
-    if (!isAuthenticated) return null;
-    
-    const result = await authClient.subscription.list();
-    if (result.error) {
-      throw new Error(result.error.message);
-    }
-    
-    // Find active or trialing subscription
-    const activeSubscription = result.data?.find(sub => 
-      sub.status === 'active' || sub.status === 'trialing'
-    );
-    
-    return activeSubscription as unknown as BetterAuthSubscription | null;
-  };
+	// Helper function to get current subscription from Better Auth
+	const getCurrentSubscription =
+		async (): Promise<BetterAuthSubscription | null> => {
+			if (!isAuthenticated) return null;
 
-  // Get plans from your API (keep this as TRPC if you have it set up)
-  const {
-    data: plans,
-    isLoading: isLoadingPlans,
-    refetch: refetchPlans,
-  } = useQuery({
-    queryKey: ['subscription', 'plans'],
-    queryFn: async () => {
-      // Replace with your actual plans API endpoint
-      const response = await fetch('/api/plans');
-      if (!response.ok) throw new Error('Failed to fetch plans');
-      return response.json();
-    },
-  });
+			const result = await authClient.subscription.list();
+			if (result.error) {
+				throw new Error(result.error.message);
+			}
 
-  // Get current subscription
-  const {
-    data: currentSubscription,
-    isLoading: isLoadingSubscription,
-    refetch: refetchSubscription,
-  } = useQuery({
-    queryKey: ['subscription', 'current'],
-    queryFn: getCurrentSubscription,
-    enabled: isAuthenticated,
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
+			// Find active or trialing subscription
+			const activeSubscription = result.data?.find(
+				(sub) => sub.status === "active" || sub.status === "trialing",
+			);
 
-  // Derive subscription status from current subscription
-  const subscriptionStatus: SubscriptionStatus | null = useMemo(() => {
-    if (!currentSubscription) return null;
-    
-    return {
-      isPaying: ['active', 'trialing'].includes(currentSubscription.status),
-      isActive: currentSubscription.status === 'active',
-      isTrialing: currentSubscription.status === 'trialing',
-      isCanceled: currentSubscription.status === 'canceled',
-      cancelAtPeriodEnd: currentSubscription.cancelAtPeriodEnd,
-      periodEnd: currentSubscription.periodEnd,
-    };
-  }, [currentSubscription]);
+			return activeSubscription as unknown as BetterAuthSubscription | null;
+		};
 
-  const isPaying = subscriptionStatus?.isPaying || false;
+	// Get plans from your API (keep this as TRPC if you have it set up)
+	const {
+		data: plans,
+		isLoading: isLoadingPlans,
+		refetch: refetchPlans,
+	} = useQuery({
+		queryKey: ["subscription", "plans"],
+		queryFn: async () => {
+			// Replace with your actual plans API endpoint
+			const response = await fetch("/api/plans");
+			if (!response.ok) throw new Error("Failed to fetch plans");
+			return response.json();
+		},
+	});
 
-  const cancelSubscriptionMutation = useMutation({
-    mutationFn: async (options?: { returnUrl?: string }) => {
-      const result = await authClient.subscription.cancel({
-        returnUrl: options?.returnUrl || window.location.href,
-      });
-      
-      if (result.error) {
-        throw new Error(result.error.message);
-      }
-      
-      return result;
-    },
-    onSuccess: () => {
-      setCancelError(null);
-      refetchSubscription();
-    },
-    onError: (error: Error) => {
-      setCancelError(error.message);
-    },
-  });
+	// Get current subscription
+	const {
+		data: currentSubscription,
+		isLoading: isLoadingSubscription,
+		refetch: refetchSubscription,
+	} = useQuery({
+		queryKey: ["subscription", "current"],
+		queryFn: getCurrentSubscription,
+		enabled: isAuthenticated,
+		retry: false,
+		refetchOnWindowFocus: false,
+	});
 
-  const upgradeSubscriptionMutation = useMutation({
-    mutationFn: async (options: BetterAuthUpgradeOptions) => {
-      const result = await authClient.subscription.upgrade(options);
-      return result;
-    },
-    onSuccess: () => {
-      setUpgradeError(null);
-      refetchSubscription();
-    },
-    onError: (error: Error) => {
-      setUpgradeError(error.message);
-    },
-  });
+	// Derive subscription status from current subscription
+	const subscriptionStatus: SubscriptionStatus | null = useMemo(() => {
+		if (!currentSubscription) return null;
 
-  const restoreSubscriptionMutation = useMutation({
-    mutationFn: async () => {
-      const result = await authClient.subscription.restore();
-      
-      if (result.error) {
-        throw new Error(result.error.message);
-      }
-      
-      return result;
-    },
-    onSuccess: () => {
-      setRestoreError(null);
-      refetchSubscription();
-    },
-    onError: (error: Error) => {
-      setRestoreError(error.message);
-    },
-  });
+		return {
+			isPaying: ["active", "trialing"].includes(currentSubscription.status),
+			isActive: currentSubscription.status === "active",
+			isTrialing: currentSubscription.status === "trialing",
+			isCanceled: currentSubscription.status === "canceled",
+			cancelAtPeriodEnd: currentSubscription.cancelAtPeriodEnd,
+			periodEnd: currentSubscription.periodEnd,
+		};
+	}, [currentSubscription]);
 
-  const billingPortalMutation = useMutation({
-    mutationFn: async (options: { returnUrl: string }) => {
-      // Use cancel with returnUrl to access billing portal
-      const result = await authClient.subscription.cancel({
-        returnUrl: options.returnUrl,
-      });
-      
-      if (result.error) {
-        throw new Error(result.error.message);
-      }
-      
-      return result;
-    },
-    onSuccess: () => {
-      setBillingPortalError(null);
-      // Better Auth handles redirect automatically
-    },
-    onError: (error: Error) => {
-      setBillingPortalError(error.message);
-    },
-  });
+	const isPaying = subscriptionStatus?.isPaying || false;
 
-  // Utility functions
-  const formatPrice = (amount: number, currency: string): string => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: currency.toUpperCase(),
-      minimumFractionDigits: 0,
-    }).format(amount / 100); // Stripe amounts are in cents
-  };
+	const cancelSubscriptionMutation = useMutation({
+		mutationFn: async (options?: { returnUrl?: string }) => {
+			const result = await authClient.subscription.cancel({
+				returnUrl: options?.returnUrl || window.location.href,
+			});
 
-  const getPlanByPriceId = (priceId: string): FormattedPlan | undefined => {
-    if (!plans) return undefined;
+			if (result.error) {
+				throw new Error(result.error.message);
+			}
 
-    return plans.find(
-      (plan: FormattedPlan) =>
-        plan.pricing.monthly?.priceId === priceId ||
-        plan.pricing.yearly?.priceId === priceId
-    );
-  };
+			return result;
+		},
+		onSuccess: () => {
+			setCancelError(null);
+			refetchSubscription();
+		},
+		onError: (error: Error) => {
+			setCancelError(error.message);
+		},
+	});
 
-  const refetchAll = () => {
-    refetchPlans();
-    refetchSubscription();
-  };
+	const upgradeSubscriptionMutation = useMutation({
+		mutationFn: async (options: BetterAuthUpgradeOptions) => {
+			const result = await authClient.subscription.upgrade(options);
+			return result;
+		},
+		onSuccess: () => {
+			setUpgradeError(null);
+			refetchSubscription();
+		},
+		onError: (error: Error) => {
+			setUpgradeError(error.message);
+		},
+	});
 
-  //@ts-ignore
-  return {
-    // Data
-    plans,
-    currentSubscription,
-    subscriptionStatus: subscriptionStatus as SubscriptionStatus | undefined,
-    isPaying,
+	const restoreSubscriptionMutation = useMutation({
+		mutationFn: async () => {
+			const result = await authClient.subscription.restore();
 
-    // Loading states
-    isLoadingPlans,
-    isLoadingSubscription,
-    isLoadingStatus: false, // Derived from subscription data
+			if (result.error) {
+				throw new Error(result.error.message);
+			}
 
-    // Mutations with proper async signatures
+			return result;
+		},
+		onSuccess: () => {
+			setRestoreError(null);
+			refetchSubscription();
+		},
+		onError: (error: Error) => {
+			setRestoreError(error.message);
+		},
+	});
 
-    upgradeSubscription: {
-      mutate: async (options: BetterAuthUpgradeOptions) => {
-        setUpgradeError(null);
-        return upgradeSubscriptionMutation.mutate(options);
-      },
-      isLoading: upgradeSubscriptionMutation.isPending,
-      error: upgradeError,
-    },
+	const billingPortalMutation = useMutation({
+		mutationFn: async (options: { returnUrl: string }) => {
+			// Use cancel with returnUrl to access billing portal
+			const result = await authClient.subscription.cancel({
+				returnUrl: options.returnUrl,
+			});
 
-    cancelSubscription: {
-      mutate: async (options?: { returnUrl?: string }) => {
-        setCancelError(null);
-        return cancelSubscriptionMutation.mutate(options);
-      },
-      isLoading: cancelSubscriptionMutation.isPending,
-      error: cancelError,
-    },
+			if (result.error) {
+				throw new Error(result.error.message);
+			}
 
-    restoreSubscription: {
-      mutate: async () => {
-        setRestoreError(null);
-        return restoreSubscriptionMutation.mutate();
-      },
-      isLoading: restoreSubscriptionMutation.isPending,
-      error: restoreError,
-    },
+			return result;
+		},
+		onSuccess: () => {
+			setBillingPortalError(null);
+			// Better Auth handles redirect automatically
+		},
+		onError: (error: Error) => {
+			setBillingPortalError(error.message);
+		},
+	});
 
-    getBillingPortal: {
-      mutate: async (options: { returnUrl: string }) => {
-        setBillingPortalError(null);
-        return billingPortalMutation.mutate(options);
-      },
-      isLoading: billingPortalMutation.isPending,
-      error: billingPortalError,
-    },
+	// Utility functions
+	const formatPrice = (amount: number, currency: string): string => {
+		return new Intl.NumberFormat("en-US", {
+			style: "currency",
+			currency: currency.toUpperCase(),
+			minimumFractionDigits: 0,
+		}).format(amount / 100); // Stripe amounts are in cents
+	};
 
-    // Utilities
-    formatPrice,
-    getPlanByPriceId,
-    refetchAll,
-  };
+	const getPlanByPriceId = (priceId: string): FormattedPlan | undefined => {
+		if (!plans) return undefined;
+
+		return plans.find(
+			(plan: FormattedPlan) =>
+				plan.pricing.monthly?.priceId === priceId ||
+				plan.pricing.yearly?.priceId === priceId,
+		);
+	};
+
+	const refetchAll = () => {
+		refetchPlans();
+		refetchSubscription();
+	};
+
+	//@ts-ignore
+	return {
+		// Data
+		plans,
+		currentSubscription,
+		subscriptionStatus: subscriptionStatus as SubscriptionStatus | undefined,
+		isPaying,
+
+		// Loading states
+		isLoadingPlans,
+		isLoadingSubscription,
+		isLoadingStatus: false, // Derived from subscription data
+
+		// Mutations with proper async signatures
+
+		upgradeSubscription: {
+			mutate: async (options: BetterAuthUpgradeOptions) => {
+				setUpgradeError(null);
+				return upgradeSubscriptionMutation.mutate(options);
+			},
+			isLoading: upgradeSubscriptionMutation.isPending,
+			error: upgradeError,
+		},
+
+		cancelSubscription: {
+			mutate: async (options?: { returnUrl?: string }) => {
+				setCancelError(null);
+				return cancelSubscriptionMutation.mutate(options);
+			},
+			isLoading: cancelSubscriptionMutation.isPending,
+			error: cancelError,
+		},
+
+		restoreSubscription: {
+			mutate: async () => {
+				setRestoreError(null);
+				return restoreSubscriptionMutation.mutate();
+			},
+			isLoading: restoreSubscriptionMutation.isPending,
+			error: restoreError,
+		},
+
+		getBillingPortal: {
+			mutate: async (options: { returnUrl: string }) => {
+				setBillingPortalError(null);
+				return billingPortalMutation.mutate(options);
+			},
+			isLoading: billingPortalMutation.isPending,
+			error: billingPortalError,
+		},
+
+		// Utilities
+		formatPrice,
+		getPlanByPriceId,
+		refetchAll,
+	};
 }

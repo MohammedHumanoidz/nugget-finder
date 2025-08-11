@@ -1,10 +1,10 @@
 // routers/appRouter.ts
 import { protectedProcedure, publicProcedure, router } from "../lib/trpc";
 import { agentRouter } from "./agent-router";
-import { subscriptionRouter } from "./subscription";
 import { debugRouter } from "./debug";
 import { ideasRouter } from "./ideas";
 import { semanticSearchRouter } from "./semantic-search";
+import { subscriptionRouter } from "./subscription";
 
 export const appRouter = router({
 	// Health check

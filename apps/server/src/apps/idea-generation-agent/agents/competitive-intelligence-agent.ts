@@ -1,21 +1,22 @@
 import { generateText } from "ai";
-import type { AgentContext, CompetitiveData } from "../../../types/apps/idea-generation-agent";
+import type {
+	AgentContext,
+	CompetitiveData,
+} from "../../../types/apps/idea-generation-agent";
 import { openrouter, perplexity } from "../../../utils/configs/ai.config";
 import { parsePerplexityResponse } from "../../../utils/json-parser";
 import { debugLogger } from "../../../utils/logger";
 
 export class CompetitiveIntelligenceAgent {
-  /**
-   * Enhanced CompetitiveIntelligenceAgent - Better competitive analysis with strategic positioning
-   * Uses structured prompts for deeper market understanding
-   */
-  static async execute(
-    context: AgentContext
-  ): Promise<CompetitiveData | null> {
-    try {
-      console.log("🏆 Step 4: Enhanced Competitive Intelligence");
+	/**
+	 * Enhanced CompetitiveIntelligenceAgent - Better competitive analysis with strategic positioning
+	 * Uses structured prompts for deeper market understanding
+	 */
+	static async execute(context: AgentContext): Promise<CompetitiveData | null> {
+		try {
+			console.log("🏆 Step 4: Enhanced Competitive Intelligence");
 
-      const systemPrompt = `You are an elite competitive analyst focused on understanding what tools already exist globally and how a new simple software solution could do better.
+			const systemPrompt = `You are an elite competitive analyst focused on understanding what tools already exist globally and how a new simple software solution could do better.
 
 **CRITICAL LANGUAGE & SCOPE REQUIREMENTS:**
 - Focus on GLOBAL competitors that serve people worldwide
@@ -81,8 +82,8 @@ Return enhanced competitive analysis:
 
 Focus on competitive intelligence that reveals clear paths to startup success through strategic differentiation.`;
 
-      const problemContext = context.problemGaps?.problems.join(", ") || "";
-      const userPrompt = `Analyze the competitive landscape within the specific niche defined by these problems: ${problemContext}
+			const problemContext = context.problemGaps?.problems.join(", ") || "";
+			const userPrompt = `Analyze the competitive landscape within the specific niche defined by these problems: ${problemContext}
 
 Conduct deep competitive analysis to:
 1. Map all direct and indirect competitors within this precise problem space
@@ -98,55 +99,55 @@ Conduct deep competitive analysis to:
 
 Provide actionable competitive intelligence that guides strategic positioning and product development decisions.`;
 
-      debugLogger.logPerplexityRequest(
-        "EnhancedCompetitiveIntelligenceAgent",
-        userPrompt,
-        systemPrompt,
-        {
-          reasoning_effort: "medium",
-          model: "sonar-pro",
-          context: context.problemGaps,
-        }
-      );
+			debugLogger.logPerplexityRequest(
+				"EnhancedCompetitiveIntelligenceAgent",
+				userPrompt,
+				systemPrompt,
+				{
+					reasoning_effort: "medium",
+					model: "sonar-pro",
+					context: context.problemGaps,
+				},
+			);
 
-      const response = await perplexity(
-        userPrompt,
-        systemPrompt,
-        "medium",
-        "sonar-pro"
-      );
+			const response = await perplexity(
+				userPrompt,
+				systemPrompt,
+				"medium",
+				"sonar-pro",
+			);
 
-      debugLogger.logPerplexityResponse(
-        "EnhancedCompetitiveIntelligenceAgent",
-        response
-      );
+			debugLogger.logPerplexityResponse(
+				"EnhancedCompetitiveIntelligenceAgent",
+				response,
+			);
 
-      if (!response?.choices?.[0]?.message?.content) {
-        debugLogger.logError(
-          "EnhancedCompetitiveIntelligenceAgent",
-          new Error("No response from Perplexity"),
-          { response }
-        );
-        throw new Error("No response from Perplexity");
-      }
+			if (!response?.choices?.[0]?.message?.content) {
+				debugLogger.logError(
+					"EnhancedCompetitiveIntelligenceAgent",
+					new Error("No response from Perplexity"),
+					{ response },
+				);
+				throw new Error("No response from Perplexity");
+			}
 
-      const content = response.choices[0].message.content;
-      console.log(
-        "🔍 Enhanced Competitive Intelligence raw response length:",
-        content.length
-      );
-      console.log("🔍 Response preview:", `${content.substring(0, 200)}...`);
+			const content = response.choices[0].message.content;
+			console.log(
+				"🔍 Enhanced Competitive Intelligence raw response length:",
+				content.length,
+			);
+			console.log("🔍 Response preview:", `${content.substring(0, 200)}...`);
 
-      const isAlreadyJson =
-        content.trim().startsWith("{") && content.trim().endsWith("}");
-      debugLogger.logContentAnalysis(
-        "EnhancedCompetitiveIntelligenceAgent",
-        content,
-        isAlreadyJson
-      );
+			const isAlreadyJson =
+				content.trim().startsWith("{") && content.trim().endsWith("}");
+			debugLogger.logContentAnalysis(
+				"EnhancedCompetitiveIntelligenceAgent",
+				content,
+				isAlreadyJson,
+			);
 
-      const structureWithLLM = async (content: string): Promise<string> => {
-        const structuringPrompt = `You are an expert competitive analyst. Convert the following competitive intelligence research into the exact JSON structure requested.
+			const structureWithLLM = async (content: string): Promise<string> => {
+				const structuringPrompt = `You are an expert competitive analyst. Convert the following competitive intelligence research into the exact JSON structure requested.
 
 REQUIRED JSON STRUCTURE:
 {
@@ -187,156 +188,156 @@ ${content}
 
 Extract competitive data and positioning strategy. Ensure all competitive advantages are realistic for software startups. Return ONLY the JSON object.`;
 
-        debugLogger.logLLMStructuring(
-          "EnhancedCompetitiveIntelligenceAgent",
-          structuringPrompt,
-          content
-        );
+				debugLogger.logLLMStructuring(
+					"EnhancedCompetitiveIntelligenceAgent",
+					structuringPrompt,
+					content,
+				);
 
-        const { text: structuredJson } = await generateText({
-          model: openrouter("openai/gpt-4.1-mini"),
-          prompt: structuringPrompt,
-          temperature: 0.1,
-          maxTokens: 1200,
-        });
+				const { text: structuredJson } = await generateText({
+					model: openrouter("openai/gpt-4.1-mini"),
+					prompt: structuringPrompt,
+					temperature: 0.1,
+					maxTokens: 1200,
+				});
 
-        debugLogger.logLLMStructuringResponse(
-          "EnhancedCompetitiveIntelligenceAgent",
-          structuredJson
-        );
-        return structuredJson;
-      };
+				debugLogger.logLLMStructuringResponse(
+					"EnhancedCompetitiveIntelligenceAgent",
+					structuredJson,
+				);
+				return structuredJson;
+			};
 
-      const parseResult = await parsePerplexityResponse<CompetitiveData>(
-        content,
-        structureWithLLM,
-        ["competition", "positioning"]
-      );
+			const parseResult = await parsePerplexityResponse<CompetitiveData>(
+				content,
+				structureWithLLM,
+				["competition", "positioning"],
+			);
 
-      debugLogger.logParsingAttempt(
-        "EnhancedCompetitiveIntelligenceAgent",
-        content,
-        parseResult
-      );
+			debugLogger.logParsingAttempt(
+				"EnhancedCompetitiveIntelligenceAgent",
+				content,
+				parseResult,
+			);
 
-      if (!parseResult.success) {
-        console.error(
-          "❌ Failed to parse enhanced competitive data:",
-          parseResult.error
-        );
-        debugLogger.logError(
-          "EnhancedCompetitiveIntelligenceAgent",
-          new Error(
-            `Failed to parse Perplexity response: ${parseResult.error}`
-          ),
-          { parseResult, originalContent: content }
-        );
-        throw new Error(
-          `Failed to parse Perplexity response: ${parseResult.error}`
-        );
-      }
+			if (!parseResult.success) {
+				console.error(
+					"❌ Failed to parse enhanced competitive data:",
+					parseResult.error,
+				);
+				debugLogger.logError(
+					"EnhancedCompetitiveIntelligenceAgent",
+					new Error(
+						`Failed to parse Perplexity response: ${parseResult.error}`,
+					),
+					{ parseResult, originalContent: content },
+				);
+				throw new Error(
+					`Failed to parse Perplexity response: ${parseResult.error}`,
+				);
+			}
 
-      const competitiveData = parseResult.data as CompetitiveData;
+			const competitiveData = parseResult.data as CompetitiveData;
 
-      console.log("✅ Step 4: Enhanced Competitive Intelligence Completed:", {
-        marketConcentration:
-          competitiveData.competition?.marketConcentrationLevel,
-        directCompetitorCount:
-          competitiveData.competition?.directCompetitors?.length || 0,
-        positioningName: competitiveData.positioning?.name,
-        competitiveScore:
-          competitiveData.competition?.competitivePositioningScore,
-      });
+			console.log("✅ Step 4: Enhanced Competitive Intelligence Completed:", {
+				marketConcentration:
+					competitiveData.competition?.marketConcentrationLevel,
+				directCompetitorCount:
+					competitiveData.competition?.directCompetitors?.length || 0,
+				positioningName: competitiveData.positioning?.name,
+				competitiveScore:
+					competitiveData.competition?.competitivePositioningScore,
+			});
 
-      debugLogger.logAgentResult(
-        "EnhancedCompetitiveIntelligenceAgent",
-        competitiveData,
-        true
-      );
-      return competitiveData;
-    } catch (error) {
-      console.error("EnhancedCompetitiveIntelligenceAgent error:", error);
-      debugLogger.logError(
-        "EnhancedCompetitiveIntelligenceAgent",
-        error as Error,
-        {
-          agent: "EnhancedCompetitiveIntelligenceAgent",
-          fallbackUsed: true,
-        }
-      );
+			debugLogger.logAgentResult(
+				"EnhancedCompetitiveIntelligenceAgent",
+				competitiveData,
+				true,
+			);
+			return competitiveData;
+		} catch (error) {
+			console.error("EnhancedCompetitiveIntelligenceAgent error:", error);
+			debugLogger.logError(
+				"EnhancedCompetitiveIntelligenceAgent",
+				error as Error,
+				{
+					agent: "EnhancedCompetitiveIntelligenceAgent",
+					fallbackUsed: true,
+				},
+			);
 
-      console.log("🔄 Using enhanced fallback competitive intelligence data");
-      return {
-        competition: {
-          marketConcentrationLevel: "LOW" as const,
-          marketConcentrationJustification:
-            "Global market focus creates opportunities for specialized solutions targeting underserved segments with digital-first, universally-adapted approaches",
-          directCompetitors: [
-            {
-              name: "Generic Global Platforms",
-              justification:
-                                  "Large platforms that attempt to serve the target market but lack specialized customization",
-              strengths: [
-                "Brand recognition",
-                "Extensive features",
-                "Large user base",
-              ],
-              weaknesses: [
-                "No local platform integrations",
-                "Western-centric design",
-                "Complex pricing for emerging markets",
-                "Poor mobile optimization",
-              ],
-            },
-          ],
-          indirectCompetitors: [
-            {
-              name: "Manual/Traditional Methods",
-              justification:
-                "Current manual processes and traditional tools used by target personas",
-              strengths: [
-                "Familiar workflows",
-                "No technology barriers",
-                "Full control",
-              ],
-              weaknesses: [
-                "Time-intensive",
-                "Error-prone",
-                "No scalability",
-                "Missing automation opportunities",
-              ],
-            },
-          ],
-          competitorFailurePoints: [
-                              "Lack of specialized platform integrations and diverse payment support",
-            "Complex interfaces designed for desktop users, not mobile-first workflows",
-            "Pricing models that don't scale with emerging market budgets",
-          ],
-          unfairAdvantage: [
-                          "Native integrations with specialized platforms and diverse payment systems",
-              "Mobile-first design optimized for global digital-first usage patterns",
-            "Local market expertise and community-driven feature development",
-          ],
-          moat: [
-                          "Exclusive partnerships with specialized platforms and niche service providers",
-              "Network effects within specific industry communities",
-              "Data advantages from understanding specialized user behavior patterns",
-          ],
-          competitivePositioningScore: 8,
-        },
-        positioning: {
-          name: "Creator Tools for Mobile-First Markets",
-          targetSegment:
-            "Independent content creators and small business owners with limited resources",
-          valueProposition:
-            "The only platform designed specifically for independent creators, with native multi-platform integrations, mobile-first workflows, and streamlined monetization support that enterprise platforms ignore",
-          keyDifferentiators: [
-            "Native integration with multiple social platforms and payment gateways",
-            "Mobile-optimized interface designed for smartphone-primary users",
-            "Community-driven feature development with creator-focused expertise",
-          ],
-        },
-      };
-    }
-  }
+			console.log("🔄 Using enhanced fallback competitive intelligence data");
+			return {
+				competition: {
+					marketConcentrationLevel: "LOW" as const,
+					marketConcentrationJustification:
+						"Global market focus creates opportunities for specialized solutions targeting underserved segments with digital-first, universally-adapted approaches",
+					directCompetitors: [
+						{
+							name: "Generic Global Platforms",
+							justification:
+								"Large platforms that attempt to serve the target market but lack specialized customization",
+							strengths: [
+								"Brand recognition",
+								"Extensive features",
+								"Large user base",
+							],
+							weaknesses: [
+								"No local platform integrations",
+								"Western-centric design",
+								"Complex pricing for emerging markets",
+								"Poor mobile optimization",
+							],
+						},
+					],
+					indirectCompetitors: [
+						{
+							name: "Manual/Traditional Methods",
+							justification:
+								"Current manual processes and traditional tools used by target personas",
+							strengths: [
+								"Familiar workflows",
+								"No technology barriers",
+								"Full control",
+							],
+							weaknesses: [
+								"Time-intensive",
+								"Error-prone",
+								"No scalability",
+								"Missing automation opportunities",
+							],
+						},
+					],
+					competitorFailurePoints: [
+						"Lack of specialized platform integrations and diverse payment support",
+						"Complex interfaces designed for desktop users, not mobile-first workflows",
+						"Pricing models that don't scale with emerging market budgets",
+					],
+					unfairAdvantage: [
+						"Native integrations with specialized platforms and diverse payment systems",
+						"Mobile-first design optimized for global digital-first usage patterns",
+						"Local market expertise and community-driven feature development",
+					],
+					moat: [
+						"Exclusive partnerships with specialized platforms and niche service providers",
+						"Network effects within specific industry communities",
+						"Data advantages from understanding specialized user behavior patterns",
+					],
+					competitivePositioningScore: 8,
+				},
+				positioning: {
+					name: "Creator Tools for Mobile-First Markets",
+					targetSegment:
+						"Independent content creators and small business owners with limited resources",
+					valueProposition:
+						"The only platform designed specifically for independent creators, with native multi-platform integrations, mobile-first workflows, and streamlined monetization support that enterprise platforms ignore",
+					keyDifferentiators: [
+						"Native integration with multiple social platforms and payment gateways",
+						"Mobile-optimized interface designed for smartphone-primary users",
+						"Community-driven feature development with creator-focused expertise",
+					],
+				},
+			};
+		}
+	}
 }

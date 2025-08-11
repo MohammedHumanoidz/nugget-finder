@@ -1,18 +1,19 @@
 import { generateText } from "ai";
-import type { AgentContext, WhatToBuildData } from "../../../types/apps/idea-generation-agent";
+import type {
+	AgentContext,
+	WhatToBuildData,
+} from "../../../types/apps/idea-generation-agent";
 import { openrouter } from "../../../utils/configs/ai.config";
 import { EnhancedJsonParser } from "../../../utils/enhanced-json-parser";
 
 export class WhatToBuildAgent {
-  /**
-   * WhatToBuildAgent - Generate detailed technical implementation guide
-   * Uses OpenRouter GPT-4o-mini for structured technical specification generation
-   */
-  static async execute(
-    context: AgentContext
-  ): Promise<WhatToBuildData | null> {
-    try {
-      const systemPrompt = `You are a product strategist focused on helping people build a simple software product quickly and affordably. Your job is to provide a clear, easy-to-understand guide of "what to build" for a business idea.
+	/**
+	 * WhatToBuildAgent - Generate detailed technical implementation guide
+	 * Uses OpenRouter GPT-4o-mini for structured technical specification generation
+	 */
+	static async execute(context: AgentContext): Promise<WhatToBuildData | null> {
+		try {
+			const systemPrompt = `You are a product strategist focused on helping people build a simple software product quickly and affordably. Your job is to provide a clear, easy-to-understand guide of "what to build" for a business idea.
 
 **CRITICAL LANGUAGE & SCOPE REQUIREMENTS:**
 - Use simple, everyday language that anyone can understand
@@ -43,14 +44,14 @@ Return this exact JSON structure:
 
 Focus on providing a practical, confidence-boosting blueprint that clearly shows a founder what they can *start building tomorrow* with existing tools and skills. No complex or speculative tech.`;
 
-      const ideaContext = context.monetization
-        ? `Business Idea: ${context.competitive?.positioning?.valueProposition || "Not specified"}
+			const ideaContext = context.monetization
+				? `Business Idea: ${context.competitive?.positioning?.valueProposition || "Not specified"}
  Target Market: ${context.competitive?.positioning?.targetSegment || "Not specified"}
  Recommended Revenue Model: ${context.monetization.primaryModel} (Pricing Strategy: ${context.monetization.pricingStrategy})
  Key Problems Solved: ${context.problemGaps?.problems?.join(", ") || "Not specified"}`
-        : "Context not fully available";
+				: "Context not fully available";
 
-      const userPrompt = `Create a comprehensive technical implementation guide for this validated business opportunity:
+			const userPrompt = `Create a comprehensive technical implementation guide for this validated business opportunity:
 
 ${ideaContext}
 
@@ -64,90 +65,91 @@ Design a software-first platform that:
 
 Focus on specificity - provide exact feature descriptions, precise integration recommendations, and clear technical approaches that eliminate guesswork for the development team.`;
 
-      const { text } = await generateText({
-        model: openrouter("openai/gpt-4.1-mini"),
-        prompt: userPrompt,
-        system: systemPrompt,
-        temperature: 0.1,
-        maxTokens: 1200,
-      });
+			const { text } = await generateText({
+				model: openrouter("openai/gpt-4.1-mini"),
+				prompt: userPrompt,
+				system: systemPrompt,
+				temperature: 0.1,
+				maxTokens: 1200,
+			});
 
-      // Use enhanced JSON parser to handle markdown code blocks and formatting issues
-      const parseResult = await EnhancedJsonParser.parseWithFallback<WhatToBuildData>(
-        text,
-        [
-          "platformDescription",
-          "coreFeaturesSummary",
-          "userInterfaces",
-          "keyIntegrations",
-        ],
-        {
-          platformDescription:
-            "A cloud-based SaaS platform with web dashboard and mobile companion app, featuring workflow builder and real-time monitoring for small business operations.",
-          coreFeaturesSummary: [
-            "Visual workflow builder with pre-built business templates",
-            "Real-time business data integration dashboard",
-            "AI-powered automation recommendations engine",
-          ],
-          userInterfaces: [
-            "Business Owner Dashboard - Main workflow management interface",
-            "Team Member Mobile App - Task execution and approvals",
-            "Admin Panel - User management and billing controls",
-          ],
-          keyIntegrations: [
-            "Stripe for subscription billing and payment processing",
-            "QuickBooks/Xero for financial data integration",
-            "Slack/Microsoft Teams for team notifications",
-          ],
-          pricingStrategyBuildRecommendation:
-            "Implement a tiered subscription model (Basic/Pro) using Stripe Subscriptions, with feature flags to gate Pro features.",
-        }
-      );
+			// Use enhanced JSON parser to handle markdown code blocks and formatting issues
+			const parseResult =
+				await EnhancedJsonParser.parseWithFallback<WhatToBuildData>(
+					text,
+					[
+						"platformDescription",
+						"coreFeaturesSummary",
+						"userInterfaces",
+						"keyIntegrations",
+					],
+					{
+						platformDescription:
+							"A cloud-based SaaS platform with web dashboard and mobile companion app, featuring workflow builder and real-time monitoring for small business operations.",
+						coreFeaturesSummary: [
+							"Visual workflow builder with pre-built business templates",
+							"Real-time business data integration dashboard",
+							"AI-powered automation recommendations engine",
+						],
+						userInterfaces: [
+							"Business Owner Dashboard - Main workflow management interface",
+							"Team Member Mobile App - Task execution and approvals",
+							"Admin Panel - User management and billing controls",
+						],
+						keyIntegrations: [
+							"Stripe for subscription billing and payment processing",
+							"QuickBooks/Xero for financial data integration",
+							"Slack/Microsoft Teams for team notifications",
+						],
+						pricingStrategyBuildRecommendation:
+							"Implement a tiered subscription model (Basic/Pro) using Stripe Subscriptions, with feature flags to gate Pro features.",
+					},
+				);
 
-      if (!parseResult.success) {
-        console.error(
-          "❌ WhatToBuild Agent JSON parsing failed:",
-          parseResult.error
-        );
-        console.log(
-          "📝 Original response:",
-          parseResult.originalText?.substring(0, 500)
-        );
-      }
+			if (!parseResult.success) {
+				console.error(
+					"❌ WhatToBuild Agent JSON parsing failed:",
+					parseResult.error,
+				);
+				console.log(
+					"📝 Original response:",
+					parseResult.originalText?.substring(0, 500),
+				);
+			}
 
-      const whatToBuildData = parseResult.data as WhatToBuildData;
-      return whatToBuildData;
-    } catch (error) {
-      console.error("WhatToBuildAgent error:", error);
+			const whatToBuildData = parseResult.data as WhatToBuildData;
+			return whatToBuildData;
+		} catch (error) {
+			console.error("WhatToBuildAgent error:", error);
 
-      // Return mock data as fallback for development/testing
-      console.log("🔄 Using fallback mock WhatToBuild data for development");
-      return {
-        platformDescription:
-          "A cloud-based SaaS automation platform with web dashboard and mobile companion app, featuring drag-and-drop workflow builder, real-time monitoring, and AI-powered optimization suggestions for small business operations.",
-        coreFeaturesSummary: [
-          "Visual workflow builder with pre-built business templates",
-          "Real-time business data integration dashboard",
-          "AI-powered automation recommendations engine",
-          "Mobile app for workflow monitoring and approvals",
-          "Team collaboration and notification system",
-          "Analytics and ROI tracking for automated processes",
-        ],
-        userInterfaces: [
-          "Business Owner Dashboard - Main workflow management interface",
-          "Team Member Mobile App - Task execution and approvals",
-          "Admin Panel - User management and billing controls",
-        ],
-        keyIntegrations: [
-          "Stripe for subscription billing and payment processing",
-          "Zapier/Make API for extended workflow capabilities",
-          "QuickBooks/Xero for financial data integration",
-          "Slack/Microsoft Teams for team notifications",
-          "Google Workspace/Office 365 for document automation",
-        ],
-        pricingStrategyBuildRecommendation:
-          "Implement freemium SaaS model with Stripe: Free tier (3 workflows, basic templates), Starter tier $29/month (unlimited workflows, advanced templates), Pro tier $99/month (AI suggestions, team collaboration, analytics), Enterprise tier $299/month (custom integrations, white-label, priority support)",
-      };
-    }
-  }
+			// Return mock data as fallback for development/testing
+			console.log("🔄 Using fallback mock WhatToBuild data for development");
+			return {
+				platformDescription:
+					"A cloud-based SaaS automation platform with web dashboard and mobile companion app, featuring drag-and-drop workflow builder, real-time monitoring, and AI-powered optimization suggestions for small business operations.",
+				coreFeaturesSummary: [
+					"Visual workflow builder with pre-built business templates",
+					"Real-time business data integration dashboard",
+					"AI-powered automation recommendations engine",
+					"Mobile app for workflow monitoring and approvals",
+					"Team collaboration and notification system",
+					"Analytics and ROI tracking for automated processes",
+				],
+				userInterfaces: [
+					"Business Owner Dashboard - Main workflow management interface",
+					"Team Member Mobile App - Task execution and approvals",
+					"Admin Panel - User management and billing controls",
+				],
+				keyIntegrations: [
+					"Stripe for subscription billing and payment processing",
+					"Zapier/Make API for extended workflow capabilities",
+					"QuickBooks/Xero for financial data integration",
+					"Slack/Microsoft Teams for team notifications",
+					"Google Workspace/Office 365 for document automation",
+				],
+				pricingStrategyBuildRecommendation:
+					"Implement freemium SaaS model with Stripe: Free tier (3 workflows, basic templates), Starter tier $29/month (unlimited workflows, advanced templates), Pro tier $99/month (AI suggestions, team collaboration, analytics), Enterprise tier $299/month (custom integrations, white-label, priority support)",
+			};
+		}
+	}
 }

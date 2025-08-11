@@ -1,399 +1,468 @@
-import { useState, useEffect, useCallback } from "react";
-import { authClient } from "@/lib/auth-client";
-import { trpc, queryClient } from "@/utils/trpc";
-import { formatErrorForDisplay, parseSubscriptionError } from "@/utils/subscription-errors";
-import type { 
-  UseSubscriptionReturn, 
-  BetterAuthSubscription,
-  BetterAuthUpgradeOptions,
-  BetterAuthCancelOptions,
-  FormattedPlan,
-  SubscriptionStatus
-} from "@/types/subscription";
 import { useQuery } from "@tanstack/react-query";
+import { useCallback, useEffect, useState } from "react";
+import { authClient } from "@/lib/auth-client";
+import type {
+	BetterAuthCancelOptions,
+	BetterAuthSubscription,
+	BetterAuthUpgradeOptions,
+	FormattedPlan,
+	SubscriptionStatus,
+	UseSubscriptionReturn,
+} from "@/types/subscription";
+import {
+	formatErrorForDisplay,
+	parseSubscriptionError,
+} from "@/utils/subscription-errors";
+import { queryClient, trpc } from "@/utils/trpc";
 
 export function useBetterAuthSubscription(): UseSubscriptionReturn {
-  // State for loading and errors
-  const [isLoadingSubscription, setIsLoadingSubscription] = useState(false);
-  const [upgradeLoading, setUpgradeLoading] = useState(false);
-  const [cancelLoading, setCancelLoading] = useState(false);
-  const [restoreLoading, setRestoreLoading] = useState(false);
-  const [billingPortalLoading, setBillingPortalLoading] = useState(false);
-  
-  const [upgradeError, setUpgradeError] = useState<string | null>(null);
-  const [cancelError, setCancelError] = useState<string | null>(null);
-  const [restoreError, setRestoreError] = useState<string | null>(null);
-  const [billingPortalError, setBillingPortalError] = useState<string | null>(null);
+	// State for loading and errors
+	const [isLoadingSubscription, setIsLoadingSubscription] = useState(false);
+	const [upgradeLoading, setUpgradeLoading] = useState(false);
+	const [cancelLoading, setCancelLoading] = useState(false);
+	const [restoreLoading, setRestoreLoading] = useState(false);
+	const [billingPortalLoading, setBillingPortalLoading] = useState(false);
 
-  // State for subscription data
-  const [currentSubscription, setCurrentSubscription] = useState<BetterAuthSubscription | null>();
-  const [lastFetch, setLastFetch] = useState(0);
+	const [upgradeError, setUpgradeError] = useState<string | null>(null);
+	const [cancelError, setCancelError] = useState<string | null>(null);
+	const [restoreError, setRestoreError] = useState<string | null>(null);
+	const [billingPortalError, setBillingPortalError] = useState<string | null>(
+		null,
+	);
 
-  // Get authentication status
-  const { data: session } = authClient.useSession();
-  const isAuthenticated = !!session?.user;
+	// State for subscription data
+	const [currentSubscription, setCurrentSubscription] =
+		useState<BetterAuthSubscription | null>();
+	const [lastFetch, setLastFetch] = useState(0);
 
-  // Fetch plans from TRPC (public data)
-  const {
-    data: plans,
-    isLoading: isLoadingPlans,
-    refetch: refetchPlans,
-  } = useQuery(trpc.subscription.getPlans.queryOptions());
+	// Get authentication status
+	const { data: session } = authClient.useSession();
+	const isAuthenticated = !!session?.user;
 
-  // Fetch subscription data using Better Auth
-  const fetchSubscriptionData = useCallback(async () => {
-    if (!isAuthenticated) {
-      setCurrentSubscription(null);
-      return;
-    }
+	// Fetch plans from TRPC (public data)
+	const {
+		data: plans,
+		isLoading: isLoadingPlans,
+		refetch: refetchPlans,
+	} = useQuery(trpc.subscription.getPlans.queryOptions());
 
-    setIsLoadingSubscription(true);
-    try {
-      // Use Better Auth subscription.list() method
-      const subscriptions = await authClient.subscription.list();
-      console.log("🔍 Raw subscription data from Better Auth:", subscriptions);
-      
-      // Get the active subscription (assuming user has only one)
-      const activeSubscription = Array.isArray(subscriptions.data) 
-        ? subscriptions.data.find((sub) => 
-            sub.status === 'active' || sub.status === 'trialing' || sub.status === 'canceled'
-          ) || null
-        : null;
+	// Fetch subscription data using Better Auth
+	const fetchSubscriptionData = useCallback(async () => {
+		if (!isAuthenticated) {
+			setCurrentSubscription(null);
+			return;
+		}
 
-      console.log("🎯 Selected active subscription:", activeSubscription);
-      console.log("📊 All subscription statuses:", Array.isArray(subscriptions) ? subscriptions.map(s => ({ status: s.status, plan: s.plan, id: s.id })) : 'Not an array');
+		setIsLoadingSubscription(true);
+		try {
+			// Use Better Auth subscription.list() method
+			const subscriptions = await authClient.subscription.list();
+			console.log("🔍 Raw subscription data from Better Auth:", subscriptions);
 
-      setCurrentSubscription(activeSubscription as unknown as BetterAuthSubscription);
-      setLastFetch(Date.now());
-    } catch (error) {
-      console.error("Error fetching subscription:", error);
-      setCurrentSubscription(null);
-    } finally {
-      setIsLoadingSubscription(false);
-    }
-  }, [isAuthenticated]);
+			// Get the active subscription (assuming user has only one)
+			const activeSubscription = Array.isArray(subscriptions.data)
+				? subscriptions.data.find(
+						(sub) =>
+							sub.status === "active" ||
+							sub.status === "trialing" ||
+							sub.status === "canceled",
+					) || null
+				: null;
 
-  // Fetch subscription data on mount and when auth changes
-  useEffect(() => {
-    fetchSubscriptionData();
-  }, [fetchSubscriptionData]);
+			console.log("🎯 Selected active subscription:", activeSubscription);
+			console.log(
+				"📊 All subscription statuses:",
+				Array.isArray(subscriptions)
+					? subscriptions.map((s) => ({
+							status: s.status,
+							plan: s.plan,
+							id: s.id,
+						}))
+					: "Not an array",
+			);
 
-  // Check for successful upgrade in URL and refresh data
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('upgrade') === 'success') {
-        console.log("🎉 Detected successful upgrade from URL, refreshing subscription data...");
-        // Force refresh subscription data after successful upgrade
-        setTimeout(() => {
-          fetchSubscriptionData();
-        }, 1000); // Give Stripe webhooks time to process
-      }
-    }
-  }, [fetchSubscriptionData]);
+			setCurrentSubscription(
+				activeSubscription as unknown as BetterAuthSubscription,
+			);
+			setLastFetch(Date.now());
+		} catch (error) {
+			console.error("Error fetching subscription:", error);
+			setCurrentSubscription(null);
+		} finally {
+			setIsLoadingSubscription(false);
+		}
+	}, [isAuthenticated]);
 
-  // Auto-refresh subscription data every 30 seconds if user is authenticated
-  useEffect(() => {
-    if (!isAuthenticated) return;
+	// Fetch subscription data on mount and when auth changes
+	useEffect(() => {
+		fetchSubscriptionData();
+	}, [fetchSubscriptionData]);
 
-    const interval = setInterval(() => {
-      const timeSinceLastFetch = Date.now() - lastFetch;
-      if (timeSinceLastFetch > 300000) { // 5 minutes
-        fetchSubscriptionData();
-      }
-    }, 300000);
+	// Check for successful upgrade in URL and refresh data
+	useEffect(() => {
+		if (typeof window !== "undefined") {
+			const urlParams = new URLSearchParams(window.location.search);
+			if (urlParams.get("upgrade") === "success") {
+				console.log(
+					"🎉 Detected successful upgrade from URL, refreshing subscription data...",
+				);
+				// Force refresh subscription data after successful upgrade
+				setTimeout(() => {
+					fetchSubscriptionData();
+				}, 1000); // Give Stripe webhooks time to process
+			}
+		}
+	}, [fetchSubscriptionData]);
 
-    return () => clearInterval(interval);
-  }, [isAuthenticated, lastFetch, fetchSubscriptionData]);
+	// Auto-refresh subscription data every 30 seconds if user is authenticated
+	useEffect(() => {
+		if (!isAuthenticated) return;
 
-  // Get the free plan (price = 0 or amount = 0)
-  const getFreePlan = (): FormattedPlan | null => {
-    if (!plans) return null;
-    return plans.find((plan: FormattedPlan) => 
-      (plan.pricing.monthly?.amount === 0) || 
-      (plan.pricing.yearly?.amount === 0) ||
-      plan.name.toLowerCase().includes('free')
-    ) || null;
-  };
+		const interval = setInterval(() => {
+			const timeSinceLastFetch = Date.now() - lastFetch;
+			if (timeSinceLastFetch > 300000) {
+				// 5 minutes
+				fetchSubscriptionData();
+			}
+		}, 300000);
 
-  // Derive subscription status with free plan fallback
-  const subscriptionStatus: SubscriptionStatus | undefined = isAuthenticated ? {
-    isActive: currentSubscription?.status === 'active' || !currentSubscription,
-    isPaying: currentSubscription ? ['active', 'trialing'].includes(currentSubscription.status) : false,
-    isTrialing: currentSubscription?.status === 'trialing' || false,
-    isCanceled: currentSubscription ? (currentSubscription.status === 'canceled' || currentSubscription.cancelAtPeriodEnd) : false,
-    planName: currentSubscription?.plan || getFreePlan()?.name || 'Free',
-    periodEnd: currentSubscription?.periodEnd,
-    trialEnd: undefined, // Better Auth doesn't provide trial end directly
-    cancelAtPeriodEnd: currentSubscription?.cancelAtPeriodEnd || false,
-  } : undefined;
+		return () => clearInterval(interval);
+	}, [isAuthenticated, lastFetch, fetchSubscriptionData]);
 
-  console.log("🔍 Subscription Status Derivation:", {
-    currentSubscription: currentSubscription ? {
-      status: currentSubscription.status,
-      plan: currentSubscription.plan,
-      stripeSubscriptionId: currentSubscription.stripeSubscriptionId,
-      cancelAtPeriodEnd: currentSubscription.cancelAtPeriodEnd
-    } : null,
-    subscriptionStatus,
-    freePlan: getFreePlan()?.name
-  });
+	// Get the free plan (price = 0 or amount = 0)
+	const getFreePlan = (): FormattedPlan | null => {
+		if (!plans) return null;
+		return (
+			plans.find(
+				(plan: FormattedPlan) =>
+					plan.pricing.monthly?.amount === 0 ||
+					plan.pricing.yearly?.amount === 0 ||
+					plan.name.toLowerCase().includes("free"),
+			) || null
+		);
+	};
 
-  const isPaying = subscriptionStatus?.isPaying;
+	// Derive subscription status with free plan fallback
+	const subscriptionStatus: SubscriptionStatus | undefined = isAuthenticated
+		? {
+				isActive:
+					currentSubscription?.status === "active" || !currentSubscription,
+				isPaying: currentSubscription
+					? ["active", "trialing"].includes(currentSubscription.status)
+					: false,
+				isTrialing: currentSubscription?.status === "trialing" || false,
+				isCanceled: currentSubscription
+					? currentSubscription.status === "canceled" ||
+						currentSubscription.cancelAtPeriodEnd
+					: false,
+				planName: currentSubscription?.plan || getFreePlan()?.name || "Free",
+				periodEnd: currentSubscription?.periodEnd,
+				trialEnd: undefined, // Better Auth doesn't provide trial end directly
+				cancelAtPeriodEnd: currentSubscription?.cancelAtPeriodEnd || false,
+			}
+		: undefined;
 
-  // Better Auth subscription operations
-  const upgradeSubscription = {
-    mutate: async (options: BetterAuthUpgradeOptions) => {
-      if (!isAuthenticated) {
-        setUpgradeError("Authentication required");
-        return;
-      }
+	console.log("🔍 Subscription Status Derivation:", {
+		currentSubscription: currentSubscription
+			? {
+					status: currentSubscription.status,
+					plan: currentSubscription.plan,
+					stripeSubscriptionId: currentSubscription.stripeSubscriptionId,
+					cancelAtPeriodEnd: currentSubscription.cancelAtPeriodEnd,
+				}
+			: null,
+		subscriptionStatus,
+		freePlan: getFreePlan()?.name,
+	});
 
-      setUpgradeLoading(true);
-      setUpgradeError(null);
-      
-      try {
-        // First, verify the plan exists in our frontend data
-        const selectedPlan = getPlanByPriceId(options.plan);
-        if (!selectedPlan) {
-          throw new Error(`Plan with price ID ${options.plan} not found in available plans`);
-        }
+	const isPaying = subscriptionStatus?.isPaying;
 
-        console.log("✅ Plan found:", selectedPlan.name);
+	// Better Auth subscription operations
+	const upgradeSubscription = {
+		mutate: async (options: BetterAuthUpgradeOptions) => {
+			if (!isAuthenticated) {
+				setUpgradeError("Authentication required");
+				return;
+			}
 
-        // Debug: Let's check what Better Auth sees
-        console.log("🔍 Current subscription state:", {
-          currentSubscription,
-          hasStripeId: !!currentSubscription?.stripeSubscriptionId,
-          subscriptionStatus: currentSubscription?.status,
-        });
+			setUpgradeLoading(true);
+			setUpgradeError(null);
 
-        // Let's also check what the Better Auth subscription.list() returns right before upgrade
-        try {
-          const currentSubscriptions = await authClient.subscription.list();
-          console.log("🔍 Current subscriptions from Better Auth:", currentSubscriptions);
-        } catch (listError) {
-          console.error("❌ Error fetching current subscriptions:", listError);
-        }
-        console.log("🚀 Calling Better Auth upgrade with:", {
-          plan: options.plan,
-          hasExistingSubscription: !!currentSubscription?.stripeSubscriptionId,
-          successUrl: options.successUrl,
-          cancelUrl: options.cancelUrl,
-        });
+			try {
+				// First, verify the plan exists in our frontend data
+				const selectedPlan = getPlanByPriceId(options.plan);
+				if (!selectedPlan) {
+					throw new Error(
+						`Plan with price ID ${options.plan} not found in available plans`,
+					);
+				}
 
-        console.log("📋 Available plans for comparison:", plans?.map(p => ({
-          productId: p.productId,
-          name: p.name,
-          monthlyPriceId: p.pricing.monthly?.priceId,
-          yearlyPriceId: p.pricing.yearly?.priceId
-        })));
+				console.log("✅ Plan found:", selectedPlan.name);
 
-        // For new users without subscriptions, don't pass subscriptionId
-        const upgradeParams = {
-          plan: options.plan,
-          successUrl: options.successUrl,
-          cancelUrl: options.cancelUrl,
-          ...(currentSubscription?.stripeSubscriptionId && {
-            subscriptionId: currentSubscription.stripeSubscriptionId
-          })
-        };
+				// Debug: Let's check what Better Auth sees
+				console.log("🔍 Current subscription state:", {
+					currentSubscription,
+					hasStripeId: !!currentSubscription?.stripeSubscriptionId,
+					subscriptionStatus: currentSubscription?.status,
+				});
 
-        if (currentSubscription?.stripeSubscriptionId) {
-          console.log("🔄 Upgrading existing subscription:", currentSubscription.stripeSubscriptionId);
-        } else {
-          console.log("🆕 Creating new subscription");
-        }
+				// Let's also check what the Better Auth subscription.list() returns right before upgrade
+				try {
+					const currentSubscriptions = await authClient.subscription.list();
+					console.log(
+						"🔍 Current subscriptions from Better Auth:",
+						currentSubscriptions,
+					);
+				} catch (listError) {
+					console.error("❌ Error fetching current subscriptions:", listError);
+				}
+				console.log("🚀 Calling Better Auth upgrade with:", {
+					plan: options.plan,
+					hasExistingSubscription: !!currentSubscription?.stripeSubscriptionId,
+					successUrl: options.successUrl,
+					cancelUrl: options.cancelUrl,
+				});
 
-        console.log("📋 Final upgrade params:", upgradeParams);
+				console.log(
+					"📋 Available plans for comparison:",
+					plans?.map((p) => ({
+						productId: p.productId,
+						name: p.name,
+						monthlyPriceId: p.pricing.monthly?.priceId,
+						yearlyPriceId: p.pricing.yearly?.priceId,
+					})),
+				);
 
-        try {
-          console.log("🚀 About to call authClient.subscription.upgrade...");
-          const upgradeResult = await authClient.subscription.upgrade(upgradeParams);
-          console.log("✅ Subscription upgrade successful, result:", upgradeResult);
-        } catch (upgradeError) {
-          console.error("❌ Better Auth upgrade failed:", upgradeError);
-          console.error("❌ Upgrade error details:", {
-            message: upgradeError instanceof Error ? upgradeError.message : String(upgradeError),
-            cause: upgradeError instanceof Error ? upgradeError.cause : undefined,
-            stack: upgradeError instanceof Error ? upgradeError.stack : undefined,
-          });
-          throw upgradeError;
-        }
-        
-        // Refresh subscription data after successful upgrade
-        await fetchSubscriptionData();
-      } catch (error: unknown) {
-        console.error("❌ Error upgrading subscription:", error);
-        const formattedError = formatErrorForDisplay(error);
-        setUpgradeError(formattedError);
-        
-        // Log detailed error information
-        const parsedError = parseSubscriptionError(error);
-        console.log("🔍 Parsed error details:", parsedError);
-      } finally {
-        setUpgradeLoading(false);
-      }
-    },
-    isLoading: upgradeLoading,
-    error: upgradeError,
-  };
+				// For new users without subscriptions, don't pass subscriptionId
+				const upgradeParams = {
+					plan: options.plan,
+					successUrl: options.successUrl,
+					cancelUrl: options.cancelUrl,
+					...(currentSubscription?.stripeSubscriptionId && {
+						subscriptionId: currentSubscription.stripeSubscriptionId,
+					}),
+				};
 
-  const cancelSubscription = {
-    mutate: async (options?: BetterAuthCancelOptions) => {
-      if (!isAuthenticated || !currentSubscription) {
-        setCancelError("No active subscription found");
-        return;
-      }
+				if (currentSubscription?.stripeSubscriptionId) {
+					console.log(
+						"🔄 Upgrading existing subscription:",
+						currentSubscription.stripeSubscriptionId,
+					);
+				} else {
+					console.log("🆕 Creating new subscription");
+				}
 
-      setCancelLoading(true);
-      setCancelError(null);
-      
-      try {
-        await authClient.subscription.cancel({
-          returnUrl: options?.returnUrl || window.location.href,
-        });
-        
-        // Refresh subscription data after successful cancellation
-        await fetchSubscriptionData();
-      } catch (error: unknown) {
-        console.error("Error canceling subscription:", error);
-        setCancelError(formatErrorForDisplay(error));
-      } finally {
-        setCancelLoading(false);
-      }
-    },
-    isLoading: cancelLoading,
-    error: cancelError,
-  };
+				console.log("📋 Final upgrade params:", upgradeParams);
 
-  const restoreSubscription = {
-    mutate: async () => {
-      if (!isAuthenticated || !currentSubscription) {
-        setRestoreError("No subscription found to restore");
-        return;
-      }
+				try {
+					console.log("🚀 About to call authClient.subscription.upgrade...");
+					const upgradeResult =
+						await authClient.subscription.upgrade(upgradeParams);
+					console.log(
+						"✅ Subscription upgrade successful, result:",
+						upgradeResult,
+					);
+				} catch (upgradeError) {
+					console.error("❌ Better Auth upgrade failed:", upgradeError);
+					console.error("❌ Upgrade error details:", {
+						message:
+							upgradeError instanceof Error
+								? upgradeError.message
+								: String(upgradeError),
+						cause:
+							upgradeError instanceof Error ? upgradeError.cause : undefined,
+						stack:
+							upgradeError instanceof Error ? upgradeError.stack : undefined,
+					});
+					throw upgradeError;
+				}
 
-      setRestoreLoading(true);
-      setRestoreError(null);
-      
-      try {
-        await authClient.subscription.restore();
-        
-        // Refresh subscription data after successful restoration
-        await fetchSubscriptionData();
-      } catch (error: unknown) {
-        console.error("Error restoring subscription:", error);
-        setRestoreError(formatErrorForDisplay(error));
-      } finally {
-        setRestoreLoading(false);
-      }
-    },
-    isLoading: restoreLoading,
-    error: restoreError,
-  };
+				// Refresh subscription data after successful upgrade
+				await fetchSubscriptionData();
+			} catch (error: unknown) {
+				console.error("❌ Error upgrading subscription:", error);
+				const formattedError = formatErrorForDisplay(error);
+				setUpgradeError(formattedError);
 
-  const getBillingPortal = {
-    mutate: async (options: { returnUrl: string }) => {
-      if (!isAuthenticated || !currentSubscription) {
-        setBillingPortalError("No subscription found");
-        return;
-      }
+				// Log detailed error information
+				const parsedError = parseSubscriptionError(error);
+				console.log("🔍 Parsed error details:", parsedError);
+			} finally {
+				setUpgradeLoading(false);
+			}
+		},
+		isLoading: upgradeLoading,
+		error: upgradeError,
+	};
 
-      setBillingPortalLoading(true);
-      setBillingPortalError(null);
-      
-      try {
-        // Better Auth uses the cancel method with returnUrl to open billing portal
-        await authClient.subscription.cancel({
-          returnUrl: options.returnUrl,
-        });
-      } catch (error: unknown) {
-        console.error("Error opening billing portal:", error);
-        setBillingPortalError(formatErrorForDisplay(error));
-      } finally {
-        setBillingPortalLoading(false);
-      }
-    },
-    isLoading: billingPortalLoading,
-    error: billingPortalError,
-  };
+	const cancelSubscription = {
+		mutate: async (options?: BetterAuthCancelOptions) => {
+			if (!isAuthenticated || !currentSubscription) {
+				setCancelError("No active subscription found");
+				return;
+			}
 
-  // Utility functions
-  const formatPrice = (amount: number, currency: string): string => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency.toUpperCase(),
-      minimumFractionDigits: 0,
-    }).format(amount / 100); // Stripe amounts are in cents
-  };
+			setCancelLoading(true);
+			setCancelError(null);
 
-  const getPlanByPriceId = (priceId: string): FormattedPlan | undefined => {
-    if (!plans) return undefined;
-    
-    return plans.find((plan: FormattedPlan) => 
-      plan.pricing.monthly?.priceId === priceId || 
-      plan.pricing.yearly?.priceId === priceId
-    );
-  };
+			try {
+				await authClient.subscription.cancel({
+					returnUrl: options?.returnUrl || window.location.href,
+				});
 
-  // Get current effective plan (subscription plan or free plan)
-  const getCurrentPlan = (): FormattedPlan | null => {
-    console.log("🎯 getCurrentPlan called:", {
-      hasCurrentSubscription: !!currentSubscription,
-      subscriptionPlan: currentSubscription?.plan,
-      availablePlans: plans?.length || 0,
-      planPriceIds: plans?.flatMap(p => [p.pricing.monthly?.priceId, p.pricing.yearly?.priceId]).filter(Boolean)
-    });
+				// Refresh subscription data after successful cancellation
+				await fetchSubscriptionData();
+			} catch (error: unknown) {
+				console.error("Error canceling subscription:", error);
+				setCancelError(formatErrorForDisplay(error));
+			} finally {
+				setCancelLoading(false);
+			}
+		},
+		isLoading: cancelLoading,
+		error: cancelError,
+	};
 
-    if (currentSubscription?.priceId) {
-      // Find the plan by price ID (Better Auth stores price ID as plan ID)
-      const matchedPlan = plans?.find((plan: FormattedPlan) => 
-        plan.pricing.monthly?.priceId === currentSubscription.priceId ||
-        plan.pricing.yearly?.priceId === currentSubscription.priceId
-      ) || null;
-      
-      console.log("🔍 Plan matching result:", {
-        searchingFor: currentSubscription.plan,
-        foundPlan: matchedPlan ? { name: matchedPlan.name, id: matchedPlan.id } : null
-      });
-      
-      return matchedPlan;
-    }
-    
-    const freePlan = getFreePlan();
-    console.log("🆓 Returning free plan:", freePlan ? { name: freePlan.name, id: freePlan.id } : null);
-    return freePlan;
-  };
+	const restoreSubscription = {
+		mutate: async () => {
+			if (!isAuthenticated || !currentSubscription) {
+				setRestoreError("No subscription found to restore");
+				return;
+			}
 
-  const refetchAll = useCallback(() => {
-    refetchPlans();
-    fetchSubscriptionData();
-  }, [refetchPlans, fetchSubscriptionData]);
+			setRestoreLoading(true);
+			setRestoreError(null);
 
-  return {
-    // Data
-    plans,
-    currentSubscription,
-    subscriptionStatus,
-    isPaying,
-    
-    // Loading states
-    isLoadingPlans,
-    isLoadingSubscription,
-    isLoadingStatus: false, // Derived synchronously
-    
-    // Better Auth Mutations
-    upgradeSubscription,
-    cancelSubscription,
-    restoreSubscription,
-    getBillingPortal,
-    
-    // Utilities
-    formatPrice,
-    getPlanByPriceId,
-    getCurrentPlan,
-    getFreePlan,
-    refetchAll,
-  };
+			try {
+				await authClient.subscription.restore();
+
+				// Refresh subscription data after successful restoration
+				await fetchSubscriptionData();
+			} catch (error: unknown) {
+				console.error("Error restoring subscription:", error);
+				setRestoreError(formatErrorForDisplay(error));
+			} finally {
+				setRestoreLoading(false);
+			}
+		},
+		isLoading: restoreLoading,
+		error: restoreError,
+	};
+
+	const getBillingPortal = {
+		mutate: async (options: { returnUrl: string }) => {
+			if (!isAuthenticated || !currentSubscription) {
+				setBillingPortalError("No subscription found");
+				return;
+			}
+
+			setBillingPortalLoading(true);
+			setBillingPortalError(null);
+
+			try {
+				// Better Auth uses the cancel method with returnUrl to open billing portal
+				await authClient.subscription.cancel({
+					returnUrl: options.returnUrl,
+				});
+			} catch (error: unknown) {
+				console.error("Error opening billing portal:", error);
+				setBillingPortalError(formatErrorForDisplay(error));
+			} finally {
+				setBillingPortalLoading(false);
+			}
+		},
+		isLoading: billingPortalLoading,
+		error: billingPortalError,
+	};
+
+	// Utility functions
+	const formatPrice = (amount: number, currency: string): string => {
+		return new Intl.NumberFormat("en-US", {
+			style: "currency",
+			currency: currency.toUpperCase(),
+			minimumFractionDigits: 0,
+		}).format(amount / 100); // Stripe amounts are in cents
+	};
+
+	const getPlanByPriceId = (priceId: string): FormattedPlan | undefined => {
+		if (!plans) return undefined;
+
+		return plans.find(
+			(plan: FormattedPlan) =>
+				plan.pricing.monthly?.priceId === priceId ||
+				plan.pricing.yearly?.priceId === priceId,
+		);
+	};
+
+	// Get current effective plan (subscription plan or free plan)
+	const getCurrentPlan = (): FormattedPlan | null => {
+		console.log("🎯 getCurrentPlan called:", {
+			hasCurrentSubscription: !!currentSubscription,
+			subscriptionPlan: currentSubscription?.plan,
+			availablePlans: plans?.length || 0,
+			planPriceIds: plans
+				?.flatMap((p) => [
+					p.pricing.monthly?.priceId,
+					p.pricing.yearly?.priceId,
+				])
+				.filter(Boolean),
+		});
+
+		if (currentSubscription?.priceId) {
+			// Find the plan by price ID (Better Auth stores price ID as plan ID)
+			const matchedPlan =
+				plans?.find(
+					(plan: FormattedPlan) =>
+						plan.pricing.monthly?.priceId === currentSubscription.priceId ||
+						plan.pricing.yearly?.priceId === currentSubscription.priceId,
+				) || null;
+
+			console.log("🔍 Plan matching result:", {
+				searchingFor: currentSubscription.plan,
+				foundPlan: matchedPlan
+					? { name: matchedPlan.name, id: matchedPlan.id }
+					: null,
+			});
+
+			return matchedPlan;
+		}
+
+		const freePlan = getFreePlan();
+		console.log(
+			"🆓 Returning free plan:",
+			freePlan ? { name: freePlan.name, id: freePlan.id } : null,
+		);
+		return freePlan;
+	};
+
+	const refetchAll = useCallback(() => {
+		refetchPlans();
+		fetchSubscriptionData();
+	}, [refetchPlans, fetchSubscriptionData]);
+
+	return {
+		// Data
+		plans,
+		currentSubscription,
+		subscriptionStatus,
+		isPaying,
+
+		// Loading states
+		isLoadingPlans,
+		isLoadingSubscription,
+		isLoadingStatus: false, // Derived synchronously
+
+		// Better Auth Mutations
+		upgradeSubscription,
+		cancelSubscription,
+		restoreSubscription,
+		getBillingPortal,
+
+		// Utilities
+		formatPrice,
+		getPlanByPriceId,
+		getCurrentPlan,
+		getFreePlan,
+		refetchAll,
+	};
 }

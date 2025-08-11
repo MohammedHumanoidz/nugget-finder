@@ -8,10 +8,13 @@ export const queryClient = new QueryClient({
 	queryCache: new QueryCache({
 		onError: (error: any) => {
 			// Don't show toast for authentication errors
-			if (error?.data?.code === "UNAUTHORIZED" || error?.message === "Authentication required") {
+			if (
+				error?.data?.code === "UNAUTHORIZED" ||
+				error?.message === "Authentication required"
+			) {
 				return;
 			}
-			
+
 			toast.error(error.message, {
 				action: {
 					label: "retry",

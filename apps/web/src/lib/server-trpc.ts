@@ -4,83 +4,83 @@ import { cookies } from "next/headers";
  * Server-side tRPC client for making authenticated requests
  */
 class ServerTRPCClient {
-  private baseURL: string;
+	private baseURL: string;
 
-  constructor() {
-    this.baseURL = process.env.NEXT_PUBLIC_SERVER_URL || '';
-  }
+	constructor() {
+		this.baseURL = process.env.NEXT_PUBLIC_SERVER_URL || "";
+	}
 
-  private async makeRequest(path: string, input?: any) {
-    const cookieStore = await cookies();
-    const sessionToken = cookieStore.get("better-auth.session_token")?.value;
-    
-    const url = new URL(`/trpc/${path}`, this.baseURL);
-    
-    if (input) {
-      url.searchParams.set('input', JSON.stringify(input));
-    }
-    
-    const response = await fetch(url.toString(), {
-      headers: {
-        'Content-Type': 'application/json',
-        Cookie: sessionToken ? `better-auth.session_token=${sessionToken}` : '',
-      },
-      cache: 'no-store', // Always get fresh data
-    });
+	private async makeRequest(path: string, input?: any) {
+		const cookieStore = await cookies();
+		const sessionToken = cookieStore.get("better-auth.session_token")?.value;
 
-    if (!response.ok) {
-      throw new Error(`Request failed: ${response.statusText}`);
-    }
+		const url = new URL(`/trpc/${path}`, this.baseURL);
 
-    const data = await response.json();
-    return data.result?.data;
-  }
+		if (input) {
+			url.searchParams.set("input", JSON.stringify(input));
+		}
 
-  async getSavedIdeas() {
-    return this.makeRequest('ideas.getSavedIdeas');
-  }
+		const response = await fetch(url.toString(), {
+			headers: {
+				"Content-Type": "application/json",
+				Cookie: sessionToken ? `better-auth.session_token=${sessionToken}` : "",
+			},
+			cache: "no-store", // Always get fresh data
+		});
 
-  async getClaimedIdeas() {
-    return this.makeRequest('ideas.getClaimedIdeas');
-  }
+		if (!response.ok) {
+			throw new Error(`Request failed: ${response.statusText}`);
+		}
 
-  async getMinedIdeas(input?: { limit?: number; offset?: number }) {
-    return this.makeRequest('ideas.getMinedIdeas', input);
-  }
+		const data = await response.json();
+		return data.result?.data;
+	}
 
-  async getUserLimits() {
-    return this.makeRequest('ideas.getLimits');
-  }
+	async getSavedIdeas() {
+		return this.makeRequest("ideas.getSavedIdeas");
+	}
 
-  async getActivityTrends() {
-    return this.makeRequest('ideas.getActivityTrends');
-  }
+	async getClaimedIdeas() {
+		return this.makeRequest("ideas.getClaimedIdeas");
+	}
 
-  async getIdeas(input?: { limit?: number; offset?: number }) {
-    return this.makeRequest('ideas.getIdeas', input);
-  }
+	async getMinedIdeas(input?: { limit?: number; offset?: number }) {
+		return this.makeRequest("ideas.getMinedIdeas", input);
+	}
 
-  async getGeneratedIdeas(input?: { limit?: number; offset?: number }) {
-    return this.makeRequest('ideas.getGeneratedIdeas', input);
-  }
+	async getUserLimits() {
+		return this.makeRequest("ideas.getLimits");
+	}
 
-  async getGeneratedIdeaById(input: { ideaId: string }) {
-    return this.makeRequest('ideas.getGeneratedIdeaById', input);
-  }
+	async getActivityTrends() {
+		return this.makeRequest("ideas.getActivityTrends");
+	}
 
-  // Agent endpoints
-  agents = {
-    getDailyIdeas: {
-      query: (input: { limit: number; offset: number }) => {
-        return this.makeRequest('agents.getDailyIdeas', input);
-      }
-    },
-    getIdeaById: {
-      query: (input: { id: string }) => {
-        return this.makeRequest('agents.getIdeaById', input);
-      }
-    }
-  };
+	async getIdeas(input?: { limit?: number; offset?: number }) {
+		return this.makeRequest("ideas.getIdeas", input);
+	}
+
+	async getGeneratedIdeas(input?: { limit?: number; offset?: number }) {
+		return this.makeRequest("ideas.getGeneratedIdeas", input);
+	}
+
+	async getGeneratedIdeaById(input: { ideaId: string }) {
+		return this.makeRequest("ideas.getGeneratedIdeaById", input);
+	}
+
+	// Agent endpoints
+	agents = {
+		getDailyIdeas: {
+			query: (input: { limit: number; offset: number }) => {
+				return this.makeRequest("agents.getDailyIdeas", input);
+			},
+		},
+		getIdeaById: {
+			query: (input: { id: string }) => {
+				return this.makeRequest("agents.getIdeaById", input);
+			},
+		},
+	};
 }
 
 export const serverTRPC = new ServerTRPCClient();
