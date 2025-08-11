@@ -91,19 +91,6 @@ const HeroSection: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 						</div>
 					)}
 
-					{/* Badges */}
-					<div className="flex justify-center gap-3 flex-wrap mb-6">
-						<span className="bg-purple-100 border border-purple-300 text-purple-700 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">
-							💎 High Purity
-						</span>
-						<span className="bg-orange-100 border border-orange-300 text-orange-700 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">
-							🔥 Prime Claim
-						</span>
-						<span className="bg-green-100 border border-green-300 text-green-700 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">
-							⛏️ Ready to Mine
-						</span>
-					</div>
-
 					{/* Key Metrics Row */}
 					<div className="mb-6 flex flex-wrap justify-center gap-6 text-sm">
 						<div className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2">
@@ -129,10 +116,6 @@ const HeroSection: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 
 					{/* Action Buttons */}
 					<div className="flex flex-wrap justify-center gap-3">
-						<Button variant="outline" size="sm">
-							<Eye className="w-4 h-4 mr-2" />
-							View Similar Nuggets
-						</Button>
 						<IdeaActions
 							ideaId={idea.id}
 							isSaved={false}
