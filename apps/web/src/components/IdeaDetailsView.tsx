@@ -173,12 +173,20 @@ const QuickOverview: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 
 				<div className="grid grid-cols-1 gap-4 border-border border-t pt-4 md:grid-cols-2">
 					<div className="rounded-lg bg-muted/30 p-3">
-						<span className="text-muted-foreground text-sm">Market Size</span>
-						<div className="font-semibold text-lg">$2.3B+</div>
+						<span className="text-muted-foreground text-sm">LTV:CAC Ratio</span>
+						<div className="font-semibold text-lg">
+							{idea.monetizationStrategy.keyMetrics?.ltvCacRatio 
+								? `${idea.monetizationStrategy.keyMetrics.ltvCacRatio}:1` 
+								: "3.5:1"}
+						</div>
 					</div>
 					<div className="rounded-lg bg-muted/30 p-3">
-						<span className="text-muted-foreground text-sm">Potential ARR</span>
-						<div className="font-semibold text-lg">$1M+ in 18 months</div>
+						<span className="text-muted-foreground text-sm">Payback Period</span>
+						<div className="font-semibold text-lg">
+							{idea.monetizationStrategy.keyMetrics?.paybackPeriod 
+								? `${idea.monetizationStrategy.keyMetrics.paybackPeriod} months` 
+								: "12 months"}
+						</div>
 					</div>
 					<div className="rounded-lg bg-muted/30 p-3">
 						<span className="text-muted-foreground text-sm">
@@ -206,6 +214,32 @@ const QuickOverview: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 const WhyThisMatters: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 	idea,
 }) => {
+	const formatCurrency = (amount: number): string => {
+		return new Intl.NumberFormat("en-US", {
+			style: "currency",
+			currency: "USD",
+			minimumFractionDigits: 0,
+			maximumFractionDigits: 0,
+		}).format(amount);
+	};
+
+	// Calculate revenue potential from LTV if available
+	const revenueValue = idea.monetizationStrategy.keyMetrics?.ltv 
+		? formatCurrency(idea.monetizationStrategy.keyMetrics.ltv) 
+		: "$1M+";
+
+	// Use actual time to market data
+	const timeValue = idea.timeToMarket 
+		? `${idea.timeToMarket} months` 
+		: "6 months";
+
+	// Use trend strength as market timing indicator
+	const marketTiming = idea.whyNow.trendStrength >= 8 
+		? "High Growth" 
+		: idea.whyNow.trendStrength >= 6 
+		? "Strong Trend" 
+		: "Emerging";
+
 	return (
 		<div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 			<h3 className="border-border border-b bg-muted/50 px-6 py-4 font-semibold text-foreground text-lg">
@@ -216,30 +250,30 @@ const WhyThisMatters: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 					<div className="rounded-lg border border-green-200 bg-gradient-to-br from-green-50 to-green-100 p-4 text-center dark:border-green-800 dark:from-green-900/20 dark:to-green-800/20">
 						<DollarSign className="mx-auto mb-2 h-8 w-8 text-green-600" />
 						<div className="font-bold text-green-700 text-lg dark:text-green-400">
-							$700+
+							{revenueValue}
 						</div>
 						<div className="text-green-600 text-sm dark:text-green-300">
-							monthly revenue loss per creator
+							{idea.monetizationStrategy.keyMetrics ? "Customer Lifetime Value" : "Revenue Potential"}
 						</div>
 					</div>
 
 					<div className="rounded-lg border border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 p-4 text-center dark:border-blue-800 dark:from-blue-900/20 dark:to-blue-800/20">
 						<Clock className="mx-auto mb-2 h-8 w-8 text-blue-600" />
 						<div className="font-bold text-blue-700 text-lg dark:text-blue-400">
-							10+ hours
+							{timeValue}
 						</div>
 						<div className="text-blue-600 text-sm dark:text-blue-300">
-							saved weekly
+							time to market
 						</div>
 					</div>
 
 					<div className="rounded-lg border border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 p-4 text-center dark:border-purple-800 dark:from-purple-900/20 dark:to-purple-800/20">
 						<TrendingUp className="mx-auto mb-2 h-8 w-8 text-purple-600" />
 						<div className="font-bold text-lg text-purple-700 dark:text-purple-400">
-							Rising Demand
+							{marketTiming}
 						</div>
 						<div className="text-purple-600 text-sm dark:text-purple-300">
-							in emerging markets
+							market timing ({idea.whyNow.trendStrength}/10)
 						</div>
 					</div>
 				</div>
