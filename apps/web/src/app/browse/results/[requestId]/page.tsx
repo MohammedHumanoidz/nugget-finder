@@ -16,7 +16,7 @@ export default async function ResultsPage({ params }: ResultsPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen">
       <Suspense
         fallback={
           <div className="flex items-center justify-center min-h-screen">

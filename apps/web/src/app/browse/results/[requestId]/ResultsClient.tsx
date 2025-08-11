@@ -88,7 +88,7 @@ export default function ResultsClient({ requestId }: ResultsClientProps) {
   const isFailed = generationStatus.status === 'FAILED';
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
+    <div className="min-h-screen">
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -147,7 +147,7 @@ export default function ResultsClient({ requestId }: ResultsClientProps) {
 
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {generatedIdeas.map((idea: any, index: number) => (
-                <Card key={idea.id} className="bg-slate-900 border-slate-700 hover:border-slate-600 transition-colors">
+                <Card key={idea.id} className="border-slate-700 hover:border-slate-600 transition-colors">
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <Badge variant="secondary" className="mb-2">
@@ -161,7 +161,13 @@ export default function ResultsClient({ requestId }: ResultsClientProps) {
                       {idea.title}
                     </CardTitle>
                     <CardDescription className="text-slate-400 text-base">
-                      {idea.description}
+                        <div className="flex items-center gap-2 mb-2">
+                          <Lightbulb className="w-4 h-4 text-yellow-400" />
+                          <span className="text-sm font-medium text-slate-300">Summary</span>
+                        </div>
+                        <p className="text-sm text-slate-400 leading-relaxed">
+                          {idea.executiveSummary}
+                        </p>
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -174,17 +180,6 @@ export default function ResultsClient({ requestId }: ResultsClientProps) {
                         </div>
                         <p className="text-sm text-slate-400 leading-relaxed">
                           {idea.problemStatement}
-                        </p>
-                      </div>
-
-                      {/* Executive Summary */}
-                      <div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <Lightbulb className="w-4 h-4 text-yellow-400" />
-                          <span className="text-sm font-medium text-slate-300">Summary</span>
-                        </div>
-                        <p className="text-sm text-slate-400 leading-relaxed">
-                          {idea.executiveSummary}
                         </p>
                       </div>
 
