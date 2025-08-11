@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { ArrowRight, CheckCircle2, Hourglass } from "lucide-react";
+import { ArrowRight, CheckCircle2, Hourglass, ArrowDown } from "lucide-react";
 
 export default function HeroSection() {
   const [query, setQuery] = useState("");
@@ -18,25 +18,54 @@ export default function HeroSection() {
     router.push(`/browse?q=${encodeURIComponent(q)}`);
   };
 
+  const scrollToNextSection = () => {
+    const nextSection = document.querySelector("#featured-nuggets");
+    if (nextSection) {
+      nextSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section className="relative w-full overflow-hidden">
       {/* Background animated trend lines */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-        <svg aria-hidden="true" role="presentation" focusable="false" className="absolute left-1/2 top-0 h-[120%] w-[120%] -translate-x-1/2 opacity-[0.08] dark:opacity-[0.12]" viewBox="0 0 800 600" fill="none">
-          <path d="M0,500 C150,420 250,460 400,400 C550,340 650,360 800,300" stroke="currentColor" strokeWidth="2" className="text-foreground/40">
-            <animate attributeName="d" dur="6s" repeatCount="indefinite" values="M0,500 C150,420 250,460 400,400 C550,340 650,360 800,300; M0,520 C150,440 250,430 400,420 C550,360 650,380 800,320; M0,500 C150,420 250,460 400,400 C550,340 650,360 800,300" />
+        <svg
+          aria-hidden="true"
+          role="presentation"
+          focusable="false"
+          className="absolute left-1/2 top-0 h-[120%] w-[120%] -translate-x-1/2 opacity-[0.08] dark:opacity-[0.12]"
+          viewBox="0 0 800 600"
+          fill="none"
+        >
+          <path
+            d="M0,500 C150,420 250,460 400,400 C550,340 650,360 800,300"
+            stroke="currentColor"
+            strokeWidth="2"
+            className="text-foreground/40"
+          >
+            <animate
+              attributeName="d"
+              dur="6s"
+              repeatCount="indefinite"
+              values="M0,500 C150,420 250,460 400,400 C550,340 650,360 800,300; M0,520 C150,440 250,430 400,420 C550,360 650,380 800,320; M0,500 C150,420 250,460 400,400 C550,340 650,360 800,300"
+            />
           </path>
         </svg>
       </div>
 
-      <div className="mx-auto grid grid-cols-1 items-center gap-10 px-4 py-16 md:p-24 lg:grid-cols-2">
+      <div className="mx-auto grid grid-cols-1 items-center gap-10 px-4 py-16 md:px-24 md:py-16 lg:grid-cols-2">
         {/* Left column */}
         <div>
           <h1 className="text-4xl font-extrabold tracking-tight text-foreground md:text-5xl lg:text-6xl">
-            Find Your Next Big Business Opportunity <span className="bg-gradient-to-r from-primary to-amber-500 bg-clip-text text-transparent">Before Anyone Else</span>
+            Find Your Next Big Business Opportunity{" "}
+            <span className="bg-gradient-to-r from-primary to-amber-500 bg-clip-text text-transparent">
+              Before Anyone Else
+            </span>
           </h1>
           <p className="mt-4 max-w-xl text-lg text-muted-foreground">
-            We scan 1,200+ market signals daily to uncover high-purity, ready-to-mine startup ideas — before the rest of the world catches on.
+            We scan 1,200+ market signals daily to uncover high-purity,
+            ready-to-mine startup ideas — before the rest of the world catches
+            on.
           </p>
 
           {/* Search bar */}
@@ -49,7 +78,9 @@ export default function HeroSection() {
                 onChange={(e) => setQuery(e.target.value)}
                 className="h-12 rounded-xl shadow-sm"
               />
-              <Button type="submit" className="h-12 rounded-xl px-6">Find Nuggets <ArrowRight className="w-4 h-4"/></Button>
+              <Button type="submit" className="h-12 rounded-xl px-6">
+                Find Nuggets <ArrowRight className="w-4 h-4" />
+              </Button>
             </div>
           </form>
 
@@ -82,7 +113,24 @@ export default function HeroSection() {
       </div>
 
       {/* Bottom gradient fade */}
-      <div aria-hidden className="pointer-events-none relative -mt-6 h-16 w-full bg-gradient-to-b from-transparent to-background" />
+      <div
+        aria-hidden
+        className="pointer-events-none relative -mt-6 h-16 w-full bg-gradient-to-b from-transparent to-background"
+      />
+
+      {/* Blinking Arrow Down CTA */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+        <span className="text-sm font-medium">Checkout our featured nuggets updated daily</span>
+        <Button
+          size={"icon"}
+          variant={"ghost"}
+          onClick={scrollToNextSection}
+          className="group flex flex-col items-center gap-2 text-muted-foreground hover:text-foreground rounded-full border-primary"
+          aria-label="Scroll to featured nuggets"
+        >
+          <ArrowDown className="h-6 w-6 animate-bounce group-hover:text-primary transition-colors" />
+        </Button>
+      </div>
     </section>
   );
-} 
+}
