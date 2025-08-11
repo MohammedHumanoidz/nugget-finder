@@ -74,7 +74,6 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { href: "/", label: "Home" },
     { href: "/browse", label: "Explore Nuggets" },
     { href: "/pricing", label: "Pricing" },
   ];
@@ -294,11 +293,11 @@ export default function Navbar() {
               >
                 <Link href="/auth/sign-in">
                   <Button
-                    variant="outline"
+                    variant="link"
                     size={"default"}
-                    className="transition-all duration-300"
+                    className="transition-all duration-300 text-muted-foreground hover:text-foreground"
                   >
-                    Sign in
+                    Login
                   </Button>
                 </Link>
               </motion.div>
@@ -321,7 +320,7 @@ export default function Navbar() {
                     size={isScrolled ? "sm" : "default"}
                     className="transition-all duration-300"
                   >
-                    Sign up
+                    Start
                   </Button>
                 </Link>
               </motion.div>
@@ -441,7 +440,7 @@ export default function Navbar() {
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       <Button variant="outline" className="w-full">
-                        Sign in
+                        Login
                       </Button>
                     </Link>
                   </motion.div>
@@ -456,7 +455,7 @@ export default function Navbar() {
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       <Button variant="default" className="w-full">
-                        Sign up
+                        Start
                       </Button>
                     </Link>
                   </motion.div>
