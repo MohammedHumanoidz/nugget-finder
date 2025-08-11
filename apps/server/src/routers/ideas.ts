@@ -14,6 +14,48 @@ import {
 import IdeaGenerationAgentController from "../apps/idea-generation-agent/idea-generation-agent.controller";
 import { onDemandIdeaGenerationJob } from "../trigger/on-demand-idea-generation";
 
+// Configuration for non-auth search limits
+const MAX_NON_AUTH_SEARCHES = Number.parseInt(process.env.MAX_NON_AUTH_SEARCHES || "1");
+
+// In-memory storage for non-auth usage tracking (in production, use Redis)
+const nonAuthUsageTracker = new Map<string, { count: number; lastReset: Date }>();
+
+// Personalization data schema
+const personalizationSchema = z.object({
+  skills: z.string().optional(),
+  goals: z.string().optional(),
+  categories: z.string().optional(),
+  revenueGoal: z.number().optional(),
+  timeAvailability: z.string().optional(),
+}).optional();
+
+// Helper function to track non-auth usage
+function trackNonAuthUsage(sessionId: string): { canGenerate: boolean; remaining: number } {
+  const now = new Date();
+  const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  
+  let usage = nonAuthUsageTracker.get(sessionId);
+  
+  // Reset if it's a new day
+  if (!usage || usage.lastReset < dayStart) {
+    usage = { count: 0, lastReset: dayStart };
+    nonAuthUsageTracker.set(sessionId, usage);
+  }
+  
+  const canGenerate = usage.count < MAX_NON_AUTH_SEARCHES;
+  const remaining = Math.max(0, MAX_NON_AUTH_SEARCHES - usage.count);
+  
+  return { canGenerate, remaining };
+}
+
+function incrementNonAuthUsage(sessionId: string) {
+  const usage = nonAuthUsageTracker.get(sessionId);
+  if (usage) {
+    usage.count += 1;
+    nonAuthUsageTracker.set(sessionId, usage);
+  }
+}
+
 export const ideasRouter = router({
   // Get user's idea limits and remaining quotas
   getLimits: protectedProcedure.query(async ({ ctx }) => {
@@ -339,30 +381,48 @@ export const ideasRouter = router({
     }
   }),
 
-  // Generate ideas on demand based on user prompt (background job version)
-  generateOnDemand: protectedProcedure
+  // Generate ideas on demand based on user prompt (supports both auth and non-auth users)
+  generateOnDemand: publicProcedure
     .input(
       z.object({
         query: z.string().min(1, "Query cannot be empty"),
         count: z.number().min(1).max(3).optional().default(1),
+        personalization: personalizationSchema,
+        sessionId: z.string().optional(), // For non-auth users
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.session.user.id;
-      console.log(`[DEBUG] generateOnDemand called with userId: ${userId}, query: "${input.query}"`);
+      const userId = ctx?.session?.user?.id;
+      const isAuthenticated = !!userId;
+      
+      console.log(`[DEBUG] generateOnDemand called with userId: ${userId || 'non-auth'}, query: "${input.query}"`);
+      
+      // Handle non-authenticated users
+      if (!isAuthenticated) {
+        const sessionId = input.sessionId || 'anonymous';
+        const usage = trackNonAuthUsage(sessionId);
+        
+        if (!usage.canGenerate) {
+          throw new Error(`SEARCH_LIMIT_EXCEEDED:You've reached your search limit (${MAX_NON_AUTH_SEARCHES}/day). Please sign up for unlimited searches.`);
+        }
+        
+        console.log(`[DEBUG] Non-auth user session ${sessionId} has ${usage.remaining} searches remaining`);
+        incrementNonAuthUsage(sessionId);
+      }
       
       try {
-        console.log(`[DEBUG] Creating idea generation request for user ${userId}`);
+        console.log(`[DEBUG] Creating idea generation request for user ${userId || 'non-auth'}`);
         
         // Create a new idea generation request record
         const ideaGenerationRequest = await prisma.ideaGenerationRequest.create({
           data: {
-            userId,
+            userId: userId || undefined, // Use undefined instead of null for Prisma
             prompt: input.query,
             status: "PENDING",
             currentStep: "Initializing",
             progressMessage: "Preparing to generate your business ideas...",
-            imageState: "confused"
+            imageState: "confused",
+            personalizationData: input.personalization ? JSON.stringify(input.personalization) : null,
           }
         });
 
@@ -386,9 +446,10 @@ export const ideasRouter = router({
             // Use the existing controller method with requestId for progress tracking
             const generatedIdeas = await IdeaGenerationAgentController.generateIdeasOnDemand(
               input.query,
-              userId,
+              userId || null, // Pass null for non-auth users
               ideaGenerationRequest.id,
-              input.count
+              input.count,
+              input.personalization || undefined
             );
 
             console.log(`[DEBUG] Generated ${generatedIdeas.length} ideas, updating to COMPLETED...`);
@@ -421,32 +482,45 @@ export const ideasRouter = router({
         return { requestId: ideaGenerationRequest.id };
       } catch (error) {
         console.error("[ERROR] Failed to generate ideas on demand:", error);
+        
+        // Check if it's a search limit error
+        if (error instanceof Error && error.message.startsWith('SEARCH_LIMIT_EXCEEDED:')) {
+          throw error; // Re-throw with original message
+        }
+        
         throw new Error("Failed to generate ideas. Please try again.");
       }
     }),
 
-  // Get the status of an idea generation request
-  getGenerationStatus: protectedProcedure
+  // Get the status of an idea generation request (supports both auth and non-auth)
+  getGenerationStatus: publicProcedure
     .input(
       z.object({
         requestId: z.string().uuid("Invalid request ID"),
       })
     )
     .query(async ({ ctx, input }) => {
-      const userId = ctx.session.user.id;
+      const userId = ctx?.session?.user?.id;
       
       try {
-        console.log(`[DEBUG] Getting generation status for request ${input.requestId}, user ${userId}`);
+        console.log(`[DEBUG] Getting generation status for request ${input.requestId}, user ${userId || 'non-auth'}`);
         
         const request = await prisma.ideaGenerationRequest.findFirst({
           where: {
-            id: input.requestId,
-            userId // Ensure user can only access their own requests
+            AND: [
+              { id: input.requestId },
+              {
+                OR: [
+                  { userId: { equals: null } }, // Non-auth request
+                  { userId: userId || undefined } // Auth request for this user
+                ]
+              }
+            ]
           }
         });
 
         if (!request) {
-          console.log(`[DEBUG] Request ${input.requestId} not found for user ${userId}`);
+          console.log(`[DEBUG] Request ${input.requestId} not found for user ${userId || 'non-auth'}`);
           throw new Error("Request not found or access denied");
         }
 
@@ -548,5 +622,21 @@ export const ideasRouter = router({
         console.error("Error getting generated idea by ID:", error);
         throw new Error("Failed to retrieve idea details");
       }
+    }),
+
+  // Get non-auth search limits for current session
+  getNonAuthLimits: publicProcedure
+    .input(
+      z.object({
+        sessionId: z.string(),
+      })
+    )
+    .query(async ({ input }) => {
+      const usage = trackNonAuthUsage(input.sessionId);
+      return {
+        maxSearches: MAX_NON_AUTH_SEARCHES,
+        remaining: usage.remaining,
+        canGenerate: usage.canGenerate,
+      };
     }),
 });

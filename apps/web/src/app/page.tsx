@@ -5,7 +5,7 @@ import CommunitySection from "@/components/CommunitySection";
 import EmergingTrends from "@/components/EmergingTrends";
 import FeaturedNuggetsGrid from "@/components/FeaturedNuggetsGrid";
 import FinalCTA from "@/components/FinalCTA";
-import HeroSection from "@/components/HeroSection";
+import { HeroSection } from "@/components/HeroSection";
 import IdeaActions from "@/components/IdeaActions";
 import LandingFAQSection from "@/components/LandingFAQSection";
 import MetricsSection from "@/components/MetricsSection";

@@ -508,8 +508,8 @@ enum IdeaGenerationStatus {
 
 model IdeaGenerationRequest {
   id              String                @id @default(uuid())
-  userId          String
-  user            User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String?               // Allow null for non-authenticated users
+  user            User?                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   prompt          String                // The user's original prompt
   status          IdeaGenerationStatus  @default(PENDING)
   
@@ -517,6 +517,9 @@ model IdeaGenerationRequest {
   currentStep     String?               // Current step being executed
   progressMessage String?               // User-friendly progress message
   imageState      String?               // Which image to show (confused, digging, happy, found)
+  
+  // Personalization data (JSON string)
+  personalizationData String?           // Store personalization data as JSON for non-auth users
   
   // Results
   generatedIdeaIds String[]             // Array of generated idea IDs when completed

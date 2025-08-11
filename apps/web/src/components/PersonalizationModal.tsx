@@ -164,7 +164,7 @@ export default function PersonalizationModal({
               />
               <div className="flex justify-between text-xs text-muted-foreground mt-2">
                 <span>$10K</span>
-                <span>$1M</span>
+                <span>$5M</span>
                 <span>$10M+</span>
               </div>
             </div>

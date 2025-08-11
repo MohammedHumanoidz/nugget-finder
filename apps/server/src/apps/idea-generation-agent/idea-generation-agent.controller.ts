@@ -118,7 +118,7 @@ const IdeaGenerationAgentController = {
    * On-Demand Idea Generation - Generates 3 ideas based on user prompt
    * Uses the same agent pipeline but driven by user input
    */
-  async generateIdeasOnDemand(userPrompt: string, userId: string, requestId?: string, count = 3): Promise<any[]> {
+  async generateIdeasOnDemand(userPrompt: string, userId: string | null, requestId?: string, count = 3, personalization?: any): Promise<any[]> {
     try {
       console.log(`🚀 Starting On-Demand Idea Generation for prompt: "${userPrompt}"`);
       debugLogger.info("🚀 On-demand idea generation started", {
@@ -244,30 +244,41 @@ const IdeaGenerationAgentController = {
             continue;
           }
 
-          // Step 10: Save to UserGeneratedIdea table
-          console.log(`💾 Step 10: Saving User Generated Idea ${i + 1} to Database`);
-          await updateProgress(requestId, GENERATION_STEPS.SAVING_RESULTS.step, `Securing golden nugget ${i + 1} in your treasure vault...`, GENERATION_STEPS.SAVING_RESULTS.imageState);
-          const savedIdea = await prisma.userGeneratedIdea.create({
-            data: {
-              userId,
-              prompt: userPrompt,
-              title: finalIdea.title,
-              description: finalIdea.description,
-              executiveSummary: finalIdea.executiveSummary,
-              problemStatement: finalIdea.problemStatement,
-              narrativeHook: finalIdea.narrativeHook,
-              tags: finalIdea.tags,
-              confidenceScore: finalIdea.confidenceScore,
-              fullIdeaDataJson: JSON.stringify({
-                ...finalIdea,
-                trends,
-                problemGaps,
-                competitive,
-                monetization,
-                whatToBuild,
-              }),
-            },
-          });
+          // Step 10: Save to UserGeneratedIdea table (only for authenticated users)
+          let savedIdea: any;
+          if (userId) {
+            console.log(`💾 Step 10: Saving User Generated Idea ${i + 1} to Database`);
+            await updateProgress(requestId, GENERATION_STEPS.SAVING_RESULTS.step, `Securing golden nugget ${i + 1} in your treasure vault...`, GENERATION_STEPS.SAVING_RESULTS.imageState);
+            savedIdea = await prisma.userGeneratedIdea.create({
+              data: {
+                userId,
+                prompt: userPrompt,
+                title: finalIdea.title,
+                description: finalIdea.description,
+                executiveSummary: finalIdea.executiveSummary,
+                problemStatement: finalIdea.problemStatement,
+                narrativeHook: finalIdea.narrativeHook,
+                tags: finalIdea.tags,
+                confidenceScore: finalIdea.confidenceScore,
+                fullIdeaDataJson: JSON.stringify({
+                  ...finalIdea,
+                  trends,
+                  problemGaps,
+                  competitive,
+                  monetization,
+                  whatToBuild,
+                }),
+              },
+            });
+          } else {
+            console.log("💾 Step 10: Skipping database save for non-authenticated user");
+            await updateProgress(requestId, GENERATION_STEPS.SAVING_RESULTS.step, `Preparing golden nugget ${i + 1} for presentation...`, GENERATION_STEPS.SAVING_RESULTS.imageState);
+            // Create a temporary ID for non-auth users
+            savedIdea = {
+              id: "temp-" + Date.now() + "-" + i,
+              ...finalIdea,
+            };
+          }
 
           generatedIdeas.push(savedIdea);
           console.log(`✅ Successfully generated and saved idea ${i + 1}: ${finalIdea.title}`);
