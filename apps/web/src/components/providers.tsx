@@ -26,6 +26,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 				onSessionChange={() => {
 					router.refresh();
 				}}
+        social={{
+          providers: ["google"]
+        }}
 				Link={Link}
 			>
 				<QueryClientProvider client={queryClient}>
