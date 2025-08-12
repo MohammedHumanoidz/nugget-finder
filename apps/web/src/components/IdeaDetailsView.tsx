@@ -1284,7 +1284,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
 
 			{/* Main Content Area */}
 			<div className="mx-auto max-w-7xl px-4 py-8">
-				<div className="flex flex-col items-start gap-8 lg:flex-row">
+				<div className="flex flex-col-reverse items-start gap-8 lg:flex-row">
 					{/* Left Column - Main Story */}
 					<div className="min-w-0 flex-2 space-y-8 lg:w-2/3">
 						<QuickOverview idea={idea} />
@@ -1302,7 +1302,7 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
 					</div>
 
 					{/* Right Column - Sticky Sidebar */}
-					<div className="sticky top-24 w-full flex-1 space-y-6 lg:w-1/3 lg:max-w-sm">
+					<div className="lg:sticky top-24 w-full flex-1 space-y-6 lg:w-1/3 lg:max-w-sm">
 						<SidebarStats idea={idea} />
 						<StrategicPosition idea={idea} />
 						<KeyDifferentiators idea={idea} />
