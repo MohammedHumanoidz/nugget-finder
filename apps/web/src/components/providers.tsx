@@ -11,32 +11,32 @@ import { ThemeProvider } from "./theme-provider";
 import { Toaster } from "./ui/sonner";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-	const router = useRouter();
-	return (
-		<ThemeProvider
-			attribute="class"
-			defaultTheme="dark"
-			enableSystem
-			disableTransitionOnChange
-		>
-			<AuthUIProvider
-				authClient={authClient}
-				navigate={router.push}
-				replace={router.replace}
-				onSessionChange={() => {
-					router.refresh();
-				}}
-        social={{
-          providers: ["google"]
+  const router = useRouter();
+  return (
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="dark"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <AuthUIProvider
+        authClient={authClient}
+        navigate={router.push}
+        replace={router.replace}
+        onSessionChange={() => {
+          router.refresh();
         }}
-				Link={Link}
-			>
-				<QueryClientProvider client={queryClient}>
-					{children}
-					<ReactQueryDevtools />
-				</QueryClientProvider>
-				<Toaster richColors />
-			</AuthUIProvider>
-		</ThemeProvider>
-	);
+        social={{
+          providers: ["google"],
+        }}
+        Link={Link}
+      >
+        <QueryClientProvider client={queryClient}>
+          {children}
+          <ReactQueryDevtools />
+        </QueryClientProvider>
+        <Toaster richColors />
+      </AuthUIProvider>
+    </ThemeProvider>
+  );
 }

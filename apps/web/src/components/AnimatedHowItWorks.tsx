@@ -123,7 +123,7 @@ const AnimatedHowItWorks = () => {
 
 			{/* Step number indicator */}
 			<motion.div
-				className="-top-3 -left-3 absolute flex h-8 w-8 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground text-sm shadow-lg"
+				className="top-3 left-3 absolute flex h-8 w-8 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground text-sm shadow-lg"
 				whileHover={{ scale: 1.1 }}
 				transition={{ type: "spring", stiffness: 400 }}
 			>
@@ -249,30 +249,6 @@ const AnimatedHowItWorks = () => {
 					</div>
 				))}
 			</div>
-
-			{/* Success Metric */}
-			<motion.div
-				initial={{ opacity: 0, y: 30 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ delay: 1.2, duration: 0.6 }}
-				className="mt-12 text-center"
-			>
-				<motion.div
-					className="mb-2 font-bold text-2xl text-foreground"
-					whileHover={{ scale: 1.05 }}
-				>
-					Success Metric
-				</motion.div>
-				<motion.div
-					className="text-muted-foreground"
-					initial={{ opacity: 0 }}
-					animate={{ opacity: 1 }}
-					transition={{ delay: 1.5 }}
-				>
-					95% of users report faster market validation using our AI-driven
-					insights
-				</motion.div>
-			</motion.div>
 		</section>
 	);
 };
