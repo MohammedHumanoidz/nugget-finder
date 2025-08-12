@@ -1,28 +1,19 @@
-import { ArrowUpRight, Loader2 } from "lucide-react";
+import AnimatedHowItWorks from "@/components/AnimatedHowItWorks";
+import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { Suspense } from "react";
-import AnimatedHowItWorks from "@/components/AnimatedHowItWorks";
 // import { Scene } from "@/components/BoxedAnimation";
-import CommunitySection from "@/components/CommunitySection";
-import EmergingTrends from "@/components/EmergingTrends";
 import FeaturedNuggetsGrid from "@/components/FeaturedNuggetsGrid";
-import FinalCTA from "@/components/FinalCTA";
 import { HeroSection } from "@/components/HeroSection";
-import IdeaActions from "@/components/IdeaActions";
 import LandingFAQSection from "@/components/LandingFAQSection";
-import MetricsSection from "@/components/MetricsSection";
-import NuggetLink from "@/components/NuggetLink";
+import NuggetsCards from "@/components/nuggetsCards";
 import { PricingPage } from "@/components/PricingPage";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+  CardContent
 } from "@/components/ui/card";
-import { getTodaysTopIdeas } from "@/lib/server-api";
+import { getLatestIdeasForDiscover, getTodaysTopIdeas } from "@/lib/server-api";
 import Link from "next/link";
 
 function PricingFallback() {
@@ -37,6 +28,8 @@ function PricingFallback() {
 // Server component with SSR
 export default async function Page() {
   const todaysIdeas = await getTodaysTopIdeas();
+  
+  const discoverIdeas = await getLatestIdeasForDiscover();
 
   // Calculate market intelligence metrics
   const aiTrendsTracked = 12764;
@@ -57,6 +50,9 @@ export default async function Page() {
             problemStatement: i.problemStatement || i.problemSolution,
             description: i.description || i.problemSolution,
             tags: i.tags || [],
+            innovationLevel: i.innovationLevel,
+            timeToMarket: i.timeToMarket,
+            urgencyLevel: i.urgencyLevel,
           }))}
         />
       )}
@@ -216,45 +212,17 @@ export default async function Page() {
         <p className="text-center font-medium text-2xl">
           Latest finest nuggets
         </p>
-        <div className="flex w-full flex-wrap items-center justify-center gap-4">
-          {Array.isArray(todaysIdeas) && todaysIdeas.length > 0 ? (
-            // @ts-ignore
-            todaysIdeas.map((idea) => (
-              <Card
-                key={idea.id}
-                className="w-96 border border-yellow-400/20 bg-gradient-to-br from-yellow-50 via-white to-yellow-100 transition-transform duration-300 hover:scale-[1.02] hover:shadow-2xl dark:border-zinc-700 dark:from-zinc-800 dark:via-zinc-900 dark:to-zinc-950"
-              >
-                <CardHeader className="flex items-start justify-between space-y-2">
-                  <div>
-                    <CardTitle className="flex items-center gap-2 font-bold text-xl text-yellow-800 dark:text-primary">
-                      💡 {idea.title}
-                    </CardTitle>
-                    <CardDescription className="mt-1 text-gray-600 text-sm dark:text-gray-400">
-                      {idea.narrativeHook}
-                    </CardDescription>
-                  </div>
-                </CardHeader>
-
-                <CardContent className="line-clamp-6 space-y-2 text-gray-800 text-sm leading-relaxed dark:text-gray-200">
-                  <p>{idea.problemSolution}</p>
-                </CardContent>
-
-                <CardFooter className="flex items-center justify-between gap-2">
-                  <IdeaActions
-                    ideaId={idea.id}
-                    isSaved={false}
-                    isClaimed={false}
-                    isClaimedByOther={false}
-                    size="sm"
-                  />
-                  <NuggetLink ideaId={idea.id} className="w-full">
-                    <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                      View Nugget <ArrowUpRight />
-                    </Button>
-                  </NuggetLink>
-                </CardFooter>
-              </Card>
-            ))
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 items-center justify-center">
+          {Array.isArray(discoverIdeas) && discoverIdeas.length > 0 ? (
+            discoverIdeas?.slice(0, 6).map((idea: any) => {
+              return (
+                <div key={idea.id} className="w-96">
+                  <NuggetsCards 
+                  className="flex h-[57dvh] justify-center"
+                    nugget={idea}  />
+                </div>
+              );
+            })
           ) : (
             <p className="w-full text-center text-gray-300">
               No ideas available yet

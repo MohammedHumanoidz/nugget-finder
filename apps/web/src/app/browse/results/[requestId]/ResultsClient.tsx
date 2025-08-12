@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import AnimatedSearchLoader from "@/components/AnimatedSearchLoader";
+import NuggetsCards from "@/components/nuggetsCards";
+import type { FeaturedNugget } from "@/components/nuggetsCards";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -173,79 +175,29 @@ export default function ResultsClient({ requestId }: ResultsClientProps) {
 						</div>
 
 						<div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-							{generatedIdeas.map((idea: any, index: number) => (
-								<Card
-									key={idea.id}
-									className="border-slate-700 transition-colors hover:border-slate-600"
-								>
-									<CardHeader>
-										<div className="flex items-start justify-between">
-											<Badge variant="secondary" className="mb-2">
-												Idea #{index + 1}
-											</Badge>
-											<div className="text-slate-400 text-sm">
-												Score: {idea.confidenceScore}/100
-											</div>
-										</div>
-										<CardTitle className="text-white text-xl leading-tight">
-											{idea.title}
-										</CardTitle>
-										<CardDescription className="text-base text-slate-400">
-											<div className="mb-2 flex items-center gap-2">
-												<Lightbulb className="h-4 w-4 text-yellow-400" />
-												<span className="font-medium text-slate-300 text-sm">
-													Summary
-												</span>
-											</div>
-											<p className="text-slate-400 text-sm leading-relaxed">
-												{idea.executiveSummary}
-											</p>
-										</CardDescription>
-									</CardHeader>
-									<CardContent>
-										<div className="space-y-4">
-											{/* Problem Statement */}
-											<div>
-												<div className="mb-2 flex items-center gap-2">
-													<Target className="h-4 w-4 text-orange-400" />
-													<span className="font-medium text-slate-300 text-sm">
-														Problem
-													</span>
-												</div>
-												<p className="text-slate-400 text-sm leading-relaxed">
-													{idea.problemStatement}
-												</p>
-											</div>
+							{generatedIdeas.map((idea: any, index: number) => {
+								// Convert idea to FeaturedNugget format
+								const featuredNugget: FeaturedNugget = {
+									id: idea.id,
+									title: idea.title,
+									narrativeHook: idea.executiveSummary,
+									problemStatement: idea.problemStatement,
+									description: idea.description || idea.executiveSummary,
+									tags: idea.tags || [],
+									innovationLevel: idea.confidenceScore ? `${idea.confidenceScore}/100` : undefined,
+									timeToMarket: idea.marketTimingScore ? `${idea.marketTimingScore}/10` : undefined,
+									urgencyLevel: idea.problemSeverity ? `${idea.problemSeverity}/10` : undefined,
+								};
 
-											{/* Tags */}
-											{idea.tags && idea.tags.length > 0 && (
-												<div className="flex flex-wrap gap-2">
-													{idea.tags.slice(0, 3).map((tag: string) => (
-														<Badge
-															key={tag}
-															variant="outline"
-															className="border-slate-600 text-slate-400 text-xs"
-														>
-															{tag}
-														</Badge>
-													))}
-												</div>
-											)}
-
-											{/* Action Button */}
-											<Button
-												variant="outline"
-												size="sm"
-												className="mt-4 w-full border-slate-600 hover:border-slate-500"
-												onClick={() => router.push(`/idea/${idea.id}`)}
-											>
-												<ExternalLink className="mr-2 h-4 w-4" />
-												View Full Details
-											</Button>
-										</div>
-									</CardContent>
-								</Card>
-							))}
+								return (
+									<div key={idea.id}>
+										<NuggetsCards 
+											nugget={featuredNugget}
+											className="border-slate-700 hover:border-slate-600"
+										/>
+									</div>
+								);
+							})}
 						</div>
 
 						{/* CTA Section */}

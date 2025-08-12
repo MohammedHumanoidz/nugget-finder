@@ -2,7 +2,7 @@
 
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import {
-	Badge,
+	Badge as BadgeIcon,
 	Bookmark,
 	BookmarkCheck,
 	Loader2,
@@ -15,6 +15,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -27,6 +28,8 @@ import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/useDebounce";
 import { queryClient, trpc } from "@/utils/trpc";
 import AnimatedSearchLoader from "./AnimatedSearchLoader";
+import NuggetsCards from "./nuggetsCards";
+import type { FeaturedNugget } from "./nuggetsCards";
 import PersonalizationModal, {
 	type PersonalizationData,
 } from "./PersonalizationModal";
@@ -55,6 +58,20 @@ interface SemanticSearchResult extends Idea {
 	matchHighlights: string[];
 	personalizationMatches: string[];
 }
+
+// Helper function to convert Idea to FeaturedNugget format
+const convertIdeaToFeaturedNugget = (idea: Idea | SemanticSearchResult): FeaturedNugget => {
+	return {
+		id: idea.id,
+		title: idea.title,
+		narrativeHook: idea.narrativeHook,
+		description: idea.description,
+		tags: [], // BrowseClient doesn't seem to have tags, so empty array
+		innovationLevel: idea.ideaScore?.totalScore ? `${idea.ideaScore.totalScore}/100` : undefined,
+		timeToMarket: idea.ideaScore?.marketTimingScore ? `${idea.ideaScore.marketTimingScore}/10` : undefined,
+		urgencyLevel: idea.ideaScore?.problemSeverity ? `${idea.ideaScore.problemSeverity}/10` : undefined,
+	};
+};
 
 export default function BrowseClient() {
 	const searchParams = useSearchParams();
@@ -430,7 +447,7 @@ export default function BrowseClient() {
 							<div className="flex items-center gap-4">
 								{(debouncedSearchQuery || searchQuery) && (
 									<div className="flex items-center gap-2 text-muted-foreground text-sm">
-										<Badge className="h-4 w-4" />
+										<BadgeIcon className="h-4 w-4" />
 										<span>
 											{isSemanticLoading
 												? "Performing semantic search..."
@@ -531,156 +548,9 @@ export default function BrowseClient() {
 				{/* Ideas Grid */}
 				{!isLoading && !isSemanticLoading && allIdeas.length > 0 && (
 					<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-						{allIdeas.map((idea: Idea | SemanticSearchResult, index) => {
-							const semanticResult =
-								searchQuery.trim() && semanticResults.length > 0
-									? (idea as SemanticSearchResult)
-									: null;
-							const baseIdea = idea as Idea;
-
+						{allIdeas.map((idea: Idea | SemanticSearchResult) => {
 							return (
-								<Card
-									key={`${baseIdea.id}-${index}`}
-									className={`flex h-full flex-col transition-shadow hover:shadow-lg ${
-										semanticResult ? "border-primary/20" : ""
-									}`}
-									ref={
-										index === allIdeas.length - 1 &&
-										(!searchQuery.trim() || semanticResults.length === 0)
-											? lastIdeaRef
-											: undefined
-									}
-								>
-									<CardHeader className="flex-1">
-										<div className="mb-2 flex items-start justify-between gap-2">
-											<CardTitle className="flex-1 text-lg">
-												{baseIdea.title || "Untitled Idea"}
-											</CardTitle>
-										</div>
-
-										{/* Personalization badges */}
-										{semanticResult?.personalizationMatches &&
-											semanticResult.personalizationMatches.length > 0 && (
-												<div className="mb-2 flex flex-wrap gap-1">
-													{semanticResult.personalizationMatches
-														.slice(0, 2)
-														.map((match, i) => (
-															<span
-																key={`${match}-${i.toString()}`}
-																className="rounded-full bg-primary/10 px-2 py-1 text-primary text-xs"
-															>
-																{match}
-															</span>
-														))}
-												</div>
-											)}
-
-										{baseIdea.ideaScore && (
-											<div className="flex gap-2 text-muted-foreground text-xs">
-												<span>
-													Problem: {baseIdea.ideaScore.problemSeverity || 0}
-												</span>
-												<span>•</span>
-												<span>
-													Feasibility:{" "}
-													{baseIdea.ideaScore.technicalFeasibility || 0}
-												</span>
-												<span>•</span>
-												<span>
-													Timing: {baseIdea.ideaScore.marketTimingScore || 0}
-												</span>
-											</div>
-										)}
-									</CardHeader>
-
-									<CardContent className="flex-1">
-										<p className="text-muted-foreground">
-											{baseIdea.description ||
-												"No description available for this startup opportunity."}
-										</p>
-
-										{/* Relevance indicator for semantic search */}
-										{semanticResult && (
-											<div className="mt-2 flex items-center gap-2 text-muted-foreground text-xs">
-												<Badge className="h-3 w-3" />
-												<span>Relevance: {semanticResult.relevanceScore}%</span>
-												{personalizationData && (
-													<span>
-														• Personalized: {semanticResult.personalizedScore}%
-													</span>
-												)}
-											</div>
-										)}
-									</CardContent>
-
-									<CardFooter className="flex flex-col gap-2">
-										<div className="flex w-full gap-2">
-											{/* Save Button */}
-											<Button
-												variant={baseIdea.isSaved ? "default" : "outline"}
-												size="sm"
-												onClick={() =>
-													handleSaveIdea(baseIdea.id, baseIdea.isSaved || false)
-												}
-												disabled={!limits?.canSave && !baseIdea.isSaved}
-												className="flex-1"
-											>
-												{baseIdea.isSaved ? (
-													<>
-														<BookmarkCheck className="mr-2 h-4 w-4" />
-														Saved
-													</>
-												) : (
-													<>
-														<Bookmark className="mr-2 h-4 w-4" />
-														Save
-													</>
-												)}
-											</Button>
-
-											{/* Claim Button */}
-											{baseIdea.isClaimedByOther ? (
-												<Button
-													variant="outline"
-													size="sm"
-													disabled
-													className="flex-1"
-												>
-													<Lock className="mr-2 h-4 w-4" />
-													Claimed
-												</Button>
-											) : (
-												<Button
-													variant={
-														baseIdea.isClaimed ? "destructive" : "default"
-													}
-													size="sm"
-													onClick={() =>
-														handleClaimIdea(
-															baseIdea.id,
-															baseIdea.isClaimed || false,
-														)
-													}
-													disabled={!limits?.canClaim && !baseIdea.isClaimed}
-													className="flex-1"
-													title={
-														!limits?.canClaim && !baseIdea.isClaimed
-															? "Upgrade for more access or unclaim idea"
-															: ""
-													}
-												>
-													{baseIdea.isClaimed ? "Unclaim" : "Claim"}
-												</Button>
-											)}
-										</div>
-
-										<Button asChild variant="outline" className="w-full">
-											<Link href={`/nugget/${baseIdea.id}`}>
-												View Details →
-											</Link>
-										</Button>
-									</CardFooter>
-								</Card>
+								<NuggetsCards key={idea.id} nugget={idea} />
 							);
 						})}
 					</div>
