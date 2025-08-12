@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/complexity/noStaticOnlyClass: <explanation> */
 import { generateText } from "ai";
 import type { AgentContext } from "../../../types/apps/idea-generation-agent";
 import { openrouter } from "../../../utils/configs/ai.config";
@@ -28,32 +29,32 @@ export class MasterResearchDirector {
 				context.userPrompt && context.userPrompt.trim().length > 0;
 
 			const directorPrompt = isUserDriven
-				? `You are the Master Research Director for a world-class startup opportunity discovery system. You are responding to a specific user inquiry to generate high-leverage, globally relevant, and software-first business ideas based on their request.
+				? `You are the Master Research Director for a world-class startup opportunity discovery system. You are responding to a specific user inquiry to generate practical, globally relevant, and software-first business ideas based on their request.
     
     **User's Request:** "${context.userPrompt}"
     
-    **Core Mission:** Generate a forward-looking research theme that directly responds to the user's prompt and enables the discovery of scalable, globally applicable digital opportunities. Prioritize ideas that are not tied to any single region or geography and lean into revolutionary approaches, including the use of agentic systems, automation, and intelligent orchestration.
+    **Core Mission:** Generate a forward-looking research theme that directly responds to the user's prompt and enables the discovery of scalable, globally applicable digital opportunities. Prioritize ideas that are not tied to any single region or geography and focus on simple, easy-to-understand solutions.
     
     **USER-FOCUSED RESEARCH STRATEGY:** Based on the user's prompt, you should:
     - Extract the core domain, industry, or problem space they are interested in
     - Identify their potential expertise level or background (if implied)
     - Focus research on practical, actionable software-first opportunities
-    - Consider both B2B and B2C use cases that could emerge from their context
-    - Explore novel and transformative technologies (agents, APIs, LLMs, orchestration tools, composability, etc.)
+    - Consider both individual consumer and business use cases that could emerge from their context
+    - Explore helpful and accessible technologies (mobile apps, web platforms, simple tools)
     - Emphasize ideas that scale globally without localization
     - Avoid region-locked business models or geo-specific regulatory barriers
     
     Return this exact JSON structure:
     {
-      "researchTheme": "string (Tailored research direction based on user's prompt, e.g., 'Agentic Tools for Creative Professionals' or 'Autonomous Finance Optimization for Remote Workers')",
+      "researchTheme": "string (Tailored research direction based on user's prompt, e.g., 'Personal Productivity Tools for Busy Families' or 'Simple Finance Management for Young Adults')",
       "globalMarketFocus": "Global Digital Market",
       "industryRotation": "string (Industry or vertical that aligns with user's interest and background)",
       "diversityMandates": [
         "mandate 1: explore only globally relevant, non-region-specific problems",
         "mandate 2: align with the user's apparent expertise level and intent",
-        "mandate 3: prioritize agentic, composable, or software-first solutions over traditional models"
+        "mandate 3: prioritize simple, easy-to-use software solutions over complex systems"
       ],
-      "researchApproach": "string (Where and how to conduct research—e.g., explore niche forums, open-source repositories, X/Twitter expert discussions, startup job boards, and bleeding-edge API tooling ecosystems)"
+      "researchApproach": "string (Where and how to conduct research—e.g., explore social media discussions, online communities, app store reviews, consumer forums, and popular software trends)"
     }
     
     **User Context Analysis:** Analyze the user's request to understand:
@@ -64,33 +65,33 @@ export class MasterResearchDirector {
     `
 				: `You are the Master Research Director for a world-class startup opportunity discovery system. Your role is to define today's research direction to discover truly novel, diverse, and globally scalable startup opportunities.
     
-    **Core Mission:** Generate a research theme that maximizes diversity from previously generated ideas and aligns with agentic, software-first, high-potential innovation. Reject all region-specific constraints. Focus only on universal problems or technologies.
+    **Core Mission:** Generate a research theme that maximizes diversity from previously generated ideas and focuses on simple, software-first, high-potential innovation. Reject all region-specific constraints. Focus only on universal problems or technologies that people everywhere can relate to.
     
     **DIVERSITY & INNOVATION ENFORCEMENT:** You MUST choose a direction that contrasts prior research along multiple dimensions:
     - Industry/vertical (change sector entirely)
-    - Target demographic (new users or contexts)
-    - Business model (e.g., B2B vs B2C vs Infra vs Tools vs AI-native)
-    - Technology paradigm (e.g., agents, real-time systems, embedded AI, composability)
-    - Complexity or scale (e.g., micro vs massive platforms)
+    - Target demographic (new users or contexts - individuals, families, students, professionals, hobbyists)
+    - Business model (e.g., individual consumers vs small businesses vs creative professionals vs students)
+    - Technology approach (e.g., mobile apps, web platforms, simple tools, community platforms)
+    - Complexity or scale (e.g., personal tools vs collaborative platforms)
     
     **GLOBAL DIGITAL STRATEGY:** Focus on:
-    - **Agentic Systems & Autonomy:** Agent orchestration, multi-agent collaboration, memory-augmented tools
-    - **Composable Tech:** API-first, no-code extensibility, plug-and-play architectures
-    - **Universal Problems:** Productivity, overload, education, health, finance
-    - **Creator, Developer & Operator Tools:** Platforms for building, scaling, and automating
-    - **Post-LLM Innovation:** Tools that leverage LLMs not just for output, but reasoning, delegation, and ecosystem logic
+    - **Personal Productivity & Lifestyle:** Daily life management, personal organization, hobby tracking
+    - **Simple Helper Tools:** Easy-to-use platforms that solve common frustrations
+    - **Universal Problems:** Time management, personal finance, learning, health, creativity, relationships
+    - **Consumer & Creator Tools:** Platforms for personal use, family coordination, hobby management
+    - **Accessible Innovation:** Tools that use technology to make daily life easier, not more complex
     
     Return this exact JSON structure:
     {
-      "researchTheme": "string (e.g., 'Agentic Automation Platforms for Fractional Finance Teams' or 'Composable Learning Agents for Rapid Skill Acquisition')",
+      "researchTheme": "string (e.g., 'Personal Finance Tools for Young Adults' or 'Family Coordination Platforms for Busy Parents')",
       "globalMarketFocus": "Global Digital Market",
-      "industryRotation": "string (Choose a novel vertical diverging from previous patterns, preferably tech-forward)",
+      "industryRotation": "string (Choose a consumer-friendly vertical, preferably focused on individual users)",
       "diversityMandates": [
         "mandate 1: avoid region-specific or compliance-bound domains",
         "mandate 2: focus on entirely new problem domains and user types",
-        "mandate 3: prioritize revolutionary business models or agentic systems"
+        "mandate 3: prioritize simple, user-friendly solutions over complex business systems"
       ],
-      "researchApproach": "string (Research should tap into future-of-work communities, open-source LLM projects, API marketplaces, developer ecosystem trends, and research papers on AI agents and orchestration)"
+      "researchApproach": "string (Research should tap into consumer communities, social media discussions, app store feedback, lifestyle forums, and popular consumer software trends)"
     }
     
     **Previous Research Context (MUST AVOID THESE):**
@@ -104,10 +105,17 @@ export class MasterResearchDirector {
 								)}, Target: ${MasterResearchDirector.extractTarget(idea.description)}`,
 						)
 						.join("\n")
-				: "No previous ideas - explore high-potential digital systems with maximum global relevance, especially in emerging tech ecosystems like agentic workflows, composable infra, AI-native collaboration tools."
+				: "No previous ideas - explore high-potential digital systems with maximum global relevance, especially in consumer-friendly technology like personal productivity tools, family management apps, hobby platforms."
 		}
     
-    Today's theme must open a fresh frontier. Focus on software-native innovation, composability, and universal access—not local or niche constraints.
+    **CRITICAL B2C vs B2B BALANCING:**
+    ${
+			context.previousIdeas && context.previousIdeas.length > 0
+				? MasterResearchDirector.determineFocusBalance(context.previousIdeas)
+				: "Start with consumer-focused research themes targeting individual users and their daily life problems."
+		}
+    
+    Today's theme must open a fresh frontier. Focus on software-native innovation that makes life easier and more enjoyable for real people. No complex or niche business constraints.
     `;
 
 			const { text } = await generateText({
@@ -123,16 +131,16 @@ export class MasterResearchDirector {
 					text,
 					["researchTheme", "globalMarketFocus", "industryRotation"],
 					{
-						researchTheme: "AI-Powered Developer Tools for Global Remote Teams",
+						researchTheme: "Personal Productivity Tools for Busy Individuals",
 						globalMarketFocus: "Global Digital Market",
-						industryRotation: "Developer Productivity and AI Infrastructure",
+						industryRotation: "Consumer Productivity and Lifestyle Management",
 						diversityMandates: [
-							"Avoid consumer social apps",
-							"Target software developers and engineering teams",
-							"Explore B2B SaaS models for deep tech",
+							"Avoid complex business apps",
+							"Target individual consumers and families",
+							"Explore simple software solutions for daily life",
 						],
 						researchApproach:
-							"Focus on developer communities, open-source trends, and AI research papers",
+							"Focus on consumer communities, lifestyle forums, and personal productivity trends",
 					},
 				);
 
@@ -166,31 +174,59 @@ export class MasterResearchDirector {
 			console.error("Master Research Director error:", error);
 			// Return fallback research direction
 			return {
-				researchTheme: "AI-Powered Developer Tools for Global Remote Teams",
+				researchTheme: "Personal Productivity Tools for Busy Individuals",
 				globalMarketFocus: "Global Digital Market",
-				industryRotation: "Developer Productivity and AI Infrastructure",
+				industryRotation: "Consumer Productivity and Lifestyle Management",
 				diversityMandates: [
-					"Avoid consumer social apps",
-					"Target software developers and engineering teams",
-					"Explore B2B SaaS models for deep tech",
+					"Avoid complex business apps",
+					"Target individual consumers and families",
+					"Explore simple software solutions for daily life",
 				],
 				researchApproach:
-					"Focus on developer communities, open-source trends, and AI research papers",
+					"Focus on consumer communities, lifestyle forums, and personal productivity trends",
 			};
 		}
+	}
+
+	// Helper function to determine B2C vs B2B focus balance
+	static determineFocusBalance(previousIdeas: any[]): string {
+		const businessFocusKeywords = ["enterprise", "business", "team", "company", "organization", "SMB", "startup", "professional"];
+		const consumerFocusKeywords = ["personal", "individual", "family", "student", "hobby", "lifestyle", "daily"];
+		
+		let businessCount = 0;
+		let consumerCount = 0;
+		
+		for (const idea of previousIdeas) {
+			const ideaText = `${idea.title} ${idea.description}`.toLowerCase();
+			
+			if (businessFocusKeywords.some(keyword => ideaText.includes(keyword))) {
+				businessCount++;
+			}
+			if (consumerFocusKeywords.some(keyword => ideaText.includes(keyword))) {
+				consumerCount++;
+			}
+		}
+		
+		if (businessCount > consumerCount) {
+			return "Previous ideas were business-focused. TODAY'S THEME MUST BE CONSUMER-FOCUSED (B2C): Target individual people, families, students, hobbyists, or personal use cases.";
+		}
+		if (consumerCount > businessCount) {
+			return "Previous ideas were consumer-focused. TODAY'S THEME SHOULD CONSIDER BUSINESS APPLICATIONS: Target small businesses, teams, or professional use cases, but keep it simple and accessible.";
+		}
+		return "Previous ideas were balanced. Focus on whichever approach (consumer or business) creates the most compelling opportunities for today's research theme.";
 	}
 
 	// Helper functions for extracting patterns from previous ideas
 	static extractIndustry(description: string): string {
 		const industryKeywords = {
+			consumer: ["personal", "individual", "family", "lifestyle", "daily", "hobby"],
 			enterprise: ["enterprise", "corporate", "large business"],
 			smb: ["small business", "SMB", "local business"],
-			consumer: ["consumer", "individual", "personal"],
 			creator: ["creator", "artist", "content"],
 			healthcare: ["health", "medical", "wellness"],
-			fintech: ["finance", "payment", "banking"],
+			fintech: ["finance", "payment", "banking", "money"],
 			edtech: ["education", "learning", "student"],
-			ai: ["AI", "artificial intelligence", "machine learning"],
+			productivity: ["productivity", "organization", "task", "time"],
 			developer_tools: ["developer", "coding", "API", "toolchain"],
 			web3: ["blockchain", "decentralized", "crypto"],
 			climate_tech: ["climate", "sustainability", "environmental"],
@@ -208,9 +244,11 @@ export class MasterResearchDirector {
 
 	static extractTarget(description: string): string {
 		const targetKeywords = {
+			individual: ["individual", "personal", "consumer", "people", "person"],
+			family: ["family", "parent", "household", "kids"],
+			student: ["student", "learner", "education"],
 			enterprise: ["enterprise", "corporation", "large company"],
 			smb: ["small business", "SMB", "local shop"],
-			individual: ["individual", "personal", "consumer"],
 			professional: ["professional", "freelancer", "consultant"],
 			creator: ["creator", "artist", "influencer"],
 			developer: ["developer", "engineer", "programmer"],

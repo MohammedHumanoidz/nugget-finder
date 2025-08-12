@@ -25,45 +25,53 @@ export class IdeaSynthesisAgent {
 **CRITICAL LANGUAGE REQUIREMENTS:**
 - Global applicability: NO geographic locations or country names (US, India, Southeast Asia, etc.)
 - Use simple, direct language that anyone can understand
-- AVOID technical prefixes like "AI-Powered", "Automated", "Real-Time" in titles
+- COMPLETELY AVOID these technical terms: "AI-Powered", "Automated", "Agent", "Agentic", "Real-Time", "Composable", "Orchestration"
 - Avoid fluff and unnecessary buzzwords; be specific and concrete
 - Write clearly and directly; do not invent startup/product names
+- Focus on what the tool DOES, not the technology behind it
+
+**CONSUMER-FIRST APPROACH:**
+- Target individual consumers, families, students, and everyday people
+- Focus on personal daily life problems, not business workflow issues
+- Use language that regular people use in conversation
+- Think about problems that affect personal time, money, relationships, health, learning
+- Solutions should feel approachable and easy for anyone to understand and use
 
 **STYLE GUIDANCE:**
-- Focus on universal problems that exist worldwide
+- Focus on universal problems that exist worldwide for individual people
 - Use clear, high-signal phrasing that communicates problem, solution, audience, and outcome
-- Only use technical qualifiers if they help the reader immediately understand the value
-- Never use "AI-Powered", "Automated", or technical prefixes in titles - focus on the core function and benefit instead
+- Only use technical qualifiers if they help the reader immediately understand the personal value
+- Titles should describe the core function and personal benefit clearly
 
 **Enhanced Synthesis Mission:**
 
 **Core Responsibilities:**
-1. **Trend-Problem Synthesis**: Connect global trends to universal human pain points
-2. **Solution Architecture**: Design simple software solutions that work worldwide
-3. **Strategic Positioning**: Position the solution for global markets
-4. **Execution Clarity**: Provide clear, actionable next steps for immediate implementation
+1. **Trend-Problem Synthesis**: Connect global trends to universal personal frustrations and daily life challenges
+2. **Solution Architecture**: Design simple software solutions that work for individual consumers worldwide
+3. **Consumer Positioning**: Position the solution for everyday people and personal use cases
+4. **Execution Clarity**: Provide clear, actionable next steps for immediate implementation of consumer-focused products
 
 **Enhanced Description Format:**
 Create a flowing narrative that naturally integrates all elements without explicit section headers:
 
-The description should weave together the trend context, specific problem, target users, signal evidence, solution overview, timing rationale, and urgency in a cohesive narrative that reads naturally. Avoid using "Trend:", "Problem:", "Solution:", or other explicit section markers within the description text.
+The description should weave together the trend context, specific personal problem, target individuals, evidence of consumer demand, solution overview, timing rationale, and urgency in a cohesive narrative that reads naturally. Avoid using "Trend:", "Problem:", "Solution:", or other explicit section markers within the description text.
 
 Structure as a compelling story that:
-- Opens with the market context and why it's emerging now
-- Identifies the specific user pain points with quantified impact  
-- Describes the target user archetype clearly
-- Provides evidence of market signals and validation
-- Explains the solution approach and unique value
-- Concludes with why timing is critical for success
+- Opens with the lifestyle or personal context and why it's emerging now
+- Identifies the specific individual frustrations with quantified personal impact  
+- Describes the target consumer clearly (families, students, working parents, etc.)
+- Provides evidence of consumer discussions and validation
+- Explains the solution approach and unique personal value
+- Concludes with why timing is critical for consumer adoption
 
 The result should be a smooth, engaging narrative that covers all strategic elements without formatted sections.
 
 **Enhanced Quality Criteria:**
-- Software-first solution buildable within 3-6 months
-- Target persona would pay within first trial week  
-- Trend amplifies problem urgency significantly
-- Solution creates network effects or data advantages
-- Clear path to $1M+ ARR within 18 months
+- Consumer-focused solution buildable within 3-6 months
+- Target individuals would pay within first trial week  
+- Trend amplifies personal problem urgency significantly
+- Solution creates network effects or community value for consumers
+- Clear path to consumer adoption and $1M+ ARR within 18 months
 
 ${
 	refinementPrompt
@@ -88,44 +96,45 @@ ${
 		? context.previousIdeas
 				.map((idea) => `- Avoid themes similar to: "${idea.title}"`)
 				.join("\n")
-		: "- No restrictions - create breakthrough opportunity"
+		: "- No restrictions - create breakthrough consumer opportunity"
 }
 
 **Output Requirements:**
-Generate a single, irresistible startup idea using the enhanced narrative format above, then structure it into the required JSON format. The idea should feel so compelling and obvious that someone would start building it immediately.
+Generate a single, irresistible consumer-focused startup idea using the enhanced narrative format above, then structure it into the required JSON format. The idea should feel so compelling and obvious that someone would start building it immediately for their own personal use.
 
 **CRITICAL TITLE REQUIREMENTS:**
 - Create concise titles: 8-10 words maximum that tell both problem and solution
-- Structure: [Solution Type] + [Core Function] + for + [Specific Target Audience]
-- Use descriptive, professional language that clearly communicates value
-- NO "Automated", "AI-Powered", or unnecessary technical prefixes
+- Structure: [Solution Type] + [Core Function] + for + [Specific Target People]
+- Use descriptive, friendly language that clearly communicates personal value
+- NO "Automated", "AI-Powered", "Agent", "Smart", or unnecessary technical prefixes
 - NO startup names, company names, or product names
 - NO geographic locations or country names
-- Examples: "Real-Time Audit and Compliance Platform for Biotech Research"; "Unified Audit Trail and Conflict Detection for AI Research Leaders"; "Smart Monetization and Payment Tools for Video Creators Ready to Grow"
+- Examples: "Family Calendar That Actually Keeps Everyone Organized"; "Expense Tracker That Helps You Save Money Daily"; "Meal Planner for Busy Parents Who Want Healthy Kids"
 
 **CRITICAL DESCRIPTION REQUIREMENTS:**
-- Write in clear English; avoid fluff and filler
+- Write in clear English that sounds like a friend explaining the idea
 - NO section headers like "Trend:", "Problem:", "Solution:"
-- Avoid unnecessary jargon; only keep terms that clarify the solution's value
+- Avoid unnecessary jargon; only keep terms that clarify the personal value
 - NO geographic locations or country-specific references
-- Focus on universal human problems that exist worldwide
+- Focus on universal human problems that exist worldwide for individuals
 - Write as a flowing, cohesive narrative that naturally covers all elements
+- Make it feel personal and relatable to everyday people
 
 Return JSON structure:
 {
-  "title": "string (8-10 words maximum; [Solution Type] + [Core Function] + for + [Specific Target Audience]; tells both problem and solution; NO 'Automated' or 'AI-Powered')",
-  "description": "string (Plain narrative, globally applicable, no fluff)",
-  "executiveSummary": "string (Clear pitch highlighting problem and solution)",
+  "title": "string (8-10 words maximum; [Solution Type] + [Core Function] + for + [Specific Target People]; tells both problem and solution; NO technical prefixes)",
+  "description": "string (Plain narrative, globally applicable, no fluff, sounds conversational)",
+  "executiveSummary": "string (Clear pitch highlighting personal problem and solution)",
   "problemSolution": "string (Plain story: 'People spend X on Y. This tool fixes it by Z, saving W.')",
-  "problemStatement": "string (Simple statement of universal problem)",
+  "problemStatement": "string (Simple statement of universal personal problem)",
   "innovationLevel": number (7.5-9.5, use decimal values like 8.2, 9.1),
-  "timeToMarket": number (months for focused software MVP),
+  "timeToMarket": number (months for focused consumer software MVP),
   "confidenceScore": number (8.0-9.8, use decimal values like 8.3, 9.2, 8.7 - only realistic high-quality opportunities),
-  "narrativeHook": "string (Memorable tagline promising clear benefit)",
-  "targetKeywords": ["software keyword 1", "niche keyword 2", "industry keyword 3"],
+  "narrativeHook": "string (Memorable tagline promising clear personal benefit)",
+  "targetKeywords": ["consumer keyword 1", "lifestyle keyword 2", "personal keyword 3"],
   "urgencyLevel": number (8.0-9.7, use decimal values like 8.4, 9.1),
   "executionComplexity": number (5.5-8.5, use decimal values like 6.2, 7.8),
-  "tags": ["SaaS", "specific-industry", "global-market", "trend-category"],
+  "tags": ["Consumer", "specific-lifestyle", "global-market", "trend-category"],
   "scoring": {
     "totalScore": number (calculate average of all sub-scores using decimal values),
     "problemSeverity": number (8.0-9.5, decimal values like 8.3, 9.1),
@@ -138,12 +147,12 @@ Return JSON structure:
     "moatStrength": number (7.5-9.0, decimal values like 8.2, 8.9),
     "regulatoryRisk": number (2.0-6.5, lower is better, decimal values like 3.2, 5.1)
   },
-  "executionPlan": "string (Concrete next steps for building and launching MVP with user acquisition strategy)",
-  "tractionSignals": "string (Specific, achievable metrics for 3-6 month validation)",
-  "frameworkFit": "string (Strategic framework explaining why this approach leads to success)"
+  "executionPlan": "string (Concrete next steps for building and launching consumer MVP with user acquisition strategy)",
+  "tractionSignals": "string (Specific, achievable metrics for 3-6 month consumer validation)",
+  "frameworkFit": "string (Strategic framework explaining why this consumer approach leads to success)"
 }
 
-Create an idea so compelling that it becomes impossible to ignore - the kind of opportunity that makes everything else feel like a distraction.`;
+Create a consumer idea so compelling that it becomes impossible to ignore - the kind of personal tool that makes everything else feel like a hassle.`;
 
 			const { text } = await generateText({
 				model: openrouter("openai/gpt-4.1-mini"),
@@ -159,45 +168,45 @@ Create an idea so compelling that it becomes impossible to ignore - the kind of 
 					["title", "description", "problemStatement", "scoring"],
 					{
 						title:
-							"Content Management and Distribution Platform for Independent Creators",
+							"Family Task Manager That Actually Works for Busy Households",
 						description:
-							"Mobile-first content creation is experiencing explosive growth globally, driven by increased smartphone penetration and diverse social platform adoption. Independent creators worldwide face a critical challenge: managing content across multiple platforms while dealing with complex monetization workflows. These creators, typically with 1K-50K followers, waste 15+ hours weekly manually distributing content across platforms and lose $600+ monthly because existing tools lack unified platform integrations and streamlined payment processing. Active discussions in creator communities highlight frustration with platform fragmentation, while market data shows 300% growth in mobile content creation. Current solutions either focus on enterprise clients or fail to provide the mobile-first, creator-focused workflows that independent creators need. A specialized platform that unifies multi-platform management, automates cross-posting, and enables seamless monetization integration would capture this underserved market during a critical growth phase, before enterprise platforms adapt their offerings.",
+							"Modern families are busier than ever, with parents juggling work, kids' activities, household responsibilities, and personal goals all at once. The rise of dual-career families and packed schedules has created a daily coordination nightmare that existing tools simply don't solve. Busy parents waste 8-12 hours weekly trying to keep track of who's picking up which kid, when appointments are scheduled, and what household tasks need to be done. Current calendar apps are built for individual work schedules, not family life where one person's sick day affects everyone's week, or where soccer practice timing impacts dinner plans. Online parent communities are filled with frustration about missed appointments, double-booked activities, and the mental load of managing family logistics. A family coordination tool designed specifically for household workflows, with features that understand how family responsibilities interconnect and help parents stay organized without the complexity of business productivity tools, would capture this underserved market of stressed families looking for simple solutions to daily chaos.",
 						executiveSummary:
-							"A mobile-first creator management platform designed specifically for independent creators, solving platform fragmentation and monetization challenges.",
+							"A family-focused coordination app designed specifically for busy households, solving the daily logistics nightmare that affects millions of parents worldwide.",
 						problemSolution:
-							"Independent creators spend 15+ hours weekly manually managing content across multiple platforms. This platform automates cross-platform posting and enables streamlined monetization, saving 12 hours weekly.",
+							"Busy families waste 8-12 hours weekly coordinating schedules and household tasks across multiple disconnected apps. This tool centralizes family coordination with features built for household workflows, saving 6+ hours weekly.",
 						problemStatement:
-							"Independent content creators face platform fragmentation and lack unified monetization tools.",
-						innovationLevel: 8.3,
+							"Busy families struggle to coordinate schedules, tasks, and responsibilities, leading to missed appointments and daily stress.",
+						innovationLevel: 7.8,
 						timeToMarket: 5,
-						confidenceScore: 8.7,
-						narrativeHook: "Turn multi-platform chaos into creator success",
+						confidenceScore: 8.6,
+						narrativeHook: "Finally, a family organizer that gets how families actually work",
 						targetKeywords: [
-							"creator tools",
-							"emerging markets",
-							"mobile-first platform",
+							"family organization",
+							"household management",
+							"parent coordination",
 						],
-						urgencyLevel: 8.9,
-						executionComplexity: 6.4,
-						tags: ["SaaS", "Creator-Economy", "Emerging-Markets"],
+						urgencyLevel: 8.7,
+						executionComplexity: 6.5,
+						tags: ["Consumer", "Family-Life", "Organization", "Lifestyle"],
 						scoring: {
-							totalScore: 85,
-							problemSeverity: 9,
-							founderMarketFit: 8,
-							technicalFeasibility: 8,
-							monetizationPotential: 9,
-							urgencyScore: 9,
-							marketTimingScore: 9,
-							executionDifficulty: 6,
-							moatStrength: 8,
-							regulatoryRisk: 3,
+							totalScore: 8.2,
+							problemSeverity: 8.8,
+							founderMarketFit: 8.0,
+							technicalFeasibility: 8.5,
+							monetizationPotential: 8.3,
+							urgencyScore: 8.7,
+							marketTimingScore: 8.4,
+							executionDifficulty: 6.5,
+							moatStrength: 7.9,
+							regulatoryRisk: 3.0,
 						},
 						executionPlan:
-							"Build MVP with specialized platform integrations, launch beta with 50 creators in target verticals.",
+							"Build MVP with core family calendar and task coordination features, launch beta with 100 busy families recruited through parenting communities.",
 						tractionSignals:
-							"Achieve 200 creator sign-ups with 60% monthly active usage within 3 months.",
+							"Achieve 500 family sign-ups with 70% weekly active usage within 3 months, families report saving 4+ hours weekly.",
 						frameworkFit:
-							"Geographic Arbitrage framework solving global problems with regional solutions.",
+							"Consumer-first approach targeting underserved family market with specialized workflow solutions.",
 					},
 				);
 
@@ -239,46 +248,46 @@ Create an idea so compelling that it becomes impossible to ignore - the kind of 
 			console.log("🔄 Using enhanced fallback synthesis data");
 			return {
 				title:
-					"Content Management and Distribution Platform for Independent Creators",
+					"Personal Budget Tracker That Actually Helps You Save Money",
 				description:
-					"Mobile-first content creation is experiencing explosive growth globally, driven by increased smartphone penetration and diverse social platform adoption. Independent creators worldwide face a critical challenge: managing content across multiple platforms while dealing with complex monetization workflows. These creators, typically with 1K-50K followers, waste 15+ hours weekly manually distributing content across platforms and lose $600+ monthly because existing tools lack unified platform integrations and streamlined payment processing. Active discussions in creator communities highlight this frustration, while market data shows 300% growth in mobile content creation. Current solutions either focus on enterprise clients or fail to provide the mobile-first, creator-focused workflows that independent creators need. A specialized platform that unifies multi-platform management, automates cross-posting, and enables seamless monetization integration would capture this underserved market during a critical growth phase, before enterprise platforms adapt their offerings.",
+					"Young adults and busy individuals worldwide are struggling more than ever to understand where their money goes each month. With the rise of subscription services, digital payments, and complex spending patterns, people lose track of $200-500 monthly in unnecessary expenses and forgotten subscriptions. Current budgeting apps are either too complex for daily use or focus on investment tracking rather than helping people understand and improve their everyday spending habits. Social media discussions among young adults consistently highlight frustration with overspending, surprise subscription charges, and feeling out of control with personal finances. A simple expense tracking tool that automatically categorizes spending, identifies unnecessary subscriptions, and provides gentle nudges for better money decisions would serve the millions of people who want to improve their financial habits without complex financial planning. The solution focuses on immediate spending awareness and small daily improvements rather than overwhelming users with complex budgeting frameworks they won't stick to.",
 				executiveSummary:
-					"A mobile-first creator management platform designed specifically for independent creators, solving platform fragmentation and monetization challenges that existing tools ignore, enabling 3x faster content distribution and 2x revenue growth.",
+					"A simple expense tracking app designed specifically for young adults and busy individuals who want to understand and improve their daily spending habits without complex financial planning.",
 				problemSolution:
-					"Independent creators spend 15+ hours weekly manually managing content across multiple platforms and lose $600+ monthly from poor monetization tools. This platform automates cross-platform posting, enables streamlined payment integration, and provides unified analytics, saving 12 hours weekly and increasing revenue by 50-100%.",
+					"People lose track of $200-500 monthly in unnecessary expenses and forgotten subscriptions because current budgeting tools are too complex for daily use. This tool provides effortless expense tracking with simple insights and gentle nudges for better money decisions.",
 				problemStatement:
-					"Independent content creators face platform fragmentation and lack unified monetization tools, limiting their growth and revenue potential.",
-				innovationLevel: 8.2,
-				timeToMarket: 5,
-				confidenceScore: 8.5,
-				narrativeHook: "Turn regional platform chaos into creator success",
+					"Young adults and busy individuals struggle to track daily expenses and end up overspending on unnecessary items and forgotten subscriptions.",
+				innovationLevel: 7.9,
+				timeToMarket: 4,
+				confidenceScore: 8.4,
+				narrativeHook: "See where your money really goes and save without effort",
 				targetKeywords: [
-					"creator tools",
-					"emerging markets",
-					"mobile-first platform",
-					"specialized social media",
+					"personal finance",
+					"expense tracking",
+					"money saving",
+					"young adults",
 				],
-				urgencyLevel: 9.1,
-				executionComplexity: 6.2,
-				tags: ["SaaS", "Creator-Economy", "Emerging-Markets", "Mobile-First"],
+				urgencyLevel: 8.5,
+				executionComplexity: 6.8,
+				tags: ["Consumer", "Personal-Finance", "Money-Management", "Lifestyle"],
 				scoring: {
-					totalScore: 85,
-					problemSeverity: 9,
-					founderMarketFit: 8,
-					technicalFeasibility: 8,
-					monetizationPotential: 9,
-					urgencyScore: 9,
-					marketTimingScore: 9,
-					executionDifficulty: 6,
-					moatStrength: 8,
-					regulatoryRisk: 3,
+					totalScore: 8.1,
+					problemSeverity: 8.6,
+					founderMarketFit: 7.8,
+					technicalFeasibility: 8.3,
+					monetizationPotential: 8.5,
+					urgencyScore: 8.5,
+					marketTimingScore: 8.2,
+					executionDifficulty: 6.8,
+					moatStrength: 7.7,
+					regulatoryRisk: 4.2,
 				},
 				executionPlan:
-					"Build MVP with 3 core specialized platforms (TikTok, niche social networks), implement basic cross-posting and analytics. Launch beta with 50 creators in target verticals through direct outreach in specialized creator communities. Integrate diverse payment systems in month 3. Scale through creator referral program and specialized platform partnerships.",
+					"Build MVP with bank connection, automatic categorization, and simple spending insights. Launch beta with 200 users recruited through personal finance social media communities. Add subscription tracking and savings recommendations in month 3.",
 				tractionSignals:
-					"Achieve 200 creator sign-ups with 60% monthly active usage, 25% of beta users upgrade to paid plans within 2 months, creators report 40%+ time savings in first week, secure partnerships with 2 specialized platforms for enhanced integrations.",
+					"Achieve 1000 user sign-ups with 60% monthly active usage, users report saving $100+ monthly within 6 weeks, 40% of beta users upgrade to paid features.",
 				frameworkFit:
-					"This follows the 'Specialized Solutions' framework by providing essential automation tools for the booming SMB digital transformation market, positioned as a 'Unbundling Zapier for SMBs' play that focuses on ease-of-use over enterprise complexity.",
+					"This follows the 'Consumer-First Simplification' framework by providing essential money management tools that prioritize ease-of-use and immediate value over complex features that users abandon.",
 			};
 		}
 	}

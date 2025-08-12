@@ -65,6 +65,7 @@ export function parseStructuredResponse<T = any>(
 		extractFromGenericCodeBlock,
 		extractFromJsonObject,
 		extractFromCleanedContent,
+		extractFromAdvancedCleaning,
 		extractDirectParse,
 	];
 
@@ -79,7 +80,9 @@ export function parseStructuredResponse<T = any>(
 					rawContent: content,
 				};
 			}
-		} catch (error) {}
+		} catch (error) {
+			// Continue to next strategy
+		}
 	}
 
 	// If all strategies fail, return fallback if provided
@@ -179,7 +182,49 @@ function extractFromCleanedContent(content: string): string | null {
 }
 
 /**
- * Strategy 5: Try parsing content directly
+ * Strategy 5: Advanced cleaning for LLM responses with extra formatting
+ */
+function extractFromAdvancedCleaning(content: string): string | null {
+	let cleaned = content;
+
+	// Remove markdown code block indicators
+	cleaned = cleaned.replace(/```json\s*/gi, "");
+	cleaned = cleaned.replace(/```\s*/g, "");
+	
+	// Remove common prefixes that LLMs add
+	cleaned = cleaned.replace(/^(here's|here is|the)\s+.*?:\s*/i, "");
+	cleaned = cleaned.replace(/^(response|json|output|result|answer):\s*/i, "");
+	
+	// Remove text before the first brace
+	const firstBraceIndex = cleaned.indexOf("{");
+	if (firstBraceIndex > 0) {
+		cleaned = cleaned.substring(firstBraceIndex);
+	}
+	
+	// Remove text after the last brace
+	const lastBraceIndex = cleaned.lastIndexOf("}");
+	if (lastBraceIndex !== -1 && lastBraceIndex < cleaned.length - 1) {
+		cleaned = cleaned.substring(0, lastBraceIndex + 1);
+	}
+	
+	// Clean up trailing commas
+	cleaned = cleaned.replace(/,(\s*[}\]])/g, "$1");
+	
+	// Remove comments
+	cleaned = cleaned.replace(/\/\/.*$/gm, "");
+	cleaned = cleaned.replace(/\/\*[\s\S]*?\*\//g, "");
+	
+	cleaned = cleaned.trim();
+	
+	if (isLikelyJson(cleaned)) {
+		return cleaned;
+	}
+	
+	return null;
+}
+
+/**
+ * Strategy 6: Try parsing content directly
  */
 function extractDirectParse(content: string): string | null {
 	const trimmed = content.trim();
@@ -350,4 +395,46 @@ export function parseLLMResponse<T = any>(
 	}
 
 	return result;
+}
+
+/**
+ * Debug utility to log detailed information about JSON parsing failures
+ * @param content - Original content that failed to parse
+ * @param error - The error that occurred
+ * @param context - Additional context about where the parsing failed
+ */
+export function debugJsonParsingFailure(
+	content: string,
+	error: string,
+	context = "Unknown",
+): void {
+	console.log(`🐛 JSON Parsing Debug for ${context}:`);
+	console.log(`📏 Content length: ${content.length}`);
+	console.log(`🚫 Error: ${error}`);
+	
+	// Show first and last 200 characters
+	console.log(`🔍 First 200 chars: ${content.substring(0, 200)}...`);
+	if (content.length > 400) {
+		console.log(`🔍 Last 200 chars: ...${content.substring(content.length - 200)}`);
+	}
+	
+	// Check for common issues
+	const firstBrace = content.indexOf("{");
+	const lastBrace = content.lastIndexOf("}");
+	console.log(`🔧 First brace at: ${firstBrace}, Last brace at: ${lastBrace}`);
+	
+	// Count braces
+	const openBraces = (content.match(/{/g) || []).length;
+	const closeBraces = (content.match(/}/g) || []).length;
+	console.log(`🔧 Open braces: ${openBraces}, Close braces: ${closeBraces}`);
+	
+	// Check for markdown indicators
+	const hasMarkdown = content.includes("```");
+	const hasJsonMarkdown = content.includes("```json");
+	console.log(`🔧 Has markdown: ${hasMarkdown}, Has JSON markdown: ${hasJsonMarkdown}`);
+	
+	// Check for quotes
+	const doubleQuotes = (content.match(/"/g) || []).length;
+	const singleQuotes = (content.match(/'/g) || []).length;
+	console.log(`🔧 Double quotes: ${doubleQuotes}, Single quotes: ${singleQuotes}`);
 }
