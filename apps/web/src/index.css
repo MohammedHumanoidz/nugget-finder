@@ -10,26 +10,75 @@
 		"Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
-/* Dark mode fix for react-big-calendar */
+/* Dark mode styles for react-big-calendar */
+.dark .rbc-calendar {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
 .dark .rbc-off-range-bg {
-	background-color: hsl(var(--muted)) !important;
-  }
-  
-  .dark .rbc-off-range {
-	color: hsl(var(--muted-foreground)) !important;
-  }
-  
-  .dark .rbc-month-view {
-	border-color: hsl(var(--border));
-  }
-  
-  .dark .rbc-header {
-	color: hsl(var(--foreground));
-  }
-  
-  .dark .rbc-today {
-	background-color: hsl(var(--primary) / 0.15) !important;
-  }
+  background-color: hsl(var(--muted)) !important;
+}
+
+.dark .rbc-off-range {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.dark .rbc-month-view {
+  border-color: hsl(var(--border));
+  background-color: hsl(var(--background));
+}
+
+.dark .rbc-header {
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--muted) / 0.3);
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.dark .rbc-today {
+  background-color: hsl(var(--primary) / 0.15) !important;
+}
+
+.dark .rbc-date-cell {
+  color: hsl(var(--foreground));
+}
+
+.dark .rbc-date-cell a {
+  color: hsl(var(--foreground));
+}
+
+.dark .rbc-month-row {
+  border-color: hsl(var(--border));
+}
+
+.dark .rbc-day-bg {
+  border-color: hsl(var(--border));
+}
+
+.dark .rbc-day-bg:hover {
+  background-color: hsl(var(--muted) / 0.5);
+}
+
+.dark .rbc-event {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border: none;
+}
+
+.dark .rbc-selected {
+  background-color: hsl(var(--primary) / 0.2) !important;
+}
+
+/* Calendar navigation buttons */
+.dark .rbc-btn-group button {
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--background));
+  border-color: hsl(var(--border));
+}
+
+.dark .rbc-btn-group button:hover {
+  background-color: hsl(var(--muted));
+}
   
 
 :root {

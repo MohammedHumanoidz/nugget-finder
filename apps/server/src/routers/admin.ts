@@ -72,8 +72,14 @@ export const adminRouter = router({
 
   getFeaturedScheduleRange: adminProcedure
     .input(z.object({
-      startDate: z.string().transform((str) => new Date(str)),
-      endDate: z.string().transform((str) => new Date(str))
+      startDate: z.string().transform((str) => {
+        const date = new Date(str);
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      }),
+      endDate: z.string().transform((str) => {
+        const date = new Date(str);
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+      })
     }))
     .query(async ({ input }) => {
       return await prisma.featuredNuggetsSchedule.findMany({

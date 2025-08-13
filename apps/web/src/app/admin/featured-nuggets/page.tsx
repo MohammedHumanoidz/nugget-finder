@@ -71,13 +71,18 @@ export default function FeaturedNuggetsPage() {
 
   const events = useMemo(
     () =>
-      calendarEvents?.map((event: any) => ({
-        id: event.id,
-        title: `${event.ideaIds.length} idea${event.ideaIds.length > 1 ? "s" : ""} scheduled`,
-        start: new Date(event.date),
-        end: new Date(event.date),
-        allDay: true,
-      })) || [],
+      calendarEvents?.map((event: any) => {
+        // Create a date that matches the stored date without timezone conversion
+        const storedDate = new Date(event.date);
+        const eventDate = new Date(storedDate.getFullYear(), storedDate.getMonth(), storedDate.getDate());
+        return {
+          id: event.id,
+          title: `${event.ideaIds.length} idea${event.ideaIds.length > 1 ? "s" : ""} scheduled`,
+          start: eventDate,
+          end: eventDate,
+          allDay: true,
+        };
+      }) || [],
     [calendarEvents]
   );
 
@@ -112,6 +117,7 @@ export default function FeaturedNuggetsPage() {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Featured Nuggets Schedule</h1>
         <Button
@@ -122,75 +128,91 @@ export default function FeaturedNuggetsPage() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Calendar</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[400px] rounded-md border bg-background text-foreground dark:border-gray-700">
-              <Calendar
-                localizer={localizer}
-                events={events}
-                date={calendarDate}
-                onNavigate={(date) => setCalendarDate(date)}
-                startAccessor="start"
-                endAccessor="end"
-                selectable
-                views={["month"]}
-                defaultView="month"
-                onSelectSlot={(slotInfo) => setSelectedDate(slotInfo.start)}
-                onSelectEvent={(event) =>
-                  setSelectedDate(new Date(event.start))
-                }
-                components={{
-                  toolbar: CustomToolbar as any,
-                }}
-                eventPropGetter={() => ({
-                  className:
-                    "bg-primary text-primary-foreground rounded px-1 text-sm",
-                  style: {},
-                })}
-                dayPropGetter={(date) => ({
+      {/* Wide Calendar View */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Calendar</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[500px] rounded-md border bg-background text-foreground">
+            <Calendar
+              key={selectedDate.toISOString()}
+              localizer={localizer}
+              events={events}
+              date={calendarDate}
+              onNavigate={(date) => setCalendarDate(date)}
+              startAccessor="start"
+              endAccessor="end"
+              selectable
+              views={["month"]}
+              defaultView="month"
+              onSelectSlot={(slotInfo) => setSelectedDate(slotInfo.start)}
+              onSelectEvent={(event) =>
+                setSelectedDate(new Date(event.start))
+              }
+              components={{
+                toolbar: CustomToolbar as any,
+              }}
+              eventPropGetter={() => ({
+                className:
+                  "bg-primary text-primary-foreground rounded px-1 text-sm",
+                style: {},
+              })}
+              dayPropGetter={(date) => {
+                const isSelected = moment(date).format('YYYY-MM-DD') === moment(selectedDate).format('YYYY-MM-DD');
+                return {
                   className: clsx(
                     "cursor-pointer hover:bg-muted transition-colors",
-                    moment(date).isSame(selectedDate, "day") && "bg-primary/20"
+                    isSelected && "!bg-primary/20 border-2 border-primary/40"
                   ),
-                })}
-              />
-            </div>
-          </CardContent>
-        </Card>
+                };
+              }}
+            />
+          </div>
+        </CardContent>
+      </Card>
 
-        {/* Idea Selection */}
-        <div className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                Schedule for {selectedDate.toLocaleDateString()}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <h3 className="font-medium mb-2">
-                  Selected Ideas ({selectedIdeas.length}/3)
-                </h3>
-                <div className="space-y-2">
+      {/* Selected Date Details and Available Ideas Side by Side */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Selected Date Details */}
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              Schedule for {selectedDate.toLocaleDateString()}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <h3 className="font-medium mb-3">
+                Selected Ideas ({selectedIdeas.length}/3)
+              </h3>
+              {selectedIdeas.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <p>No ideas scheduled for this date</p>
+                  <p className="text-sm">Select ideas from the available list →</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
                   {selectedIdeas.map((ideaId, index) => {
                     const idea = getSelectedIdeaDetails(ideaId);
                     return (
                       <div
                         key={ideaId}
-                        className="flex items-center gap-2 p-2 border rounded"
+                        className="flex items-start gap-3 p-3 border rounded-lg bg-muted/30"
                       >
-                        <Badge variant="outline">{index + 1}</Badge>
-                        <div className="flex-1">
-                          <p className="font-medium">
+                        <Badge variant="outline" className="mt-1">{index + 1}</Badge>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium mb-1">
                             {idea?.title || "Loading..."}
                           </p>
                           {idea?.narrativeHook && (
-                            <p className="text-sm text-muted-foreground truncate">
+                            <p className="text-sm text-muted-foreground line-clamp-2">
                               {idea.narrativeHook}
+                            </p>
+                          )}
+                          {idea?.ideaScore && (
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Score: {idea.ideaScore.totalScore}
                             </p>
                           )}
                         </div>
@@ -198,6 +220,7 @@ export default function FeaturedNuggetsPage() {
                           size="sm"
                           variant="ghost"
                           onClick={() => removeIdea(ideaId)}
+                          className="shrink-0"
                         >
                           <X className="h-4 w-4" />
                         </Button>
@@ -205,42 +228,68 @@ export default function FeaturedNuggetsPage() {
                     );
                   })}
                 </div>
-              </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
-              <div>
-                <h3 className="font-medium mb-2">Available Ideas</h3>
-                <Input
-                  placeholder="Search ideas..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="mb-2"
-                />
-                <div className="max-h-96 overflow-y-auto space-y-4 w-full py-4">
-                  {availableIdeas?.map((idea: any) => (
-                    <button
-                      type="button"
-                      key={idea.id}
-                      className="flex items-center gap-2 p-2 border rounded cursor-pointer hover:bg-muted w-full"
-                      onClick={() => addIdea(idea.id)}
-                    >
-                      <div className="flex-1">
-                        <p className="font-medium">{idea.title}</p>
-                        <p className="text-sm text-muted-foreground">
-                          Score: {idea.ideaScore?.totalScore || "N/A"} |
-                          Created:{" "}
-                          {new Date(idea.createdAt).toLocaleDateString()}
+        {/* Available Ideas */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Available Ideas</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Input
+              placeholder="Search ideas..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <div className="max-h-[400px] overflow-y-auto space-y-2">
+              {availableIdeas?.map((idea: any) => (
+                <button
+                  type="button"
+                  key={idea.id}
+                  className={clsx(
+                    "w-full text-left p-3 border rounded-lg transition-colors",
+                    selectedIdeas.includes(idea.id)
+                      ? "bg-primary/10 border-primary"
+                      : "hover:bg-muted border-border",
+                    selectedIdeas.length >= 3 && !selectedIdeas.includes(idea.id) && "opacity-50 cursor-not-allowed"
+                  )}
+                  onClick={() => addIdea(idea.id)}
+                  disabled={selectedIdeas.length >= 3 && !selectedIdeas.includes(idea.id)}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium mb-1 line-clamp-1">{idea.title}</p>
+                      {idea.narrativeHook && (
+                        <p className="text-sm text-muted-foreground line-clamp-2 mb-1">
+                          {idea.narrativeHook}
                         </p>
-                      </div>
-                      {selectedIdeas.includes(idea.id) && (
-                        <Badge>Selected</Badge>
                       )}
-                    </button>
-                  ))}
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                        <span>Score: {idea.ideaScore?.totalScore || "N/A"}</span>
+                        <span>•</span>
+                        <span>{new Date(idea.createdAt).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                    {selectedIdeas.includes(idea.id) && (
+                      <Badge variant="secondary" className="shrink-0">Selected</Badge>
+                    )}
+                  </div>
+                </button>
+              ))}
+              {(!availableIdeas || availableIdeas.length === 0) && (
+                <div className="text-center py-8 text-muted-foreground">
+                  <p>No ideas found</p>
+                  {searchTerm && (
+                    <p className="text-sm">Try adjusting your search terms</p>
+                  )}
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
