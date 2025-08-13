@@ -559,8 +559,19 @@ export default function BrowseServerClient({
         {/* Ideas Grid */}
         {!isLoading && !isSemanticLoading && allIdeas.length > 0 && (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {allIdeas.map((idea: Idea | SemanticSearchResult) => {
-              return <NuggetsCards key={idea.id} nugget={idea} className="h-[57dvh] w-full justify-center"/>;
+            {allIdeas.map((idea: Idea | SemanticSearchResult, index) => {
+              // For infinite scroll, attach ref to the last item (only for regular browsing, not search results)
+              const isLastItem = index === allIdeas.length - 1;
+              const shouldAttachRef = isLastItem && !searchQuery.trim() && hasNextPage;
+              
+              return (
+                <div 
+                  key={idea.id}
+                  ref={shouldAttachRef ? lastIdeaRef : undefined}
+                >
+                  <NuggetsCards nugget={idea} className="h-[57dvh] w-full justify-center"/>
+                </div>
+              );
             })}
           </div>
         )}
