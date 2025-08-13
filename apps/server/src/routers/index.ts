@@ -1,6 +1,7 @@
 // routers/appRouter.ts
 import { protectedProcedure, publicProcedure, router } from "../lib/trpc";
 import { agentRouter } from "./agent-router";
+import { adminRouter } from "./admin";
 import { debugRouter } from "./debug";
 import { ideasRouter } from "./ideas";
 import { semanticSearchRouter } from "./semantic-search";
@@ -31,6 +32,9 @@ export const appRouter = router({
 
 	// Semantic search routes
 	search: semanticSearchRouter,
+
+	// Admin routes
+	admin: adminRouter,
 
 	// Debug routes (remove in production)
 	debug: debugRouter,

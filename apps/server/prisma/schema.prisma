@@ -38,6 +38,10 @@ model User {
   viewedIdeas ViewedIdeas[]
   userGeneratedIdeas UserGeneratedIdea[]
   ideaGenerationRequests IdeaGenerationRequest[]
+  
+  // Add new relations for admin functionality
+  featuredSchedules      FeaturedNuggetsSchedule[]
+  
   @@unique([email])
   @@map("user")
 }
@@ -531,4 +535,17 @@ model IdeaGenerationRequest {
   
   @@index([userId])
   @@index([status])
+}
+
+// Featured Nuggets Scheduling Model
+model FeaturedNuggetsSchedule {
+  id          String   @id @default(uuid())
+  date        DateTime @unique @db.Date
+  ideaIds     String[]
+  order       Int      @default(1)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   String
+  creator     User     @relation(fields: [createdBy], references: [id])
 } 

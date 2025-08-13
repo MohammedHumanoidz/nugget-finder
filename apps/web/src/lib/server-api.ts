@@ -151,40 +151,67 @@ export const semanticSearchIdeas = cache(
 // Get latest 3 ideas for homepage - sorted by creation date and score
 export const getTodaysTopIdeas = cache(async () => {
 	try {
-		console.log("Fetching latest 3 ideas...");
-
-		// Try the tRPC client first
+		console.log("Fetching today's top ideas with scheduled check...");
+		
+		// First check for scheduled featured nuggets
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
+		
 		try {
-			const result = await serverTrpcClient.agents.getDailyIdeas.query({
-				limit: 50,
-				offset: 0,
+			const scheduled = await serverTrpcClient.admin.getFeaturedSchedule.query({
+				date: today.toISOString()
 			});
-
-			if (result?.ideas?.length > 0) {
-				// Sort by creation date (most recent first) and score
-				const latestIdeas = result.ideas
-					.sort((a: any, b: any) => {
-						// First sort by creation date (most recent first)
-						const dateA = new Date(a.createdAt).getTime();
-						const dateB = new Date(b.createdAt).getTime();
-						if (dateB !== dateA) {
-							return dateB - dateA;
+			
+			if (scheduled?.ideaIds?.length && scheduled.ideaIds.length > 0) {
+				console.log(`Found ${scheduled.ideaIds.length} scheduled ideas for today`);
+				
+				// Fetch the scheduled ideas in order
+				const scheduledIdeas = await Promise.all(
+					scheduled.ideaIds.map(async (id) => {
+						try {
+							return await serverTrpcClient.agents.getIdeaById.query({ id });
+						} catch (error) {
+							console.error(`Failed to fetch scheduled idea ${id}:`, error);
+							return null;
 						}
-						// Then by score if dates are the same
-						const scoreA = a.ideaScore?.overallScore || 0;
-						const scoreB = b.ideaScore?.overallScore || 0;
-						return scoreB - scoreA;
 					})
-					.slice(0, 3);
-
-				console.log(`Found ${latestIdeas.length} latest ideas`);
-				return latestIdeas;
+				);
+				
+				const validIdeas = scheduledIdeas.filter(Boolean);
+				if (validIdeas.length > 0) {
+					console.log(`Returning ${validIdeas.length} scheduled ideas`);
+					return validIdeas.slice(0, 3);
+				}
 			}
-		} catch (error) {
-			console.error("tRPC fetch failed:", error);
+		} catch (adminError) {
+			console.log("No scheduled ideas or admin query failed, using fallback");
+		}
+
+		// Fallback to existing logic
+		const result = await serverTrpcClient.agents.getDailyIdeas.query({
+			limit: 50,
+			offset: 0,
+		});
+
+		if (result?.ideas?.length > 0) {
+			const latestIdeas = result.ideas
+				.sort((a: any, b: any) => {
+					const dateA = new Date(a.createdAt).getTime();
+					const dateB = new Date(b.createdAt).getTime();
+					if (dateB !== dateA) {
+						return dateB - dateA;
+					}
+					const scoreA = a.ideaScore?.overallScore || 0;
+					const scoreB = b.ideaScore?.overallScore || 0;
+					return scoreB - scoreA;
+				})
+				.slice(0, 3);
+
+			console.log(`Found ${latestIdeas.length} fallback ideas`);
+			return latestIdeas;
 		}
 	} catch (error) {
-		console.error("Error fetching latest ideas:", error);
+		console.error("Error fetching today's top ideas:", error);
 		return [];
 	}
 });

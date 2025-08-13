@@ -10,6 +10,28 @@
 		"Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
+/* Dark mode fix for react-big-calendar */
+.dark .rbc-off-range-bg {
+	background-color: hsl(var(--muted)) !important;
+  }
+  
+  .dark .rbc-off-range {
+	color: hsl(var(--muted-foreground)) !important;
+  }
+  
+  .dark .rbc-month-view {
+	border-color: hsl(var(--border));
+  }
+  
+  .dark .rbc-header {
+	color: hsl(var(--foreground));
+  }
+  
+  .dark .rbc-today {
+	background-color: hsl(var(--primary) / 0.15) !important;
+  }
+  
+
 :root {
 	--background: oklch(1 0 0);
 	--foreground: oklch(0.3211 0 0);
