@@ -24,6 +24,7 @@ export function HeroSection() {
 	const [query, setQuery] = useState("");
 	const router = useRouter();
 	const { data: session } = authClient.useSession();
+	console.log({ session });
 	const [showPersonalizationPrompt, setShowPersonalizationPrompt] =
 		useState(false);
 	const [showPersonalizationModal, setShowPersonalizationModal] =

@@ -9,12 +9,10 @@ import LandingFAQSection from "@/components/LandingFAQSection";
 import NuggetsCards from "@/components/nuggetsCards";
 import { PricingPage } from "@/components/PricingPage";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { getLatestIdeasForDiscover, getTodaysTopIdeas } from "@/lib/server-api";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
 
 function PricingFallback() {
   return (
@@ -28,7 +26,7 @@ function PricingFallback() {
 // Server component with SSR
 export default async function Page() {
   const todaysIdeas = await getTodaysTopIdeas();
-  
+
   const discoverIdeas = await getLatestIdeasForDiscover();
 
   // Calculate market intelligence metrics
@@ -217,9 +215,10 @@ export default async function Page() {
             discoverIdeas?.slice(0, 6).map((idea: any) => {
               return (
                 <div key={idea.id} className="w-96">
-                  <NuggetsCards 
-                  className="flex h-[57dvh] justify-center"
-                    nugget={idea}  />
+                  <NuggetsCards
+                    className="flex h-[57dvh] justify-center"
+                    nugget={idea}
+                  />
                 </div>
               );
             })

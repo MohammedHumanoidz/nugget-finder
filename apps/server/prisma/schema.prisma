@@ -21,6 +21,7 @@ model User {
   createdAt        DateTime
   updatedAt        DateTime
   stripeCustomerId String?   // Add this field for the Stripe plugin
+  role             String    @default("user") // ADD THIS LINE
   claimLimit       Int       @default(0)  // Number of claims allowed
   claimsUsed       Int       @default(0)  // Number of claims used
   saveLimit        Int       @default(0)  // Number of saves allowed (-1 for unlimited)

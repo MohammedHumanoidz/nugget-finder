@@ -13,19 +13,13 @@ const _app = new Elysia()
 	.use(
 		cors({
 			origin: process.env.CORS_ORIGIN || "",
-			methods: ["GET", "POST", "OPTIONS"],
+			methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 			allowedHeaders: ["Content-Type", "Authorization"],
 			credentials: true,
 		}),
 	)
 	.use(chatRouter)
-	.all("/api/auth/*", async (context) => {
-		const { request } = context;
-		if (["POST", "GET"].includes(request.method)) {
-			return auth.handler(request);
-		}
-		context.error(405);
-	})
+	.mount(auth.handler)
 	.all("/trpc/*", async (context) => {
 		const res = await fetchRequestHandler({
 			endpoint: "/trpc",
