@@ -27,17 +27,23 @@ export function useSubscription(): UseSubscriptionReturn {
 		async (): Promise<BetterAuthSubscription | null> => {
 			if (!isAuthenticated) return null;
 
-			const result = await authClient.subscription.list();
-			if (result.error) {
-				throw new Error(result.error.message);
+			try {
+				const result = await authClient.subscription.list();
+				if (result.error) {
+					console.warn("Subscription list error:", result.error.message);
+					return null; // Return null instead of throwing for free users
+				}
+
+				// Find active or trialing subscription
+				const activeSubscription = result.data?.find(
+					(sub) => sub.status === "active" || sub.status === "trialing",
+				);
+
+				return activeSubscription as unknown as BetterAuthSubscription | null;
+			} catch (error) {
+				console.warn("Failed to fetch subscription:", error);
+				return null; // Default to free user
 			}
-
-			// Find active or trialing subscription
-			const activeSubscription = result.data?.find(
-				(sub) => sub.status === "active" || sub.status === "trialing",
-			);
-
-			return activeSubscription as unknown as BetterAuthSubscription | null;
 		};
 
 	// Get plans using TRPC
@@ -49,15 +55,19 @@ export function useSubscription(): UseSubscriptionReturn {
 
 	// Get current subscription
 	const {
-		data: currentSubscription,
+		data: currentSubscription = null, // Default to null
 		isLoading: isLoadingSubscription,
 		refetch: refetchSubscription,
+		error: subscriptionError,
 	} = useQuery({
 		queryKey: ["subscription", "current"],
 		queryFn: getCurrentSubscription,
 		enabled: isAuthenticated,
-		retry: false,
+		retry: 1, // Allow one retry
 		refetchOnWindowFocus: false,
+		staleTime: 5 * 60 * 1000, // 5 minutes
+		gcTime: 10 * 60 * 1000, // 10 minutes
+		placeholderData: null, // Provide placeholder data to prevent undefined
 	});
 
 	// Derive subscription status from current subscription
@@ -74,7 +84,9 @@ export function useSubscription(): UseSubscriptionReturn {
 		};
 	}, [currentSubscription]);
 
-	const isPaying = subscriptionStatus?.isPaying || false;
+	// For unauthenticated users, always treat as not paying
+	// For authenticated users with no subscription data (loading or error), default to false
+	const isPaying = isAuthenticated ? (subscriptionStatus?.isPaying || false) : false;
 
 	const cancelSubscriptionMutation = useMutation({
 		mutationFn: async (options?: { returnUrl?: string }) => {
@@ -180,7 +192,7 @@ export function useSubscription(): UseSubscriptionReturn {
 	return {
 		// Data
 		plans,
-		currentSubscription,
+		currentSubscription: currentSubscription || null, // Ensure we return null instead of undefined
 		subscriptionStatus: subscriptionStatus as SubscriptionStatus | undefined,
 		isPaying,
 
@@ -188,6 +200,10 @@ export function useSubscription(): UseSubscriptionReturn {
 		isLoadingPlans,
 		isLoadingSubscription,
 		isLoadingStatus: false, // Derived from subscription data
+
+		// Debug information
+		subscriptionError,
+		isAuthenticated,
 
 		// Mutations with proper async signatures
 
