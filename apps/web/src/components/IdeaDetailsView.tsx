@@ -38,6 +38,24 @@ import type {
 } from "@/types/idea-details";
 import NuggetChat from "./NuggetChat";
 import Link from "next/link";
+import { useSubscription } from "@/hooks/useSubscription";
+
+// Upgrade Prompt Component for premium features
+const UpgradePrompt: React.FC<{ componentName: string }> = ({ componentName }) => (
+  <div className="rounded-lg border border-border bg-muted/30 p-8 text-center">
+    <div className="mb-4">
+      <h3 className="font-semibold text-lg">Upgrade Required</h3>
+      <p className="text-muted-foreground">
+        {componentName} is available for premium users
+      </p>
+    </div>
+    <Button asChild>
+      <Link href="/pricing">
+        Upgrade to Premium
+      </Link>
+    </Button>
+  </div>
+);
 
 // Hero Section Component
 const HeroSection: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
@@ -155,6 +173,14 @@ const HeroSection: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 const QuickOverview: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
   idea,
 }) => {
+  const { isPaying } = useSubscription();
+  
+  // Default to free if field doesn't exist (before migration)
+  const isFree = idea.isFreeQuickOverview ?? true;
+  if (!isPaying && !isFree) {
+    return <UpgradePrompt componentName="Quick Overview" />;
+  }
+
   const formatCurrency = (amount: number): string => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -233,6 +259,14 @@ const QuickOverview: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 const WhyThisMatters: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
   idea,
 }) => {
+  const { isPaying } = useSubscription();
+  
+  // Default to free if field doesn't exist (before migration)
+  const isFree = idea.isFreeWhyThisMatters ?? true;
+  if (!isPaying && !isFree) {
+    return <UpgradePrompt componentName="Why This Matters" />;
+  }
+
   const formatCurrency = (amount: number): string => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -308,6 +342,14 @@ const WhyThisMatters: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 const DetailedOverview: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
   idea,
 }) => {
+  const { isPaying } = useSubscription();
+  
+  // Default to free if field doesn't exist (before migration)
+  const isFree = idea.isFreeDetailedOverview ?? true;
+  if (!isPaying && !isFree) {
+    return <UpgradePrompt componentName="Detailed Overview" />;
+  }
+
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
       <h3 className="border-border border-b bg-muted/50 px-6 py-4 font-semibold text-foreground text-lg">
@@ -326,6 +368,14 @@ const DetailedOverview: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 const TheClaimWhyNow: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
   idea,
 }) => {
+  const { isPaying } = useSubscription();
+  
+  // Default to paid if field doesn't exist (before migration)
+  const isFree = idea.isFreeTheClaimWhyNow ?? false;
+  if (!isPaying && !isFree) {
+    return <UpgradePrompt componentName="The Claim (Why Now)" />;
+  }
+
   const renderBulletPoints = (
     items: string[],
     emptyMessage = "Not specified"
@@ -380,6 +430,14 @@ const TheClaimWhyNow: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 const WhatToBuild: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
   idea,
 }) => {
+  const { isPaying } = useSubscription();
+  
+  // Default to paid if field doesn't exist (before migration)
+  const isFree = idea.isFreeWhatToBuild ?? false;
+  if (!isPaying && !isFree) {
+    return <UpgradePrompt componentName="What to Build" />;
+  }
+
   const renderBulletPoints = (
     items: string[],
     emptyMessage = "Not specified"
@@ -506,6 +564,14 @@ const WhatToBuild: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 const ExecutionPlan: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
   idea,
 }) => {
+  const { isPaying } = useSubscription();
+  
+  // Default to paid if field doesn't exist (before migration)
+  const isFree = idea.isFreeExecutionPlan ?? false;
+  if (!isPaying && !isFree) {
+    return <UpgradePrompt componentName="Execution Plan" />;
+  }
+
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
       <h3 className="border-border border-b bg-muted/50 px-6 py-4 font-semibold text-foreground text-lg">
@@ -579,6 +645,14 @@ const ExecutionPlan: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 const MarketGap: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
   idea,
 }) => {
+  const { isPaying } = useSubscription();
+  
+  // Default to paid if field doesn't exist (before migration)
+  const isFree = idea.isFreeMarketGap ?? false;
+  if (!isPaying && !isFree) {
+    return <UpgradePrompt componentName="Market Gap" />;
+  }
+
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
       <h3 className="border-border border-b bg-muted/50 px-6 py-4 font-semibold text-foreground text-lg">
@@ -609,6 +683,14 @@ const MarketGap: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 const CompetitiveLandscape: React.FC<{
   idea: IdeaDetailsViewProps["idea"];
 }> = ({ idea }) => {
+  const { isPaying } = useSubscription();
+  
+  // Default to paid if field doesn't exist (before migration)
+  const isFree = idea.isFreeCompetitiveLandscape ?? false;
+  if (!isPaying && !isFree) {
+    return <UpgradePrompt componentName="Competitive Landscape" />;
+  }
+
   const [competitorTab, setCompetitorTab] = useState<"direct" | "indirect">(
     "direct"
   );
@@ -796,6 +878,14 @@ const CompetitiveLandscape: React.FC<{
 const RevenueModel: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
   idea,
 }) => {
+  const { isPaying } = useSubscription();
+  
+  // Default to paid if field doesn't exist (before migration)
+  const isFree = idea.isFreeRevenueModel ?? false;
+  if (!isPaying && !isFree) {
+    return <UpgradePrompt componentName="Revenue Model" />;
+  }
+
   const formatCurrency = (amount: number): string => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -946,6 +1036,14 @@ const RevenueModel: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 const ExecutionValidation: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
   idea,
 }) => {
+  const { isPaying } = useSubscription();
+  
+  // Default to paid if field doesn't exist (before migration)
+  const isFree = idea.isFreeExecutionValidation ?? false;
+  if (!isPaying && !isFree) {
+    return <UpgradePrompt componentName="Execution & Validation" />;
+  }
+
   const renderBulletPoints = (
     items: string[],
     emptyMessage = "Not specified"
@@ -1039,6 +1137,14 @@ const CallToAction: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 const ChatSection: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
   idea,
 }) => {
+  const { isPaying } = useSubscription();
+  
+  // Default to paid if field doesn't exist (before migration)
+  const isFree = idea.isFreeChat ?? false;
+  if (!isPaying && !isFree) {
+    return <UpgradePrompt componentName="AI Chat" />;
+  }
+
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
       <h3 className="flex items-center gap-2 border-border border-b bg-muted/50 px-6 py-4 font-semibold text-foreground text-lg">

@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { trpc } from "@/utils/trpc";
 import type {
 	BetterAuthSubscription,
 	BetterAuthUpgradeOptions,
@@ -39,20 +40,12 @@ export function useSubscription(): UseSubscriptionReturn {
 			return activeSubscription as unknown as BetterAuthSubscription | null;
 		};
 
-	// Get plans from your API (keep this as TRPC if you have it set up)
+	// Get plans using TRPC
 	const {
 		data: plans,
 		isLoading: isLoadingPlans,
 		refetch: refetchPlans,
-	} = useQuery({
-		queryKey: ["subscription", "plans"],
-		queryFn: async () => {
-			// Replace with your actual plans API endpoint
-			const response = await fetch("/api/plans");
-			if (!response.ok) throw new Error("Failed to fetch plans");
-			return response.json();
-		},
-	});
+	} = useQuery(trpc.subscription.getPlans.queryOptions());
 
 	// Get current subscription
 	const {

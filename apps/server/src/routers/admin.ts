@@ -92,4 +92,142 @@ export const adminRouter = router({
         orderBy: { date: 'asc' }
       });
     }),
+
+  // Feature Visibility Management
+  getFeatureVisibilityDefaults: adminProcedure.query(async () => {
+    try {
+      // Try to get the most recent idea to see current defaults
+      const recentIdea = await prisma.dailyIdea.findFirst({
+        orderBy: { createdAt: 'desc' },
+        select: {
+          isFreeQuickOverview: true,
+          isFreeWhyThisMatters: true,
+          isFreeDetailedOverview: true,
+          isFreeTheClaimWhyNow: true,
+          isFreeWhatToBuild: true,
+          isFreeExecutionPlan: true,
+          isFreeMarketGap: true,
+          isFreeCompetitiveLandscape: true,
+          isFreeRevenueModel: true,
+          isFreeExecutionValidation: true,
+          isFreeChat: true,
+        }
+      });
+      
+      return recentIdea || {
+        isFreeQuickOverview: true,
+        isFreeWhyThisMatters: true,
+        isFreeDetailedOverview: true,
+        isFreeTheClaimWhyNow: false,
+        isFreeWhatToBuild: false,
+        isFreeExecutionPlan: false,
+        isFreeMarketGap: false,
+        isFreeCompetitiveLandscape: false,
+        isFreeRevenueModel: false,
+        isFreeExecutionValidation: false,
+        isFreeChat: false,
+      };
+    } catch (error: any) {
+      // If migration hasn't been run yet, return default values
+      console.warn('Feature visibility fields not yet migrated, using defaults:', error.message);
+      return {
+        isFreeQuickOverview: true,
+        isFreeWhyThisMatters: true,
+        isFreeDetailedOverview: true,
+        isFreeTheClaimWhyNow: false,
+        isFreeWhatToBuild: false,
+        isFreeExecutionPlan: false,
+        isFreeMarketGap: false,
+        isFreeCompetitiveLandscape: false,
+        isFreeRevenueModel: false,
+        isFreeExecutionValidation: false,
+        isFreeChat: false,
+      };
+    }
+  }),
+
+  updateFeatureVisibilityDefaults: adminProcedure
+    .input(z.object({
+      isFreeQuickOverview: z.boolean(),
+      isFreeWhyThisMatters: z.boolean(),
+      isFreeDetailedOverview: z.boolean(),
+      isFreeTheClaimWhyNow: z.boolean(),
+      isFreeWhatToBuild: z.boolean(),
+      isFreeExecutionPlan: z.boolean(),
+      isFreeMarketGap: z.boolean(),
+      isFreeCompetitiveLandscape: z.boolean(),
+      isFreeRevenueModel: z.boolean(),
+      isFreeExecutionValidation: z.boolean(),
+      isFreeChat: z.boolean(),
+      applyToAllIdeas: z.boolean().optional().default(false),
+    }))
+    .mutation(async ({ input }) => {
+      try {
+        const { applyToAllIdeas, ...settingsData } = input;
+        
+        if (applyToAllIdeas) {
+          // Update ALL existing ideas with the new settings
+          const result = await prisma.dailyIdea.updateMany({
+            data: settingsData
+          });
+          
+          return { 
+            success: true, 
+            updatedCount: result.count,
+            message: `Updated ${result.count} ideas with new feature visibility settings`
+          };
+        } else {
+          // Update only future ideas (created after now) with new defaults
+          const result = await prisma.dailyIdea.updateMany({
+            where: { 
+              createdAt: { gte: new Date() } 
+            },
+            data: settingsData
+          });
+          
+          return { 
+            success: true, 
+            updatedCount: result.count,
+            message: `Updated ${result.count} future ideas with new defaults`
+          };
+        }
+      } catch (error: any) {
+        // If migration hasn't been run yet
+        console.warn('Feature visibility fields not yet migrated, cannot update defaults:', error.message);
+        return { 
+          success: false, 
+          updatedCount: 0,
+          message: 'Feature visibility migration not yet run. Please run database migration first.'
+        };
+      }
+    }),
+
+  updateIdeaFeatureVisibility: adminProcedure
+    .input(z.object({
+      ideaId: z.string(),
+      settings: z.object({
+        isFreeQuickOverview: z.boolean(),
+        isFreeWhyThisMatters: z.boolean(),
+        isFreeDetailedOverview: z.boolean(),
+        isFreeTheClaimWhyNow: z.boolean(),
+        isFreeWhatToBuild: z.boolean(),
+        isFreeExecutionPlan: z.boolean(),
+        isFreeMarketGap: z.boolean(),
+        isFreeCompetitiveLandscape: z.boolean(),
+        isFreeRevenueModel: z.boolean(),
+        isFreeExecutionValidation: z.boolean(),
+        isFreeChat: z.boolean(),
+      })
+    }))
+    .mutation(async ({ input }) => {
+      try {
+        return await prisma.dailyIdea.update({
+          where: { id: input.ideaId },
+          data: input.settings
+        });
+      } catch (error: any) {
+        console.warn('Feature visibility fields not yet migrated, cannot update idea:', error.message);
+        throw new Error('Feature visibility migration not yet run. Please run database migration first.');
+      }
+    }),
 });

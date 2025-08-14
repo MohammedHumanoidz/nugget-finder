@@ -160,7 +160,38 @@ export const agentRouter = router({
 			try {
 				const idea = await prisma.dailyIdea.findUnique({
 					where: { id: input.id },
-					include: {
+					select: {
+						// Basic fields
+						id: true,
+						title: true,
+						description: true,
+						narrativeHook: true,
+						problemStatement: true,
+						problemSolution: true,
+						executiveSummary: true,
+						tags: true,
+						innovationLevel: true,
+						timeToMarket: true,
+						urgencyLevel: true,
+						executionComplexity: true,
+						confidenceScore: true,
+						createdAt: true,
+						updatedAt: true,
+						
+						// Feature visibility fields
+						isFreeQuickOverview: true,
+						isFreeWhyThisMatters: true,
+						isFreeDetailedOverview: true,
+						isFreeTheClaimWhyNow: true,
+						isFreeWhatToBuild: true,
+						isFreeExecutionPlan: true,
+						isFreeMarketGap: true,
+						isFreeCompetitiveLandscape: true,
+						isFreeRevenueModel: true,
+						isFreeExecutionValidation: true,
+						isFreeChat: true,
+						
+						// Relations
 						whyNow: true,
 						ideaScore: true,
 						marketOpportunity: {

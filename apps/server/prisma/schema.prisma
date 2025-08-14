@@ -419,6 +419,19 @@ model DailyIdea {
   urgencyLevel      Int // 1-10 scale for market timing pressure
   executionComplexity Int // 1-10 scale for implementation difficulty
   tags              String[]
+  
+  // Feature visibility flags for free vs paid users
+  isFreeQuickOverview       Boolean @default(true)
+  isFreeWhyThisMatters      Boolean @default(true)
+  isFreeDetailedOverview    Boolean @default(true)
+  isFreeTheClaimWhyNow      Boolean @default(false)
+  isFreeWhatToBuild         Boolean @default(false)
+  isFreeExecutionPlan       Boolean @default(false)
+  isFreeMarketGap           Boolean @default(false)
+  isFreeCompetitiveLandscape Boolean @default(false)
+  isFreeRevenueModel        Boolean @default(false)
+  isFreeExecutionValidation Boolean @default(false)
+  isFreeChat                Boolean @default(false)
   // Relations
   ideaScoreId        String?      @unique
   ideaScore          IdeaScore?   @relation(fields: [ideaScoreId], references: [id])
