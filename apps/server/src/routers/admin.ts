@@ -324,4 +324,169 @@ export const adminRouter = router({
         data: { isActive: false }
       });
     }),
+
+  // Analytics endpoints
+  getStats: adminProcedure.query(async () => {
+    const [totalUsers, totalNuggets] = await Promise.all([
+      prisma.user.count(),
+      prisma.dailyIdea.count()
+    ]);
+
+    return {
+      totalUsers,
+      totalNuggets
+    };
+  }),
+
+  getTodaysFeaturedNuggets: adminProcedure.query(async () => {
+    const today = new Date();
+    const dateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    
+    const schedule = await prisma.featuredNuggetsSchedule.findFirst({
+      where: { 
+        date: dateOnly,
+        isActive: true
+      },
+      include: {
+        creator: {
+          select: { name: true, email: true }
+        }
+      }
+    });
+
+    if (!schedule || !schedule.ideaIds?.length) {
+      return [];
+    }
+
+    // Get the actual ideas
+    const ideas = await prisma.dailyIdea.findMany({
+      where: {
+        id: { in: schedule.ideaIds }
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        tags: true,
+        createdAt: true,
+        _count: {
+          select: {
+            viewedIdeas: true,
+            savedIdeas: true
+          }
+        },
+        claimedIdeas: {
+          select: { id: true }
+        }
+      }
+    });
+
+    // Maintain the order from the schedule
+    const orderedIdeas = schedule.ideaIds
+      .map(id => ideas.find(idea => idea.id === id))
+      .filter((idea): idea is NonNullable<typeof idea> => idea !== undefined);
+
+    return orderedIdeas.map(idea => ({
+      id: idea.id,
+      title: idea.title,
+      description: idea.description,
+      category: idea.tags?.[0] || 'General',
+      status: 'Published',
+      views: idea._count?.viewedIdeas || 0,
+      saves: idea._count?.savedIdeas || 0,
+      claims: idea.claimedIdeas ? 1 : 0
+    }));
+  }),
+
+  getEngagementData: adminProcedure
+    .input(z.object({
+      days: z.number().default(30)
+    }))
+    .query(async ({ input }) => {
+      const endDate = new Date();
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - input.days);
+
+      // Get engagement data aggregated by date
+      const [viewsData, savesData, claimsData] = await Promise.all([
+        // Views by date
+        prisma.viewedIdeas.groupBy({
+          by: ['createdAt'],
+          _count: { id: true },
+          where: {
+            createdAt: {
+              gte: startDate,
+              lte: endDate
+            }
+          }
+        }),
+        // Saves by date
+        prisma.savedIdeas.groupBy({
+          by: ['createdAt'],
+          _count: { id: true },
+          where: {
+            createdAt: {
+              gte: startDate,
+              lte: endDate
+            }
+          }
+        }),
+        // Claims by date
+        prisma.claimedIdeas.groupBy({
+          by: ['createdAt'],
+          _count: { id: true },
+          where: {
+            createdAt: {
+              gte: startDate,
+              lte: endDate
+            }
+          }
+        })
+      ]);
+
+      // Create a map of date strings to engagement counts
+      const engagementMap = new Map<string, { views: number; saves: number; claims: number }>();
+
+      // Initialize all dates with zero counts
+      for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        const dateStr = d.toISOString().split('T')[0];
+        engagementMap.set(dateStr, { views: 0, saves: 0, claims: 0 });
+      }
+
+      // Populate views
+      viewsData.forEach(item => {
+        const dateStr = item.createdAt.toISOString().split('T')[0];
+        const existing = engagementMap.get(dateStr);
+        if (existing) {
+          existing.views = item._count.id;
+        }
+      });
+
+      // Populate saves
+      savesData.forEach(item => {
+        const dateStr = item.createdAt.toISOString().split('T')[0];
+        const existing = engagementMap.get(dateStr);
+        if (existing) {
+          existing.saves = item._count.id;
+        }
+      });
+
+      // Populate claims
+      claimsData.forEach(item => {
+        const dateStr = item.createdAt.toISOString().split('T')[0];
+        const existing = engagementMap.get(dateStr);
+        if (existing) {
+          existing.claims = item._count.id;
+        }
+      });
+
+      // Convert to array format
+      return Array.from(engagementMap.entries()).map(([date, counts]) => ({
+        date,
+        views: counts.views,
+        saves: counts.saves,
+        claims: counts.claims
+      }));
+    }),
+
 });
