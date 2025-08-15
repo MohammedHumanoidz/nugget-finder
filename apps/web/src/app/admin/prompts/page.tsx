@@ -176,6 +176,18 @@ export default function PromptsPage() {
         </p>
       </div>
 
+      <div className="mt-8 p-4 bg-primary/10 rounded-lg border border-primary">
+        <h3 className="font-semibold text-primary mb-2">How it works:</h3>
+        <ul className="text-sm text-primary/75 space-y-1">
+          <li>• Each agent can have multiple prompts (System Prompt for behavior, User Prompt for queries)</li>
+          <li>• System prompts define the AI's role and behavior patterns</li>
+          <li>• User prompts provide specific instructions or questions for the AI to process</li>
+          <li>• Changes take effect within 5 minutes due to intelligent caching</li>
+          <li>• Empty prompts will use hardcoded fallbacks to ensure system reliability</li>
+          <li>• All prompts are automatically backed up with version history</li>
+        </ul>
+      </div>
+
       <div className="space-y-6">
         {AGENTS.map(agent => (
           <Card key={agent.key} className="w-full">
@@ -222,18 +234,6 @@ export default function PromptsPage() {
             </CardContent>
           </Card>
         ))}
-      </div>
-
-      <div className="mt-8 p-4 bg-primary/10 rounded-lg border border-primary">
-        <h3 className="font-semibold text-primary mb-2">How it works:</h3>
-        <ul className="text-sm text-primary/75 space-y-1">
-          <li>• Each agent can have multiple prompts (System Prompt for behavior, User Prompt for queries)</li>
-          <li>• System prompts define the AI's role and behavior patterns</li>
-          <li>• User prompts provide specific instructions or questions for the AI to process</li>
-          <li>• Changes take effect within 5 minutes due to intelligent caching</li>
-          <li>• Empty prompts will use hardcoded fallbacks to ensure system reliability</li>
-          <li>• All prompts are automatically backed up with version history</li>
-        </ul>
       </div>
     </div>
   );

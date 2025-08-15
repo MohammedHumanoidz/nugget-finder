@@ -1,14 +1,7 @@
-import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
-import "../index.css";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import Providers from "@/components/providers";
 import StructuredData from "@/components/StructuredData";
-
-const manrope = Manrope({
-  subsets: ["latin"],
-});
+import type { Metadata } from "next";
 
 // This metadata object provides default SEO information for the entire site.
 // Pages can override these defaults by exporting their own metadata object.
@@ -85,15 +78,13 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <StructuredData data={organizationSchema} />
-      </head>
-      <body className={`${manrope.className}`}>
-        <Providers>
-          <div className="flex flex-col gap-6 bg-background">{children}</div>
-        </Providers>
-      </body>
-    </html>
+    <>
+      <StructuredData data={organizationSchema} />
+      <div className="flex flex-col gap-6 bg-background">
+        <Navbar />
+        {children}
+        <Footer />
+      </div>
+    </>
   );
 }
