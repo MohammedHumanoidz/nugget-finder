@@ -26,10 +26,15 @@ export function CalendarGrid({
   isDateSelected
 }: CalendarGridProps) {
   // Helper function to check if a date has events
+  // Add 1 day to the calendar date to match the event dates correctly
   const hasEvents = (dateString: string): boolean => {
+    const calendarDate = new Date(dateString);
+    calendarDate.setDate(calendarDate.getDate() - 1);
+    const adjustedDateString = calendarDate.toISOString().split('T')[0];
+    
     return events.some(event => {
       const eventDate = event.date.split('T')[0]; // Extract YYYY-MM-DD part
-      return eventDate === dateString && event.ideaIds.length > 0;
+      return eventDate === adjustedDateString && event.ideaIds.length > 0;
     });
   };
 
