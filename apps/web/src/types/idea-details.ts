@@ -188,4 +188,5 @@ export interface IdeaDetailsViewProps {
 		frameworkFit: FrameworkFit;
 		whatToBuild?: WhatToBuild;
 	};
+	isFreeDetailedOverview?: boolean;
 }

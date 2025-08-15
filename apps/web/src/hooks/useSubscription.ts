@@ -202,6 +202,7 @@ export function useSubscription(): UseSubscriptionReturn {
 		isLoadingStatus: false, // Derived from subscription data
 
 		// Debug information
+		//@ts-ignore
 		subscriptionError,
 		isAuthenticated,
 

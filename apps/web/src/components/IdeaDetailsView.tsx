@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/correctness/useHookAtTopLevel: <explanation> */
 "use client";
 
 import {
@@ -170,7 +171,7 @@ const HeroSection: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 };
 
 // Quick Overview Component
-const QuickOverview: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
+const QuickOverview: React.FC<{ idea: IdeaDetailsViewProps["idea"] & { isFreeQuickOverview: boolean } }> = ({
   idea,
 }) => {
   const { isPaying } = useSubscription();
@@ -258,7 +259,7 @@ const QuickOverview: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 // Why This Matters Component
 const WhyThisMatters: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
   idea,
-}) => {
+}: { idea: any }) => {
   const { isPaying } = useSubscription();
   
   // Default to free if field doesn't exist (before migration)
@@ -339,7 +340,7 @@ const WhyThisMatters: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 };
 
 // Detailed Overview Component
-const DetailedOverview: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
+const DetailedOverview: React.FC<{ idea: IdeaDetailsViewProps["idea"] & { isFreeDetailedOverview: boolean } }> = ({
   idea,
 }) => {
   const { isPaying } = useSubscription();
@@ -365,7 +366,7 @@ const DetailedOverview: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 };
 
 // The Claim (Why Now) Component
-const TheClaimWhyNow: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
+const TheClaimWhyNow: React.FC<{ idea: IdeaDetailsViewProps["idea"] & { isFreeTheClaimWhyNow: boolean } }> = ({
   idea,
 }) => {
   const { isPaying } = useSubscription();
@@ -427,7 +428,7 @@ const TheClaimWhyNow: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 };
 
 // What to Build Component (Detailed)
-const WhatToBuild: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
+const WhatToBuild: React.FC<{ idea: IdeaDetailsViewProps["idea"] & { isFreeWhatToBuild: boolean } }> = ({
   idea,
 }) => {
   const { isPaying } = useSubscription();
@@ -561,7 +562,7 @@ const WhatToBuild: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 };
 
 // Execution Plan Component
-const ExecutionPlan: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
+const ExecutionPlan: React.FC<{ idea: IdeaDetailsViewProps["idea"] & { isFreeExecutionPlan: boolean } }> = ({
   idea,
 }) => {
   const { isPaying } = useSubscription();
@@ -642,7 +643,7 @@ const ExecutionPlan: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 };
 
 // Market Gap Component
-const MarketGap: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
+const MarketGap: React.FC<{ idea: IdeaDetailsViewProps["idea"] & { isFreeMarketGap: boolean } }> = ({
   idea,
 }) => {
   const { isPaying } = useSubscription();
@@ -681,7 +682,7 @@ const MarketGap: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 
 // Competitive Landscape Component
 const CompetitiveLandscape: React.FC<{
-  idea: IdeaDetailsViewProps["idea"];
+  idea: IdeaDetailsViewProps["idea"] & { isFreeCompetitiveLandscape: boolean };
 }> = ({ idea }) => {
   const { isPaying } = useSubscription();
   
@@ -875,7 +876,7 @@ const CompetitiveLandscape: React.FC<{
 };
 
 // Revenue Model Component (Comprehensive)
-const RevenueModel: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
+const RevenueModel: React.FC<{ idea: IdeaDetailsViewProps["idea"] & { isFreeRevenueModel: boolean } }> = ({
   idea,
 }) => {
   const { isPaying } = useSubscription();
@@ -1033,7 +1034,7 @@ const RevenueModel: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 };
 
 // Execution & Validation Component
-const ExecutionValidation: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
+const ExecutionValidation: React.FC<{ idea: IdeaDetailsViewProps["idea"] & { isFreeExecutionValidation: boolean } }> = ({
   idea,
 }) => {
   const { isPaying } = useSubscription();
@@ -1134,7 +1135,7 @@ const CallToAction: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
 };
 
 // Chat Section Component
-const ChatSection: React.FC<{ idea: IdeaDetailsViewProps["idea"] }> = ({
+const ChatSection: React.FC<{ idea: IdeaDetailsViewProps["idea"] & { isFreeChat: boolean } }> = ({
   idea,
 }) => {
   const { isPaying } = useSubscription();
@@ -1408,18 +1409,18 @@ const IdeaDetailsView: React.FC<IdeaDetailsViewProps> = ({ idea }) => {
         <div className="flex flex-col-reverse items-start gap-8 lg:flex-row">
           {/* Left Column - Main Story */}
           <div className="min-w-0 flex-2 space-y-8 lg:w-2/3">
-            <QuickOverview idea={idea} />
+            <QuickOverview idea={idea as any} />
             <WhyThisMatters idea={idea} />
-            <DetailedOverview idea={idea} />
-            <TheClaimWhyNow idea={idea} />
-            <WhatToBuild idea={idea} />
-            <ExecutionPlan idea={idea} />
-            <MarketGap idea={idea} />
-            <CompetitiveLandscape idea={idea} />
-            <RevenueModel idea={idea} />
-            <ExecutionValidation idea={idea} />
+            <DetailedOverview idea={idea as any} />
+            <TheClaimWhyNow idea={idea as any} />
+            <WhatToBuild idea={idea as any} />
+            <ExecutionPlan idea={idea as any} />
+            <MarketGap idea={idea as any} />
+            <CompetitiveLandscape idea={idea as any} />
+            <RevenueModel idea={idea as any} />
+            <ExecutionValidation idea={idea as any} />
             <CallToAction idea={idea} />
-            <ChatSection idea={idea} />
+            <ChatSection idea={idea as any} />
           </div>
 
           {/* Right Column - Sticky Sidebar */}

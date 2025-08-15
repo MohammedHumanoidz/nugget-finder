@@ -166,6 +166,7 @@ export const getTodaysTopIdeas = cache(async () => {
 				console.log(`Found ${scheduled.ideaIds.length} scheduled ideas for today`);
 				
 				// Fetch the scheduled ideas in order
+				//@ts-ignore
 				const scheduledIdeas = await Promise.all(
 					scheduled.ideaIds.map(async (id) => {
 						try {

@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
 		
 		// Return the plans data - TRPC wraps data in result.data
 		return NextResponse.json(data.result?.data || data);
-	} catch (error) {
+	} catch (error: any) {
 		console.error("Error fetching plans:", error);
 		return NextResponse.json(
 			{ error: "Failed to fetch plans", details: error.message },
