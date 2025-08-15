@@ -1,0 +1,2202 @@
+Event 0: {id: 'e25afd28-1f11-4ff7-b760-f82072673932', date: '2025-08-11T00:00:00.000Z', ideaIds: Array(3), dateType: 'string', dateObject: Mon Aug 11 2025 03:00:00 GMT+0300 (East Africa Time)}date: "2025-08-11T00:00:00.000Z"dateObject: Mon Aug 11 2025 03:00:00 GMT+0300 (East Africa Time) {}dateType: "string"id: "e25afd28-1f11-4ff7-b760-f82072673932"ideaIds: (3) ['f28747e3-eee9-464c-bc38-3b1eec6a6d90', '513d0abc-e1c8-4caa-9692-a4368318b69f', 'a70d7291-43c2-4a35-82f8-b4511124e1ba'][[Prototype]]: Object
+page.tsx:90 Event 1: {id: '5b0f4435-d514-4d39-b928-92547cd8ee49', date: '2025-08-12T00:00:00.000Z', ideaIds: Array(3), dateType: 'string', dateObject: Tue Aug 12 2025 03:00:00 GMT+0300 (East Africa Time)}
+page.tsx:90 Event 2: {id: 'f5af9f9d-266b-424c-acd0-076fbeb5558b', date: '2025-08-13T00:00:00.000Z', ideaIds: Array(0), dateType: 'string', dateObject: Wed Aug 13 2025 03:00:00 GMT+0300 (East Africa Time)}
+page.tsx:90 Event 3: {id: '8701f654-c701-4bb3-b836-4b13e291e2fb', date: '2025-08-14T00:00:00.000Z', ideaIds: Array(3), dateType: 'string', dateObject: Thu Aug 14 2025 03:00:00 GMT+0300 (East Africa Time)}
+page.tsx:90 Event 4: {id: 'b52ed9f3-06ce-4638-9fd7-5a1895014f4b', date: '2025-08-18T00:00:00.000Z', ideaIds: Array(3), dateType: 'string', dateObject: Mon Aug 18 2025 03:00:00 GMT+0300 (East Africa Time)}
+page.tsx:90 Event 5: {id: 'cf87d54b-c3b2-4577-bc7d-a8ae32953270', date: '2025-08-19T00:00:00.000Z', ideaIds: Array(3), dateType: 'string', dateObject: Tue Aug 19 2025 03:00:00 GMT+0300 (East Africa Time)}
+page.tsx:88 Raw calendarEvents data: (6) [{…}, {…}, {…}, {…}, {…}, {…}]
+page.tsx:90 Event 0: {id: 'e25afd28-1f11-4ff7-b760-f82072673932', date: '2025-08-11T00:00:00.000Z', ideaIds: Array(3), dateType: 'string', dateObject: Mon Aug 11 2025 03:00:00 GMT+0300 (East Africa Time)}
+page.tsx:90 Event 1: {id: '5b0f4435-d514-4d39-b928-92547cd8ee49', date: '2025-08-12T00:00:00.000Z', ideaIds: Array(3), dateType: 'string', dateObject: Tue Aug 12 2025 03:00:00 GMT+0300 (East Africa Time)}
+page.tsx:90 Event 2: {id: 'f5af9f9d-266b-424c-acd0-076fbeb5558b', date: '2025-08-13T00:00:00.000Z', ideaIds: Array(0), dateType: 'string', dateObject: Wed Aug 13 2025 03:00:00 GMT+0300 (East Africa Time)}
+page.tsx:90 Event 3: {id: '8701f654-c701-4bb3-b836-4b13e291e2fb', date: '2025-08-14T00:00:00.000Z', ideaIds: Array(3), dateType: 'string', dateObject: Thu Aug 14 2025 03:00:00 GMT+0300 (East Africa Time)}
+page.tsx:90 Event 4: {id: 'b52ed9f3-06ce-4638-9fd7-5a1895014f4b', date: '2025-08-18T00:00:00.000Z', ideaIds: Array(3), dateType: 'string', dateObject: Mon Aug 18 2025 03:00:00 GMT+0300 (East Africa Time)}
+page.tsx:90 Event 5: {id: 'cf87d54b-c3b2-4577-bc7d-a8ae32953270', date: '2025-08-19T00:00:00.000Z', ideaIds: Array(3), dateType: 'string', dateObject: Tue Aug 19 2025 03:00:00 GMT+0300 (East Africa Time)}
+page.tsx:203 Event processing: {rawDate: '2025-08-11T00:00:00.000Z', storedDate: Mon Aug 11 2025 03:00:00 GMT+0300 (East Africa Time), eventDate: Mon Aug 11 2025 00:00:00 GMT+0300 (East Africa Time), formattedEventDate: '2025-08-11', formattedStoredDate: '2025-08-11', …}
+page.tsx:203 Event processing: {rawDate: '2025-08-12T00:00:00.000Z', storedDate: Tue Aug 12 2025 03:00:00 GMT+0300 (East Africa Time), eventDate: Tue Aug 12 2025 00:00:00 GMT+0300 (East Africa Time), formattedEventDate: '2025-08-12', formattedStoredDate: '2025-08-12', …}
+page.tsx:203 Event processing: {rawDate: '2025-08-13T00:00:00.000Z', storedDate: Wed Aug 13 2025 03:00:00 GMT+0300 (East Africa Time), eventDate: Wed Aug 13 2025 00:00:00 GMT+0300 (East Africa Time), formattedEventDate: '2025-08-13', formattedStoredDate: '2025-08-13', …}
+page.tsx:203 Event processing: {rawDate: '2025-08-14T00:00:00.000Z', storedDate: Thu Aug 14 2025 03:00:00 GMT+0300 (East Africa Time), eventDate: Thu Aug 14 2025 00:00:00 GMT+0300 (East Africa Time), formattedEventDate: '2025-08-14', formattedStoredDate: '2025-08-14', …}
+page.tsx:203 Event processing: {rawDate: '2025-08-18T00:00:00.000Z', storedDate: Mon Aug 18 2025 03:00:00 GMT+0300 (East Africa Time), eventDate: Mon Aug 18 2025 00:00:00 GMT+0300 (East Africa Time), formattedEventDate: '2025-08-18', formattedStoredDate: '2025-08-18', …}
+page.tsx:203 Event processing: {rawDate: '2025-08-19T00:00:00.000Z', storedDate: Tue Aug 19 2025 03:00:00 GMT+0300 (East Africa Time), eventDate: Tue Aug 19 2025 00:00:00 GMT+0300 (East Africa Time), formattedEventDate: '2025-08-19', formattedStoredDate: '2025-08-19', …}
+page.tsx:222 Final mapped events: (6) [{…}, {…}, {…}, {…}, {…}, {…}]
+page.tsx:203 Event processing: {rawDate: '2025-08-11T00:00:00.000Z', storedDate: Mon Aug 11 2025 03:00:00 GMT+0300 (East Africa Time), eventDate: Mon Aug 11 2025 00:00:00 GMT+0300 (East Africa Time), formattedEventDate: '2025-08-11', formattedStoredDate: '2025-08-11', …}
+page.tsx:203 Event processing: {rawDate: '2025-08-12T00:00:00.000Z', storedDate: Tue Aug 12 2025 03:00:00 GMT+0300 (East Africa Time), eventDate: Tue Aug 12 2025 00:00:00 GMT+0300 (East Africa Time), formattedEventDate: '2025-08-12', formattedStoredDate: '2025-08-12', …}
+page.tsx:203 Event processing: {rawDate: '2025-08-13T00:00:00.000Z', storedDate: Wed Aug 13 2025 03:00:00 GMT+0300 (East Africa Time), eventDate: Wed Aug 13 2025 00:00:00 GMT+0300 (East Africa Time), formattedEventDate: '2025-08-13', formattedStoredDate: '2025-08-13', …}
+page.tsx:203 Event processing: {rawDate: '2025-08-14T00:00:00.000Z', storedDate: Thu Aug 14 2025 03:00:00 GMT+0300 (East Africa Time), eventDate: Thu Aug 14 2025 00:00:00 GMT+0300 (East Africa Time), formattedEventDate: '2025-08-14', formattedStoredDate: '2025-08-14', …}
+page.tsx:203 Event processing: {rawDate: '2025-08-18T00:00:00.000Z', storedDate: Mon Aug 18 2025 03:00:00 GMT+0300 (East Africa Time), eventDate: Mon Aug 18 2025 00:00:00 GMT+0300 (East Africa Time), formattedEventDate: '2025-08-18', formattedStoredDate: '2025-08-18', …}
+page.tsx:203 Event processing: {rawDate: '2025-08-19T00:00:00.000Z', storedDate: Tue Aug 19 2025 03:00:00 GMT+0300 (East Africa Time), eventDate: Tue Aug 19 2025 00:00:00 GMT+0300 (East Africa Time), formattedEventDate: '2025-08-19', formattedStoredDate: '2025-08-19', …}
+page.tsx:222 Final mapped events: (6) [{…}, {…}, {…}, {…}, {…}, {…}]
+page.tsx:296 Your app (or one of its dependencies) is using an outdated JSX transform. Update to the modern JSX transform for faster performance: https://react.dev/link/new-jsx-transform
+exports.createElement @ react.development.js:994
+(anonymous) @ uncontrollable.js:149
+react-stack-bottom-frame @ react-dom-client.development.js:22973
+renderWithHooks @ react-dom-client.development.js:6666
+updateForwardRef @ react-dom-client.development.js:8678
+beginWork @ react-dom-client.development.js:10894
+runWithFiberInDEV @ react-dom-client.development.js:844
+performUnitOfWork @ react-dom-client.development.js:15257
+workLoopSync @ react-dom-client.development.js:15077
+renderRootSync @ react-dom-client.development.js:15057
+performWorkOnRoot @ react-dom-client.development.js:14525
+performSyncWorkOnRoot @ react-dom-client.development.js:16364
+flushSyncWorkAcrossRoots_impl @ react-dom-client.development.js:16210
+processRootScheduleInMicrotask @ react-dom-client.development.js:16249
+(anonymous) @ react-dom-client.development.js:16383
+<ForwardRef>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:346
+FeaturedNuggetsPage @ page.tsx:296
+react-stack-bottom-frame @ react-dom-client.development.js:22973
+renderWithHooksAgain @ react-dom-client.development.js:6766
+renderWithHooks @ react-dom-client.development.js:6678
+updateFunctionComponent @ react-dom-client.development.js:8930
+beginWork @ react-dom-client.development.js:10555
+runWithFiberInDEV @ react-dom-client.development.js:844
+performUnitOfWork @ react-dom-client.development.js:15257
+workLoopSync @ react-dom-client.development.js:15077
+renderRootSync @ react-dom-client.development.js:15057
+performWorkOnRoot @ react-dom-client.development.js:14525
+performSyncWorkOnRoot @ react-dom-client.development.js:16364
+flushSyncWorkAcrossRoots_impl @ react-dom-client.development.js:16210
+processRootScheduleInMicrotask @ react-dom-client.development.js:16249
+(anonymous) @ react-dom-client.development.js:16383
+page.tsx:345 Date: 2025-08-11, Event Date (processed): 2025-08-11, Raw Event Date: 2025-08-11T00:00:00.000Z, Ideas Count: 3, Matches: true, Event: {id: 'e25afd28-1f11-4ff7-b760-f82072673932', date: '2025-08-11T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:359 dayPropGetter: 2025-08-11 should be highlighted
+page.tsx:359 dayPropGetter: 2025-08-12 should be highlighted
+page.tsx:345 Date: 2025-08-14, Event Date (processed): 2025-08-11, Raw Event Date: 2025-08-11T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: 'e25afd28-1f11-4ff7-b760-f82072673932', date: '2025-08-11T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-14, Event Date (processed): 2025-08-12, Raw Event Date: 2025-08-12T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: '5b0f4435-d514-4d39-b928-92547cd8ee49', date: '2025-08-12T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-14, Event Date (processed): 2025-08-14, Raw Event Date: 2025-08-14T00:00:00.000Z, Ideas Count: 3, Matches: true, Event: {id: '8701f654-c701-4bb3-b836-4b13e291e2fb', date: '2025-08-14T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:359 dayPropGetter: 2025-08-14 should be highlighted
+page.tsx:345 Date: 2025-08-15, Event Date (processed): 2025-08-11, Raw Event Date: 2025-08-11T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: 'e25afd28-1f11-4ff7-b760-f82072673932', date: '2025-08-11T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-15, Event Date (processed): 2025-08-12, Raw Event Date: 2025-08-12T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: '5b0f4435-d514-4d39-b928-92547cd8ee49', date: '2025-08-12T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-15, Event Date (processed): 2025-08-14, Raw Event Date: 2025-08-14T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: '8701f654-c701-4bb3-b836-4b13e291e2fb', date: '2025-08-14T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-15, Event Date (processed): 2025-08-18, Raw Event Date: 2025-08-18T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: 'b52ed9f3-06ce-4638-9fd7-5a1895014f4b', date: '2025-08-18T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-15, Event Date (processed): 2025-08-19, Raw Event Date: 2025-08-19T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: 'cf87d54b-c3b2-4577-bc7d-a8ae32953270', date: '2025-08-19T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-11, Event Date (processed): 2025-08-11, Raw Event Date: 2025-08-11T00:00:00.000Z, Ideas Count: 3, Matches: true, Event: {id: 'e25afd28-1f11-4ff7-b760-f82072673932', date: '2025-08-11T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:359 dayPropGetter: 2025-08-11 should be highlighted
+page.tsx:359 dayPropGetter: 2025-08-12 should be highlighted
+page.tsx:345 Date: 2025-08-14, Event Date (processed): 2025-08-11, Raw Event Date: 2025-08-11T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: 'e25afd28-1f11-4ff7-b760-f82072673932', date: '2025-08-11T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-14, Event Date (processed): 2025-08-12, Raw Event Date: 2025-08-12T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: '5b0f4435-d514-4d39-b928-92547cd8ee49', date: '2025-08-12T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-14, Event Date (processed): 2025-08-14, Raw Event Date: 2025-08-14T00:00:00.000Z, Ideas Count: 3, Matches: true, Event: {id: '8701f654-c701-4bb3-b836-4b13e291e2fb', date: '2025-08-14T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:359 dayPropGetter: 2025-08-14 should be highlighted
+page.tsx:345 Date: 2025-08-15, Event Date (processed): 2025-08-11, Raw Event Date: 2025-08-11T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: 'e25afd28-1f11-4ff7-b760-f82072673932', date: '2025-08-11T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-15, Event Date (processed): 2025-08-12, Raw Event Date: 2025-08-12T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: '5b0f4435-d514-4d39-b928-92547cd8ee49', date: '2025-08-12T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-15, Event Date (processed): 2025-08-14, Raw Event Date: 2025-08-14T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: '8701f654-c701-4bb3-b836-4b13e291e2fb', date: '2025-08-14T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-15, Event Date (processed): 2025-08-18, Raw Event Date: 2025-08-18T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: 'b52ed9f3-06ce-4638-9fd7-5a1895014f4b', date: '2025-08-18T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-15, Event Date (processed): 2025-08-19, Raw Event Date: 2025-08-19T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: 'cf87d54b-c3b2-4577-bc7d-a8ae32953270', date: '2025-08-19T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:359 dayPropGetter: 2025-08-18 should be highlighted
+page.tsx:345 Date: 2025-08-19, Event Date (processed): 2025-08-11, Raw Event Date: 2025-08-11T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: 'e25afd28-1f11-4ff7-b760-f82072673932', date: '2025-08-11T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-19, Event Date (processed): 2025-08-12, Raw Event Date: 2025-08-12T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: '5b0f4435-d514-4d39-b928-92547cd8ee49', date: '2025-08-12T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-19, Event Date (processed): 2025-08-14, Raw Event Date: 2025-08-14T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: '8701f654-c701-4bb3-b836-4b13e291e2fb', date: '2025-08-14T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-19, Event Date (processed): 2025-08-18, Raw Event Date: 2025-08-18T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: 'b52ed9f3-06ce-4638-9fd7-5a1895014f4b', date: '2025-08-18T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-19, Event Date (processed): 2025-08-19, Raw Event Date: 2025-08-19T00:00:00.000Z, Ideas Count: 3, Matches: true, Event: {id: 'cf87d54b-c3b2-4577-bc7d-a8ae32953270', date: '2025-08-19T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:359 dayPropGetter: 2025-08-19 should be highlighted
+page.tsx:345 Date: 2025-08-20, Event Date (processed): 2025-08-11, Raw Event Date: 2025-08-11T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: 'e25afd28-1f11-4ff7-b760-f82072673932', date: '2025-08-11T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-20, Event Date (processed): 2025-08-12, Raw Event Date: 2025-08-12T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: '5b0f4435-d514-4d39-b928-92547cd8ee49', date: '2025-08-12T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-20, Event Date (processed): 2025-08-14, Raw Event Date: 2025-08-14T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: '8701f654-c701-4bb3-b836-4b13e291e2fb', date: '2025-08-14T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-20, Event Date (processed): 2025-08-18, Raw Event Date: 2025-08-18T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: 'b52ed9f3-06ce-4638-9fd7-5a1895014f4b', date: '2025-08-18T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-20, Event Date (processed): 2025-08-19, Raw Event Date: 2025-08-19T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: 'cf87d54b-c3b2-4577-bc7d-a8ae32953270', date: '2025-08-19T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:359 dayPropGetter: 2025-08-18 should be highlighted
+page.tsx:345 Date: 2025-08-19, Event Date (processed): 2025-08-11, Raw Event Date: 2025-08-11T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: 'e25afd28-1f11-4ff7-b760-f82072673932', date: '2025-08-11T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-19, Event Date (processed): 2025-08-12, Raw Event Date: 2025-08-12T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: '5b0f4435-d514-4d39-b928-92547cd8ee49', date: '2025-08-12T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-19, Event Date (processed): 2025-08-14, Raw Event Date: 2025-08-14T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: '8701f654-c701-4bb3-b836-4b13e291e2fb', date: '2025-08-14T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-19, Event Date (processed): 2025-08-18, Raw Event Date: 2025-08-18T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: 'b52ed9f3-06ce-4638-9fd7-5a1895014f4b', date: '2025-08-18T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-19, Event Date (processed): 2025-08-19, Raw Event Date: 2025-08-19T00:00:00.000Z, Ideas Count: 3, Matches: true, Event: {id: 'cf87d54b-c3b2-4577-bc7d-a8ae32953270', date: '2025-08-19T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:359 dayPropGetter: 2025-08-19 should be highlighted
+page.tsx:345 Date: 2025-08-20, Event Date (processed): 2025-08-11, Raw Event Date: 2025-08-11T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: 'e25afd28-1f11-4ff7-b760-f82072673932', date: '2025-08-11T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-20, Event Date (processed): 2025-08-12, Raw Event Date: 2025-08-12T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: '5b0f4435-d514-4d39-b928-92547cd8ee49', date: '2025-08-12T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-20, Event Date (processed): 2025-08-14, Raw Event Date: 2025-08-14T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: '8701f654-c701-4bb3-b836-4b13e291e2fb', date: '2025-08-14T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-20, Event Date (processed): 2025-08-18, Raw Event Date: 2025-08-18T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: 'b52ed9f3-06ce-4638-9fd7-5a1895014f4b', date: '2025-08-18T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:345 Date: 2025-08-20, Event Date (processed): 2025-08-19, Raw Event Date: 2025-08-19T00:00:00.000Z, Ideas Count: 3, Matches: false, Event: {id: 'cf87d54b-c3b2-4577-bc7d-a8ae32953270', date: '2025-08-19T00:00:00.000Z', ideaIds: Array(3), order: 1, isActive: true, …}
+page.tsx:136 DOM Check - Cell: 2025-08-27, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-27, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-27, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-27, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-27, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 27 (constructed as 2025-08-27)
+page.tsx:136 DOM Check - Cell: 2025-08-28, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-28, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-28, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-28, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-28, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 28 (constructed as 2025-08-28)
+page.tsx:136 DOM Check - Cell: 2025-08-29, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-29, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-29, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-29, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-29, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 29 (constructed as 2025-08-29)
+page.tsx:136 DOM Check - Cell: 2025-08-30, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-30, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-30, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-30, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-30, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 30 (constructed as 2025-08-30)
+page.tsx:136 DOM Check - Cell: 2025-08-31, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-31, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-31, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-31, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-31, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 31 (constructed as 2025-08-31)
+page.tsx:136 DOM Check - Cell: 2025-08-01, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-01, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-01, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-01, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-01, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 01 (constructed as 2025-08-01)
+page.tsx:136 DOM Check - Cell: 2025-08-02, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-02, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-02, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-02, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-02, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 02 (constructed as 2025-08-02)
+page.tsx:136 DOM Check - Cell: 2025-08-03, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-03, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-03, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-03, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-03, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 03 (constructed as 2025-08-03)
+page.tsx:136 DOM Check - Cell: 2025-08-04, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-04, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-04, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-04, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-04, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 04 (constructed as 2025-08-04)
+page.tsx:136 DOM Check - Cell: 2025-08-05, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-05, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-05, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-05, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-05, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 05 (constructed as 2025-08-05)
+page.tsx:136 DOM Check - Cell: 2025-08-06, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-06, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-06, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-06, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-06, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 06 (constructed as 2025-08-06)
+page.tsx:136 DOM Check - Cell: 2025-08-07, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-07, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-07, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-07, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-07, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 07 (constructed as 2025-08-07)
+page.tsx:136 DOM Check - Cell: 2025-08-08, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-08, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-08, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-08, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-08, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 08 (constructed as 2025-08-08)
+page.tsx:136 DOM Check - Cell: 2025-08-09, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-09, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-09, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-09, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-09, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 09 (constructed as 2025-08-09)
+page.tsx:136 DOM Check - Cell: 2025-08-10, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-10, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-10, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-10, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-10, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 10 (constructed as 2025-08-10)
+page.tsx:113 📅 Calendar Debug - UI shows: 11, calendarDate: Fri Aug 15 2025 19:12:55 GMT+0300 (East Africa Time), currentMonth: 2025-08, fullDate: 2025-08-11
+page.tsx:136 DOM Check - Cell: 2025-08-11, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> true
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> true
+page.tsx:139   Method 3 (Split): 2025-08-11 -> true
+page.tsx:140   Ideas: 3
+page.tsx:146 🎯 Adding visual indicator to UI date 11 (constructed as 2025-08-11)
+page.tsx:113 📅 Calendar Debug - UI shows: 12, calendarDate: Fri Aug 15 2025 19:12:55 GMT+0300 (East Africa Time), currentMonth: 2025-08, fullDate: 2025-08-12
+page.tsx:136 DOM Check - Cell: 2025-08-12, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-12, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> true
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> true
+page.tsx:139   Method 3 (Split): 2025-08-12 -> true
+page.tsx:140   Ideas: 3
+page.tsx:146 🎯 Adding visual indicator to UI date 12 (constructed as 2025-08-12)
+page.tsx:136 DOM Check - Cell: 2025-08-13, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-13, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-13, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-13, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-13, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 13 (constructed as 2025-08-13)
+page.tsx:113 📅 Calendar Debug - UI shows: 14, calendarDate: Fri Aug 15 2025 19:12:55 GMT+0300 (East Africa Time), currentMonth: 2025-08, fullDate: 2025-08-14
+page.tsx:136 DOM Check - Cell: 2025-08-14, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-14, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-14, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> true
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> true
+page.tsx:139   Method 3 (Split): 2025-08-14 -> true
+page.tsx:140   Ideas: 3
+page.tsx:146 🎯 Adding visual indicator to UI date 14 (constructed as 2025-08-14)
+page.tsx:136 DOM Check - Cell: 2025-08-15, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-15, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-15, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-15, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-15, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 15 (constructed as 2025-08-15)
+page.tsx:136 DOM Check - Cell: 2025-08-16, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-16, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-16, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-16, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-16, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 16 (constructed as 2025-08-16)
+page.tsx:136 DOM Check - Cell: 2025-08-17, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-17, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-17, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-17, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-17, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 17 (constructed as 2025-08-17)
+page.tsx:113 📅 Calendar Debug - UI shows: 18, calendarDate: Fri Aug 15 2025 19:12:55 GMT+0300 (East Africa Time), currentMonth: 2025-08, fullDate: 2025-08-18
+page.tsx:136 DOM Check - Cell: 2025-08-18, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-18, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-18, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-18, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> true
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> true
+page.tsx:139   Method 3 (Split): 2025-08-18 -> true
+page.tsx:140   Ideas: 3
+page.tsx:146 🎯 Adding visual indicator to UI date 18 (constructed as 2025-08-18)
+page.tsx:113 📅 Calendar Debug - UI shows: 19, calendarDate: Fri Aug 15 2025 19:12:55 GMT+0300 (East Africa Time), currentMonth: 2025-08, fullDate: 2025-08-19
+page.tsx:136 DOM Check - Cell: 2025-08-19, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-19, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-19, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-19, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-19, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> true
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> true
+page.tsx:139   Method 3 (Split): 2025-08-19 -> true
+page.tsx:140   Ideas: 3
+page.tsx:146 🎯 Adding visual indicator to UI date 19 (constructed as 2025-08-19)
+page.tsx:136 DOM Check - Cell: 2025-08-20, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-20, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-20, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-20, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-20, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 20 (constructed as 2025-08-20)
+page.tsx:136 DOM Check - Cell: 2025-08-21, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-21, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-21, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-21, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-21, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 21 (constructed as 2025-08-21)
+page.tsx:136 DOM Check - Cell: 2025-08-22, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-22, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-22, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-22, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-22, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 22 (constructed as 2025-08-22)
+page.tsx:136 DOM Check - Cell: 2025-08-23, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-23, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-23, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-23, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-23, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 23 (constructed as 2025-08-23)
+page.tsx:136 DOM Check - Cell: 2025-08-24, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-24, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-24, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-24, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-24, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 24 (constructed as 2025-08-24)
+page.tsx:136 DOM Check - Cell: 2025-08-25, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-25, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-25, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-25, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-25, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 25 (constructed as 2025-08-25)
+page.tsx:136 DOM Check - Cell: 2025-08-26, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-26, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-26, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-26, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-26, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 26 (constructed as 2025-08-26)
+page.tsx:136 DOM Check - Cell: 2025-08-27, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-27, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-27, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-27, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-27, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 27 (constructed as 2025-08-27)
+page.tsx:136 DOM Check - Cell: 2025-08-28, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-28, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-28, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-28, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-28, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 28 (constructed as 2025-08-28)
+page.tsx:136 DOM Check - Cell: 2025-08-29, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-29, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-29, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-29, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-29, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 29 (constructed as 2025-08-29)
+page.tsx:136 DOM Check - Cell: 2025-08-30, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-30, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-30, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-30, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-30, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 30 (constructed as 2025-08-30)
+page.tsx:136 DOM Check - Cell: 2025-08-31, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-31, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-31, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-31, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-31, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 31 (constructed as 2025-08-31)
+page.tsx:136 DOM Check - Cell: 2025-08-01, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-01, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-01, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-01, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-01, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 01 (constructed as 2025-08-01)
+page.tsx:136 DOM Check - Cell: 2025-08-02, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-02, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-02, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-02, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-02, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 02 (constructed as 2025-08-02)
+page.tsx:136 DOM Check - Cell: 2025-08-03, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-03, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-03, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-03, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-03, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 03 (constructed as 2025-08-03)
+page.tsx:136 DOM Check - Cell: 2025-08-04, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-04, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-04, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-04, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-04, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 04 (constructed as 2025-08-04)
+page.tsx:136 DOM Check - Cell: 2025-08-05, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-05, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-05, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-05, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-05, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 05 (constructed as 2025-08-05)
+page.tsx:136 DOM Check - Cell: 2025-08-06, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-06, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-06, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-06, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-06, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 06 (constructed as 2025-08-06)
+page.tsx:136 DOM Check - Cell: 2025-08-27, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-27, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-27, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-27, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-27, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 27 (constructed as 2025-08-27)
+page.tsx:136 DOM Check - Cell: 2025-08-28, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-28, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-28, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-28, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-28, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 28 (constructed as 2025-08-28)
+page.tsx:136 DOM Check - Cell: 2025-08-29, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-29, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-29, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-29, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-29, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 29 (constructed as 2025-08-29)
+page.tsx:136 DOM Check - Cell: 2025-08-30, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-30, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-30, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-30, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-30, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 30 (constructed as 2025-08-30)
+page.tsx:136 DOM Check - Cell: 2025-08-31, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-31, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-31, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-31, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-31, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 31 (constructed as 2025-08-31)
+page.tsx:136 DOM Check - Cell: 2025-08-01, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-01, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-01, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-01, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-01, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 01 (constructed as 2025-08-01)
+page.tsx:136 DOM Check - Cell: 2025-08-02, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-02, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-02, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-02, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-02, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 02 (constructed as 2025-08-02)
+page.tsx:136 DOM Check - Cell: 2025-08-03, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-03, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-03, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-03, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-03, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 03 (constructed as 2025-08-03)
+page.tsx:136 DOM Check - Cell: 2025-08-04, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-04, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-04, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-04, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-04, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 04 (constructed as 2025-08-04)
+page.tsx:136 DOM Check - Cell: 2025-08-05, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-05, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-05, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-05, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-05, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 05 (constructed as 2025-08-05)
+page.tsx:136 DOM Check - Cell: 2025-08-06, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-06, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-06, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-06, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-06, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 06 (constructed as 2025-08-06)
+page.tsx:136 DOM Check - Cell: 2025-08-07, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-07, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-07, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-07, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-07, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 07 (constructed as 2025-08-07)
+page.tsx:136 DOM Check - Cell: 2025-08-08, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-08, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-08, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-08, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-08, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 08 (constructed as 2025-08-08)
+page.tsx:136 DOM Check - Cell: 2025-08-09, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-09, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-09, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-09, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-09, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 09 (constructed as 2025-08-09)
+page.tsx:136 DOM Check - Cell: 2025-08-10, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-10, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-10, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-10, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-10, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 10 (constructed as 2025-08-10)
+page.tsx:113 📅 Calendar Debug - UI shows: 11, calendarDate: Fri Aug 15 2025 19:12:55 GMT+0300 (East Africa Time), currentMonth: 2025-08, fullDate: 2025-08-11
+page.tsx:136 DOM Check - Cell: 2025-08-11, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> true
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> true
+page.tsx:139   Method 3 (Split): 2025-08-11 -> true
+page.tsx:140   Ideas: 3
+page.tsx:146 🎯 Adding visual indicator to UI date 11 (constructed as 2025-08-11)
+page.tsx:113 📅 Calendar Debug - UI shows: 12, calendarDate: Fri Aug 15 2025 19:12:55 GMT+0300 (East Africa Time), currentMonth: 2025-08, fullDate: 2025-08-12
+page.tsx:136 DOM Check - Cell: 2025-08-12, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-12, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> true
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> true
+page.tsx:139   Method 3 (Split): 2025-08-12 -> true
+page.tsx:140   Ideas: 3
+page.tsx:146 🎯 Adding visual indicator to UI date 12 (constructed as 2025-08-12)
+page.tsx:136 DOM Check - Cell: 2025-08-13, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-13, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-13, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-13, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-13, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 13 (constructed as 2025-08-13)
+page.tsx:113 📅 Calendar Debug - UI shows: 14, calendarDate: Fri Aug 15 2025 19:12:55 GMT+0300 (East Africa Time), currentMonth: 2025-08, fullDate: 2025-08-14
+page.tsx:136 DOM Check - Cell: 2025-08-14, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-14, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-14, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> true
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> true
+page.tsx:139   Method 3 (Split): 2025-08-14 -> true
+page.tsx:140   Ideas: 3
+page.tsx:146 🎯 Adding visual indicator to UI date 14 (constructed as 2025-08-14)
+page.tsx:136 DOM Check - Cell: 2025-08-15, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-15, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-15, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-15, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-15, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 15 (constructed as 2025-08-15)
+page.tsx:136 DOM Check - Cell: 2025-08-16, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-16, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-16, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-16, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-16, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 16 (constructed as 2025-08-16)
+page.tsx:136 DOM Check - Cell: 2025-08-17, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-17, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-17, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-17, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-17, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 17 (constructed as 2025-08-17)
+page.tsx:113 📅 Calendar Debug - UI shows: 18, calendarDate: Fri Aug 15 2025 19:12:55 GMT+0300 (East Africa Time), currentMonth: 2025-08, fullDate: 2025-08-18
+page.tsx:136 DOM Check - Cell: 2025-08-18, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-18, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-18, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-18, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> true
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> true
+page.tsx:139   Method 3 (Split): 2025-08-18 -> true
+page.tsx:140   Ideas: 3
+page.tsx:146 🎯 Adding visual indicator to UI date 18 (constructed as 2025-08-18)
+page.tsx:113 📅 Calendar Debug - UI shows: 19, calendarDate: Fri Aug 15 2025 19:12:55 GMT+0300 (East Africa Time), currentMonth: 2025-08, fullDate: 2025-08-19
+page.tsx:136 DOM Check - Cell: 2025-08-19, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-19, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-19, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-19, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-19, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> true
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> true
+page.tsx:139   Method 3 (Split): 2025-08-19 -> true
+page.tsx:140   Ideas: 3
+page.tsx:146 🎯 Adding visual indicator to UI date 19 (constructed as 2025-08-19)
+page.tsx:136 DOM Check - Cell: 2025-08-20, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-20, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-20, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-20, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-20, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 20 (constructed as 2025-08-20)
+page.tsx:136 DOM Check - Cell: 2025-08-21, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-21, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-21, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-21, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-21, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 21 (constructed as 2025-08-21)
+page.tsx:136 DOM Check - Cell: 2025-08-22, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-22, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-22, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-22, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-22, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 22 (constructed as 2025-08-22)
+page.tsx:136 DOM Check - Cell: 2025-08-23, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-23, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-23, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-23, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-23, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 23 (constructed as 2025-08-23)
+page.tsx:136 DOM Check - Cell: 2025-08-24, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-24, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-24, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-24, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-24, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 24 (constructed as 2025-08-24)
+page.tsx:136 DOM Check - Cell: 2025-08-25, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-25, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-25, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-25, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-25, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 25 (constructed as 2025-08-25)
+page.tsx:136 DOM Check - Cell: 2025-08-26, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-26, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-26, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-26, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-26, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 26 (constructed as 2025-08-26)
+page.tsx:136 DOM Check - Cell: 2025-08-27, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-27, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-27, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-27, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-27, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 27 (constructed as 2025-08-27)
+page.tsx:136 DOM Check - Cell: 2025-08-28, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-28, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-28, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-28, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-28, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 28 (constructed as 2025-08-28)
+page.tsx:136 DOM Check - Cell: 2025-08-29, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-29, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-29, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-29, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-29, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 29 (constructed as 2025-08-29)
+page.tsx:136 DOM Check - Cell: 2025-08-30, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-30, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-30, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-30, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-30, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 30 (constructed as 2025-08-30)
+page.tsx:136 DOM Check - Cell: 2025-08-31, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-31, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-31, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-31, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-31, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 31 (constructed as 2025-08-31)
+page.tsx:136 DOM Check - Cell: 2025-08-01, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-01, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-01, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-01, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-01, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 01 (constructed as 2025-08-01)
+page.tsx:136 DOM Check - Cell: 2025-08-02, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-02, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-02, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-02, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-02, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 02 (constructed as 2025-08-02)
+page.tsx:136 DOM Check - Cell: 2025-08-03, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-03, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-03, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-03, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-03, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 03 (constructed as 2025-08-03)
+page.tsx:136 DOM Check - Cell: 2025-08-04, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-04, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-04, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-04, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-04, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 04 (constructed as 2025-08-04)
+page.tsx:136 DOM Check - Cell: 2025-08-05, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-05, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-05, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-05, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-05, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 05 (constructed as 2025-08-05)
+page.tsx:136 DOM Check - Cell: 2025-08-06, Event: 2025-08-11T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-11 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-11 -> false
+page.tsx:139   Method 3 (Split): 2025-08-11 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-06, Event: 2025-08-12T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-12 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-12 -> false
+page.tsx:139   Method 3 (Split): 2025-08-12 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-06, Event: 2025-08-14T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-14 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-14 -> false
+page.tsx:139   Method 3 (Split): 2025-08-14 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-06, Event: 2025-08-18T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-18 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-18 -> false
+page.tsx:139   Method 3 (Split): 2025-08-18 -> false
+page.tsx:140   Ideas: 3
+page.tsx:136 DOM Check - Cell: 2025-08-06, Event: 2025-08-19T00:00:00.000Z
+page.tsx:137   Method 1 (UTC): 2025-08-19 -> false
+page.tsx:138   Method 2 (Moment): 2025-08-19 -> false
+page.tsx:139   Method 3 (Split): 2025-08-19 -> false
+page.tsx:140   Ideas: 3
+page.tsx:170 ❌ No events for UI date 06 (constructed as 2025-08-06)

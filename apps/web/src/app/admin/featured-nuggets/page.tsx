@@ -8,57 +8,13 @@ import { trpc } from "@/utils/trpc";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import { CalendarDays, Search, X } from "lucide-react";
-import moment from "moment";
-import { useMemo, useState } from "react";
-import { Calendar, momentLocalizer, type ToolbarProps } from "react-big-calendar";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import "./calendar-styles.css";
+import { useState, useMemo } from "react";
+import { CustomCalendar } from "./components/custom-calendar";
 import { AvailableIdeasSkeleton, CalendarSkeleton, EmptySelectedIdeas, SelectedIdeasSkeleton } from "./components/skeletons";
-
-const localizer = momentLocalizer(moment);
-
-function CustomToolbar({ label, onNavigate }: ToolbarProps) {
-  return (
-    <div className="flex justify-between items-center mb-6 p-4 border-b border-border/30">
-      <div className="flex gap-1">
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={() => onNavigate("TODAY")}
-          className="border-border/50 hover:border-primary/50 transition-colors"
-          aria-label="Navigate to today"
-        >
-          Today
-        </Button>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={() => onNavigate("PREV")}
-          className="border-border/50 hover:border-primary/50 transition-colors"
-          aria-label="Navigate to previous month"
-        >
-          ← Prev
-        </Button>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={() => onNavigate("NEXT")}
-          className="border-border/50 hover:border-primary/50 transition-colors"
-          aria-label="Navigate to next month"
-        >
-          Next →
-        </Button>
-      </div>
-      <h2 className="font-semibold text-lg text-foreground" aria-live="polite">
-        {label}
-      </h2>
-    </div>
-  );
-}
 
 export default function FeaturedNuggetsPage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [calendarDate, setCalendarDate] = useState(new Date());
+
   const [selectedIdeas, setSelectedIdeas] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -77,8 +33,8 @@ export default function FeaturedNuggetsPage() {
 
   const { data: calendarEvents, isLoading: isLoadingCalendar } = useQuery(
     trpc.admin.getFeaturedScheduleRange.queryOptions({
-      startDate: moment(calendarDate).startOf("month").toISOString(),
-      endDate: moment(calendarDate).endOf("month").toISOString(),
+      startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString(),
+      endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).toISOString(),
     })
   );
 
@@ -89,24 +45,6 @@ export default function FeaturedNuggetsPage() {
         setSelectedIdeas([]);
       },
     })
-  );
-
-  const events = useMemo(
-    () =>
-      calendarEvents?.map((event: any) => {
-        // Create a date that matches the stored date without timezone conversion
-        const storedDate = new Date(event.date);
-        const eventDate = new Date(storedDate.getUTCFullYear(), storedDate.getUTCMonth(), storedDate.getUTCDate());
-        return {
-          id: event.id,
-          title: `💡 ${event.ideaIds.length} idea${event.ideaIds.length > 1 ? "s" : ""}`,
-          start: eventDate,
-          end: eventDate,
-          allDay: true,
-          resource: event.ideaIds.length, // Store count for styling
-        };
-      }) || [],
-    [calendarEvents]
   );
 
   useMemo(() => {
@@ -176,66 +114,27 @@ export default function FeaturedNuggetsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
-            <div className="h-[500px] rounded-lg border-2 border-border/30 bg-background">
-              <Calendar
-                key={selectedDate.toISOString()}
-                localizer={localizer}
-                events={events}
-                date={calendarDate}
-                onNavigate={(date) => setCalendarDate(date)}
-                startAccessor="start"
-                endAccessor="end"
-                selectable
-                views={["month"]}
-                defaultView="month"
-                onSelectSlot={(slotInfo) => setSelectedDate(slotInfo.start)}
-                onSelectEvent={(event) =>
-                  setSelectedDate(new Date(event.start))
-                }
-                components={{
-                  toolbar: CustomToolbar as any,
-                }}
-                eventPropGetter={(event) => ({
-                  className:
-                    "bg-primary/90 text-primary-foreground rounded-md px-2 py-1 text-xs font-semibold border border-primary shadow-sm hover:bg-primary transition-colors",
-                  style: {
-                    fontSize: '0.75rem',
-                    fontWeight: '600',
-                    minHeight: '20px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  },
-                })}
-                dayPropGetter={(date) => {
-                  const isSelected = moment(date).format('YYYY-MM-DD') === moment(selectedDate).format('YYYY-MM-DD');
-                  const dateStr = moment(date).format('YYYY-MM-DD');
-                  const hasScheduledIdeas = calendarEvents?.some((event: any) => 
-                    moment(event.date).format('YYYY-MM-DD') === dateStr
-                  );
-                  
-                  return {
-                    className: clsx(
-                      "cursor-pointer hover:bg-muted/50 transition-all duration-200 border border-transparent relative",
-                      isSelected && "!bg-primary/10 border-primary/60 ring-1 ring-primary/20",
-                      hasScheduledIdeas && !isSelected && "bg-primary/70 border-primary/60 hover:bg-primary/20"
-                    ),
-                  };
-                }}
-              />
-            </div>
+            <CustomCalendar
+              events={calendarEvents || []}
+              onDateSelect={setSelectedDate}
+              selectedDate={selectedDate}
+            />
             
             {/* Calendar Legend */}
             <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-primary/10 border border-primary/60 rounded"></div>
+                <div className="w-4 h-4 bg-primary/10 border border-primary/60 rounded" />
                 <span>Selected Date</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 bg-primary/10 border border-primary/60 rounded relative">
-                  <div className="absolute top-0 right-0 w-2 h-2 bg-primary/60 rounded-full transform translate-x-1 -translate-y-1"></div>
+                  <div className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full transform translate-x-1 -translate-y-1" />
                 </div>
                 <span>Has Scheduled Ideas</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-primary/90 border border-primary rounded text-white flex items-center justify-center text-xs">💡</div>
+                <span>Event Badge</span>
               </div>
             </div>
           </CardContent>
