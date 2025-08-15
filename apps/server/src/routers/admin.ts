@@ -230,4 +230,98 @@ export const adminRouter = router({
         throw new Error('Feature visibility migration not yet run. Please run database migration first.');
       }
     }),
+
+  // Prompt Management
+  getPrompts: adminProcedure.query(async () => {
+    return await prisma.adminPrompts.findMany({
+      where: { isActive: true },
+      include: {
+        updater: {
+          select: { name: true, email: true }
+        }
+      },
+      orderBy: [
+        { agentName: 'asc' },
+        { promptKey: 'asc' }
+      ]
+    });
+  }),
+
+  getPromptsByAgent: adminProcedure
+    .input(z.object({
+      agentName: z.string()
+    }))
+    .query(async ({ input }) => {
+      return await prisma.adminPrompts.findMany({
+        where: { 
+          agentName: input.agentName,
+          isActive: true 
+        },
+        include: {
+          updater: {
+            select: { name: true, email: true }
+          }
+        },
+        orderBy: { promptKey: 'asc' }
+      });
+    }),
+
+  updatePrompt: adminProcedure
+    .input(z.object({
+      id: z.string().optional(),
+      agentName: z.string().optional(),
+      promptKey: z.string().optional().default('systemPrompt'),
+      promptContent: z.string().min(10, "Prompt must be at least 10 characters")
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (input.id) {
+        // Update existing prompt
+        return await prisma.adminPrompts.update({
+          where: { id: input.id },
+          data: { 
+            promptContent: input.promptContent,
+            updatedBy: ctx.session.user.id,
+            updatedAt: new Date()
+          }
+        });
+      } else if (input.agentName) {
+        // Create new prompt
+        return await prisma.adminPrompts.create({
+          data: {
+            agentName: input.agentName,
+            promptKey: input.promptKey || 'systemPrompt',
+            promptContent: input.promptContent,
+            updatedBy: ctx.session.user.id
+          }
+        });
+      } else {
+        throw new Error('Either id or agentName must be provided');
+      }
+    }),
+
+  createPrompt: adminProcedure
+    .input(z.object({
+      agentName: z.string(),
+      promptKey: z.string(),
+      promptContent: z.string().min(10)
+    }))
+    .mutation(async ({ input, ctx }) => {
+      return await prisma.adminPrompts.create({
+        data: {
+          ...input,
+          updatedBy: ctx.session.user.id
+        }
+      });
+    }),
+
+  deletePrompt: adminProcedure
+    .input(z.object({
+      id: z.string()
+    }))
+    .mutation(async ({ input }) => {
+      return await prisma.adminPrompts.update({
+        where: { id: input.id },
+        data: { isActive: false }
+      });
+    }),
 });

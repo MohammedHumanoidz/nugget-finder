@@ -5,6 +5,7 @@ import type {
 } from "../../../types/apps/idea-generation-agent";
 import { openrouter } from "../../../utils/configs/ai.config";
 import { EnhancedJsonParser } from "../../../utils/enhanced-json-parser";
+import { getPrompt } from "../../../utils/prompt-helper";
 
 export class MonetizationAgent {
 	/**
@@ -15,7 +16,11 @@ export class MonetizationAgent {
 		context: AgentContext,
 	): Promise<MonetizationData | null> {
 		try {
-			const systemPrompt = `Let's design a simple pricing plan that everyday people worldwide actually love paying for. Given a real personal problem and a focused consumer software solution, create a pricing model that feels fair and makes sense to individual users globally. This should realistically grow to meaningful revenue for a consumer-focused startup.
+			// Get dynamic prompt from database with fallback
+			const systemPrompt = await getPrompt(
+				'MonetizationAgent',
+				'systemPrompt',
+				`Let's design a simple pricing plan that everyday people worldwide actually love paying for. Given a real personal problem and a focused consumer software solution, create a pricing model that feels fair and makes sense to individual users globally. This should realistically grow to meaningful revenue for a consumer-focused startup.
 
 		**CRITICAL LANGUAGE & SCOPE REQUIREMENTS:**
 		- Focus on GLOBAL individual customers and universal pricing that works worldwide
@@ -53,7 +58,8 @@ export class MonetizationAgent {
 		  ]
 		}
 		
-		Focus on absolute clarity and brutal achievability. Every number should tell an honest story about *our specific individual users'* willingness to pay for personal value. No LinkedIn post tones.`;
+		Focus on absolute clarity and brutal achievability. Every number should tell an honest story about *our specific individual users'* willingness to pay for personal value. No LinkedIn post tones.`
+			);
 
 			const problemContext = context.problemGaps?.problems.join(", ") || "";
 			const positioningContext =

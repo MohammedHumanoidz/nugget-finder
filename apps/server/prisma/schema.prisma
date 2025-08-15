@@ -41,6 +41,7 @@ model User {
   
   // Add new relations for admin functionality
   featuredSchedules      FeaturedNuggetsSchedule[]
+  promptUpdates          AdminPrompts[]
   
   @@unique([email])
   @@map("user")
@@ -561,4 +562,19 @@ model FeaturedNuggetsSchedule {
   updatedAt   DateTime @updatedAt
   createdBy   String
   creator     User     @relation(fields: [createdBy], references: [id])
+}
+
+// Admin Prompts Model for Dynamic Prompt Management
+model AdminPrompts {
+  id            String   @id @default(uuid())
+  agentName     String
+  promptKey     String
+  promptContent String   @db.Text
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  updatedBy     String
+  updater       User     @relation(fields: [updatedBy], references: [id])
+  
+  @@unique([agentName, promptKey])
 } 

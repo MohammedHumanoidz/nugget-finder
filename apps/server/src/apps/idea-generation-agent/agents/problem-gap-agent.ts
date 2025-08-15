@@ -6,6 +6,7 @@ import type {
 import { openrouter, perplexity } from "../../../utils/configs/ai.config";
 import { parsePerplexityResponse } from "../../../utils/json-parser";
 import { debugLogger } from "../../../utils/logger";
+import { getPrompt } from "../../../utils/prompt-helper";
 
 export class ProblemGapAgent {
 	/**
@@ -16,7 +17,11 @@ export class ProblemGapAgent {
 		try {
 			console.log("🎯 Step 3: Enhanced Problem Gap Analysis");
 
-			const systemPrompt = `You are an elite problem identifier with deep expertise in discovering everyday frustrations that people worldwide face and can be solved with simple software.
+			// Get dynamic prompt from database with fallback
+			const systemPromptBase = await getPrompt(
+				'ProblemGapAgent',
+				'systemPrompt', 
+				`You are an elite problem identifier with deep expertise in discovering everyday frustrations that people worldwide face and can be solved with simple software.
 
 **CRITICAL LANGUAGE & SCOPE REQUIREMENTS:**
 - Focus on UNIVERSAL problems that people face everywhere
@@ -76,7 +81,11 @@ Return enhanced JSON structure:
   ]
 }
 
-Focus on problems so painful and immediate that the target persona would pay for a solution within their first trial week.`;
+Focus on problems so painful and immediate that the target persona would pay for a solution within their first trial week.`
+			);
+
+			// Build the complete system prompt
+			const systemPrompt = systemPromptBase;
 
 			const userPrompt = `Based on this validated trend: "${context.trends?.title} - ${context.trends?.description}"
 

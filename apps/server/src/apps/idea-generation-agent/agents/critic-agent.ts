@@ -4,6 +4,7 @@ import type {
 	SynthesizedIdea,
 } from "../../../types/apps/idea-generation-agent";
 import { openrouter } from "../../../utils/configs/ai.config";
+import { getPrompt } from "../../../utils/prompt-helper";
 
 export class CriticAgent {
 	/**
@@ -17,7 +18,11 @@ export class CriticAgent {
 		try {
 			console.log("🔍 Step 6: Activating Critic Agent");
 
-			const criticPrompt = `You are a world-class startup critic and strategic advisor with deep expertise in evaluating early-stage business opportunities. Your role is to conduct a silent, comprehensive critique of generated startup ideas and create targeted refinement recommendations.
+			// Get dynamic prompt from database with fallback
+			const criticPrompt = await getPrompt(
+				'CriticAgent',
+				'systemPrompt',
+				`You are a world-class startup critic and strategic advisor with deep expertise in evaluating early-stage business opportunities. Your role is to conduct a silent, comprehensive critique of generated startup ideas and create targeted refinement recommendations.
 
 **Critique Framework:**
 
@@ -64,11 +69,24 @@ Narrative Hook: ${idea.narrativeHook}
 
 Conduct a thorough critique focusing on the most critical weaknesses that could prevent startup success. Generate specific, actionable refinement recommendations that will strengthen the ideas while maintaining their core viability.
 
+Return a focused refinement prompt that addresses the most important improvements needed:`
+			);
+
+			// Build the complete critic prompt with context
+			const fullCriticPrompt = `${criticPrompt}
+
+**Context Information:**
+- Research Theme: ${context.trends?.title}
+- Market Focus: Global market opportunities
+- Competitive Landscape: ${context.competitive?.competition.marketConcentrationLevel} concentration
+
+Conduct a thorough critique focusing on the most critical weaknesses that could prevent startup success. Generate specific, actionable refinement recommendations that will strengthen the ideas while maintaining their core viability.
+
 Return a focused refinement prompt that addresses the most important improvements needed:`;
 
 			const { text: refinementPrompt } = await generateText({
 				model: openrouter("openai/gpt-4.1-mini"),
-				prompt: criticPrompt,
+				prompt: fullCriticPrompt,
 				temperature: 0.2,
 				maxTokens: 800,
 			});

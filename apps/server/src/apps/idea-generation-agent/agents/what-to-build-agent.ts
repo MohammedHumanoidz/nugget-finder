@@ -5,6 +5,7 @@ import type {
 } from "../../../types/apps/idea-generation-agent";
 import { openrouter } from "../../../utils/configs/ai.config";
 import { EnhancedJsonParser } from "../../../utils/enhanced-json-parser";
+import { getPrompt } from "../../../utils/prompt-helper";
 
 export class WhatToBuildAgent {
 	/**
@@ -13,7 +14,11 @@ export class WhatToBuildAgent {
 	 */
 	static async execute(context: AgentContext): Promise<WhatToBuildData | null> {
 		try {
-			const systemPrompt = `You are a product strategist focused on helping people build a simple consumer app quickly and affordably. Your job is to provide a clear, easy-to-understand guide of "what to build" for a consumer-focused idea.
+			// Get dynamic prompt from database with fallback
+			const systemPrompt = await getPrompt(
+				'WhatToBuildAgent',
+				'systemPrompt',
+				`You are a product strategist focused on helping people build a simple consumer app quickly and affordably. Your job is to provide a clear, easy-to-understand guide of "what to build" for a consumer-focused idea.
 
 **CRITICAL LANGUAGE & SCOPE REQUIREMENTS:**
 - Use simple, everyday language that anyone can understand
@@ -50,7 +55,8 @@ Return this exact JSON structure:
   "freemiumComponents": "string? (Optional: if offering free features, describe what would be free to attract individual users. Example: 'Offer a free version that allows basic family calendar sharing and simple task lists.')"
 }
 
-Focus on providing a practical, confidence-boosting blueprint that clearly shows a founder what they can *start building tomorrow* with existing consumer app tools and skills. No complex or speculative tech.`;
+Focus on providing a practical, confidence-boosting blueprint that clearly shows a founder what they can *start building tomorrow* with existing consumer app tools and skills. No complex or speculative tech.`
+			);
 
 			const ideaContext = context.monetization
 				? `Consumer App Idea: ${context.competitive?.positioning?.valueProposition || "Not specified"}

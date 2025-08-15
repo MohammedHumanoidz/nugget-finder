@@ -6,6 +6,7 @@ import type {
 import { openrouter, perplexity } from "../../../utils/configs/ai.config";
 import { parsePerplexityResponse } from "../../../utils/json-parser";
 import { debugLogger } from "../../../utils/logger";
+import { getPrompt } from "../../../utils/prompt-helper";
 
 export class CompetitiveIntelligenceAgent {
 	/**
@@ -16,7 +17,11 @@ export class CompetitiveIntelligenceAgent {
 		try {
 			console.log("🏆 Step 4: Enhanced Competitive Intelligence");
 
-			const systemPrompt = `You are an elite competitive analyst focused on understanding what tools already exist globally and how a new simple software solution could do better for everyday consumers.
+			// Get dynamic prompt from database with fallback
+			const systemPrompt = await getPrompt(
+				'CompetitiveIntelligenceAgent',
+				'systemPrompt',
+				`You are an elite competitive analyst focused on understanding what tools already exist globally and how a new simple software solution could do better for everyday consumers.
 
 **CRITICAL LANGUAGE & SCOPE REQUIREMENTS:**
 - Focus on GLOBAL competitors that serve people worldwide
@@ -80,7 +85,8 @@ Return enhanced competitive analysis:
   }
 }
 
-Focus on competitive intelligence that reveals clear paths to consumer product success through strategic differentiation that appeals to everyday people.`;
+Focus on competitive intelligence that reveals clear paths to consumer product success through strategic differentiation that appeals to everyday people.`
+			);
 
 			const problemContext = context.problemGaps?.problems.join(", ") || "";
 			const userPrompt = `Analyze the competitive landscape within the specific consumer niche defined by these problems: ${problemContext}

@@ -5,6 +5,7 @@ import type {
 } from "../../../types/apps/idea-generation-agent";
 import { openrouter } from "../../../utils/configs/ai.config";
 import { EnhancedJsonParser } from "../../../utils/enhanced-json-parser";
+import { getPrompt } from "../../../utils/prompt-helper";
 
 export class IdeaSynthesisAgent {
 	/**
@@ -20,7 +21,11 @@ export class IdeaSynthesisAgent {
 				"🧠 Step 7: Enhanced Idea Synthesis with Trend Architect Logic",
 			);
 
-			const trendArchitectPrompt = `You are the Trend Architect - a world-class startup idea synthesizer who transforms market research into compelling, immediately actionable business opportunities. Your expertise lies in combining trend analysis, problem identification, and competitive intelligence into cohesive startup concepts that feel inevitable and urgent.
+			// Get dynamic prompt from database with fallback
+			const baseTrendArchitectPrompt = await getPrompt(
+				'IdeaSynthesisAgent',
+				'trendArchitectPrompt',
+				`You are the Trend Architect - a world-class startup idea synthesizer who transforms market research into compelling, immediately actionable business opportunities. Your expertise lies in combining trend analysis, problem identification, and competitive intelligence into cohesive startup concepts that feel inevitable and urgent.
 
 **CRITICAL LANGUAGE REQUIREMENTS:**
 - Global applicability: NO geographic locations or country names (US, India, Southeast Asia, etc.)
@@ -152,7 +157,37 @@ Return JSON structure:
   "frameworkFit": "string (Strategic framework explaining why this consumer approach leads to success)"
 }
 
-Create a consumer idea so compelling that it becomes impossible to ignore - the kind of personal tool that makes everything else feel like a hassle.`;
+Create a consumer idea so compelling that it becomes impossible to ignore - the kind of personal tool that makes everything else feel like a hassle.`
+			);
+
+			// Build the complete prompt with context
+			const trendArchitectPrompt = `${baseTrendArchitectPrompt}
+
+${
+				refinementPrompt
+					? `
+**CRITICAL REFINEMENT REQUIREMENTS:**
+${refinementPrompt}
+
+Apply these refinement recommendations to strengthen the final synthesis.
+`
+					: ""
+			}
+
+**Research Inputs to Synthesize:**
+TREND: ${context.trends?.title} - ${context.trends?.description}
+PROBLEMS: ${context.problemGaps?.problems.join(", ")}
+COMPETITIVE POSITIONING: ${context.competitive?.positioning.valueProposition}
+MONETIZATION MODEL: ${context.monetization?.primaryModel}
+
+**Diversity Requirements (ensure novelty):**
+${
+				context.previousIdeas && context.previousIdeas.length > 0
+					? context.previousIdeas
+							.map((idea) => `- Avoid themes similar to: "${idea.title}"`)
+							.join("\n")
+					: "- No restrictions - create breakthrough consumer opportunity"
+			}`;
 
 			const { text } = await generateText({
 				model: openrouter("openai/gpt-4.1-mini"),

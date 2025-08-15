@@ -1,28 +1,33 @@
 /** biome-ignore-all lint/complexity/noStaticOnlyClass: <explanation> */
 import { generateText } from "ai";
 import type {
-	AgentContext,
-	TrendData,
+  AgentContext,
+  TrendData,
 } from "../../../types/apps/idea-generation-agent";
 import { openrouter, perplexity } from "../../../utils/configs/ai.config";
 import { EnhancedJsonParser } from "../../../utils/enhanced-json-parser";
 import { parsePerplexityResponse } from "../../../utils/json-parser";
 import { debugLogger } from "../../../utils/logger";
+import { getPrompt } from "../../../utils/prompt-helper";
 import type { ResearchDirectorData } from "./master-research-director";
 
 export class TrendResearchAgent {
-	/**
-	 * Enhanced TrendResearchAgent - Now guided by Master Research Director
-	 * Uses Perplexity Deep Research with Director's research theme
-	 */
-	static async execute(
-		context: AgentContext,
-		researchDirection?: ResearchDirectorData,
-	): Promise<TrendData | null> {
-		try {
-			console.log("📈 Step 2: Enhanced Trend Research");
+  /**
+   * Enhanced TrendResearchAgent - Now guided by Master Research Director
+   * Uses Perplexity Deep Research with Director's research theme
+   */
+  static async execute(
+    context: AgentContext,
+    researchDirection?: ResearchDirectorData
+  ): Promise<TrendData | null> {
+    try {
+      console.log("📈 Step 2: Enhanced Trend Research");
 
-			const systemPrompt = `You are an elite trend research specialist with deep expertise in identifying emerging patterns that create immediate software startup opportunities. Your research is guided by today's strategic research direction.
+      // Get dynamic prompt from database with fallback
+      const baseSystemPrompt = await getPrompt(
+        "TrendResearchAgent",
+        "systemPrompt",
+        `You are an elite trend research specialist with deep expertise in identifying emerging patterns that create immediate software startup opportunities. Your research is guided by today's strategic research direction.
 
 **CRITICAL LANGUAGE & SCOPE REQUIREMENTS:**
 - Focus on GLOBAL trends that affect people worldwide
@@ -34,14 +39,14 @@ export class TrendResearchAgent {
 
 **Research Mission Parameters:**
 ${
-	researchDirection
-		? `
+  researchDirection
+    ? `
 - Research Theme: ${researchDirection.researchTheme}
 - Global Market Focus: ${researchDirection.globalMarketFocus}  
 - Industry Focus: ${researchDirection.industryRotation}
 - Diversity Mandates: ${researchDirection.diversityMandates.join(", ")}
 `
-		: "General global technology and market trend research"
+    : "General global technology and market trend research"
 }
 
 **Critical Requirements:**
@@ -77,21 +82,27 @@ Return structured JSON with enhanced data:
   "supportingData": ["Specific social media discussion or community trend", "Key lifestyle change or behavioral shift", "Quantitative metrics if available", "Global adoption patterns and consumer evidence"]
 }
 
-Focus on trends that are currently generating genuine excitement and discussion in real communities, particularly those affecting individual consumers and their daily lives.`;
+Focus on trends that are currently generating genuine excitement and discussion in real communities, particularly those affecting individual consumers and their daily lives.
+`
+      );
 
-			const userPrompt = `Conduct deep research to identify one powerful emerging trend that is generating significant buzz in online communities and creating immediate opportunities for consumer-focused software solutions.
+      // Get dynamic user prompt from database with fallback
+      const baseUserPrompt = await getPrompt(
+        "TrendResearchAgent",
+        "userPrompt",
+        `Conduct deep research to identify one powerful emerging trend that is generating significant buzz in online communities and creating immediate opportunities for consumer-focused software solutions.
 
 **Strategic Research Direction:**
 ${
-	researchDirection
-		? `
+  researchDirection
+    ? `
 Focus your research on: ${researchDirection.researchTheme}
 Market context: Global market opportunities
 Industry vertical: ${researchDirection.industryRotation}
 
 Research approach: ${researchDirection.researchApproach}
 `
-		: "Conduct broad global consumer lifestyle and technology trend research"
+    : "Conduct broad global consumer lifestyle and technology trend research"
 }
 
 **Consumer Trend Categories to Explore:**
@@ -106,53 +117,124 @@ Research approach: ${researchDirection.researchApproach}
 
 **Diversity Requirements - MUST AVOID:**
 ${
-	context.previousIdeas && context.previousIdeas.length > 0
-		? context.previousIdeas
-				.map((idea) => `- Theme: "${idea.title}" - Focus area already covered`)
-				.join("\n")
-		: "- No restrictions - establish new research territory"
+  context.previousIdeas && context.previousIdeas.length > 0
+    ? context.previousIdeas
+        .map((idea) => `- Theme: "${idea.title}" - Focus area already covered`)
+        .join("\n")
+    : "- No restrictions - establish new research territory"
 }
 
-Find a trend that is genuinely creating conversation, excitement, and early adoption among everyday people. Provide evidence of real human engagement and community validation, particularly from consumer communities and lifestyle discussions.`;
+Find a trend that is genuinely creating conversation, excitement, and early adoption among everyday people. Provide evidence of real human engagement and community validation, particularly from consumer communities and lifestyle discussions.`
+      );
 
-			// LOG: Enhanced Perplexity API request
-			debugLogger.logPerplexityRequest(
-				"EnhancedTrendResearchAgent",
-				userPrompt,
-				systemPrompt,
-				{
-					reasoning_effort: "high",
-					model: "sonar-deep-research",
-					researchDirection: researchDirection,
-				},
-			);
+      // Build complete user prompt with context
+      const userPrompt = `${baseUserPrompt}
 
-			const response = await perplexity(
-				userPrompt,
-				systemPrompt,
-				"high",
-				"sonar-deep-research",
-			);
+**Strategic Research Direction:**
+${
+        researchDirection
+          ? `
+Focus your research on: ${researchDirection.researchTheme}
+Market context: Global market opportunities
+Industry vertical: ${researchDirection.industryRotation}
 
-			// LOG: Perplexity API response (FULL)
-			debugLogger.logPerplexityResponse("EnhancedTrendResearchAgent", response);
+Research approach: ${researchDirection.researchApproach}
+`
+          : "Conduct broad global consumer lifestyle and technology trend research"
+      }
 
-			if (!response?.choices?.[0]?.message?.content) {
-				debugLogger.logError(
-					"EnhancedTrendResearchAgent",
-					new Error("No response from Perplexity"),
-					{ response },
-				);
-				throw new Error("No response from Perplexity");
-			}
+**Consumer Trend Categories to Explore:**
+- Personal productivity and life organization
+- Family coordination and household management
+- Individual finance and money management
+- Learning, skills, and personal development
+- Health, wellness, and self-care
+- Creative hobbies and personal projects
+- Social connection and community building
+- Entertainment and leisure activities
 
-			const content = response.choices[0].message.content;
-			console.log("🔍 Enhanced Trend raw response length:", content.length);
-			console.log("🔍 Response preview:", `${content.substring(0, 200)}...`);
+**Diversity Requirements - MUST AVOID:**
+${
+        context.previousIdeas && context.previousIdeas.length > 0
+          ? context.previousIdeas
+              .map((idea) => `- Theme: "${idea.title}" - Focus area already covered`)
+              .join("\n")
+          : "- No restrictions - establish new research territory"
+      }`;
+      // Build complete system prompt with context
+      const systemPrompt = `${baseSystemPrompt}
 
-			// Enhanced LLM structuring with better prompts
-			const structureWithLLM = async (content: string): Promise<string> => {
-				const structuringPrompt = `You are an expert data analyst specializing in consumer trend research. Convert the following comprehensive trend analysis into the exact JSON structure requested.
+**Research Mission Parameters:**
+${
+  researchDirection
+    ? `
+- Research Theme: ${researchDirection.researchTheme}
+- Global Market Focus: ${researchDirection.globalMarketFocus}  
+- Industry Focus: ${researchDirection.industryRotation}
+- Diversity Mandates: ${researchDirection.diversityMandates.join(", ")}
+`
+    : "General global technology and market trend research"
+}
+
+${
+  researchDirection
+    ? `
+Focus your research on: ${researchDirection.researchTheme}
+Market context: Global market opportunities
+Industry vertical: ${researchDirection.industryRotation}
+
+Research approach: ${researchDirection.researchApproach}
+`
+    : "Conduct broad global consumer lifestyle and technology trend research"
+}
+
+**Diversity Requirements - MUST AVOID:**
+${
+  context.previousIdeas && context.previousIdeas.length > 0
+    ? context.previousIdeas
+        .map((idea) => `- Theme: "${idea.title}" - Focus area already covered`)
+        .join("\n")
+    : "- No restrictions - establish new research territory"
+}`;
+
+      // LOG: Enhanced Perplexity API request
+      debugLogger.logPerplexityRequest(
+        "EnhancedTrendResearchAgent",
+        userPrompt,
+        systemPrompt,
+        {
+          reasoning_effort: "high",
+          model: "sonar-deep-research",
+          researchDirection: researchDirection,
+        }
+      );
+
+      const response = await perplexity(
+        userPrompt,
+        systemPrompt,
+        "high",
+        "sonar-deep-research"
+      );
+
+      // LOG: Perplexity API response (FULL)
+      debugLogger.logPerplexityResponse("EnhancedTrendResearchAgent", response);
+
+      if (!response?.choices?.[0]?.message?.content) {
+        debugLogger.logError(
+          "EnhancedTrendResearchAgent",
+          new Error("No response from Perplexity"),
+          { response }
+        );
+        throw new Error("No response from Perplexity");
+      }
+
+      const content = response.choices[0].message.content;
+      console.log("🔍 Enhanced Trend raw response length:", content.length);
+      console.log("🔍 Response preview:", `${content.substring(0, 200)}...`);
+
+      // Enhanced LLM structuring with better prompts
+      const structureWithLLM = async (content: string): Promise<string> => {
+        const structuringPrompt = `You are an expert data analyst specializing in consumer trend research. Convert the following comprehensive trend analysis into the exact JSON structure requested.
 
 REQUIRED JSON STRUCTURE:
 {
@@ -169,109 +251,109 @@ ${content}
 
 Extract the core trend information and format as valid JSON. Ensure all supporting data includes specific, verifiable sources. Return ONLY the JSON object.`;
 
-				debugLogger.logLLMStructuring(
-					"EnhancedTrendResearchAgent",
-					structuringPrompt,
-					content,
-				);
+        debugLogger.logLLMStructuring(
+          "EnhancedTrendResearchAgent",
+          structuringPrompt,
+          content
+        );
 
-				const { text: structuredJson } = await generateText({
-					model: openrouter("openai/gpt-4.1-mini"),
-					prompt: structuringPrompt,
-					temperature: 0.1,
-					maxTokens: 800,
-				});
+        const { text: structuredJson } = await generateText({
+          model: openrouter("openai/gpt-4.1-mini"),
+          prompt: structuringPrompt,
+          temperature: 0.1,
+          maxTokens: 800,
+        });
 
-				debugLogger.logLLMStructuringResponse(
-					"EnhancedTrendResearchAgent",
-					structuredJson,
-				);
+        debugLogger.logLLMStructuringResponse(
+          "EnhancedTrendResearchAgent",
+          structuredJson
+        );
 
-				// Clean the LLM response before returning
-				return EnhancedJsonParser.cleanJsonResponse(structuredJson);
-			};
+        // Clean the LLM response before returning
+        return EnhancedJsonParser.cleanJsonResponse(structuredJson);
+      };
 
-			const parseResult = await parsePerplexityResponse<TrendData>(
-				content,
-				structureWithLLM,
-				["title", "description"], // Required fields
-			);
+      const parseResult = await parsePerplexityResponse<TrendData>(
+        content,
+        structureWithLLM,
+        ["title", "description"] // Required fields
+      );
 
-			debugLogger.logParsingAttempt(
-				"EnhancedTrendResearchAgent",
-				content,
-				parseResult,
-			);
+      debugLogger.logParsingAttempt(
+        "EnhancedTrendResearchAgent",
+        content,
+        parseResult
+      );
 
-			if (!parseResult.success) {
-				console.error(
-					"❌ Failed to parse enhanced trend data:",
-					parseResult.error,
-				);
-				debugLogger.logError(
-					"EnhancedTrendResearchAgent",
-					new Error(
-						`Failed to parse Perplexity response: ${parseResult.error}`,
-					),
-					{ parseResult, originalContent: content },
-				);
-				
-				// Instead of throwing an error, use fallback data to continue the pipeline
-				console.log("🔄 Using enhanced fallback trend data");
-				return {
-					title: researchDirection
-						? `${researchDirection.industryRotation} Consumer Trends`
-						: "Personal Productivity and Life Organization",
-					description: researchDirection
-						? `Growing trends in ${researchDirection.globalMarketFocus} focused on ${researchDirection.industryRotation} solutions that help people manage their daily lives better.`
-						: "People worldwide are looking for simple tools to help them organize their daily lives, manage their time better, and reduce everyday stress and frustration.",
-					trendStrength: 7,
-					catalystType: "SOCIAL_TREND" as const,
-					timingUrgency: 6,
-					supportingData: [
-						"Analysis faced parsing challenges but consumer signals suggest strong demand",
-						"Global communities discussing personal productivity solutions",
-						"Increasing adoption of lifestyle management tools",
-					],
-				};
-			}
+      if (!parseResult.success) {
+        console.error(
+          "❌ Failed to parse enhanced trend data:",
+          parseResult.error
+        );
+        debugLogger.logError(
+          "EnhancedTrendResearchAgent",
+          new Error(
+            `Failed to parse Perplexity response: ${parseResult.error}`
+          ),
+          { parseResult, originalContent: content }
+        );
 
-			const trendData = parseResult.data as TrendData;
+        // Instead of throwing an error, use fallback data to continue the pipeline
+        console.log("🔄 Using enhanced fallback trend data");
+        return {
+          title: researchDirection
+            ? `${researchDirection.industryRotation} Consumer Trends`
+            : "Personal Productivity and Life Organization",
+          description: researchDirection
+            ? `Growing trends in ${researchDirection.globalMarketFocus} focused on ${researchDirection.industryRotation} solutions that help people manage their daily lives better.`
+            : "People worldwide are looking for simple tools to help them organize their daily lives, manage their time better, and reduce everyday stress and frustration.",
+          trendStrength: 7,
+          catalystType: "SOCIAL_TREND" as const,
+          timingUrgency: 6,
+          supportingData: [
+            "Analysis faced parsing challenges but consumer signals suggest strong demand",
+            "Global communities discussing personal productivity solutions",
+            "Increasing adoption of lifestyle management tools",
+          ],
+        };
+      }
 
-			console.log("✅ Step 2: Enhanced Trend Research Completed:", {
-				title: trendData.title,
-				trendStrength: trendData.trendStrength,
-				catalystType: trendData.catalystType,
-				timingUrgency: trendData.timingUrgency,
-			});
+      const trendData = parseResult.data as TrendData;
 
-			debugLogger.logAgentResult("EnhancedTrendResearchAgent", trendData, true);
-			return trendData;
-		} catch (error) {
-			console.error("EnhancedTrendResearchAgent error:", error);
-			debugLogger.logError("EnhancedTrendResearchAgent", error as Error, {
-				agent: "EnhancedTrendResearchAgent",
-				fallbackUsed: true,
-			});
+      console.log("✅ Step 2: Enhanced Trend Research Completed:", {
+        title: trendData.title,
+        trendStrength: trendData.trendStrength,
+        catalystType: trendData.catalystType,
+        timingUrgency: trendData.timingUrgency,
+      });
 
-			// Enhanced fallback with research direction context
-			console.log("🔄 Using enhanced fallback trend data");
-			return {
-				title: researchDirection
-					? `${researchDirection.industryRotation} Innovation in ${researchDirection.globalMarketFocus}`
-					: "Personal Organization Tools for Busy Individuals",
-				description: researchDirection
-					? `Emerging trend in ${researchDirection.globalMarketFocus} focused on ${researchDirection.industryRotation} solutions that help people manage their daily lives.`
-					: "Busy individuals worldwide are looking for simple tools to help them stay organized, manage their time better, and coordinate their daily activities more effectively, driven by increasingly complex modern life demands.",
-				trendStrength: 8,
-				catalystType: "SOCIAL_TREND" as const,
-				timingUrgency: 7,
-				supportingData: [
-					"Active discussions in global lifestyle and productivity communities",
-					"Growing adoption of personal organization and time management apps",
-					"Increasing consumer demand for simple daily life management tools",
-				],
-			};
-		}
-	}
+      debugLogger.logAgentResult("EnhancedTrendResearchAgent", trendData, true);
+      return trendData;
+    } catch (error) {
+      console.error("EnhancedTrendResearchAgent error:", error);
+      debugLogger.logError("EnhancedTrendResearchAgent", error as Error, {
+        agent: "EnhancedTrendResearchAgent",
+        fallbackUsed: true,
+      });
+
+      // Enhanced fallback with research direction context
+      console.log("🔄 Using enhanced fallback trend data");
+      return {
+        title: researchDirection
+          ? `${researchDirection.industryRotation} Innovation in ${researchDirection.globalMarketFocus}`
+          : "Personal Organization Tools for Busy Individuals",
+        description: researchDirection
+          ? `Emerging trend in ${researchDirection.globalMarketFocus} focused on ${researchDirection.industryRotation} solutions that help people manage their daily lives.`
+          : "Busy individuals worldwide are looking for simple tools to help them stay organized, manage their time better, and coordinate their daily activities more effectively, driven by increasingly complex modern life demands.",
+        trendStrength: 8,
+        catalystType: "SOCIAL_TREND" as const,
+        timingUrgency: 7,
+        supportingData: [
+          "Active discussions in global lifestyle and productivity communities",
+          "Growing adoption of personal organization and time management apps",
+          "Increasing consumer demand for simple daily life management tools",
+        ],
+      };
+    }
+  }
 }

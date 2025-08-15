@@ -3,6 +3,7 @@ import { generateText } from "ai";
 import type { AgentContext } from "../../../types/apps/idea-generation-agent";
 import { openrouter } from "../../../utils/configs/ai.config";
 import { EnhancedJsonParser } from "../../../utils/enhanced-json-parser";
+import { getPrompt } from "../../../utils/prompt-helper";
 
 // Interface for Master Research Director
 interface ResearchDirectorData {
@@ -28,8 +29,15 @@ export class MasterResearchDirector {
 			const isUserDriven =
 				context.userPrompt && context.userPrompt.trim().length > 0;
 
+			// Get dynamic prompt from database with fallback
+			const basePrompt = await getPrompt(
+				'MasterResearchDirector', 
+				'systemPrompt',
+				`You are the Master Research Director for a world-class startup opportunity discovery system. You help guide research direction to ensure diverse, high-quality startup opportunities.`
+			);
+
 			const directorPrompt = isUserDriven
-				? `You are the Master Research Director for a world-class startup opportunity discovery system. You are responding to a specific user inquiry to generate practical, globally relevant, and software-first business ideas based on their request.
+				? `${basePrompt} You are responding to a specific user inquiry to generate practical, globally relevant, and software-first business ideas based on their request.
     
     **User's Request:** "${context.userPrompt}"
     
