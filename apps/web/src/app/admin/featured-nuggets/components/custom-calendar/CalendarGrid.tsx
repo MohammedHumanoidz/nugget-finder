@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/a11y/useKeyWithClickEvents: <explanation> */
 /** biome-ignore-all lint/a11y/noStaticElementInteractions: <explanation> */
-import { CalendarDay } from './useCalendar';
+import type { CalendarDay } from './useCalendar';
 
 interface Event {
   id: string;
