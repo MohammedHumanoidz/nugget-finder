@@ -7,29 +7,51 @@ import { Input } from "@/components/ui/input";
 import { trpc } from "@/utils/trpc";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
-import { X } from "lucide-react";
+import { CalendarDays, Search, X } from "lucide-react";
 import moment from "moment";
 import { useMemo, useState } from "react";
 import { Calendar, momentLocalizer, type ToolbarProps } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import "./calendar-styles.css";
+import { AvailableIdeasSkeleton, CalendarSkeleton, EmptySelectedIdeas, SelectedIdeasSkeleton } from "./components/skeletons";
 
 const localizer = momentLocalizer(moment);
 
 function CustomToolbar({ label, onNavigate }: ToolbarProps) {
   return (
-    <div className="flex justify-between items-center mb-4">
-      <div className="flex gap-2">
-        <Button variant="outline" size="sm" onClick={() => onNavigate("TODAY")}>
+    <div className="flex justify-between items-center mb-6 p-4 border-b border-border/30">
+      <div className="flex gap-1">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={() => onNavigate("TODAY")}
+          className="border-border/50 hover:border-primary/50 transition-colors"
+          aria-label="Navigate to today"
+        >
           Today
         </Button>
-        <Button variant="outline" size="sm" onClick={() => onNavigate("PREV")}>
-          Prev
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={() => onNavigate("PREV")}
+          className="border-border/50 hover:border-primary/50 transition-colors"
+          aria-label="Navigate to previous month"
+        >
+          ← Prev
         </Button>
-        <Button variant="outline" size="sm" onClick={() => onNavigate("NEXT")}>
-          Next
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={() => onNavigate("NEXT")}
+          className="border-border/50 hover:border-primary/50 transition-colors"
+          aria-label="Navigate to next month"
+        >
+          Next →
         </Button>
       </div>
-      <span className="font-semibold">{label}</span>
+      <h2 className="font-semibold text-lg text-foreground" aria-live="polite">
+        {label}
+      </h2>
     </div>
   );
 }
@@ -40,20 +62,20 @@ export default function FeaturedNuggetsPage() {
   const [selectedIdeas, setSelectedIdeas] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { data: schedule, refetch: refetchSchedule } = useQuery(
+  const { data: schedule, refetch: refetchSchedule, isLoading: isLoadingSchedule } = useQuery(
     trpc.admin.getFeaturedSchedule.queryOptions({
       date: selectedDate.toISOString(),
     })
   );
 
-  const { data: availableIdeas } = useQuery(
+  const { data: availableIdeas, isLoading: isLoadingIdeas } = useQuery(
     trpc.admin.getAvailableIdeas.queryOptions({
       search: searchTerm || undefined,
       limit: 20,
     })
   );
 
-  const { data: calendarEvents } = useQuery(
+  const { data: calendarEvents, isLoading: isLoadingCalendar } = useQuery(
     trpc.admin.getFeaturedScheduleRange.queryOptions({
       startDate: moment(calendarDate).startOf("month").toISOString(),
       endDate: moment(calendarDate).endOf("month").toISOString(),
@@ -74,13 +96,14 @@ export default function FeaturedNuggetsPage() {
       calendarEvents?.map((event: any) => {
         // Create a date that matches the stored date without timezone conversion
         const storedDate = new Date(event.date);
-        const eventDate = new Date(storedDate.getFullYear(), storedDate.getMonth(), storedDate.getDate());
+        const eventDate = new Date(storedDate.getUTCFullYear(), storedDate.getUTCMonth(), storedDate.getUTCDate());
         return {
           id: event.id,
-          title: `${event.ideaIds.length} idea${event.ideaIds.length > 1 ? "s" : ""} scheduled`,
+          title: `💡 ${event.ideaIds.length} idea${event.ideaIds.length > 1 ? "s" : ""}`,
           start: eventDate,
           end: eventDate,
           allDay: true,
+          resource: event.ideaIds.length, // Store count for styling
         };
       }) || [],
     [calendarEvents]
@@ -116,180 +139,267 @@ export default function FeaturedNuggetsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen bg-background p-4 lg:p-6">
+      <div className="max-w-7xl mx-auto space-y-8">
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Featured Nuggets Schedule</h1>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-2 border-b border-border/50">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground mb-1">Featured Nuggets Schedule</h1>
+          <p className="text-muted-foreground text-sm">Manage and schedule featured ideas for daily highlights</p>
+        </div>
         <Button
           onClick={handleSaveSchedule}
-          disabled={updateScheduleMutation.isPending}
+          disabled={updateScheduleMutation.isPending || selectedIdeas.length === 0}
+          className="min-w-[140px] shadow-sm border border-primary/20"
+          size="lg"
         >
-          {updateScheduleMutation.isPending ? "Saving..." : "Save Schedule"}
+          {updateScheduleMutation.isPending ? (
+            <>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+              Saving...
+            </>
+          ) : (
+            "Save Schedule"
+          )}
         </Button>
       </div>
 
       {/* Wide Calendar View */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Calendar</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="h-[500px] rounded-md border bg-background text-foreground">
-            <Calendar
-              key={selectedDate.toISOString()}
-              localizer={localizer}
-              events={events}
-              date={calendarDate}
-              onNavigate={(date) => setCalendarDate(date)}
-              startAccessor="start"
-              endAccessor="end"
-              selectable
-              views={["month"]}
-              defaultView="month"
-              onSelectSlot={(slotInfo) => setSelectedDate(slotInfo.start)}
-              onSelectEvent={(event) =>
-                setSelectedDate(new Date(event.start))
-              }
-              components={{
-                toolbar: CustomToolbar as any,
-              }}
-              eventPropGetter={() => ({
-                className:
-                  "bg-primary text-primary-foreground rounded px-1 text-sm",
-                style: {},
-              })}
-              dayPropGetter={(date) => {
-                const isSelected = moment(date).format('YYYY-MM-DD') === moment(selectedDate).format('YYYY-MM-DD');
-                return {
-                  className: clsx(
-                    "cursor-pointer hover:bg-muted transition-colors",
-                    isSelected && "!bg-primary/20 border-2 border-primary/40"
-                  ),
-                };
-              }}
-            />
-          </div>
-        </CardContent>
-      </Card>
+      {isLoadingCalendar ? (
+        <CalendarSkeleton />
+      ) : (
+        <Card className="border-2 border-border/50 shadow-sm">
+          <CardHeader className="border-b border-border/50">
+            <CardTitle className="flex items-center gap-2 text-foreground">
+              <CalendarDays className="h-5 w-5" />
+              Calendar
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div className="h-[500px] rounded-lg border-2 border-border/30 bg-background">
+              <Calendar
+                key={selectedDate.toISOString()}
+                localizer={localizer}
+                events={events}
+                date={calendarDate}
+                onNavigate={(date) => setCalendarDate(date)}
+                startAccessor="start"
+                endAccessor="end"
+                selectable
+                views={["month"]}
+                defaultView="month"
+                onSelectSlot={(slotInfo) => setSelectedDate(slotInfo.start)}
+                onSelectEvent={(event) =>
+                  setSelectedDate(new Date(event.start))
+                }
+                components={{
+                  toolbar: CustomToolbar as any,
+                }}
+                eventPropGetter={(event) => ({
+                  className:
+                    "bg-primary/90 text-primary-foreground rounded-md px-2 py-1 text-xs font-semibold border border-primary shadow-sm hover:bg-primary transition-colors",
+                  style: {
+                    fontSize: '0.75rem',
+                    fontWeight: '600',
+                    minHeight: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  },
+                })}
+                dayPropGetter={(date) => {
+                  const isSelected = moment(date).format('YYYY-MM-DD') === moment(selectedDate).format('YYYY-MM-DD');
+                  const dateStr = moment(date).format('YYYY-MM-DD');
+                  const hasScheduledIdeas = calendarEvents?.some((event: any) => 
+                    moment(event.date).format('YYYY-MM-DD') === dateStr
+                  );
+                  
+                  return {
+                    className: clsx(
+                      "cursor-pointer hover:bg-muted/50 transition-all duration-200 border border-transparent relative",
+                      isSelected && "!bg-primary/10 border-primary/60 ring-1 ring-primary/20",
+                      hasScheduledIdeas && !isSelected && "bg-primary/70 border-primary/60 hover:bg-primary/20"
+                    ),
+                  };
+                }}
+              />
+            </div>
+            
+            {/* Calendar Legend */}
+            <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-primary/10 border border-primary/60 rounded"></div>
+                <span>Selected Date</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-primary/10 border border-primary/60 rounded relative">
+                  <div className="absolute top-0 right-0 w-2 h-2 bg-primary/60 rounded-full transform translate-x-1 -translate-y-1"></div>
+                </div>
+                <span>Has Scheduled Ideas</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Selected Date Details and Available Ideas Side by Side */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Selected Date Details */}
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              Schedule for {selectedDate.toLocaleDateString()}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <h3 className="font-medium mb-3">
-                Selected Ideas ({selectedIdeas.length}/3)
-              </h3>
-              {selectedIdeas.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <p>No ideas scheduled for this date</p>
-                  <p className="text-sm">Select ideas from the available list →</p>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {selectedIdeas.map((ideaId, index) => {
-                    const idea = getSelectedIdeaDetails(ideaId);
-                    return (
-                      <div
-                        key={ideaId}
-                        className="flex items-start gap-3 p-3 border rounded-lg bg-muted/30"
-                      >
-                        <Badge variant="outline" className="mt-1">{index + 1}</Badge>
+        {isLoadingSchedule ? (
+          <SelectedIdeasSkeleton />
+        ) : (
+          <Card className="border-2 border-border/50 shadow-sm">
+            <CardHeader className="border-b border-border/50">
+              <CardTitle className="text-foreground">
+                Schedule for {selectedDate.toLocaleDateString('en-US', { 
+                  weekday: 'long', 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div>
+                <h3 className="font-semibold mb-4 text-foreground flex items-center gap-2">
+                  Selected Ideas 
+                  <Badge 
+                    variant={selectedIdeas.length === 3 ? "default" : "outline"} 
+                    className="text-xs"
+                  >
+                    {selectedIdeas.length}/3
+                  </Badge>
+                </h3>
+                {selectedIdeas.length === 0 ? (
+                  <EmptySelectedIdeas />
+                ) : (
+                  <div className="space-y-3">
+                    {selectedIdeas.map((ideaId, index) => {
+                      const idea = getSelectedIdeaDetails(ideaId);
+                      return (
+                        <div
+                          key={ideaId}
+                          className="group flex items-start gap-3 p-4 border-2 border-border/30 rounded-lg bg-card hover:border-primary/40 transition-all duration-200"
+                        >
+                          <Badge 
+                            variant="secondary" 
+                            className="mt-1 min-w-[24px] h-6 flex items-center justify-center text-xs font-medium"
+                          >
+                            {index + 1}
+                          </Badge>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-semibold mb-2 text-foreground leading-tight">
+                              {idea?.title || "Loading..."}
+                            </p>
+                            {idea?.narrativeHook && (
+                              <p className="text-sm text-muted-foreground line-clamp-2 mb-2 leading-relaxed">
+                                {idea.narrativeHook}
+                              </p>
+                            )}
+                            {idea?.ideaScore && (
+                              <p className="text-xs text-muted-foreground/80 font-medium">
+                                Score: {idea.ideaScore.totalScore}
+                              </p>
+                            )}
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => removeIdea(ideaId)}
+                            className="shrink-0 h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
+                            aria-label={`Remove ${idea?.title || 'idea'} from schedule`}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Available Ideas */}
+        {isLoadingIdeas ? (
+          <AvailableIdeasSkeleton />
+        ) : (
+          <Card className="border-2 border-border/50 shadow-sm">
+            <CardHeader className="border-b border-border/50">
+              <CardTitle className="text-foreground">Available Ideas</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Input
+                  placeholder="Search ideas..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 border-2 border-border/50 focus:border-primary/60 transition-colors"
+                />
+              </div>
+              <div className="max-h-[400px] overflow-y-auto space-y-3 pr-2">
+                {availableIdeas?.map((idea: any) => {
+                  const isSelected = selectedIdeas.includes(idea.id);
+                  const isDisabled = selectedIdeas.length >= 3 && !isSelected;
+                  
+                  return (
+                    <button
+                      type="button"
+                      key={idea.id}
+                      className={clsx(
+                        "w-full text-left p-4 border-2 rounded-lg transition-all duration-200 group",
+                        isSelected
+                          ? "bg-primary/5 border-primary/60 ring-1 ring-primary/20"
+                          : "hover:bg-muted/30 border-border/40 hover:border-border/70",
+                        isDisabled && "opacity-40 cursor-not-allowed hover:bg-transparent hover:border-border/40"
+                      )}
+                      onClick={() => addIdea(idea.id)}
+                      disabled={isDisabled}
+                      aria-label={`${isSelected ? 'Remove' : 'Add'} ${idea.title} ${isSelected ? 'from' : 'to'} schedule`}
+                    >
+                      <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium mb-1">
-                            {idea?.title || "Loading..."}
+                          <p className="font-semibold mb-2 line-clamp-1 text-foreground group-hover:text-primary transition-colors">
+                            {idea.title}
                           </p>
-                          {idea?.narrativeHook && (
-                            <p className="text-sm text-muted-foreground line-clamp-2">
+                          {idea.narrativeHook && (
+                            <p className="text-sm text-muted-foreground line-clamp-2 mb-3 leading-relaxed">
                               {idea.narrativeHook}
                             </p>
                           )}
-                          {idea?.ideaScore && (
-                            <p className="text-xs text-muted-foreground mt-1">
-                              Score: {idea.ideaScore.totalScore}
-                            </p>
-                          )}
+                          <div className="flex items-center gap-3 text-xs text-muted-foreground/80">
+                            <span className="font-medium">Score: {idea.ideaScore?.totalScore || "N/A"}</span>
+                            <span className="text-muted-foreground/50">•</span>
+                            <span>{new Date(idea.createdAt).toLocaleDateString()}</span>
+                          </div>
                         </div>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => removeIdea(ideaId)}
-                          className="shrink-0"
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
+                        {isSelected && (
+                          <Badge variant="default" className="shrink-0 text-xs">Selected</Badge>
+                        )}
                       </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Available Ideas */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Available Ideas</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Input
-              placeholder="Search ideas..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <div className="max-h-[400px] overflow-y-auto space-y-2">
-              {availableIdeas?.map((idea: any) => (
-                <button
-                  type="button"
-                  key={idea.id}
-                  className={clsx(
-                    "w-full text-left p-3 border rounded-lg transition-colors",
-                    selectedIdeas.includes(idea.id)
-                      ? "bg-primary/10 border-primary"
-                      : "hover:bg-muted border-border",
-                    selectedIdeas.length >= 3 && !selectedIdeas.includes(idea.id) && "opacity-50 cursor-not-allowed"
-                  )}
-                  onClick={() => addIdea(idea.id)}
-                  disabled={selectedIdeas.length >= 3 && !selectedIdeas.includes(idea.id)}
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium mb-1 line-clamp-1">{idea.title}</p>
-                      {idea.narrativeHook && (
-                        <p className="text-sm text-muted-foreground line-clamp-2 mb-1">
-                          {idea.narrativeHook}
-                        </p>
-                      )}
-                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                        <span>Score: {idea.ideaScore?.totalScore || "N/A"}</span>
-                        <span>•</span>
-                        <span>{new Date(idea.createdAt).toLocaleDateString()}</span>
-                      </div>
+                    </button>
+                  );
+                })}
+                {(!availableIdeas || availableIdeas.length === 0) && !isLoadingIdeas && (
+                  <div className="text-center py-12 px-4">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-muted/30 rounded-full flex items-center justify-center">
+                      <Search className="w-8 h-8 text-muted-foreground" />
                     </div>
-                    {selectedIdeas.includes(idea.id) && (
-                      <Badge variant="secondary" className="shrink-0">Selected</Badge>
+                    <p className="text-muted-foreground mb-1 font-medium">No ideas found</p>
+                    {searchTerm ? (
+                      <p className="text-sm text-muted-foreground/70">Try adjusting your search terms</p>
+                    ) : (
+                      <p className="text-sm text-muted-foreground/70">No ideas are available at the moment</p>
                     )}
                   </div>
-                </button>
-              ))}
-              {(!availableIdeas || availableIdeas.length === 0) && (
-                <div className="text-center py-8 text-muted-foreground">
-                  <p>No ideas found</p>
-                  {searchTerm && (
-                    <p className="text-sm">Try adjusting your search terms</p>
-                  )}
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+        </div>
       </div>
     </div>
   );
