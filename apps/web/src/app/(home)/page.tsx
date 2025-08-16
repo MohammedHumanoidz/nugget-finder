@@ -216,7 +216,7 @@ export default async function Page() {
               return (
                 <div key={idea.id} className="w-96">
                   <NuggetsCards
-                    className="flex h-[57dvh] justify-center"
+                    className="flex justify-center"
                     nugget={idea}
                   />
                 </div>

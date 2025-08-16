@@ -154,39 +154,75 @@ export const getTodaysTopIdeas = cache(async () => {
 		console.log("Fetching today's top ideas with scheduled check...");
 		
 		// First check for scheduled featured nuggets
-		const today = new Date();
-		today.setHours(0, 0, 0, 0);
+		// Create a UTC date for today to match how admin panel saves dates
+		const now = new Date();
+		const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+		
+		console.log("=== FEATURED NUGGETS DEBUG START ===");
+		console.log("Current local time:", now.toString());
+		console.log("Current UTC time:", now.toUTCString());
+		console.log("Query date (UTC):", today.toISOString());
+		console.log("Query date parts:", {
+			year: now.getUTCFullYear(),
+			month: now.getUTCMonth(),
+			date: now.getUTCDate()
+		});
 		
 		try {
-			const scheduled = await serverTrpcClient.admin.getFeaturedSchedule.query({
+			console.log("Making admin.getPublicFeaturedSchedule query...");
+			const scheduled = await serverTrpcClient.admin.getPublicFeaturedSchedule.query({
 				date: today.toISOString()
 			});
 			
+			console.log("Admin query response:", JSON.stringify(scheduled, null, 2));
+			
 			if (scheduled?.ideaIds?.length && scheduled.ideaIds.length > 0) {
-				console.log(`Found ${scheduled.ideaIds.length} scheduled ideas for today`);
+				console.log(`✅ Found ${scheduled.ideaIds.length} scheduled ideas for today`);
+				console.log("Scheduled idea IDs:", scheduled.ideaIds);
 				
 				// Fetch the scheduled ideas in order
+				console.log("Fetching individual scheduled ideas...");
 				//@ts-ignore
 				const scheduledIdeas = await Promise.all(
-					scheduled.ideaIds.map(async (id) => {
+					scheduled.ideaIds.map(async (id, index) => {
 						try {
-							return await serverTrpcClient.agents.getIdeaById.query({ id });
+							console.log(`Fetching idea ${index + 1}/${scheduled.ideaIds.length}: ${id}`);
+							const idea = await serverTrpcClient.agents.getIdeaById.query({ id });
+							console.log(`✅ Successfully fetched idea: ${idea?.title || 'Unknown'}`);
+							return idea;
 						} catch (error) {
-							console.error(`Failed to fetch scheduled idea ${id}:`, error);
+							console.error(`❌ Failed to fetch scheduled idea ${id}:`, error);
 							return null;
 						}
 					})
 				);
 				
 				const validIdeas = scheduledIdeas.filter(Boolean);
+				console.log(`Valid ideas count: ${validIdeas.length}`);
+				
 				if (validIdeas.length > 0) {
-					console.log(`Returning ${validIdeas.length} scheduled ideas`);
+					console.log(`🎯 Returning ${validIdeas.length} scheduled ideas`);
+					console.log("Scheduled ideas titles:", validIdeas.map(idea => idea?.title));
+					console.log("=== FEATURED NUGGETS DEBUG END ===");
 					return validIdeas.slice(0, 3);
 				}
+				
+				console.log("❌ No valid ideas after filtering");
+			} else {
+				console.log("❌ No scheduled ideas found or empty ideaIds array");
+				console.log("Scheduled object:", scheduled);
 			}
 		} catch (adminError) {
-			console.log("No scheduled ideas or admin query failed, using fallback");
+			console.error("❌ Admin query failed:", adminError);
+			console.log("Error details:", {
+				message: adminError instanceof Error ? adminError.message : String(adminError),
+				stack: adminError instanceof Error ? adminError.stack : undefined,
+				cause: adminError instanceof Error ? adminError.cause : undefined
+			});
 		}
+		
+		console.log("📋 Using fallback logic");
+		console.log("=== FEATURED NUGGETS DEBUG END ===");
 
 		// Fallback to existing logic
 		const result = await serverTrpcClient.agents.getDailyIdeas.query({

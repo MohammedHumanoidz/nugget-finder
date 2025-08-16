@@ -1,23 +1,103 @@
 import { z } from "zod";
-import { adminProcedure, router } from "../lib/trpc";
+import { adminProcedure, publicProcedure, router } from "../lib/trpc";
 import { prisma } from "../utils/configs/db.config";
 
 export const adminRouter = router({
-  // Featured Nuggets Management
+  // Public endpoint for server-side featured schedule retrieval
+  getPublicFeaturedSchedule: publicProcedure
+    .input(z.object({ 
+      date: z.string().transform((str) => new Date(str)).optional() 
+    }))
+    .query(async ({ input }) => {
+      console.log("=== SERVER: getPublicFeaturedSchedule called ===");
+      console.log("Raw input:", input);
+      console.log("Input date string:", input.date?.toISOString());
+      
+      const targetDate = input.date || new Date();
+      console.log("Target date (parsed):", targetDate.toISOString());
+      console.log("Target date local:", targetDate.toString());
+      
+      // Use UTC date calculation to match client-side logic
+      const dateOnly = new Date(Date.UTC(targetDate.getUTCFullYear(), targetDate.getUTCMonth(), targetDate.getUTCDate()));
+      console.log("Date only (server calculation):", dateOnly.toISOString());
+      console.log("Date parts used (UTC):", {
+        year: targetDate.getUTCFullYear(),
+        month: targetDate.getUTCMonth(),
+        date: targetDate.getUTCDate()
+      });
+      
+      console.log("Database query WHERE clause:", {
+        date: dateOnly.toISOString(),
+        isActive: true
+      });
+      
+      const result = await prisma.featuredNuggetsSchedule.findFirst({
+        where: { 
+          date: dateOnly,
+          isActive: true 
+        },
+        select: { 
+          id: true,
+          date: true,
+          ideaIds: true,
+          isActive: true
+        }
+      });
+      
+      console.log("Database query result:", JSON.stringify(result, null, 2));
+      console.log("=== SERVER: getPublicFeaturedSchedule end ===");
+      
+      return result;
+    }),
+
+  // Featured Nuggets Management (Admin only)
   getFeaturedSchedule: adminProcedure
     .input(z.object({ 
       date: z.string().transform((str) => new Date(str)).optional() 
     }))
     .query(async ({ input }) => {
-      const targetDate = input.date || new Date();
-      const dateOnly = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
+      console.log("=== SERVER: getFeaturedSchedule called ===");
+      console.log("Raw input:", input);
+      console.log("Input date string:", input.date?.toISOString());
       
-      return await prisma.featuredNuggetsSchedule.findFirst({
-        where: { date: dateOnly },
+      const targetDate = input.date || new Date();
+      console.log("Target date (parsed):", targetDate.toISOString());
+      console.log("Target date local:", targetDate.toString());
+      
+      const dateOnly = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
+      console.log("Date only (server calculation):", dateOnly.toISOString());
+      console.log("Date parts used:", {
+        year: targetDate.getFullYear(),
+        month: targetDate.getMonth(),
+        date: targetDate.getDate()
+      });
+      
+      console.log("Database query WHERE clause:", {
+        date: dateOnly.toISOString(),
+        isActive: true
+      });
+      
+      // Also query all schedules to see what exists
+      const allSchedules = await prisma.featuredNuggetsSchedule.findMany({
+        select: { date: true, isActive: true, ideaIds: true },
+        orderBy: { date: 'asc' }
+      });
+      console.log("All existing schedules:", JSON.stringify(allSchedules, null, 2));
+      
+      const result = await prisma.featuredNuggetsSchedule.findFirst({
+        where: { 
+          date: dateOnly,
+          isActive: true 
+        },
         include: { 
           creator: { select: { name: true, email: true } }
         }
       });
+      
+      console.log("Database query result:", JSON.stringify(result, null, 2));
+      console.log("=== SERVER: getFeaturedSchedule end ===");
+      
+      return result;
     }),
 
   updateFeaturedSchedule: adminProcedure
@@ -176,21 +256,21 @@ export const adminRouter = router({
             updatedCount: result.count,
             message: `Updated ${result.count} ideas with new feature visibility settings`
           };
-        } else {
-          // Update only future ideas (created after now) with new defaults
-          const result = await prisma.dailyIdea.updateMany({
-            where: { 
-              createdAt: { gte: new Date() } 
-            },
-            data: settingsData
-          });
-          
-          return { 
-            success: true, 
-            updatedCount: result.count,
-            message: `Updated ${result.count} future ideas with new defaults`
-          };
         }
+        
+        // Update only future ideas (created after now) with new defaults
+        const result = await prisma.dailyIdea.updateMany({
+          where: { 
+            createdAt: { gte: new Date() } 
+          },
+          data: settingsData
+        });
+        
+        return { 
+          success: true, 
+          updatedCount: result.count,
+          message: `Updated ${result.count} future ideas with new defaults`
+        };
       } catch (error: any) {
         // If migration hasn't been run yet
         console.warn('Feature visibility fields not yet migrated, cannot update defaults:', error.message);
@@ -284,7 +364,9 @@ export const adminRouter = router({
             updatedAt: new Date()
           }
         });
-      } else if (input.agentName) {
+      }
+      
+      if (input.agentName) {
         // Create new prompt
         return await prisma.adminPrompts.create({
           data: {
@@ -294,9 +376,9 @@ export const adminRouter = router({
             updatedBy: ctx.session.user.id
           }
         });
-      } else {
-        throw new Error('Either id or agentName must be provided');
       }
+      
+      throw new Error('Either id or agentName must be provided');
     }),
 
   createPrompt: adminProcedure
