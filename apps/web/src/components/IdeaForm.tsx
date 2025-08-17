@@ -2,7 +2,7 @@
 
 import { useForm } from "@tanstack/react-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { ArrowUpRight, Info, Settings } from "lucide-react";
+import { ArrowUpRight, Settings } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -14,13 +14,6 @@ import PersonalizationModal, {
 	type PersonalizationData,
 } from "./PersonalizationModal";
 import { Button } from "./ui/button";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "./ui/select";
 import { Textarea } from "./ui/textarea";
 
 const IdeaForm = () => {
@@ -32,9 +25,7 @@ const IdeaForm = () => {
 	const [isGenerating, setIsGenerating] = useState(false);
 	const [requestId, setRequestId] = useState<string | null>(null);
 	const [searchQuery, setSearchQuery] = useState("");
-	const [ideaCount, setIdeaCount] = useState("1");
 	const [startTime, setStartTime] = useState<Date | null>(null);
-	const [showTimeWarning, setShowTimeWarning] = useState(false);
 
 	// Check authentication state
 	const { data: session, isPending } = authClient.useSession();
@@ -46,7 +37,7 @@ const IdeaForm = () => {
 				setRequestId(data.requestId);
 				setIsGenerating(true);
 			},
-			onError: (error: any) => {
+			onError: (error: unknown) => {
 				toast.error(
 					"❌ An unexpected error occurred while digging for ideas. Please try again.",
 				);
@@ -136,17 +127,10 @@ const IdeaForm = () => {
 			setSearchQuery(value.idea);
 			setStartTime(new Date());
 
-			// Show warning for multiple ideas
-			if (Number.parseInt(ideaCount) > 1) {
-				toast.info(
-					`⏳ Generating ${ideaCount} ideas will take longer. Please be patient!`,
-				);
-			}
-
 			// Call the generate ideas mutation instead of redirecting to browse
 			generateIdeasMutation.mutate({
 				query: value.idea,
-				count: Number.parseInt(ideaCount),
+				count: 1,
 			});
 		},
 	});
@@ -201,42 +185,9 @@ const IdeaForm = () => {
 					<Settings className="mr-2 h-4 w-4" />
 					{personalizationData ? "Update Search Profile" : "Personalize Search"}
 				</Button>
-
-				{/* Idea Count Selector */}
-				<div className="flex items-center gap-2 text-sm">
-					<span className="text-muted-foreground">Ideas to generate:</span>
-					<Select
-						value={ideaCount}
-						onValueChange={(value) => {
-							setIdeaCount(value);
-							setShowTimeWarning(false);
-						}}
-					>
-						<SelectTrigger className="h-9 w-20">
-							<SelectValue />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="1">1</SelectItem>
-							<SelectItem value="2">2</SelectItem>
-							<SelectItem value="3">3</SelectItem>
-						</SelectContent>
-					</Select>
-				</div>
 			</div>
 
-			{/* Time Warning */}
-			{Number.parseInt(ideaCount) > 1 && (
-				<div className="flex justify-center">
-					<div className="flex max-w-md items-center gap-2 rounded-lg border px-4 py-2 text-sm">
-						<Info className="h-4 w-4" />
-						<span>
-							Generating {ideaCount} ideas will take approximately{" "}
-							{Number.parseInt(ideaCount) * 2}-{Number.parseInt(ideaCount) * 3}{" "}
-							minutes
-						</span>
-					</div>
-				</div>
-			)}
+
 
 			<form
 				onSubmit={(e) => {
@@ -259,7 +210,7 @@ const IdeaForm = () => {
 							<form.Subscribe
 								selector={(state) => [state.canSubmit, state.isSubmitting]}
 							>
-								{([canSubmit, isSubmitting]) => (
+								{([canSubmit]) => (
 									<Button
 										type="submit"
 										className="absolute right-4 bottom-4"

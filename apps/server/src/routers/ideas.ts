@@ -2,7 +2,7 @@ import { z } from "zod";
 import prisma from "../../prisma";
 import IdeaGenerationAgentController from "../apps/idea-generation-agent/idea-generation-agent.controller";
 import { protectedProcedure, publicProcedure, router } from "../lib/trpc";
-import { onDemandIdeaGenerationJob } from "../trigger/on-demand-idea-generation";
+
 import {
 	claimIdeaForUser,
 	getIdeasForUser,
@@ -512,6 +512,13 @@ export const ideasRouter = router({
 								progressMessage: `🎉 Found ${generatedIdeas.length} amazing business opportunities for you!`,
 								imageState: "found",
 								generatedIdeaIds: generatedIdeas.map((idea: any) => idea.id),
+								// Store full idea data for non-auth users in personalizationData field
+								...((!userId && generatedIdeas.length > 0) && {
+									personalizationData: JSON.stringify({
+										...(input.personalization || {}),
+										generatedIdeasData: generatedIdeas
+									})
+								}),
 							},
 						});
 						console.log("[DEBUG] Fallback execution completed successfully!");
@@ -589,6 +596,19 @@ export const ideasRouter = router({
 					`[DEBUG] Found request ${input.requestId}, status: ${request.status}, step: ${request.currentStep}`,
 				);
 
+				// Parse personalization data to extract generated ideas for non-auth users
+				let generatedIdeasData = null;
+				if (request.personalizationData) {
+					try {
+						const parsed = JSON.parse(request.personalizationData);
+						if (parsed.generatedIdeasData) {
+							generatedIdeasData = parsed.generatedIdeasData;
+						}
+					} catch (error) {
+						console.error("Failed to parse personalization data:", error);
+					}
+				}
+
 				return {
 					requestId: request.id,
 					status: request.status,
@@ -596,6 +616,7 @@ export const ideasRouter = router({
 					progressMessage: request.progressMessage,
 					imageState: request.imageState,
 					generatedIdeaIds: request.generatedIdeaIds,
+					generatedIdeasData, // Include the full idea data for non-auth users
 					errorMessage: request.errorMessage,
 					createdAt: request.createdAt,
 					updatedAt: request.updatedAt,
@@ -607,7 +628,7 @@ export const ideasRouter = router({
 		}),
 
 	// Get user's generated ideas
-	getGeneratedIdeas: protectedProcedure
+	getGeneratedIdeas: publicProcedure
 		.input(
 			z
 				.object({
@@ -617,12 +638,12 @@ export const ideasRouter = router({
 				.optional(),
 		)
 		.query(async ({ ctx, input }) => {
-			const userId = ctx.session.user.id;
+			const userId = ctx?.session?.user?.id;
 			const { limit = 20, offset = 0 } = input || {};
 
 			try {
 				const generatedIdeas = await prisma.userGeneratedIdea.findMany({
-					where: { userId },
+					where: { userId: userId || undefined },
 					orderBy: { createdAt: "desc" },
 					take: limit,
 					skip: offset,

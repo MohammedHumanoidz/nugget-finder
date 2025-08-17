@@ -3,9 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import {
 	ArrowLeft,
-	ExternalLink,
 	Lightbulb,
-	Target,
 	TrendingUp,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -14,24 +12,31 @@ import { toast } from "sonner";
 import AnimatedSearchLoader from "@/components/AnimatedSearchLoader";
 import NuggetsCards from "@/components/nuggetsCards";
 import type { FeaturedNugget } from "@/components/nuggetsCards";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
 import { trpc } from "@/utils/trpc";
 
 interface ResultsClientProps {
 	requestId: string;
 }
 
+interface GeneratedIdea {
+	id: string;
+	title: string;
+	description?: string;
+	executiveSummary?: string;
+	problemStatement?: string;
+	narrativeHook?: string;
+	tags?: string[] | string;
+	confidenceScore?: number;
+	createdAt?: string;
+	updatedAt?: string;
+	// Additional fields that might come from direct generation data
+	[key: string]: any;
+}
+
 export default function ResultsClient({ requestId }: ResultsClientProps) {
 	const router = useRouter();
-	const [generatedIdeas, setGeneratedIdeas] = useState<any[]>([]);
+	const [generatedIdeas, setGeneratedIdeas] = useState<GeneratedIdea[]>([]);
 
 	// Poll for generation status
 	const { data: generationStatus, error } = useQuery({
@@ -50,28 +55,37 @@ export default function ResultsClient({ requestId }: ResultsClientProps) {
 		retry: 3,
 	});
 
-	// Fetch generated ideas when generation is complete
-	const { data: ideas } = useQuery({
-		...trpc.ideas.getGeneratedIdeas.queryOptions({ limit: 10 }),
+	// Fetch generated ideas when generation is complete (only for authenticated users)
+	const { data: allGeneratedIdeas } = useQuery({
+		...trpc.ideas.getGeneratedIdeas.queryOptions({ limit: 50 }),
 		enabled:
-			generationStatus?.status === "COMPLETED" && generatedIdeas.length === 0,
+			generationStatus?.status === "COMPLETED" && 
+			generationStatus.generatedIdeaIds &&
+			generationStatus.generatedIdeaIds.length > 0 &&
+			generatedIdeas.length === 0 &&
+			!(generationStatus as any).generatedIdeasData, // Only fetch from DB if no direct data available
 	});
 
 	useEffect(() => {
 		if (
 			generationStatus?.status === "COMPLETED" &&
-			ideas &&
+			generationStatus.generatedIdeaIds &&
+			generationStatus.generatedIdeaIds.length > 0 &&
 			generatedIdeas.length === 0
 		) {
-			// Filter ideas that were just generated based on timing
-			const recentIdeas = ideas.filter((idea: any) => {
-				const ideaTime = new Date(idea.createdAt).getTime();
-				const requestTime = new Date(generationStatus.createdAt).getTime();
-				return ideaTime >= requestTime - 60000; // Within 1 minute of request
-			});
-			setGeneratedIdeas(recentIdeas.slice(0, 3)); // Show only the latest 3
+			// For non-auth users, use the direct idea data from the response
+			if ((generationStatus as any).generatedIdeasData) {
+				setGeneratedIdeas((generationStatus as any).generatedIdeasData);
+			} 
+			// For authenticated users, filter from the database query
+			else if (allGeneratedIdeas) {
+				const justGeneratedIdeas = allGeneratedIdeas.filter((idea: GeneratedIdea) =>
+					generationStatus.generatedIdeaIds.includes(idea.id)
+				);
+				setGeneratedIdeas(justGeneratedIdeas);
+			}
 		}
-	}, [generationStatus, ideas, generatedIdeas.length]);
+	}, [generationStatus, allGeneratedIdeas, generatedIdeas.length]);
 
 	useEffect(() => {
 		if (generationStatus?.status === "FAILED") {
@@ -166,34 +180,33 @@ export default function ResultsClient({ requestId }: ResultsClientProps) {
 					<div>
 						<div className="mb-12 text-center">
 							<h1 className="mb-4 font-bold text-4xl">
-								🎉 Your Business Ideas Are Ready!
+								🎉 Your Business Idea Is Ready!
 							</h1>
 							<p className="text-slate-400 text-xl">
-								Here are {generatedIdeas.length} high-potential opportunities
-								tailored for you
+								{generatedIdeas.length === 1 
+									? "Here's your personalized high-potential business opportunity"
+									: `Here are ${generatedIdeas.length} high-potential opportunities tailored for you`}
 							</p>
 						</div>
 
-						<div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-							{generatedIdeas.map((idea: any, index: number) => {
+						<div className="grid gap-8 md:grid-cols-1 lg:grid-cols-2">
+							{generatedIdeas.map((idea: GeneratedIdea) => {
 								// Convert idea to FeaturedNugget format
 								const featuredNugget: FeaturedNugget = {
 									id: idea.id,
-									title: idea.title,
-									narrativeHook: idea.executiveSummary,
+									title: idea.title || "Your Business Idea",
+									narrativeHook: idea.narrativeHook || idea.executiveSummary,
 									problemStatement: idea.problemStatement,
 									description: idea.description || idea.executiveSummary,
-									tags: idea.tags || [],
-									innovationLevel: idea.confidenceScore ? `${idea.confidenceScore}/100` : undefined,
-									timeToMarket: idea.marketTimingScore ? `${idea.marketTimingScore}/10` : undefined,
-									urgencyLevel: idea.problemSeverity ? `${idea.problemSeverity}/10` : undefined,
+									tags: Array.isArray(idea.tags) ? idea.tags : (idea.tags ? [idea.tags] : []),
+									innovationLevel: idea.confidenceScore ? `${idea.confidenceScore}/10` : undefined,
 								};
 
 								return (
-									<div key={idea.id}>
+									<div key={idea.id} className="w-full">
 										<NuggetsCards 
 											nugget={featuredNugget}
-											className="border-slate-700 hover:border-slate-600"
+											className="w-full border-slate-700 hover:border-slate-600"
 										/>
 									</div>
 								);
@@ -203,44 +216,46 @@ export default function ResultsClient({ requestId }: ResultsClientProps) {
 						{/* CTA Section */}
 						<div className="mt-16 border-slate-800 border-t py-12 text-center">
 							<h3 className="mb-4 font-bold text-2xl">
-								Want to explore more ideas?
+								Ready to dive deeper or explore more?
 							</h3>
 							<p className="mb-6 text-slate-400">
-								Discover thousands of validated business opportunities in our
-								nugget collection
+								Generate another idea or discover thousands of validated business opportunities in our nugget collection
 							</p>
 							<div className="flex flex-col justify-center gap-4 sm:flex-row">
-								<Button size="lg" onClick={() => router.push("/browse")}>
-									<TrendingUp className="mr-2 h-5 w-5" />
-									Browse All Nuggets
+								<Button size="lg" onClick={() => router.push("/")}>
+									<Lightbulb className="mr-2 h-5 w-5" />
+									Generate Another Idea
 								</Button>
 								<Button
 									variant="outline"
 									size="lg"
-									onClick={() => router.push("/")}
+									onClick={() => router.push("/browse")}
 								>
-									Generate More Ideas
+									<TrendingUp className="mr-2 h-5 w-5" />
+									Browse All Nuggets
 								</Button>
 							</div>
 						</div>
 					</div>
 				)}
 
-				{/* No Ideas Generated */}
+				{/* No Ideas Generated or Loading Ideas */}
 				{isComplete && generatedIdeas.length === 0 && (
 					<div className="flex min-h-[60vh] flex-col items-center justify-center">
 						<div className="max-w-md text-center">
-							<h2 className="mb-4 font-bold text-2xl">Generation Complete</h2>
+							<h2 className="mb-4 font-bold text-2xl">🎉 Generation Complete!</h2>
 							<p className="mb-6 text-lg text-slate-400">
-								Your ideas were generated successfully, but we couldn't display
-								them here. Check your dashboard to view them.
+								Your personalized business idea has been generated successfully. 
+								{generationStatus?.generatedIdeaIds?.length > 0 
+									? " Loading your idea details..."
+									: " Generate another idea to explore more opportunities!"}
 							</p>
 							<div className="flex justify-center gap-4">
-								<Button onClick={() => router.push("/dashboard")}>
-									View Dashboard
+								<Button onClick={() => router.push("/")}>
+									Generate Another Idea
 								</Button>
-								<Button variant="outline" onClick={() => router.push("/")}>
-									Generate More
+								<Button variant="outline" onClick={() => router.push("/browse")}>
+									Browse All Ideas
 								</Button>
 							</div>
 						</div>

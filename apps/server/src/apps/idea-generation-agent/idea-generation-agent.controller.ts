@@ -125,14 +125,14 @@ const IdeaGenerationAgentController = {
 	},
 
 	/**
-	 * On-Demand Idea Generation - Generates 3 ideas based on user prompt
+	 * On-Demand Idea Generation - Generates ideas based on user prompt
 	 * Uses the same agent pipeline but driven by user input
 	 */
 	async generateIdeasOnDemand(
 		userPrompt: string,
 		userId: string | null,
 		requestId?: string,
-		count = 3,
+		count = 1,
 		personalization?: any,
 	): Promise<any[]> {
 		try {
@@ -150,263 +150,263 @@ const IdeaGenerationAgentController = {
 			const generatedIdeas = [];
 
 			// Generate ideas for the user
-			for (let i = 0; i < count; i++) {
-				console.log(
-					`🎯 Generating idea ${i + 1} of ${count} for prompt: "${userPrompt}"`,
+			try {
+				// Update progress for this idea iteration
+				const ideaStep = getStepForIdeaGeneration(1, 1);
+				await updateProgress(
+					requestId,
+					ideaStep.step,
+					ideaStep.message,
+					ideaStep.imageState,
 				);
 
-				try {
-					// Update progress for this idea iteration
-					const ideaStep = getStepForIdeaGeneration(i + 1, count);
-					await updateProgress(
-						requestId,
-						ideaStep.step,
-						ideaStep.message,
-						ideaStep.imageState,
-					);
+				// Initialize agent context with user prompt
+				const agentContext: AgentContext = {
+					userPrompt,
+					previousIdeas: [], // Clean slate for each on-demand generation
+				};
 
-					// Initialize agent context with user prompt
-					const agentContext: AgentContext = {
-						userPrompt,
-						previousIdeas: [], // Clean slate for each on-demand generation
-					};
+				// Step 1: Master Research Director - Set research parameters based on user prompt
+				console.log(
+					"🎯 Step 1: Activating Master Research Director (Idea 1)",
+				);
+				await updateProgress(
+					requestId,
+					GENERATION_STEPS.RESEARCH_DIRECTION.step,
+					GENERATION_STEPS.RESEARCH_DIRECTION.message,
+					GENERATION_STEPS.RESEARCH_DIRECTION.imageState,
+				);
+				const researchDirection =
+					await this.masterResearchDirector(agentContext);
 
-					// Step 1: Master Research Director - Set research parameters based on user prompt
-					console.log(
-						`🎯 Step 1: Activating Master Research Director (Idea ${i + 1})`,
-					);
-					await updateProgress(
-						requestId,
-						GENERATION_STEPS.RESEARCH_DIRECTION.step,
-						GENERATION_STEPS.RESEARCH_DIRECTION.message,
-						GENERATION_STEPS.RESEARCH_DIRECTION.imageState,
-					);
-					const researchDirection =
-						await this.masterResearchDirector(agentContext);
-
-					// Step 2: Enhanced Trend Research - Guided by research director and user prompt
-					console.log(`📈 Step 2: Enhanced Trend Research (Idea ${i + 1})`);
-					await updateProgress(
-						requestId,
-						GENERATION_STEPS.TREND_RESEARCH.step,
-						GENERATION_STEPS.TREND_RESEARCH.message,
-						GENERATION_STEPS.TREND_RESEARCH.imageState,
-					);
-					const trends = await this.trendResearchAgent(
-						agentContext,
-						researchDirection || undefined,
-					);
-					if (!trends) {
-						debugLogger.logError(
-							"generateIdeasOnDemand",
-							new Error(`Failed to research trends for idea ${i + 1}`),
-							{ step: "trendResearch", ideaNumber: i + 1, userPrompt },
-						);
-						continue;
-					}
-					agentContext.trends = trends;
-
-					// Step 3: Enhanced Problem Gap Analysis
-					console.log(
-						`🎯 Step 3: Enhanced Problem Gap Analysis (Idea ${i + 1})`,
-					);
-					await updateProgress(
-						requestId,
-						GENERATION_STEPS.PROBLEM_ANALYSIS.step,
-						GENERATION_STEPS.PROBLEM_ANALYSIS.message,
-						GENERATION_STEPS.PROBLEM_ANALYSIS.imageState,
-					);
-					const problemGaps = await this.problemGapAgent(agentContext);
-					if (!problemGaps) {
-						debugLogger.logError(
-							"generateIdeasOnDemand",
-							new Error(`Failed to analyze problems for idea ${i + 1}`),
-							{ step: "problemAnalysis", ideaNumber: i + 1, userPrompt },
-						);
-						continue;
-					}
-					agentContext.problemGaps = problemGaps;
-
-					// Step 4: Enhanced Competitive Intelligence
-					console.log(
-						`🏆 Step 4: Enhanced Competitive Intelligence (Idea ${i + 1})`,
-					);
-					await updateProgress(
-						requestId,
-						GENERATION_STEPS.COMPETITIVE_ANALYSIS.step,
-						GENERATION_STEPS.COMPETITIVE_ANALYSIS.message,
-						GENERATION_STEPS.COMPETITIVE_ANALYSIS.imageState,
-					);
-					const competitive =
-						await this.competitiveIntelligenceAgent(agentContext);
-					if (!competitive) {
-						debugLogger.logError(
-							"generateIdeasOnDemand",
-							new Error(`Failed to research competition for idea ${i + 1}`),
-							{
-								step: "competitiveIntelligence",
-								ideaNumber: i + 1,
-								userPrompt,
-							},
-						);
-						continue;
-					}
-					agentContext.competitive = competitive;
-
-					// Step 5: Enhanced Monetization Strategy
-					console.log(
-						`💰 Step 5: Enhanced Monetization Strategy (Idea ${i + 1})`,
-					);
-					await updateProgress(
-						requestId,
-						GENERATION_STEPS.MONETIZATION_STRATEGY.step,
-						GENERATION_STEPS.MONETIZATION_STRATEGY.message,
-						GENERATION_STEPS.MONETIZATION_STRATEGY.imageState,
-					);
-					const monetization = await this.monetizationAgent(agentContext);
-					if (!monetization) {
-						debugLogger.logError(
-							"generateIdeasOnDemand",
-							new Error(`Failed to design monetization for idea ${i + 1}`),
-							{ step: "monetization", ideaNumber: i + 1, userPrompt },
-						);
-						continue;
-					}
-					agentContext.monetization = monetization;
-
-					// Step 6: Generate what to build
-					console.log(`🛠️ Step 6: What To Build Analysis (Idea ${i + 1})`);
-					await updateProgress(
-						requestId,
-						GENERATION_STEPS.TECHNICAL_PLANNING.step,
-						GENERATION_STEPS.TECHNICAL_PLANNING.message,
-						GENERATION_STEPS.TECHNICAL_PLANNING.imageState,
-					);
-					const whatToBuild = await this.whatToBuildAgent(agentContext);
-					agentContext.whatToBuild = whatToBuild || undefined;
-
-					// Step 7: Initial idea synthesis
-					console.log(`🧠 Step 7: Initial Idea Synthesis (Idea ${i + 1})`);
-					await updateProgress(
-						requestId,
-						GENERATION_STEPS.IDEA_SYNTHESIS.step,
-						GENERATION_STEPS.IDEA_SYNTHESIS.message,
-						GENERATION_STEPS.IDEA_SYNTHESIS.imageState,
-					);
-					const initialIdea = await this.ideaSynthesisAgent(agentContext);
-					if (!initialIdea) {
-						debugLogger.logError(
-							"generateIdeasOnDemand",
-							new Error(`Failed to synthesize initial idea ${i + 1}`),
-							{ step: "initialSynthesis", ideaNumber: i + 1, userPrompt },
-						);
-						continue;
-					}
-
-					// Step 8: Critic Agent - Analyze and create refinement prompt
-					console.log(`🔍 Step 8: Critic Agent Analysis (Idea ${i + 1})`);
-					await updateProgress(
-						requestId,
-						GENERATION_STEPS.CRITICAL_REVIEW.step,
-						GENERATION_STEPS.CRITICAL_REVIEW.message,
-						GENERATION_STEPS.CRITICAL_REVIEW.imageState,
-					);
-					const refinementPrompt = await this.criticAgent(
-						[initialIdea],
-						agentContext,
-					);
-
-					// Step 9: Final Refined Synthesis - Apply critic feedback
-					console.log(
-						`🎨 Step 9: Final Refined Idea Synthesis (Idea ${i + 1})`,
-					);
-					await updateProgress(
-						requestId,
-						GENERATION_STEPS.FINAL_REFINEMENT.step,
-						GENERATION_STEPS.FINAL_REFINEMENT.message,
-						GENERATION_STEPS.FINAL_REFINEMENT.imageState,
-					);
-					const finalIdea = await this.ideaSynthesisAgent(
-						agentContext,
-						refinementPrompt || undefined,
-					);
-					if (!finalIdea) {
-						debugLogger.logError(
-							"generateIdeasOnDemand",
-							new Error(`Failed to create final refined idea ${i + 1}`),
-							{ step: "finalSynthesis", ideaNumber: i + 1, userPrompt },
-						);
-						continue;
-					}
-
-					// Step 10: Save to UserGeneratedIdea table (only for authenticated users)
-					let savedIdea: any;
-					if (userId) {
-						console.log(
-							`💾 Step 10: Saving User Generated Idea ${i + 1} to Database`,
-						);
-						await updateProgress(
-							requestId,
-							GENERATION_STEPS.SAVING_RESULTS.step,
-							`Securing golden nugget ${i + 1} in your treasure vault...`,
-							GENERATION_STEPS.SAVING_RESULTS.imageState,
-						);
-						savedIdea = await prisma.userGeneratedIdea.create({
-							data: {
-								userId,
-								prompt: userPrompt,
-								title: finalIdea.title,
-								description: finalIdea.description,
-								executiveSummary: finalIdea.executiveSummary,
-								problemStatement: finalIdea.problemStatement,
-								narrativeHook: finalIdea.narrativeHook,
-								tags: finalIdea.tags,
-								confidenceScore: finalIdea.confidenceScore,
-								fullIdeaDataJson: JSON.stringify({
-									...finalIdea,
-									trends,
-									problemGaps,
-									competitive,
-									monetization,
-									whatToBuild,
-								}),
-							},
-						});
-					} else {
-						console.log(
-							"💾 Step 10: Skipping database save for non-authenticated user",
-						);
-						await updateProgress(
-							requestId,
-							GENERATION_STEPS.SAVING_RESULTS.step,
-							`Preparing golden nugget ${i + 1} for presentation...`,
-							GENERATION_STEPS.SAVING_RESULTS.imageState,
-						);
-						// Create a temporary ID for non-auth users
-						savedIdea = {
-							id: "temp-" + Date.now() + "-" + i,
-							...finalIdea,
-						};
-					}
-
-					generatedIdeas.push(savedIdea);
-					console.log(
-						`✅ Successfully generated and saved idea ${i + 1}: ${finalIdea.title}`,
-					);
-				} catch (error) {
-					console.error(`❌ Failed to generate idea ${i + 1}:`, error);
+				// Step 2: Enhanced Trend Research - Guided by research director and user prompt
+				console.log("📈 Step 2: Enhanced Trend Research (Idea 1)");
+				await updateProgress(
+					requestId,
+					GENERATION_STEPS.TREND_RESEARCH.step,
+					GENERATION_STEPS.TREND_RESEARCH.message,
+					GENERATION_STEPS.TREND_RESEARCH.imageState,
+				);
+				const trends = await this.trendResearchAgent(
+					agentContext,
+					researchDirection || undefined,
+				);
+				if (!trends) {
 					debugLogger.logError(
-						`On-demand idea generation ${i + 1}`,
-						error as Error,
+						"generateIdeasOnDemand",
+						new Error("Failed to research trends for idea 1"),
+						{ step: "trendResearch", ideaNumber: 1, userPrompt },
+					);
+					throw new Error("Failed to research trends for idea 1");
+				}
+				agentContext.trends = trends;
+
+				// Step 3: Enhanced Problem Gap Analysis
+				console.log(
+					"🎯 Step 3: Enhanced Problem Gap Analysis (Idea 1)",
+				);
+				await updateProgress(
+					requestId,
+					GENERATION_STEPS.PROBLEM_ANALYSIS.step,
+					GENERATION_STEPS.PROBLEM_ANALYSIS.message,
+					GENERATION_STEPS.PROBLEM_ANALYSIS.imageState,
+				);
+				const problemGaps = await this.problemGapAgent(agentContext);
+				if (!problemGaps) {
+					debugLogger.logError(
+						"generateIdeasOnDemand",
+						new Error("Failed to analyze problems for idea 1"),
+						{ step: "problemAnalysis", ideaNumber: 1, userPrompt },
+					);
+					throw new Error("Failed to analyze problems for idea 1");
+				}
+				agentContext.problemGaps = problemGaps;
+
+				// Step 4: Enhanced Competitive Intelligence
+				console.log(
+					"🏆 Step 4: Enhanced Competitive Intelligence (Idea 1)",
+				);
+				await updateProgress(
+					requestId,
+					GENERATION_STEPS.COMPETITIVE_ANALYSIS.step,
+					GENERATION_STEPS.COMPETITIVE_ANALYSIS.message,
+					GENERATION_STEPS.COMPETITIVE_ANALYSIS.imageState,
+				);
+				const competitive =
+					await this.competitiveIntelligenceAgent(agentContext);
+				if (!competitive) {
+					debugLogger.logError(
+						"generateIdeasOnDemand",
+						new Error("Failed to research competition for idea 1"),
 						{
+							step: "competitiveIntelligence",
+							ideaNumber: 1,
 							userPrompt,
-							userId,
-							ideaNumber: i + 1,
 						},
 					);
-					// Continue to next idea even if one fails
+					throw new Error("Failed to research competition for idea 1");
 				}
+				agentContext.competitive = competitive;
+
+				// Step 5: Enhanced Monetization Strategy
+				console.log(
+					"💰 Step 5: Enhanced Monetization Strategy (Idea 1)",
+				);
+				await updateProgress(
+					requestId,
+					GENERATION_STEPS.MONETIZATION_STRATEGY.step,
+					GENERATION_STEPS.MONETIZATION_STRATEGY.message,
+					GENERATION_STEPS.MONETIZATION_STRATEGY.imageState,
+				);
+				const monetization = await this.monetizationAgent(agentContext);
+				if (!monetization) {
+					debugLogger.logError(
+						"generateIdeasOnDemand",
+						new Error("Failed to design monetization for idea 1"),
+						{ step: "monetization", ideaNumber: 1, userPrompt },
+					);
+					throw new Error("Failed to design monetization for idea 1");
+				}
+				agentContext.monetization = monetization;
+
+				// Step 6: Generate what to build
+				console.log("🛠️ Step 6: What To Build Analysis (Idea 1)");
+				await updateProgress(
+					requestId,
+					GENERATION_STEPS.TECHNICAL_PLANNING.step,
+					GENERATION_STEPS.TECHNICAL_PLANNING.message,
+					GENERATION_STEPS.TECHNICAL_PLANNING.imageState,
+				);
+				const whatToBuild = await this.whatToBuildAgent(agentContext);
+				agentContext.whatToBuild = whatToBuild || undefined;
+
+				// Step 7: Initial idea synthesis
+				console.log("🧠 Step 7: Initial Idea Synthesis (Idea 1)");
+				await updateProgress(
+					requestId,
+					GENERATION_STEPS.IDEA_SYNTHESIS.step,
+					GENERATION_STEPS.IDEA_SYNTHESIS.message,
+					GENERATION_STEPS.IDEA_SYNTHESIS.imageState,
+				);
+				const initialIdea = await this.ideaSynthesisAgent(agentContext);
+				if (!initialIdea) {
+					debugLogger.logError(
+						"generateIdeasOnDemand",
+						new Error("Failed to synthesize initial idea 1"),
+						{ step: "initialSynthesis", ideaNumber: 1, userPrompt },
+					);
+					throw new Error("Failed to synthesize initial idea 1");
+				}
+
+				// Step 8: Critic Agent - Analyze and create refinement prompt
+				console.log("🔍 Step 8: Critic Agent Analysis (Idea 1)");
+				await updateProgress(
+					requestId,
+					GENERATION_STEPS.CRITICAL_REVIEW.step,
+					GENERATION_STEPS.CRITICAL_REVIEW.message,
+					GENERATION_STEPS.CRITICAL_REVIEW.imageState,
+				);
+				const refinementPrompt = await this.criticAgent(
+					[initialIdea],
+					agentContext,
+				);
+
+				// Step 9: Final Refined Synthesis - Apply critic feedback
+				console.log(
+					"🎨 Step 9: Final Refined Idea Synthesis (Idea 1)",
+				);
+				await updateProgress(
+					requestId,
+					GENERATION_STEPS.FINAL_REFINEMENT.step,
+					GENERATION_STEPS.FINAL_REFINEMENT.message,
+					GENERATION_STEPS.FINAL_REFINEMENT.imageState,
+				);
+				const finalIdea = await this.ideaSynthesisAgent(
+					agentContext,
+					refinementPrompt || undefined,
+				);
+				if (!finalIdea) {
+					debugLogger.logError(
+						"generateIdeasOnDemand",
+							new Error("Failed to create final refined idea 1"),
+						{ step: "finalSynthesis", ideaNumber: 1, userPrompt },
+					);
+					throw new Error("Failed to create final refined idea 1");
+				}
+
+				// Step 10: Save to UserGeneratedIdea table (only for authenticated users)
+				let savedIdea: any;
+				if (userId) {
+					console.log(
+						"💾 Step 10: Saving User Generated Idea 1 to Database",
+					);
+					await updateProgress(
+						requestId,
+						GENERATION_STEPS.SAVING_RESULTS.step,
+						"Securing golden nugget 1 in your treasure vault...",
+						GENERATION_STEPS.SAVING_RESULTS.imageState,
+					);
+					savedIdea = await prisma.userGeneratedIdea.create({
+						data: {
+							userId,
+							prompt: userPrompt,
+							title: finalIdea.title,
+							description: finalIdea.description,
+							executiveSummary: finalIdea.executiveSummary,
+							problemStatement: finalIdea.problemStatement,
+							narrativeHook: finalIdea.narrativeHook,
+							tags: finalIdea.tags,
+							confidenceScore: finalIdea.confidenceScore,
+							fullIdeaDataJson: JSON.stringify({
+								...finalIdea,
+								trends,
+								problemGaps,
+								competitive,
+								monetization,
+								whatToBuild,
+							}),
+						},
+					});
+				} else {
+					console.log(
+						"💾 Step 10: Skipping database save for non-authenticated user",
+					);
+					await updateProgress(
+						requestId,
+						GENERATION_STEPS.SAVING_RESULTS.step,
+						"Preparing golden nugget 1 for presentation...",
+						GENERATION_STEPS.SAVING_RESULTS.imageState,
+					);
+					// Create a temporary ID for non-auth users
+					savedIdea = {
+						id: "temp-" + Date.now() + "-" + 1,
+						...finalIdea,
+					};
+				}
+
+				generatedIdeas.push(savedIdea);
+				console.log(
+					`✅ Successfully generated and saved idea 1: ${finalIdea.title}`,
+				);
+			} catch (error) {
+				console.error("❌ Failed to generate idea 1:", error);
+				debugLogger.logError(
+					"On-demand idea generation 1",
+					error as Error,
+					{
+						userPrompt,
+						userId,
+						ideaNumber: 1,
+					},
+				);
+				// Continue to next idea even if one fails
 			}
+			// for (let i = 0; i < 1; i++) {
+			// 	console.log(
+			// 		`🎯 Generating idea ${i + 1} of ${count} for prompt: "${userPrompt}"`,
+			// 	);
+
+			// }
 
 			console.log(
 				`🎉 On-Demand Idea Generation Completed. Generated ${generatedIdeas.length} ideas.`,
