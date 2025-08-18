@@ -7,10 +7,12 @@ import type { AppRouter } from "../../../server/types";
 export const queryClient = new QueryClient({
 	queryCache: new QueryCache({
 		onError: (error: any) => {
-			// Don't show toast for authentication errors
+			// Don't show toast for authentication errors or subscription errors
 			if (
 				error?.data?.code === "UNAUTHORIZED" ||
-				error?.message === "Authentication required"
+				error?.message === "Authentication required" ||
+				error?.message?.includes("subscription") ||
+				error?.message?.includes("data is undefined")
 			) {
 				return;
 			}
