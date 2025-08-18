@@ -571,7 +571,7 @@ export default function BrowseServerClient({
                   key={idea.id}
                   ref={shouldAttachRef ? lastIdeaRef : undefined}
                 >
-                  <NuggetsCards nugget={idea} className="h-[57dvh] w-full justify-center"/>
+                  <NuggetsCards nugget={idea} className="w-full justify-center"/>
                 </div>
               );
             })}
