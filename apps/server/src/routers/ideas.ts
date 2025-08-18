@@ -512,8 +512,8 @@ export const ideasRouter = router({
 								progressMessage: `🎉 Found ${generatedIdeas.length} amazing business opportunities for you!`,
 								imageState: "found",
 								generatedIdeaIds: generatedIdeas.map((idea: any) => idea.id),
-								// Store full idea data for non-auth users in personalizationData field
-								...((!userId && generatedIdeas.length > 0) && {
+								// Store full idea data for all users in personalizationData field
+								...(generatedIdeas.length > 0 && {
 									personalizationData: JSON.stringify({
 										...(input.personalization || {}),
 										generatedIdeasData: generatedIdeas

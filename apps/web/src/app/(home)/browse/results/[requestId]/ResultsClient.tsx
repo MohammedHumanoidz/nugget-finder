@@ -73,11 +73,11 @@ export default function ResultsClient({ requestId }: ResultsClientProps) {
 			generationStatus.generatedIdeaIds.length > 0 &&
 			generatedIdeas.length === 0
 		) {
-			// For non-auth users, use the direct idea data from the response
+			// Always use the direct idea data from the response if available (both auth and non-auth users)
 			if ((generationStatus as any).generatedIdeasData) {
 				setGeneratedIdeas((generationStatus as any).generatedIdeasData);
 			} 
-			// For authenticated users, filter from the database query
+			// Fallback: For authenticated users, filter from the database query if direct data not available
 			else if (allGeneratedIdeas) {
 				const justGeneratedIdeas = allGeneratedIdeas.filter((idea: GeneratedIdea) =>
 					generationStatus.generatedIdeaIds.includes(idea.id)
