@@ -29,6 +29,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           onSessionChange={() => {
             router.refresh();
           }}
+          redirectTo={process.env.NEXT_PUBLIC_APP_URL || "https://nuggetfinder.ai"}
           social={{
             providers: ["google"],
           }}
