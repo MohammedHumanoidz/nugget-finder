@@ -14,6 +14,7 @@ import { authClient } from "@/lib/auth-client";
 import { trpc } from "@/utils/trpc";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { useNavigationLoader } from "@/hooks/use-navigation-loader";
 
 // Generate a simple session ID for non-auth users
 function generateSessionId(): string {
@@ -30,6 +31,7 @@ export function HeroSection() {
 	const [showPersonalizationModal, setShowPersonalizationModal] =
 		useState(false);
 	const [isGenerating, setIsGenerating] = useState(false);
+	const { startLoading } = useNavigationLoader();
 
 	const generateIdeas = useMutation(
 		trpc.ideas.generateOnDemand.mutationOptions({
@@ -91,6 +93,7 @@ export function HeroSection() {
 		personalization?: PersonalizationData,
 	) => {
 		setIsGenerating(true);
+		startLoading("Generating ideas...");
 
 		try {
 			const sessionId = session?.user?.id || generateSessionId();

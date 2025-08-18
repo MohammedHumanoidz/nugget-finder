@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
+import { NavigationLink } from "./navigation-link";
 
 export default function Navbar() {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -199,13 +200,14 @@ export default function Navbar() {
 							}}
 							whileHover={{ y: -2, scale: isScrolled ? 0.95 : 1.05 }}
 						>
-							<Link
+							<NavigationLink
 								href={link.href}
+								loadingMessage={`Loading ${link.label}...`}
 								className="group relative text-base text-muted-foreground transition-all duration-200 hover:text-foreground"
 							>
 								{link.label}
 								<span className="-bottom-1 absolute left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full" />
-							</Link>
+							</NavigationLink>
 						</motion.div>
 					))}
 
@@ -224,13 +226,14 @@ export default function Navbar() {
 								}}
 								whileHover={{ y: -2, scale: isScrolled ? 0.95 : 1.05 }}
 							>
-								<Link
+								<NavigationLink
 									href={link.href}
+									loadingMessage={`Loading ${link.label}...`}
 									className="group relative text-base text-muted-foreground transition-all duration-200 hover:text-foreground"
 								>
 									{link.label}
 									<span className="-bottom-1 absolute left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full" />
-								</Link>
+								</NavigationLink>
 							</motion.div>
 						))}
 					</SignedIn>
@@ -404,13 +407,14 @@ export default function Navbar() {
 									transition={{ delay: index * 0.1 }}
 									whileTap={{ scale: 0.95 }}
 								>
-									<Link
+									<NavigationLink
 										href={link.href}
+										loadingMessage={`Loading ${link.label}...`}
 										className="block py-2 text-muted-foreground transition-colors hover:text-foreground"
 										onClick={() => setIsMobileMenuOpen(false)}
 									>
 										{link.label}
-									</Link>
+									</NavigationLink>
 								</motion.div>
 							))}
 
@@ -423,13 +427,14 @@ export default function Navbar() {
 										transition={{ delay: (navLinks.length + index) * 0.1 }}
 										whileTap={{ scale: 0.95 }}
 									>
-										<Link
+										<NavigationLink
 											href={link.href}
+											loadingMessage={`Loading ${link.label}...`}
 											className="block py-2 text-muted-foreground transition-colors hover:text-foreground"
 											onClick={() => setIsMobileMenuOpen(false)}
 										>
 											{link.label}
-										</Link>
+										</NavigationLink>
 									</motion.div>
 								))}
 							</SignedIn>
@@ -443,14 +448,15 @@ export default function Navbar() {
 										transition={{ delay: 0.4 }}
 										whileTap={{ scale: 0.95 }}
 									>
-										<Link
+										<NavigationLink
 											href="/auth/sign-in"
+											loadingMessage="Loading login..."
 											onClick={() => setIsMobileMenuOpen(false)}
 										>
 											<Button variant="outline" className="w-full">
 												Login
 											</Button>
-										</Link>
+										</NavigationLink>
 									</motion.div>
 									<motion.div
 										initial={{ opacity: 0, y: 20 }}
@@ -458,14 +464,15 @@ export default function Navbar() {
 										transition={{ delay: 0.5 }}
 										whileTap={{ scale: 0.95 }}
 									>
-										<Link
+										<NavigationLink
 											href="/auth/sign-up"
+											loadingMessage="Loading signup..."
 											onClick={() => setIsMobileMenuOpen(false)}
 										>
 											<Button variant="default" className="w-full">
 												Start
 											</Button>
-										</Link>
+										</NavigationLink>
 									</motion.div>
 								</SignedOut>
 								<SignedIn>
@@ -475,14 +482,15 @@ export default function Navbar() {
 										transition={{ delay: 0.4 }}
 										whileTap={{ scale: 0.95 }}
 									>
-										<Link
+										<NavigationLink
 											href="/dashboard"
+											loadingMessage="Loading dashboard..."
 											onClick={() => setIsMobileMenuOpen(false)}
 										>
 											<Button variant="default" className="w-full">
 												Dashboard
 											</Button>
-										</Link>
+										</NavigationLink>
 									</motion.div>
 									<motion.div
 										initial={{ opacity: 0, y: 20 }}

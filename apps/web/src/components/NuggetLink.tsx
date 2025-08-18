@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { useNonAuthViewTracker } from "@/hooks/useNonAuthViewTracker";
 import { authClient } from "@/lib/auth-client";
+import { useNavigationLoader } from "@/hooks/use-navigation-loader";
 
 interface NuggetLinkProps {
 	ideaId: string;
@@ -34,10 +35,12 @@ export default function NuggetLink({
 		useNonAuthViewTracker();
 
 	const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+	const { startLoading } = useNavigationLoader();
 
 	const handleClick = (e: React.MouseEvent) => {
 		// For authenticated users, let them navigate normally
 		if (isAuthenticated) {
+			startLoading("Loading nugget...");
 			return; // Continue with normal navigation
 		}
 
@@ -52,6 +55,7 @@ export default function NuggetLink({
 
 		if (alreadyViewed || canViewNew) {
 			// User can access this idea, continue with navigation
+			startLoading("Loading nugget...");
 			return;
 		}
 

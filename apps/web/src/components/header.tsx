@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { ModeToggle } from "./mode-toggle";
 import UserMenu from "./user-menu";
+import { NavigationLink } from "./navigation-link";
 
 export default function Header() {
 	const links = [
@@ -16,9 +17,9 @@ export default function Header() {
 				<nav className="flex gap-4 text-lg">
 					{links.map(({ to, label }) => {
 						return (
-							<Link key={to} href={to}>
+							<NavigationLink key={to} href={to} loadingMessage={`Loading ${label}...`}>
 								{label}
-							</Link>
+							</NavigationLink>
 						);
 					})}
 				</nav>

@@ -31,6 +31,7 @@ import PersonalizationModal, {
   type PersonalizationData,
 } from "./PersonalizationModal";
 import NuggetsCards from "./nuggetsCards";
+import { useNavigationLoader } from "@/hooks/use-navigation-loader";
 
 interface IdeaScore {
   totalScore?: number;
@@ -91,6 +92,7 @@ export default function BrowseServerClient({
   const [searchDataReady, setSearchDataReady] = useState(false);
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const observerRef = useRef<IntersectionObserver>(null);
+  const { startLoading } = useNavigationLoader();
 
   // Handle search context from homepage
   useEffect(() => {

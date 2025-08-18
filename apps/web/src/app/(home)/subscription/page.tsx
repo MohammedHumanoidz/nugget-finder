@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import { SubscriptionManager } from "@/components/SubscriptionManager";
 import { authClient } from "@/lib/auth-client";
+import { PageLoader } from "@/components/ui/page-loader";
 
 export default function SubscriptionPage() {
 	const router = useRouter();
@@ -19,9 +20,7 @@ export default function SubscriptionPage() {
 	if (isPending) {
 		return (
 			<div className="min-h-screen bg-background">
-				<div className="flex min-h-96 items-center justify-center">
-					<div>Loading...</div>
-				</div>
+				<PageLoader message="Loading subscription..." />
 			</div>
 		);
 	}

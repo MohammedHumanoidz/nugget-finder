@@ -18,6 +18,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useBetterAuthSubscription } from "@/hooks/useBetterAuthSubscription";
 import { authClient } from "@/lib/auth-client";
 import type { BillingPeriod, PricingPageProps } from "@/types/subscription";
+import { useNavigationLoader } from "@/hooks/use-navigation-loader";
 
 export function PricingPage({
 	highlightedPlanId,
@@ -30,6 +31,7 @@ export function PricingPage({
 	// Get authentication status
 	const { data: session } = authClient.useSession();
 	const isAuthenticated = !!session?.user;
+	const { startLoading } = useNavigationLoader();
 
 	// Check if user was redirected due to view limit
 	const reason = searchParams.get("reason");
@@ -55,6 +57,7 @@ export function PricingPage({
 		// Check if user is authenticated
 		if (!isAuthenticated) {
 			// Redirect to login page
+			startLoading("Loading login...");
 			router.push("/auth/sign-in");
 			return;
 		}
@@ -91,6 +94,7 @@ export function PricingPage({
 			upgradeOptions.subscriptionId = currentSubscription.stripeSubscriptionId;
 		}
 
+		startLoading("Processing subscription...");
 		await upgradeSubscription.mutate(upgradeOptions);
 	};
 

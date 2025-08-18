@@ -9,6 +9,8 @@ import { authClient } from "@/lib/auth-client";
 import { queryClient } from "@/utils/trpc";
 import { ThemeProvider } from "./theme-provider";
 import { Toaster } from "./ui/sonner";
+import { NavigationLoaderProvider } from "@/hooks/use-navigation-loader";
+import { NavigationLoader } from "./navigation-loader";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -19,24 +21,27 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      <AuthUIProvider
-        authClient={authClient}
-        navigate={router.push}
-        replace={router.replace}
-        onSessionChange={() => {
-          router.refresh();
-        }}
-        social={{
-          providers: ["google"],
-        }}
-        Link={Link}
-      >
-        <QueryClientProvider client={queryClient}>
-          {children}
-          <ReactQueryDevtools />
-        </QueryClientProvider>
-        <Toaster richColors />
-      </AuthUIProvider>
+      <NavigationLoaderProvider>
+        <AuthUIProvider
+          authClient={authClient}
+          navigate={router.push}
+          replace={router.replace}
+          onSessionChange={() => {
+            router.refresh();
+          }}
+          social={{
+            providers: ["google"],
+          }}
+          Link={Link}
+        >
+          <QueryClientProvider client={queryClient}>
+            {children}
+            <ReactQueryDevtools />
+          </QueryClientProvider>
+          <Toaster richColors />
+        </AuthUIProvider>
+        <NavigationLoader />
+      </NavigationLoaderProvider>
     </ThemeProvider>
   );
 }

@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sidebar";
 import { UserButton } from "@daveyplate/better-auth-ui";
 import Image from "next/image";
+import { NavigationLink } from "./navigation-link";
 
 const adminItems = [
   { title: "Dashboard", url: "/admin", icon: Home },
@@ -42,10 +43,10 @@ export function AppSidebar() {
               {adminItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <NavigationLink href={item.url} loadingMessage={`Loading ${item.title}...`}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </NavigationLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

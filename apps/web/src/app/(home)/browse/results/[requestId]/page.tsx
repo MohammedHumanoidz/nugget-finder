@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import ResultsClient from "./ResultsClient";
+import { PageLoader } from "@/components/ui/page-loader";
 
 interface ResultsPageProps {
 	params: Promise<{ requestId: string }>;
@@ -19,11 +20,7 @@ export default async function ResultsPage({ params }: ResultsPageProps) {
 	return (
 		<div className="min-h-screen">
 			<Suspense
-				fallback={
-					<div className="flex min-h-screen items-center justify-center">
-						<div className="text-white">Loading...</div>
-					</div>
-				}
+				fallback={<PageLoader message="Loading results..." />}
 			>
 				<ResultsClient requestId={requestId} />
 			</Suspense>

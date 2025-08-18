@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import BrowseServerClient from "@/components/BrowseServerClient";
 import { serverTRPC } from "@/lib/server-trpc";
+import { PageLoader } from "@/components/ui/page-loader";
 
 async function getInitialData() {
 	try {
@@ -40,14 +41,7 @@ export default async function BrowsePage() {
 	return (
 		<div className="min-h-screen bg-background">
 			<Suspense
-				fallback={
-					<div className="flex items-center justify-center py-12">
-						<div className="text-center">
-							<Loader2 className="mx-auto mb-4 h-8 w-8 animate-spin" />
-							<p className="text-muted-foreground">Loading ideas...</p>
-						</div>
-					</div>
-				}
+				fallback={<PageLoader message="Loading ideas..." />}
 			>
 				<BrowseServerClient
 					initialIdeas={initialIdeas}
