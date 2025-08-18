@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useNavigationLoader } from "@/hooks/use-navigation-loader";
-import { ComponentProps } from "react";
+import type { ComponentProps } from "react";
 
 interface NavigationLinkProps extends ComponentProps<typeof Link> {
   loadingMessage?: string;

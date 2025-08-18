@@ -20,7 +20,7 @@ const getIdeasSchema = z.object({
 });
 
 const getIdeaByIdSchema = z.object({
-	id: z.string().uuid(),
+	id: z.string().min(1),
 });
 
 export const agentRouter = router({

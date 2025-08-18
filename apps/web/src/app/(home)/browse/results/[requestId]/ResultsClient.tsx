@@ -156,6 +156,7 @@ export default function ResultsClient({ requestId }: ResultsClientProps) {
 								{generationStatus.progressMessage}
 							</p>
 						</div>
+						<p className="text-center text-slate-400">We&apos;re generating your idea. Feel free to move around since it might take a bit and we&apos;ll handle it from here.</p>
 					</div>
 				)}
 

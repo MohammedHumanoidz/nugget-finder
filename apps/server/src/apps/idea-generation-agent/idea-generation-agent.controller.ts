@@ -334,55 +334,30 @@ const IdeaGenerationAgentController = {
 					throw new Error("Failed to create final refined idea 1");
 				}
 
-				// Step 10: Save to UserGeneratedIdea table (only for authenticated users)
-				let savedIdea: any;
-				if (userId) {
-					console.log(
-						"💾 Step 10: Saving User Generated Idea 1 to Database",
-					);
-					await updateProgress(
-						requestId,
-						GENERATION_STEPS.SAVING_RESULTS.step,
-						"Securing golden nugget 1 in your treasure vault...",
-						GENERATION_STEPS.SAVING_RESULTS.imageState,
-					);
-					savedIdea = await prisma.userGeneratedIdea.create({
-						data: {
-							userId,
-							prompt: userPrompt,
-							title: finalIdea.title,
-							description: finalIdea.description,
-							executiveSummary: finalIdea.executiveSummary,
-							problemStatement: finalIdea.problemStatement,
-							narrativeHook: finalIdea.narrativeHook,
-							tags: finalIdea.tags,
-							confidenceScore: finalIdea.confidenceScore,
-							fullIdeaDataJson: JSON.stringify({
-								...finalIdea,
-								trends,
-								problemGaps,
-								competitive,
-								monetization,
-								whatToBuild,
-							}),
-						},
-					});
-				} else {
-					console.log(
-						"💾 Step 10: Skipping database save for non-authenticated user",
-					);
-					await updateProgress(
-						requestId,
-						GENERATION_STEPS.SAVING_RESULTS.step,
-						"Preparing golden nugget 1 for presentation...",
-						GENERATION_STEPS.SAVING_RESULTS.imageState,
-					);
-					// Create a temporary ID for non-auth users
-					savedIdea = {
-						id: "temp-" + Date.now() + "-" + 1,
-						...finalIdea,
-					};
-				}
+				// Step 10: Save to DailyIdea table for consistency with existing nugget route
+				console.log(
+					"💾 Step 10: Saving Generated Idea 1 to Database",
+				);
+				await updateProgress(
+					requestId,
+					GENERATION_STEPS.SAVING_RESULTS.step,
+					userId ? 
+						"Securing golden nugget 1 in your treasure vault..." :
+						"Securing golden nugget 1 for later claiming...",
+					GENERATION_STEPS.SAVING_RESULTS.imageState,
+				);
+
+				// Create the idea in the main DailyIdea table so it can be accessed via /nugget/[id]
+				const savedIdea = await this.saveGeneratedIdeaToDailyIdea(
+					finalIdea,
+					trends,
+					problemGaps,
+					competitive,
+					monetization,
+					whatToBuild,
+					userId,
+					userPrompt
+				);
 
 				generatedIdeas.push(savedIdea);
 				console.log(
@@ -692,6 +667,169 @@ const IdeaGenerationAgentController = {
 				failurePoint: "pipeline execution",
 			});
 			return null;
+		}
+	},
+
+	/**
+	 * Save a generated idea to the DailyIdea table with all related entities
+	 * This allows generated ideas to be accessed via the regular nugget route
+	 */
+	async saveGeneratedIdeaToDailyIdea(
+		idea: any,
+		trends: any,
+		problemGaps: any,
+		competitive: any,
+		monetization: any,
+		whatToBuild: any,
+		userId: string | null,
+		userPrompt: string
+	): Promise<any> {
+		try {
+			// Create related entities first
+			const whyNow = await IdeaGenerationAgentService.createWhyNow(trends);
+			const ideaScore = await IdeaGenerationAgentService.createIdeaScore(
+				idea.scoring,
+			);
+			const monetizationStrategy =
+				await IdeaGenerationAgentService.createMonetizationStrategy(
+					monetization,
+				);
+
+			// Create DailyIdea with all the same structure as the regular generation
+			let dailyIdea: any;
+
+			if (whatToBuild) {
+				// Use a transaction to handle the circular dependency
+				dailyIdea = await prisma.$transaction(async (tx) => {
+					// First create DailyIdea without whatToBuildId
+					const createdIdea = await tx.dailyIdea.create({
+						data: {
+							title: idea.title,
+							description: idea.description,
+							executiveSummary: idea.executiveSummary,
+							problemSolution: idea.problemSolution,
+							problemStatement: idea.problemStatement,
+							innovationLevel: idea.innovationLevel,
+							timeToMarket: idea.timeToMarket,
+							confidenceScore: idea.confidenceScore,
+							narrativeHook: idea.narrativeHook,
+							targetKeywords: idea.targetKeywords,
+							urgencyLevel: idea.urgencyLevel,
+							executionComplexity: idea.executionComplexity,
+							tags: idea.tags,
+							whyNowId: whyNow.id,
+							ideaScoreId: ideaScore.id,
+							monetizationStrategyId: monetizationStrategy.id,
+						},
+					});
+
+					// Then create WhatToBuild with the actual DailyIdea ID
+					const createdWhatToBuild = await tx.whatToBuild.create({
+						data: {
+							platformDescription: whatToBuild.platformDescription,
+							coreFeaturesSummary: whatToBuild.coreFeaturesSummary,
+							userInterfaces: whatToBuild.userInterfaces,
+							keyIntegrations: whatToBuild.keyIntegrations,
+							pricingStrategyBuildRecommendation:
+								whatToBuild.pricingStrategyBuildRecommendation,
+							dailyIdeaId: createdIdea.id,
+						},
+					});
+
+					// Finally update DailyIdea to include the whatToBuildId
+					const updatedIdea = await tx.dailyIdea.update({
+						where: { id: createdIdea.id },
+						data: { whatToBuildId: createdWhatToBuild.id },
+					});
+
+					return updatedIdea;
+				});
+			} else {
+				// Create DailyIdea without WhatToBuild
+				dailyIdea = await IdeaGenerationAgentService.createDailyIdea(
+					idea,
+					whyNow.id,
+					ideaScore.id,
+					monetizationStrategy.id,
+				);
+			}
+
+			// Create related entities
+			if (problemGaps.gaps.length > 0) {
+				await IdeaGenerationAgentService.createMarketGap(
+					problemGaps.gaps[0],
+					dailyIdea.id,
+				);
+			}
+
+			await IdeaGenerationAgentService.createMarketCompetition(
+				competitive.competition,
+				dailyIdea.id,
+			);
+			await IdeaGenerationAgentService.createStrategicPositioning(
+				competitive.positioning,
+				dailyIdea.id,
+			);
+
+			// Create new related entities for execution plan, traction signals, and framework fit
+			if (idea.executionPlan) {
+				await IdeaGenerationAgentService.createExecutionPlan(
+					idea.executionPlan,
+					dailyIdea.id,
+				);
+			}
+
+			if (idea.tractionSignals) {
+				await IdeaGenerationAgentService.createTractionSignals(
+					idea.tractionSignals,
+					dailyIdea.id,
+				);
+			}
+
+			if (idea.frameworkFit) {
+				await IdeaGenerationAgentService.createFrameworkFit(
+					idea.frameworkFit,
+					dailyIdea.id,
+				);
+			}
+
+			// Also save to UserGeneratedIdea if there's a userId for claiming purposes
+			if (userId) {
+				await prisma.userGeneratedIdea.create({
+					data: {
+						userId,
+						prompt: userPrompt,
+						title: idea.title,
+						description: idea.description,
+						executiveSummary: idea.executiveSummary,
+						problemStatement: idea.problemStatement,
+						narrativeHook: idea.narrativeHook,
+						tags: idea.tags,
+						confidenceScore: idea.confidenceScore,
+						fullIdeaDataJson: JSON.stringify({
+							...idea,
+							trends,
+							problemGaps,
+							competitive,
+							monetization,
+							whatToBuild,
+						}),
+						// Link to the actual DailyIdea for consistency
+						// Note: This assumes there's a dailyIdeaId field in UserGeneratedIdea
+						// If not, you might want to add it or use a different approach
+					},
+				});
+			}
+
+			console.log(
+				"🎉 Generated Idea Saved to DailyIdea Successfully:",
+				dailyIdea.id,
+			);
+
+			return dailyIdea;
+		} catch (error) {
+			console.error("❌ Failed to save generated idea to DailyIdea:", error);
+			throw error;
 		}
 	},
 };
