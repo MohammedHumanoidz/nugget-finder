@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/complexity/noStaticOnlyClass: <explanation> */
 import { generateText } from "ai";
 import type {
 	AgentContext,
@@ -6,8 +7,66 @@ import type {
 import { openrouter } from "../../../utils/configs/ai.config";
 import { EnhancedJsonParser } from "../../../utils/enhanced-json-parser";
 import { getPrompt } from "../../../utils/prompt-helper";
+import { debugLogger } from "../../../utils/logger";
 
 export class IdeaSynthesisAgent {
+	/**
+	 * Creates a dynamic fallback based on research context instead of hardcoded data
+	 */
+	private static createDynamicFallback(context: AgentContext): SynthesizedIdea {
+		// Extract key information from research context
+		const trendTitle = context.trends?.title || "Emerging Market Opportunity";
+		const trendDescription = context.trends?.description || "A growing market trend presents new opportunities";
+		const mainProblem = context.problemGaps?.problems?.[0] || "People face challenges in their daily activities";
+		const valueProposition = context.competitive?.positioning?.valueProposition || "A simple tool that solves everyday problems";
+		
+		// Generate title based on trend context
+		let title = "Simple Tool That Solves Daily Problems";
+		if (context.trends?.title?.toLowerCase().includes("restaurant") || 
+			context.trends?.title?.toLowerCase().includes("food")) {
+			title = "Food Order Management Tool That Actually Works";
+		} else if (context.trends?.title?.toLowerCase().includes("family")) {
+			title = "Family Coordination App That Actually Works";
+		} else if (context.trends?.title?.toLowerCase().includes("finance") || 
+				   context.trends?.title?.toLowerCase().includes("money")) {
+			title = "Personal Finance Tracker That Actually Helps";
+		}
+		
+		// Generate description based on trend and problems
+		const description = `${trendDescription.substring(0, 400)}... This creates an opportunity for a simple solution that addresses these challenges by ${valueProposition.toLowerCase()}. The tool would help people save time and reduce frustration by providing a focused solution to this specific problem.`;
+		
+		return {
+			title,
+			description,
+			executiveSummary: `A focused solution addressing the challenges identified in ${trendTitle.toLowerCase()}.`,
+			problemSolution: `${mainProblem.substring(0, 100)}... This tool provides a simple solution that addresses these issues.`,
+			problemStatement: `${mainProblem.substring(0, 150)}...`,
+			innovationLevel: 7.5,
+			timeToMarket: 4,
+			confidenceScore: 8.0,
+			narrativeHook: "Finally, a tool that actually solves this problem",
+			targetKeywords: ["solution", "tool", "simple"],
+			urgencyLevel: 8.0,
+			executionComplexity: 6.5,
+			tags: ["Consumer", "Solution", "Tool"],
+			scoring: {
+				totalScore: 7.8,
+				problemSeverity: 8.0,
+				founderMarketFit: 7.5,
+				technicalFeasibility: 8.0,
+				monetizationPotential: 7.8,
+				urgencyScore: 8.0,
+				marketTimingScore: 7.9,
+				executionDifficulty: 6.5,
+				moatStrength: 7.5,
+				regulatoryRisk: 3.5,
+			},
+			executionPlan: "Build MVP with core features, test with target users, iterate based on feedback.",
+			tractionSignals: "Achieve initial user adoption with positive feedback and engagement metrics.",
+			frameworkFit: "Consumer-focused approach addressing validated market need.",
+		};
+	}
+
 	/**
 	 * Enhanced IdeaSynthesisAgent - Uses Trend Architect logic with critic feedback
 	 * Implements markdown-style output format and strategic refinement
@@ -17,7 +76,7 @@ export class IdeaSynthesisAgent {
 		refinementPrompt?: string,
 	): Promise<SynthesizedIdea | null> {
 		try {
-			console.log(
+			debugLogger.debug(
 				"🧠 Step 7: Enhanced Idea Synthesis with Trend Architect Logic",
 			);
 
@@ -196,53 +255,15 @@ ${
 				maxOutputTokens: 2000,
 			});
 
+			// Create dynamic fallback based on research context
+			const dynamicFallback = IdeaSynthesisAgent.createDynamicFallback(context);
+			
 			// Use enhanced JSON parser to handle markdown code blocks and complex responses
 			const parseResult =
 				await EnhancedJsonParser.parseWithFallback<SynthesizedIdea>(
 					text,
 					["title", "description", "problemStatement", "scoring"],
-					{
-						title:
-							"Family Task Manager That Actually Works for Busy Households",
-						description:
-							"Modern families are busier than ever, with parents juggling work, kids' activities, household responsibilities, and personal goals all at once. The rise of dual-career families and packed schedules has created a daily coordination nightmare that existing tools simply don't solve. Busy parents waste 8-12 hours weekly trying to keep track of who's picking up which kid, when appointments are scheduled, and what household tasks need to be done. Current calendar apps are built for individual work schedules, not family life where one person's sick day affects everyone's week, or where soccer practice timing impacts dinner plans. Online parent communities are filled with frustration about missed appointments, double-booked activities, and the mental load of managing family logistics. A family coordination tool designed specifically for household workflows, with features that understand how family responsibilities interconnect and help parents stay organized without the complexity of business productivity tools, would capture this underserved market of stressed families looking for simple solutions to daily chaos.",
-						executiveSummary:
-							"A family-focused coordination app designed specifically for busy households, solving the daily logistics nightmare that affects millions of parents worldwide.",
-						problemSolution:
-							"Busy families waste 8-12 hours weekly coordinating schedules and household tasks across multiple disconnected apps. This tool centralizes family coordination with features built for household workflows, saving 6+ hours weekly.",
-						problemStatement:
-							"Busy families struggle to coordinate schedules, tasks, and responsibilities, leading to missed appointments and daily stress.",
-						innovationLevel: 7.8,
-						timeToMarket: 5,
-						confidenceScore: 8.6,
-						narrativeHook: "Finally, a family organizer that gets how families actually work",
-						targetKeywords: [
-							"family organization",
-							"household management",
-							"parent coordination",
-						],
-						urgencyLevel: 8.7,
-						executionComplexity: 6.5,
-						tags: ["Consumer", "Family-Life", "Organization", "Lifestyle"],
-						scoring: {
-							totalScore: 8.2,
-							problemSeverity: 8.8,
-							founderMarketFit: 8.0,
-							technicalFeasibility: 8.5,
-							monetizationPotential: 8.3,
-							urgencyScore: 8.7,
-							marketTimingScore: 8.4,
-							executionDifficulty: 6.5,
-							moatStrength: 7.9,
-							regulatoryRisk: 3.0,
-						},
-						executionPlan:
-							"Build MVP with core family calendar and task coordination features, launch beta with 100 busy families recruited through parenting communities.",
-						tractionSignals:
-							"Achieve 500 family sign-ups with 70% weekly active usage within 3 months, families report saving 4+ hours weekly.",
-						frameworkFit:
-							"Consumer-first approach targeting underserved family market with specialized workflow solutions.",
-					},
+					dynamicFallback,
 				);
 
 			if (!parseResult.success) {
@@ -250,12 +271,12 @@ ${
 					"❌ Enhanced Idea Synthesis JSON parsing failed:",
 					parseResult.error,
 				);
-				console.log(
+				debugLogger.debug(
 					"📝 Original response:",
 					parseResult.originalText?.substring(0, 500),
 				);
 				if (parseResult.cleanedText) {
-					console.log(
+					debugLogger.debug(
 						"🧹 Cleaned response:",
 						parseResult.cleanedText.substring(0, 500),
 					);
@@ -269,7 +290,7 @@ ${
 				synthesizedIdea.whatToBuild = context.whatToBuild;
 			}
 
-			console.log("✅ Step 7: Enhanced Idea Synthesis Completed:", {
+			debugLogger.debug("✅ Step 7: Enhanced Idea Synthesis Completed:", {
 				title: synthesizedIdea.title,
 				confidenceScore: synthesizedIdea.confidenceScore,
 				urgencyLevel: synthesizedIdea.urgencyLevel,
@@ -280,50 +301,8 @@ ${
 		} catch (error) {
 			console.error("Enhanced IdeaSynthesisAgent error:", error);
 
-			console.log("🔄 Using enhanced fallback synthesis data");
-			return {
-				title:
-					"Personal Budget Tracker That Actually Helps You Save Money",
-				description:
-					"Young adults and busy individuals worldwide are struggling more than ever to understand where their money goes each month. With the rise of subscription services, digital payments, and complex spending patterns, people lose track of $200-500 monthly in unnecessary expenses and forgotten subscriptions. Current budgeting apps are either too complex for daily use or focus on investment tracking rather than helping people understand and improve their everyday spending habits. Social media discussions among young adults consistently highlight frustration with overspending, surprise subscription charges, and feeling out of control with personal finances. A simple expense tracking tool that automatically categorizes spending, identifies unnecessary subscriptions, and provides gentle nudges for better money decisions would serve the millions of people who want to improve their financial habits without complex financial planning. The solution focuses on immediate spending awareness and small daily improvements rather than overwhelming users with complex budgeting frameworks they won't stick to.",
-				executiveSummary:
-					"A simple expense tracking app designed specifically for young adults and busy individuals who want to understand and improve their daily spending habits without complex financial planning.",
-				problemSolution:
-					"People lose track of $200-500 monthly in unnecessary expenses and forgotten subscriptions because current budgeting tools are too complex for daily use. This tool provides effortless expense tracking with simple insights and gentle nudges for better money decisions.",
-				problemStatement:
-					"Young adults and busy individuals struggle to track daily expenses and end up overspending on unnecessary items and forgotten subscriptions.",
-				innovationLevel: 7.9,
-				timeToMarket: 4,
-				confidenceScore: 8.4,
-				narrativeHook: "See where your money really goes and save without effort",
-				targetKeywords: [
-					"personal finance",
-					"expense tracking",
-					"money saving",
-					"young adults",
-				],
-				urgencyLevel: 8.5,
-				executionComplexity: 6.8,
-				tags: ["Consumer", "Personal-Finance", "Money-Management", "Lifestyle"],
-				scoring: {
-					totalScore: 8.1,
-					problemSeverity: 8.6,
-					founderMarketFit: 7.8,
-					technicalFeasibility: 8.3,
-					monetizationPotential: 8.5,
-					urgencyScore: 8.5,
-					marketTimingScore: 8.2,
-					executionDifficulty: 6.8,
-					moatStrength: 7.7,
-					regulatoryRisk: 4.2,
-				},
-				executionPlan:
-					"Build MVP with bank connection, automatic categorization, and simple spending insights. Launch beta with 200 users recruited through personal finance social media communities. Add subscription tracking and savings recommendations in month 3.",
-				tractionSignals:
-					"Achieve 1000 user sign-ups with 60% monthly active usage, users report saving $100+ monthly within 6 weeks, 40% of beta users upgrade to paid features.",
-				frameworkFit:
-					"This follows the 'Consumer-First Simplification' framework by providing essential money management tools that prioritize ease-of-use and immediate value over complex features that users abandon.",
-			};
+			debugLogger.debug("🔄 Using enhanced fallback synthesis data");
+			return IdeaSynthesisAgent.createDynamicFallback(context);
 		}
 	}
 }

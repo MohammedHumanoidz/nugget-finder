@@ -6,7 +6,9 @@ import type {
 import { openrouter } from "../../../utils/configs/ai.config";
 import { EnhancedJsonParser } from "../../../utils/enhanced-json-parser";
 import { getPrompt } from "../../../utils/prompt-helper";
+import { debugLogger } from "../../../utils/logger";
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class MonetizationAgent {
 	/**
 	 * MonetizationAgent - Generate revenue models and financial projections
@@ -168,7 +170,7 @@ export class MonetizationAgent {
 					"❌ Monetization Agent JSON parsing failed:",
 					parseResult.error,
 				);
-				console.log(
+				debugLogger.debug(
 					"📝 Original response:",
 					parseResult.originalText?.substring(0, 500),
 				);
@@ -180,7 +182,7 @@ export class MonetizationAgent {
 			console.error("MonetizationAgent error:", error);
 
 			// Return mock data as fallback for development/testing
-			console.log("🔄 Using fallback mock monetization data for development");
+			debugLogger.debug("🔄 Using fallback mock monetization data for development");
 			return {
 				primaryModel: "Simple Monthly Subscription",
 				pricingStrategy:

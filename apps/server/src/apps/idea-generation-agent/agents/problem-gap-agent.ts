@@ -150,11 +150,27 @@ Focus on immediate, specific, personally frustrating problems that create urgent
 
 			debugLogger.logPerplexityResponse("EnhancedProblemGapAgent", response);
 
+			console.log("🔍 ProblemGapAgent response structure debug:", {
+				hasResponse: !!response,
+				hasChoices: !!response?.choices,
+				choicesLength: response?.choices?.length,
+				hasFirstChoice: !!response?.choices?.[0],
+				hasMessage: !!response?.choices?.[0]?.message,
+				hasContent: !!response?.choices?.[0]?.message?.content,
+				contentLength: response?.choices?.[0]?.message?.content?.length,
+				contentPreview: response?.choices?.[0]?.message?.content?.substring(0, 100)
+			});
+
 			if (!response?.choices?.[0]?.message?.content) {
 				debugLogger.logError(
 					"EnhancedProblemGapAgent",
 					new Error("No response from Perplexity"),
-					{ response },
+					{ 
+						response,
+						responseKeys: response ? Object.keys(response) : null,
+						choicesType: typeof response?.choices,
+						firstChoiceType: typeof response?.choices?.[0]
+					},
 				);
 				throw new Error("No response from Perplexity");
 			}

@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/complexity/noStaticOnlyClass: <explanation> */
 import { generateText } from "ai";
 import type {
 	AgentContext,
@@ -6,6 +7,7 @@ import type {
 import { openrouter } from "../../../utils/configs/ai.config";
 import { EnhancedJsonParser } from "../../../utils/enhanced-json-parser";
 import { getPrompt } from "../../../utils/prompt-helper";
+import { debugLogger } from "../../../utils/logger";
 
 export class WhatToBuildAgent {
 	/**
@@ -134,7 +136,7 @@ Focus on specificity - provide exact feature descriptions, precise integration r
 					"❌ WhatToBuild Agent JSON parsing failed:",
 					parseResult.error,
 				);
-				console.log(
+				debugLogger.debug(
 					"📝 Original response:",
 					parseResult.originalText?.substring(0, 500),
 				);
@@ -146,7 +148,7 @@ Focus on specificity - provide exact feature descriptions, precise integration r
 			console.error("WhatToBuildAgent error:", error);
 
 			// Return mock data as fallback for development/testing
-			console.log("🔄 Using fallback mock WhatToBuild data for development");
+			debugLogger.debug("🔄 Using fallback mock WhatToBuild data for development");
 			return {
 				platformDescription:
 					"A mobile app that helps busy individuals organize their daily lives, track personal goals, and coordinate with family members through simple, intuitive features designed for everyday use.",

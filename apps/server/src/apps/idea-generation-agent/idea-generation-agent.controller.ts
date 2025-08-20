@@ -136,7 +136,7 @@ const IdeaGenerationAgentController = {
 		personalization?: any,
 	): Promise<any[]> {
 		try {
-			console.log(
+			debugLogger.debug(
 				`🚀 Starting On-Demand Idea Generation for prompt: "${userPrompt}"`,
 			);
 			debugLogger.info("🚀 On-demand idea generation started", {
@@ -167,7 +167,7 @@ const IdeaGenerationAgentController = {
 				};
 
 				// Step 1: Master Research Director - Set research parameters based on user prompt
-				console.log(
+				debugLogger.debug(
 					"🎯 Step 1: Activating Master Research Director (Idea 1)",
 				);
 				await updateProgress(
@@ -180,7 +180,7 @@ const IdeaGenerationAgentController = {
 					await this.masterResearchDirector(agentContext);
 
 				// Step 2: Enhanced Trend Research - Guided by research director and user prompt
-				console.log("📈 Step 2: Enhanced Trend Research (Idea 1)");
+				debugLogger.debug("📈 Step 2: Enhanced Trend Research (Idea 1)");
 				await updateProgress(
 					requestId,
 					GENERATION_STEPS.TREND_RESEARCH.step,
@@ -202,7 +202,7 @@ const IdeaGenerationAgentController = {
 				agentContext.trends = trends;
 
 				// Step 3: Enhanced Problem Gap Analysis
-				console.log(
+				debugLogger.debug(
 					"🎯 Step 3: Enhanced Problem Gap Analysis (Idea 1)",
 				);
 				await updateProgress(
@@ -223,7 +223,7 @@ const IdeaGenerationAgentController = {
 				agentContext.problemGaps = problemGaps;
 
 				// Step 4: Enhanced Competitive Intelligence
-				console.log(
+				debugLogger.debug(
 					"🏆 Step 4: Enhanced Competitive Intelligence (Idea 1)",
 				);
 				await updateProgress(
@@ -249,7 +249,7 @@ const IdeaGenerationAgentController = {
 				agentContext.competitive = competitive;
 
 				// Step 5: Enhanced Monetization Strategy
-				console.log(
+				debugLogger.debug(
 					"💰 Step 5: Enhanced Monetization Strategy (Idea 1)",
 				);
 				await updateProgress(
@@ -270,7 +270,7 @@ const IdeaGenerationAgentController = {
 				agentContext.monetization = monetization;
 
 				// Step 6: Generate what to build
-				console.log("🛠️ Step 6: What To Build Analysis (Idea 1)");
+				debugLogger.debug("🛠️ Step 6: What To Build Analysis (Idea 1)");
 				await updateProgress(
 					requestId,
 					GENERATION_STEPS.TECHNICAL_PLANNING.step,
@@ -281,7 +281,7 @@ const IdeaGenerationAgentController = {
 				agentContext.whatToBuild = whatToBuild || undefined;
 
 				// Step 7: Initial idea synthesis
-				console.log("🧠 Step 7: Initial Idea Synthesis (Idea 1)");
+				debugLogger.debug("🧠 Step 7: Initial Idea Synthesis (Idea 1)");
 				await updateProgress(
 					requestId,
 					GENERATION_STEPS.IDEA_SYNTHESIS.step,
@@ -299,7 +299,7 @@ const IdeaGenerationAgentController = {
 				}
 
 				// Step 8: Critic Agent - Analyze and create refinement prompt
-				console.log("🔍 Step 8: Critic Agent Analysis (Idea 1)");
+				debugLogger.debug("🔍 Step 8: Critic Agent Analysis (Idea 1)");
 				await updateProgress(
 					requestId,
 					GENERATION_STEPS.CRITICAL_REVIEW.step,
@@ -312,7 +312,7 @@ const IdeaGenerationAgentController = {
 				);
 
 				// Step 9: Final Refined Synthesis - Apply critic feedback
-				console.log(
+				debugLogger.debug(
 					"🎨 Step 9: Final Refined Idea Synthesis (Idea 1)",
 				);
 				await updateProgress(
@@ -335,7 +335,7 @@ const IdeaGenerationAgentController = {
 				}
 
 				// Step 10: Save to DailyIdea table for consistency with existing nugget route
-				console.log(
+				debugLogger.debug(
 					"💾 Step 10: Saving Generated Idea 1 to Database",
 				);
 				await updateProgress(
@@ -360,7 +360,7 @@ const IdeaGenerationAgentController = {
 				);
 
 				generatedIdeas.push(savedIdea);
-				console.log(
+				debugLogger.debug(
 					`✅ Successfully generated and saved idea 1: ${finalIdea.title}`,
 				);
 			} catch (error) {
@@ -377,13 +377,13 @@ const IdeaGenerationAgentController = {
 				// Continue to next idea even if one fails
 			}
 			// for (let i = 0; i < 1; i++) {
-			// 	console.log(
+			// 	debugLogger.debug(
 			// 		`🎯 Generating idea ${i + 1} of ${count} for prompt: "${userPrompt}"`,
 			// 	);
 
 			// }
 
-			console.log(
+			debugLogger.debug(
 				`🎉 On-Demand Idea Generation Completed. Generated ${generatedIdeas.length} ideas.`,
 			);
 			debugLogger.info("🎉 On-demand idea generation completed", {
@@ -412,7 +412,7 @@ const IdeaGenerationAgentController = {
 	 */
 	async generateDailyIdea(): Promise<string | null> {
 		try {
-			console.log("🚀 Starting Enhanced Daily Idea Generation Pipeline");
+			debugLogger.debug("🚀 Starting Enhanced Daily Idea Generation Pipeline");
 			debugLogger.info("🚀 Enhanced daily idea generation started", {
 				timestamp: new Date().toISOString(),
 				sessionId: Date.now().toString(),
@@ -436,11 +436,11 @@ const IdeaGenerationAgentController = {
 			};
 
 			// Step 1: Master Research Director - Set today's research parameters
-			console.log("🎯 Step 1: Activating Master Research Director");
+			debugLogger.debug("🎯 Step 1: Activating Master Research Director");
 			const researchDirection = await this.masterResearchDirector(agentContext);
 
 			// Step 2: Enhanced Trend Research - Guided by research director
-			console.log("📈 Step 2: Enhanced Trend Research");
+			debugLogger.debug("📈 Step 2: Enhanced Trend Research");
 			debugLogger.info(
 				"📈 Starting enhanced trend research with research direction",
 			);
@@ -460,7 +460,7 @@ const IdeaGenerationAgentController = {
 			debugLogger.info("✅ Enhanced trend research completed", { trends });
 
 			// Step 3: Enhanced Problem Gap Analysis - Deep persona-specific problems
-			console.log("🎯 Step 3: Enhanced Problem Gap Analysis");
+			debugLogger.debug("🎯 Step 3: Enhanced Problem Gap Analysis");
 			debugLogger.info("🎯 Starting enhanced problem gap analysis");
 			const problemGaps = await this.problemGapAgent(agentContext);
 			if (!problemGaps) {
@@ -477,7 +477,7 @@ const IdeaGenerationAgentController = {
 			});
 
 			// Step 4: Enhanced Competitive Intelligence - Strategic positioning
-			console.log("🏆 Step 4: Enhanced Competitive Intelligence");
+			debugLogger.debug("🏆 Step 4: Enhanced Competitive Intelligence");
 			debugLogger.info("🏆 Starting enhanced competitive intelligence");
 			const competitive = await this.competitiveIntelligenceAgent(agentContext);
 			if (!competitive) {
@@ -494,27 +494,27 @@ const IdeaGenerationAgentController = {
 			});
 
 			// Step 5: Enhanced Monetization Strategy
-			console.log("💰 Step 5: Enhanced Monetization Strategy");
+			debugLogger.debug("💰 Step 5: Enhanced Monetization Strategy");
 			const monetization = await this.monetizationAgent(agentContext);
 			if (!monetization) throw new Error("Failed to design monetization");
 			agentContext.monetization = monetization;
 
 			// Step 6: Generate initial idea synthesis
-			console.log("🧠 Step 6: Initial Idea Synthesis");
+			debugLogger.debug("🧠 Step 6: Initial Idea Synthesis");
 			const whatToBuild = await this.whatToBuildAgent(agentContext);
 			agentContext.whatToBuild = whatToBuild || undefined;
 			const initialIdea = await this.ideaSynthesisAgent(agentContext);
 			if (!initialIdea) throw new Error("Failed to synthesize initial idea");
 
 			// Step 7: Critic Agent - Analyze and create refinement prompt
-			console.log("🔍 Step 7: Critic Agent Analysis");
+			debugLogger.debug("🔍 Step 7: Critic Agent Analysis");
 			const refinementPrompt = await this.criticAgent(
 				[initialIdea],
 				agentContext,
 			);
 
 			// Step 8: Final Refined Synthesis - Apply critic feedback
-			console.log("🎨 Step 8: Final Refined Idea Synthesis");
+			debugLogger.debug("🎨 Step 8: Final Refined Idea Synthesis");
 			const finalIdea = await this.ideaSynthesisAgent(
 				agentContext,
 				refinementPrompt || undefined,
@@ -524,7 +524,7 @@ const IdeaGenerationAgentController = {
 			const idea = finalIdea;
 
 			// Step 9: Save to database
-			console.log("💾 Step 9: Saving Enhanced Idea to Database");
+			debugLogger.debug("💾 Step 9: Saving Enhanced Idea to Database");
 			const whyNow = await IdeaGenerationAgentService.createWhyNow(trends);
 			const ideaScore = await IdeaGenerationAgentService.createIdeaScore(
 				idea.scoring,
@@ -632,11 +632,11 @@ const IdeaGenerationAgentController = {
 				);
 			}
 
-			console.log(
+			debugLogger.debug(
 				"🎉 Enhanced Daily Idea Generated Successfully:",
 				dailyIdea.id,
 			);
-			console.log("📊 Final Idea Summary:", {
+			debugLogger.debug("📊 Final Idea Summary:", {
 				title: idea.title,
 				confidenceScore: idea.confidenceScore,
 				urgencyLevel: idea.urgencyLevel,
@@ -821,7 +821,7 @@ const IdeaGenerationAgentController = {
 				});
 			}
 
-			console.log(
+			debugLogger.debug(
 				"🎉 Generated Idea Saved to DailyIdea Successfully:",
 				dailyIdea.id,
 			);

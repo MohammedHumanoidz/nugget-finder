@@ -4,6 +4,7 @@ import type { AgentContext } from "../../../types/apps/idea-generation-agent";
 import { openrouter } from "../../../utils/configs/ai.config";
 import { EnhancedJsonParser } from "../../../utils/enhanced-json-parser";
 import { getPrompt } from "../../../utils/prompt-helper";
+import { debugLogger } from "../../../utils/logger";
 
 // Interface for Master Research Director
 interface ResearchDirectorData {
@@ -23,7 +24,7 @@ export class MasterResearchDirector {
 		context: AgentContext,
 	): Promise<ResearchDirectorData | null> {
 		try {
-			console.log("🎯 Step 1: Activating Master Research Director");
+			debugLogger.debug("🎯 Step 1: Activating Master Research Director");
 
 			// Check if this is user-driven or daily automatic generation
 			const isUserDriven =
@@ -33,7 +34,7 @@ export class MasterResearchDirector {
 			const basePrompt = await getPrompt(
 				'MasterResearchDirector', 
 				'systemPrompt',
-				`You are the Master Research Director for a world-class startup opportunity discovery system. You help guide research direction to ensure diverse, high-quality startup opportunities.`
+				"You are the Master Research Director for a world-class startup opportunity discovery system. You help guide research direction to ensure diverse, high-quality startup opportunities."
 			);
 
 			const directorPrompt = isUserDriven
@@ -157,12 +158,12 @@ export class MasterResearchDirector {
 					"❌ Master Research Director JSON parsing failed:",
 					parseResult.error,
 				);
-				console.log(
+				debugLogger.debug(
 					"📝 Original response:",
 					parseResult.originalText?.substring(0, 500),
 				);
 				if (parseResult.cleanedText) {
-					console.log(
+					debugLogger.debug(
 						"🧹 Cleaned response:",
 						parseResult.cleanedText.substring(0, 500),
 					);
@@ -171,7 +172,7 @@ export class MasterResearchDirector {
 
 			const directorData = parseResult.data as ResearchDirectorData;
 
-			console.log("✅ Step 1: Research Director Set Research Parameters:", {
+			debugLogger.debug("✅ Step 1: Research Director Set Research Parameters:", {
 				theme: directorData.researchTheme,
 				geography: directorData.globalMarketFocus,
 				industry: directorData.industryRotation,

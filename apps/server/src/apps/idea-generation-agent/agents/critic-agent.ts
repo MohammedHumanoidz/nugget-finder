@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/complexity/noStaticOnlyClass: <explanation> */
 import { generateText } from "ai";
 import type {
 	AgentContext,
@@ -5,6 +6,7 @@ import type {
 } from "../../../types/apps/idea-generation-agent";
 import { openrouter } from "../../../utils/configs/ai.config";
 import { getPrompt } from "../../../utils/prompt-helper";
+import { debugLogger } from "../../../utils/logger";
 
 export class CriticAgent {
 	/**
@@ -16,7 +18,7 @@ export class CriticAgent {
 		context: AgentContext,
 	): Promise<string | null> {
 		try {
-			console.log("🔍 Step 6: Activating Critic Agent");
+			debugLogger.debug("🔍 Step 6: Activating Critic Agent");
 
 			// Get dynamic prompt from database with fallback
 			const criticPrompt = await getPrompt(
@@ -91,10 +93,10 @@ Return a focused refinement prompt that addresses the most important improvement
 				maxOutputTokens: 800,
 			});
 
-			console.log(
+			debugLogger.debug(
 				"✅ Step 6: Critic Agent Generated Refinement Recommendations",
 			);
-			console.log(
+			debugLogger.debug(
 				"🔍 Refinement focus areas identified:",
 				refinementPrompt.substring(0, 200) + "...",
 			);

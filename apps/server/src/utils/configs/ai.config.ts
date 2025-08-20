@@ -30,6 +30,7 @@ const perplexity = async (
 			model: perplexityProvider(model),
 			system: systemPrompt,
 			prompt: userPrompt,
+			maxOutputTokens: 8000,
 			maxRetries,
 			...(model === "sonar-deep-research" && {
 				providerOptions: {
@@ -40,16 +41,29 @@ const perplexity = async (
 			}),
 		});
 
+		console.log("🔍 AI SDK Raw Result Debug:", {
+			hasText: !!result.text,
+			textLength: result.text?.length,
+			textPreview: result.text?.substring(0, 100),
+			hasUsage: !!result.usage,
+			usageProps: result.usage ? Object.keys(result.usage) : null,
+			hasResponse: !!result.response,
+			responseProps: result.response ? Object.keys(result.response) : null,
+			hasProviderMetadata: !!result.providerMetadata,
+			hasSources: !!result.sources,
+			sourcesLength: result.sources?.length,
+		});
+
 		// Convert AI SDK response to match PerplexityResponse type
 		const perplexityMetadata = result.providerMetadata?.perplexity as any;
 		const response: PerplexityResponse = {
-			id: result.response.id,
-			model: result.response.modelId,
-			created: Math.floor(result.response.timestamp.getTime() / 1000),
+			id: result.response?.id || "unknown",
+			model: result.response?.modelId || model,
+			created: result.response?.timestamp ? Math.floor(result.response.timestamp.getTime() / 1000) : Math.floor(Date.now() / 1000),
 			usage: {
-				prompt_tokens: result.usage.inputTokens ?? 0,
-				completion_tokens: result.usage.outputTokens ?? 0,
-				total_tokens: result.usage.totalTokens ?? 0,
+				prompt_tokens: result.usage?.inputTokens ?? 0,
+				completion_tokens: result.usage?.outputTokens ?? 0,
+				total_tokens: result.usage?.totalTokens ?? 0,
 				search_context_size: "0",
 				citation_tokens: perplexityMetadata?.usage?.citationTokens || 0,
 				num_search_queries: perplexityMetadata?.usage?.numSearchQueries || 0,
@@ -61,7 +75,7 @@ const perplexity = async (
 					index: 0,
 					finish_reason: result.finishReason || "stop",
 					message: {
-						content: result.text,
+						content: result.text || "",
 						role: "assistant",
 					},
 				},
@@ -78,6 +92,12 @@ const perplexity = async (
 			model,
 			hasResponse: !!result.text,
 			tokenUsage: result.usage,
+			responseStructure: {
+				hasChoices: !!response.choices,
+				choicesLength: response.choices?.length,
+				hasContent: !!response.choices?.[0]?.message?.content,
+				contentLength: response.choices?.[0]?.message?.content?.length,
+			}
 		});
 
 		return response;
