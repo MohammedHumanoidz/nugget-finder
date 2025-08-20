@@ -88,7 +88,7 @@ Return a focused refinement prompt that addresses the most important improvement
 				model: openrouter("openai/gpt-4.1-mini"),
 				prompt: fullCriticPrompt,
 				temperature: 0.2,
-				maxTokens: 800,
+				maxOutputTokens: 800,
 			});
 
 			console.log(

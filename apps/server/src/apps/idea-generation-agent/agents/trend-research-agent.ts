@@ -261,7 +261,7 @@ Extract the core trend information and format as valid JSON. Ensure all supporti
           model: openrouter("openai/gpt-4.1-mini"),
           prompt: structuringPrompt,
           temperature: 0.1,
-          maxTokens: 800,
+          maxOutputTokens: 800,
         });
 
         debugLogger.logLLMStructuringResponse(

@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/complexity/noStaticOnlyClass: <explanation> */
 import { generateText } from "ai";
 import type {
 	AgentContext,
@@ -205,7 +206,7 @@ Extract problems and gaps with maximum specificity and personal impact quantific
 					model: openrouter("openai/gpt-4.1-mini"),
 					prompt: structuringPrompt,
 					temperature: 0.1,
-					maxTokens: 1000,
+					maxOutputTokens: 1000,
 				});
 
 				debugLogger.logLLMStructuringResponse(

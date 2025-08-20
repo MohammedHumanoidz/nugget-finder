@@ -294,7 +294,7 @@ Take a deep breath and work on this problem step-by-step.
 				system: systemPrompt,
 				messages,
 				temperature: 0.7,
-				maxTokens: 1000,
+				maxOutputTokens: 1000,
 			});
 
 			set.headers = {
@@ -306,7 +306,7 @@ Take a deep breath and work on this problem step-by-step.
 				"Access-Control-Allow-Headers": "Content-Type, Authorization",
 			};
 
-			return result.toDataStreamResponse();
+			return result.toUIMessageStreamResponse();
 		} catch (error) {
 			console.error("Chat API error:", error);
 			set.status = 500;

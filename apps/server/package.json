@@ -2,7 +2,6 @@
 	"name": "server",
 	"main": "src/index.ts",
 	"type": "module",
-
 	"scripts": {
 		"build": "tsdown",
 		"check-types": "tsc -b",
@@ -20,14 +19,15 @@
 		"schema": "./prisma/schema.prisma"
 	},
 	"dependencies": {
+		"@ai-sdk/perplexity": "^2.0.4",
 		"@elysiajs/cors": "^1.2.0",
 		"@elysiajs/trpc": "^1.1.0",
-		"@openrouter/ai-sdk-provider": "^0.7.3",
+		"@openrouter/ai-sdk-provider": "^1.1.2",
 		"@prisma/client": "^6.12.0",
 		"@trigger.dev/sdk": "^3.3.17",
 		"@trpc/client": "^11.4.2",
 		"@trpc/server": "^11.4.2",
-		"ai": "^4.3.19",
+		"ai": "^5.0.19",
 		"dotenv": "^16.4.7",
 		"elysia": "^1.2.25",
 		"fuse.js": "^7.1.0",

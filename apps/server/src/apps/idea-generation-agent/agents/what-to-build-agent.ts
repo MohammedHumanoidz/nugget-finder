@@ -93,7 +93,7 @@ Focus on specificity - provide exact feature descriptions, precise integration r
 				prompt: userPrompt,
 				system: systemPrompt,
 				temperature: 0.1,
-				maxTokens: 1200,
+				maxOutputTokens: 1200,
 			});
 
 			// Use enhanced JSON parser to handle markdown code blocks and formatting issues

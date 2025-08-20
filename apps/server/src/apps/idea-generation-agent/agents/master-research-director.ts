@@ -130,7 +130,7 @@ export class MasterResearchDirector {
 				model: openrouter("openai/gpt-4.1-mini"),
 				prompt: directorPrompt,
 				temperature: 0.3,
-				maxTokens: 600,
+				maxOutputTokens: 600,
 			});
 
 			// Use enhanced JSON parser to handle markdown code blocks and formatting issues

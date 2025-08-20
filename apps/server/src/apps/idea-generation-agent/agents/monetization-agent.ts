@@ -84,7 +84,7 @@ export class MonetizationAgent {
 				prompt: userPrompt,
 				system: systemPrompt,
 				temperature: 0.1,
-				maxTokens: 1000,
+				maxOutputTokens: 1000,
 			});
 
 			// Use enhanced JSON parser to handle markdown code blocks and formatting issues

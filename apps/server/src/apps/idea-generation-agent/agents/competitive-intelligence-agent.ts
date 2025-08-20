@@ -219,7 +219,7 @@ Return only the JSON object with no additional text or formatting:`;
 						model: openrouter("openai/gpt-4.1-mini"),
 						prompt: structuringPrompt,
 						temperature: 0.1,
-						maxTokens: 1500,
+						maxOutputTokens: 1500,
 					});
 
 					debugLogger.logLLMStructuringResponse(

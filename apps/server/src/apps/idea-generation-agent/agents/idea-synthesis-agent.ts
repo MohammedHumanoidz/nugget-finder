@@ -193,7 +193,7 @@ ${
 				model: openrouter("openai/gpt-4.1-mini"),
 				prompt: trendArchitectPrompt,
 				temperature: 0.1,
-				maxTokens: 2000,
+				maxOutputTokens: 2000,
 			});
 
 			// Use enhanced JSON parser to handle markdown code blocks and complex responses
