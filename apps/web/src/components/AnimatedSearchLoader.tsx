@@ -605,14 +605,10 @@ export default function AnimatedSearchLoader({
     <div className="inset-0 z-50 flex flex-col items-center justify-center bg-background">
       <div className="flex flex-col items-center justify-center gap-2 max-lg:px-4">
         <p className="font-semibold text-lg lg:text-2xl flex items-center gap-2 text-center">
-          <Pickaxe className="w-8 lg:w-4 text-primary"/> KEEP THIS TAB OPEN… PIP&apos;S MINING YOUR NUGGETS! If
-          this takes a long time it&apos;s normal. <Pickaxe className="w-8 lg:w-4 text-primary"/>
+          <Pickaxe className="w-8 lg:w-4 text-primary"/> KEEP THIS TAB OPEN <Pickaxe className="w-8 lg:w-4 text-primary"/>
         </p>
         <p className="text-muted-foreground lg:w-3/4 text-sm lg:text-base text-center">
-          Pip the Prospector is working overtime in the data mines, excavating
-          your golden insights. Expected dig time: 2-8 minutes (deeper veins may
-          take longer) Worth the wait…Pip&apos;s never returned empty-handed!
-          Mining in progress...
+        Pip the Prospector is mining deep. Quality nugget extraction takes 5-10 minutes. This is completely normal.
         </p>
       </div>
       <div className="w-full max-w-4xl space-y-8 px-4 text-center mt-4">
