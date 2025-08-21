@@ -223,6 +223,56 @@ export const IdeaGenerationAgentService = {
 		monetizationStrategyId: string,
 		whatToBuildId?: string,
 	) {
+		// Get current feature visibility defaults from the most recent idea
+		let featureDefaults;
+		try {
+			const recentIdea = await prisma.dailyIdea.findFirst({
+				orderBy: { createdAt: 'desc' },
+				select: {
+					isFreeQuickOverview: true,
+					isFreeWhyThisMatters: true,
+					isFreeDetailedOverview: true,
+					isFreeTheClaimWhyNow: true,
+					isFreeWhatToBuild: true,
+					isFreeExecutionPlan: true,
+					isFreeMarketGap: true,
+					isFreeCompetitiveLandscape: true,
+					isFreeRevenueModel: true,
+					isFreeExecutionValidation: true,
+					isFreeChat: true,
+				}
+			});
+			
+			featureDefaults = recentIdea || {
+				isFreeQuickOverview: true,
+				isFreeWhyThisMatters: true,
+				isFreeDetailedOverview: true,
+				isFreeTheClaimWhyNow: false,
+				isFreeWhatToBuild: false,
+				isFreeExecutionPlan: false,
+				isFreeMarketGap: false,
+				isFreeCompetitiveLandscape: false,
+				isFreeRevenueModel: false,
+				isFreeExecutionValidation: false,
+				isFreeChat: false,
+			};
+		} catch (error) {
+			// If there's an error fetching defaults, use the schema defaults
+			featureDefaults = {
+				isFreeQuickOverview: true,
+				isFreeWhyThisMatters: true,
+				isFreeDetailedOverview: true,
+				isFreeTheClaimWhyNow: false,
+				isFreeWhatToBuild: false,
+				isFreeExecutionPlan: false,
+				isFreeMarketGap: false,
+				isFreeCompetitiveLandscape: false,
+				isFreeRevenueModel: false,
+				isFreeExecutionValidation: false,
+				isFreeChat: false,
+			};
+		}
+
 		const createData: any = {
 			title: ideaData.title,
 			description: ideaData.description,
@@ -240,6 +290,8 @@ export const IdeaGenerationAgentService = {
 			whyNowId,
 			ideaScoreId,
 			monetizationStrategyId,
+			// Apply feature visibility defaults
+			...featureDefaults,
 		};
 
 		// Only add whatToBuildId if provided
