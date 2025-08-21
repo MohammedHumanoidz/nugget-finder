@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { adminProcedure, publicProcedure, router } from "../lib/trpc";
 import { prisma } from "../utils/configs/db.config";
+import IdeaGenerationAgentController from "../apps/idea-generation-agent/idea-generation-agent.controller";
 
 export const adminRouter = router({
   // Public endpoint for server-side featured schedule retrieval
@@ -569,6 +570,59 @@ export const adminRouter = router({
         saves: counts.saves,
         claims: counts.claims
       }));
+    }),
+
+  // Test Prompt - Generate a single idea using current prompts
+  testPromptGeneration: adminProcedure
+    .mutation(async () => {
+      try {
+        console.log('🧪 Admin test prompt generation started');
+        
+        // Generate a single idea using the same flow as daily generation
+        const ideaId = await IdeaGenerationAgentController.generateDailyIdea();
+        
+        if (!ideaId) {
+          throw new Error('Failed to generate test idea - no idea ID returned');
+        }
+        
+        // Fetch the generated idea to return it with all details
+        const generatedIdea = await prisma.dailyIdea.findUnique({
+          where: { id: ideaId },
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            executiveSummary: true,
+            problemSolution: true,
+            problemStatement: true,
+            innovationLevel: true,
+            timeToMarket: true,
+            confidenceScore: true,
+            narrativeHook: true,
+            targetKeywords: true,
+            urgencyLevel: true,
+            executionComplexity: true,
+            tags: true,
+            createdAt: true
+          }
+        });
+        
+        console.log('✅ Admin test prompt generation completed', { ideaId });
+        
+        return {
+          success: true,
+          message: 'Test idea generated successfully!',
+          idea: generatedIdea
+        };
+      } catch (error: any) {
+        console.error('❌ Admin test prompt generation failed:', error);
+        
+        return {
+          success: false,
+          message: `Failed to generate test idea: ${error.message || 'Unknown error'}`,
+          idea: null
+        };
+      }
     }),
 
 });

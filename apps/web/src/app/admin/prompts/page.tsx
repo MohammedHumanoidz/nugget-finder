@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { trpc } from '@/utils/trpc';
 import { toast } from 'sonner';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { ArrowUpRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 // Define all the agents and their prompt structures
 const AGENTS = [
@@ -67,6 +69,9 @@ export default function PromptsPage() {
   const [prompts, setPrompts] = useState<AgentPrompts>({});
   const [originalPrompts, setOriginalPrompts] = useState<AgentPrompts>({});
   const [savingStates, setSavingStates] = useState<Record<string, boolean>>({});
+  const [isTestingPrompts, setIsTestingPrompts] = useState(false);
+  const [generatedIdea, setGeneratedIdea] = useState<any>(null);
+  const router = useRouter();
 
   // Query to get all prompts
   const { data: promptsData, isLoading, refetch } = useQuery(trpc.admin.getPrompts.queryOptions());
@@ -83,6 +88,25 @@ export default function PromptsPage() {
       toast.error(`Failed to update prompt: ${error.message}`);
       const key = `${variables.agentName}:${variables.promptKey}`;
       setSavingStates(prev => ({ ...prev, [key]: false }));
+    }
+  }));
+
+  // Mutation to test prompt generation
+  const testPromptMutation = useMutation(trpc.admin.testPromptGeneration.mutationOptions({
+    onSuccess: (data: any) => {
+      setIsTestingPrompts(false);
+      if (data.success) {
+        setGeneratedIdea(data.idea);
+        toast.success(`Test idea generated successfully! "${data.idea?.title}"`);
+      } else {
+        toast.error(data.message);
+        setGeneratedIdea(null);
+      }
+    },
+    onError: (error: any) => {
+      setIsTestingPrompts(false);
+      setGeneratedIdea(null);
+      toast.error(`Failed to test prompts: ${error.message}`);
     }
   }));
 
@@ -156,6 +180,12 @@ export default function PromptsPage() {
     return prompts[agentKey]?.[promptKey] !== originalPrompts[agentKey]?.[promptKey];
   };
 
+  const handleTestPrompts = () => {
+    setIsTestingPrompts(true);
+    setGeneratedIdea(null); // Clear any previous results
+    testPromptMutation.mutate();
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-6">
@@ -167,14 +197,140 @@ export default function PromptsPage() {
     );
   }
 
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">AI Agent Prompts</h1>
-        <p className="text-muted-foreground">
-          Configure the system and user prompts for each AI agent to customize idea generation behavior
-        </p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-3xl font-bold">AI Agent Prompts</h1>
+          <p className="text-muted-foreground">
+            Configure the system and user prompts for each AI agent to customize idea generation behavior
+          </p>
+        </div>
+        <div className='flex flex-col gap-2'>
+        {
+          isTestingPrompts && (
+            <div className='bg-emerald-500 text-white px-4 py-2 rounded-md'>
+              <p>This might take a while so please dont close the tab. Estimated time: 5-10 minutes</p>
+            </div>
+          )
+        }
+        <Button 
+          onClick={handleTestPrompts}
+          disabled={isTestingPrompts}
+          className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-2"
+        >
+          {isTestingPrompts ? (
+            <>
+              <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              Generating...
+            </>
+          ) : (
+            '🧪 Test Prompts'
+          )}
+        </Button>
+        </div>
       </div>
+
+      {/* Generated Idea Display */}
+      {generatedIdea && (
+        <Card className="mt-6 border-primary bg-primary/10">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className=" flex items-center gap-2">
+                🎉 Test Generation Results
+              </CardTitle>
+              <Button variant="ghost" size="sm" onClick={() => {
+                router.push(`/nugget/mined/${generatedIdea.id}`);
+              }}>
+                <ArrowUpRight className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setGeneratedIdea(null)}
+                className=""
+              >
+                ✕ Close
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <h3 className="font-bold text-lg text-primary mb-2">{generatedIdea.title}</h3>
+              <p className="text-sm text-primary/75 mb-3">{generatedIdea.executiveSummary}</p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-3">
+                <div>
+                  <h4 className="font-semibold text-primary mb-1">📖 Description</h4>
+                  <p className="text-sm text-primary/75 line-clamp-4">{generatedIdea.description}</p>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold text-primary mb-1">🎯 Problem & Solution</h4>
+                  <p className="text-sm text-primary/75 line-clamp-3">{generatedIdea.problemSolution}</p>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold text-primary mb-1">⚡ Narrative Hook</h4>
+                  <p className="text-sm text-primary/75">{generatedIdea.narrativeHook}</p>
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex flex-wrap gap-2">
+                  <div className="bg-primary/10 px-2 py-1 rounded text-xs text-primary">
+                    💡 Innovation: {generatedIdea.innovationLevel}/10
+                  </div>
+                  <div className="bg-primary/10 px-2 py-1 rounded text-xs text-primary">
+                    ⏱️ Time to Market: {generatedIdea.timeToMarket}/10
+                  </div>
+                  <div className="bg-primary/10 px-2 py-1 rounded text-xs text-primary">
+                    🎯 Confidence: {generatedIdea.confidenceScore}/10
+                  </div>
+                  <div className="bg-primary/10 px-2 py-1 rounded text-xs text-primary">
+                    🚨 Urgency: {generatedIdea.urgencyLevel}/10
+                  </div>
+                  <div className="bg-primary/10 px-2 py-1 rounded text-xs text-primary">
+                    🔧 Complexity: {generatedIdea.executionComplexity}/10
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold text-primary mb-1">🏷️ Tags</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {generatedIdea.tags?.map((tag: string, index: number) => (
+                      <span key={index} className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold text-primary mb-1">🔍 SEO Keywords</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {generatedIdea.targetKeywords?.slice(0, 5).map((keyword: string, index: number) => (
+                      <span key={index} className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
+                        {keyword}
+                      </span>
+                    ))}
+                    {generatedIdea.targetKeywords?.length > 5 && (
+                      <span className="text-emerald-600 text-xs">+{generatedIdea.targetKeywords.length - 5} more</span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="text-xs text-primary mt-3">
+                  Generated: {new Date(generatedIdea.createdAt).toLocaleString()}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="mt-8 p-4 bg-primary/10 rounded-lg border border-primary">
         <h3 className="font-semibold text-primary mb-2">How it works:</h3>
@@ -185,6 +341,7 @@ export default function PromptsPage() {
           <li>• Changes take effect within 5 minutes due to intelligent caching</li>
           <li>• Empty prompts will use hardcoded fallbacks to ensure system reliability</li>
           <li>• All prompts are automatically backed up with version history</li>
+          <li>• <strong>🧪 Test Prompts</strong>: Click the test button to generate a single idea using your current prompts - perfect for validating changes before deployment</li>
         </ul>
       </div>
 
