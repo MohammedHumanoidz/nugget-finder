@@ -240,10 +240,11 @@ export default function PromptsPage() {
               <CardTitle className=" flex items-center gap-2">
                 🎉 Test Generation Results
               </CardTitle>
+              <div className='flex items-center gap-2'>
               <Button variant="ghost" size="sm" onClick={() => {
-                router.push(`/nugget/mined/${generatedIdea.id}`);
+                router.push(`/nugget/${generatedIdea.id}`);
               }}>
-                <ArrowUpRight className="h-4 w-4" />
+                <ArrowUpRight className="h-4 w-4" /> View Nugget
               </Button>
               <Button
                 variant="ghost"
@@ -253,6 +254,7 @@ export default function PromptsPage() {
               >
                 ✕ Close
               </Button>
+              </div>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -302,7 +304,7 @@ export default function PromptsPage() {
                   <h4 className="font-semibold text-primary mb-1">🏷️ Tags</h4>
                   <div className="flex flex-wrap gap-1">
                     {generatedIdea.tags?.map((tag: string, index: number) => (
-                      <span key={index} className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
+                      <span key={index.toString()} className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
                         {tag}
                       </span>
                     ))}
@@ -313,7 +315,7 @@ export default function PromptsPage() {
                   <h4 className="font-semibold text-primary mb-1">🔍 SEO Keywords</h4>
                   <div className="flex flex-wrap gap-1">
                     {generatedIdea.targetKeywords?.slice(0, 5).map((keyword: string, index: number) => (
-                      <span key={index} className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
+                      <span key={index.toString()} className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
                         {keyword}
                       </span>
                     ))}
