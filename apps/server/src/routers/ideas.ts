@@ -13,6 +13,7 @@ import {
 	unclaimIdeaForUser,
 	unsaveIdeaForUser,
 } from "../utils/idea-management";
+import { safeUuidArray } from "../utils/safe-json-parser";
 
 // Configuration for non-auth search limits
 const MAX_NON_AUTH_SEARCHES = Number.parseInt(
@@ -511,7 +512,7 @@ export const ideasRouter = router({
 								currentStep: "Complete",
 								progressMessage: `🎉 Found ${generatedIdeas.length} amazing business opportunities for you!`,
 								imageState: "found",
-								generatedIdeaIds: generatedIdeas.map((idea: any) => idea.id),
+								generatedIdeaIds: safeUuidArray(generatedIdeas.map((idea: any) => idea.id)),
 								// Store full idea data for all users in personalizationData field
 								...(generatedIdeas.length > 0 && {
 									personalizationData: JSON.stringify({

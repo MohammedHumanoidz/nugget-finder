@@ -8,6 +8,7 @@ import {
 import type { AgentContext } from "../types/apps/idea-generation-agent";
 import { prisma } from "../utils/configs/db.config";
 import { debugLogger } from "../utils/logger";
+import { safeUuidArray } from "../utils/safe-json-parser";
 
 export const onDemandIdeaGenerationJob = task({
 	id: "on-demand-idea-generator",

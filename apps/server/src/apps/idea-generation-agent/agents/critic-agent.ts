@@ -98,7 +98,7 @@ Return a focused refinement prompt that addresses the most important improvement
 			);
 			debugLogger.debug(
 				"🔍 Refinement focus areas identified:",
-				refinementPrompt.substring(0, 200) + "...",
+				{ refinementPreview: `${refinementPrompt.substring(0, 200)}...` },
 			);
 
 			return refinementPrompt;

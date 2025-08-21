@@ -6,6 +6,7 @@ import type {
 } from "../../../types/apps/idea-generation-agent";
 import { openrouter } from "../../../utils/configs/ai.config";
 import { EnhancedJsonParser } from "../../../utils/enhanced-json-parser";
+import { SafeJsonParser } from "../../../utils/safe-json-parser";
 import { getPrompt } from "../../../utils/prompt-helper";
 import { debugLogger } from "../../../utils/logger";
 
@@ -47,6 +48,9 @@ export class WhatToBuildAgent {
 - Features that help with daily life, personal goals, family coordination, etc.
 - Social/community features that connect users with similar interests
 
+**CRITICAL OUTPUT REQUIREMENT:**
+You MUST return ONLY valid JSON. No markdown, no explanations, no text outside the JSON object. Do not include code blocks with backticks.
+
 Return this exact JSON structure:
 {
   "platformDescription": "string (A simple summary of what the app does for individual users, in everyday language. Example: 'A mobile app that helps busy parents coordinate family schedules and share household tasks, making daily life less stressful.')",
@@ -57,7 +61,9 @@ Return this exact JSON structure:
   "freemiumComponents": "string? (Optional: if offering free features, describe what would be free to attract individual users. Example: 'Offer a free version that allows basic family calendar sharing and simple task lists.')"
 }
 
-Focus on providing a practical, confidence-boosting blueprint that clearly shows a founder what they can *start building tomorrow* with existing consumer app tools and skills. No complex or speculative tech.`
+Focus on providing a practical, confidence-boosting blueprint that clearly shows a founder what they can *start building tomorrow* with existing consumer app tools and skills. No complex or speculative tech.
+
+REMEMBER: Return ONLY the JSON object, no other text.`
 			);
 
 			const ideaContext = context.monetization
@@ -98,9 +104,71 @@ Focus on specificity - provide exact feature descriptions, precise integration r
 				maxOutputTokens: 1200,
 			});
 
-			// Use enhanced JSON parser to handle markdown code blocks and formatting issues
-			const parseResult =
-				await EnhancedJsonParser.parseWithFallback<WhatToBuildData>(
+			console.log("🔍 WhatToBuildAgent raw response length:", text.length);
+			console.log("🔍 Response preview:", `${text.substring(0, 200)}...`);
+
+			// Define fallback data
+			const fallbackData: WhatToBuildData = {
+				platformDescription:
+					"A mobile app that helps busy individuals organize their daily lives, track personal goals, and coordinate with family members through simple, easy-to-use features.",
+				coreFeaturesSummary: [
+					"Personal dashboard showing daily tasks and goals",
+					"Simple family coordination and shared calendar",
+					"Progress tracking for personal habits and goals",
+				],
+				userInterfaces: [
+					"Personal Dashboard - Main daily overview screen",
+					"Family Coordination - Shared schedule and task view",
+					"Settings - Simple personal preferences and account management",
+				],
+				keyIntegrations: [
+					"Phone calendar sync for seamless schedule integration",
+					"Stripe for simple subscription payments",
+					"Push notifications for reminders and family updates",
+				],
+				pricingStrategyBuildRecommendation:
+					"Implement a simple freemium model using Stripe Subscriptions, with basic features free and premium personal productivity features behind a monthly subscription.",
+			};
+
+			// First try SafeJsonParser with LLM repair fallback
+			let whatToBuildData: WhatToBuildData | null = null;
+
+			const schemaHint = {
+				expectedKeys: [
+					'platformDescription',
+					'coreFeaturesSummary', 
+					'userInterfaces',
+					'keyIntegrations',
+					'pricingStrategyBuildRecommendation'
+				],
+				description: 'Technical implementation guide for a consumer-focused app',
+				example: {
+					platformDescription: "A mobile app that helps busy parents coordinate family schedules and share household tasks",
+					coreFeaturesSummary: ["Family calendar integration", "Task sharing system", "Quick notifications"],
+					userInterfaces: ["Family Dashboard", "Individual schedule view", "Settings screen"],
+					keyIntegrations: ["Phone calendar sync", "Payment processing", "Push notifications"],
+					pricingStrategyBuildRecommendation: "Freemium model with basic features free and premium subscription"
+				}
+			};
+
+			const parseResult = await SafeJsonParser.parseWithLLMFallback<WhatToBuildData>(
+				text,
+				"WhatToBuildData from what-to-build agent",
+				1,
+				schemaHint
+			);
+
+			if (parseResult.success && parseResult.data) {
+				whatToBuildData = parseResult.data;
+				debugLogger.debug("✅ Safe JSON parsing successful", {
+					usedLLMRepair: parseResult.usedLLMRepair
+				});
+			} else {
+				// Fallback to enhanced parser
+				debugLogger.debug("⚠️ Safe JSON parser failed, trying enhanced parser...", {
+					parseError: parseResult.error
+				});
+				const enhancedResult = await EnhancedJsonParser.parseWithFallback<WhatToBuildData>(
 					text,
 					[
 						"platformDescription",
@@ -108,41 +176,23 @@ Focus on specificity - provide exact feature descriptions, precise integration r
 						"userInterfaces",
 						"keyIntegrations",
 					],
-					{
-						platformDescription:
-							"A mobile app that helps busy individuals organize their daily lives, track personal goals, and coordinate with family members through simple, easy-to-use features.",
-						coreFeaturesSummary: [
-							"Personal dashboard showing daily tasks and goals",
-							"Simple family coordination and shared calendar",
-							"Progress tracking for personal habits and goals",
-						],
-						userInterfaces: [
-							"Personal Dashboard - Main daily overview screen",
-							"Family Coordination - Shared schedule and task view",
-							"Settings - Simple personal preferences and account management",
-						],
-						keyIntegrations: [
-							"Phone calendar sync for seamless schedule integration",
-							"Stripe for simple subscription payments",
-							"Push notifications for reminders and family updates",
-						],
-						pricingStrategyBuildRecommendation:
-							"Implement a simple freemium model using Stripe Subscriptions, with basic features free and premium personal productivity features behind a monthly subscription.",
-					},
+					fallbackData,
 				);
 
-			if (!parseResult.success) {
-				console.error(
-					"❌ WhatToBuild Agent JSON parsing failed:",
-					parseResult.error,
-				);
-				debugLogger.debug(
-					"📝 Original response:",
-					parseResult.originalText?.substring(0, 500),
-				);
+				if (enhancedResult.success) {
+					whatToBuildData = enhancedResult.data as WhatToBuildData;
+				} else {
+					console.error(
+						"❌ Both JSON parsing methods failed:",
+						enhancedResult.error,
+					);
+					whatToBuildData = fallbackData;
+				}
 			}
-
-			const whatToBuildData = parseResult.data as WhatToBuildData;
+			debugLogger.debug("🔄 WhatToBuildAgent response:", {
+				whatToBuildData,
+				parseResult,
+			});
 			return whatToBuildData;
 		} catch (error) {
 			console.error("WhatToBuildAgent error:", error);

@@ -2,7 +2,10 @@
  * Enhanced JSON Parser Utility
  * Handles various JSON response formats from LLMs including markdown code blocks,
  * extra text, and malformed responses with robust error handling and fallback strategies.
+ * Now includes LLM-powered repair for maximum reliability.
  */
+
+import { SafeJsonParser } from "./safe-json-parser";
 
 export interface ParseResult<T> {
 	success: boolean;
@@ -15,6 +18,7 @@ export interface ParseResult<T> {
 export class EnhancedJsonParser {
 	/**
 	 * Main parsing function that attempts multiple strategies to extract valid JSON
+	 * Now includes LLM repair as the ultimate fallback before using fallback data
 	 */
 	static async parseWithFallback<T>(
 		rawText: string,
@@ -111,7 +115,34 @@ export class EnhancedJsonParser {
 				}
 			}
 
-			// Strategy 5: Use fallback data if provided
+			// Strategy 5: Try LLM repair as last resort before fallback
+			try {
+				console.warn("🤖 Attempting LLM repair for malformed JSON...");
+				const llmResult = await SafeJsonParser.parseWithLLMFallback<T>(
+					rawText,
+					"EnhancedJsonParser LLM repair attempt"
+				);
+				
+				if (llmResult.success && llmResult.data) {
+					if (
+						EnhancedJsonParser.validateRequiredFields(
+							llmResult.data,
+							requiredFields,
+						)
+					) {
+						return {
+							success: true,
+							data: llmResult.data,
+							originalText,
+							cleanedText: llmResult.repairedText || "LLM repaired",
+						};
+					}
+				}
+			} catch (llmError) {
+				console.warn("⚠️ LLM repair failed:", llmError);
+			}
+
+			// Strategy 6: Use fallback data if provided
 			if (fallbackData) {
 				console.warn("⚠️ Using fallback data due to JSON parsing failure");
 				return {

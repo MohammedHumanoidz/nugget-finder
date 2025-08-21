@@ -8,6 +8,8 @@ import { openrouter } from "../../../utils/configs/ai.config";
 import { EnhancedJsonParser } from "../../../utils/enhanced-json-parser";
 import { getPrompt } from "../../../utils/prompt-helper";
 import { debugLogger } from "../../../utils/logger";
+import { SafeJsonParser } from "../../../utils/safe-json-parser";
+import { SynthesisValidator } from "../../../utils/synthesis-validator";
 
 export class IdeaSynthesisAgent {
 	/**
@@ -115,20 +117,23 @@ export class IdeaSynthesisAgent {
 3. **Consumer Positioning**: Position the solution for everyday people and personal use cases
 4. **Execution Clarity**: Provide clear, actionable next steps for immediate implementation of consumer-focused products
 
+**CRITICAL: CONSUMER TOOL FOCUS**
+This MUST be about a simple tool/app that individual people would use daily. NOT about:
+- Business operations or restaurant management
+- Industry analysis or market research  
+- Complex platforms or enterprise solutions
+- Academic research or comprehensive studies
+
 **Enhanced Description Format:**
-Create a flowing narrative that naturally integrates all elements without explicit section headers:
+Write like you're explaining a helpful app to a friend. The description should:
+- Start with the daily frustration people face
+- Explain what the simple tool does to fix it
+- Show how it saves time/money/stress for individuals
+- Use conversational language anyone understands
+- Focus on personal benefits, not business metrics
+- Make it sound like something on the App Store
 
-The description should weave together the trend context, specific personal problem, target individuals, evidence of consumer demand, solution overview, timing rationale, and urgency in a cohesive narrative that reads naturally. Avoid using "Trend:", "Problem:", "Solution:", or other explicit section markers within the description text.
-
-Structure as a compelling story that:
-- Opens with the lifestyle or personal context and why it's emerging now
-- Identifies the specific individual frustrations with quantified personal impact  
-- Describes the target consumer clearly (families, students, working parents, etc.)
-- Provides evidence of consumer discussions and validation
-- Explains the solution approach and unique personal value
-- Concludes with why timing is critical for consumer adoption
-
-The result should be a smooth, engaging narrative that covers all strategic elements without formatted sections.
+Avoid research language like "analysis explores", "study reveals", "comprehensive examination". Instead use personal language like "people struggle with", "this tool helps you", "saves you time by".
 
 **Enhanced Quality Criteria:**
 - Consumer-focused solution buildable within 3-6 months
@@ -167,22 +172,25 @@ ${
 Generate a single, irresistible consumer-focused startup idea using the enhanced narrative format above, then structure it into the required JSON format. The idea should feel so compelling and obvious that someone would start building it immediately for their own personal use.
 
 **CRITICAL TITLE REQUIREMENTS:**
-- Create concise titles: 8-10 words maximum that tell both problem and solution
-- Structure: [Solution Type] + [Core Function] + for + [Specific Target People]
+- Create concise titles: 6-8 words maximum that tell both problem and solution
+- Structure: [What It Does] + [For Whom] + [Key Benefit]
 - Use descriptive, friendly language that clearly communicates personal value
-- NO "Automated", "AI-Powered", "Agent", "Smart", or unnecessary technical prefixes
+- NO business terms: "Operational", "Management", "Analysis", "Platform", "System"
+- NO "Automated", "AI-Powered", "Agent", "Smart", or technical prefixes
 - NO startup names, company names, or product names
 - NO geographic locations or country names
-- Examples: "Family Calendar That Actually Keeps Everyone Organized"; "Expense Tracker That Helps You Save Money Daily"; "Meal Planner for Busy Parents Who Want Healthy Kids"
+- Examples: "Group Meal Planner That Splits Bills"; "Family Calendar That Actually Works"; "Food Allergy Tracker for Safe Dining"
 
 **CRITICAL DESCRIPTION REQUIREMENTS:**
-- Write in clear English that sounds like a friend explaining the idea
+- Write like you're describing an app to a friend, NOT a business analysis
+- Start with the daily frustration: "People waste 30 minutes every day trying to..."
+- Explain the simple solution: "This tool fixes that by..."
+- Show the personal benefit: "You save time, avoid stress, and never have to..."
 - NO section headers like "Trend:", "Problem:", "Solution:"
-- Avoid unnecessary jargon; only keep terms that clarify the personal value
-- NO geographic locations or country-specific references
-- Focus on universal human problems that exist worldwide for individuals
-- Write as a flowing, cohesive narrative that naturally covers all elements
-- Make it feel personal and relatable to everyday people
+- NO business jargon: "operational efficiency", "market analysis", "comprehensive"
+- NO research language: "study shows", "analysis reveals", "findings indicate"
+- Use everyday language: "helps you", "saves time", "makes it easier", "never worry about"
+- Maximum 3 sentences that flow naturally together
 
 Return JSON structure:
 {
@@ -258,32 +266,62 @@ ${
 			// Create dynamic fallback based on research context
 			const dynamicFallback = IdeaSynthesisAgent.createDynamicFallback(context);
 			
-			// Use enhanced JSON parser to handle markdown code blocks and complex responses
-			const parseResult =
-				await EnhancedJsonParser.parseWithFallback<SynthesizedIdea>(
+			// First try enhanced JSON parser with safe fallback
+			let synthesizedIdea: SynthesizedIdea | null = null;
+
+			const parseResult = await SafeJsonParser.parseWithLLMFallback<SynthesizedIdea>(
+				text,
+				"SynthesizedIdea from idea synthesis agent"
+			);
+
+			if (parseResult.success && parseResult.data) {
+				synthesizedIdea = parseResult.data;
+				debugLogger.debug("✅ Safe JSON parsing successful", {
+					usedLLMRepair: parseResult.usedLLMRepair
+				});
+			} else {
+				// Fallback to enhanced parser
+				debugLogger.debug("⚠️ Safe JSON parser failed, trying enhanced parser...", {
+					parseError: parseResult.error
+				});
+				const enhancedResult = await EnhancedJsonParser.parseWithFallback<SynthesizedIdea>(
 					text,
 					["title", "description", "problemStatement", "scoring"],
 					dynamicFallback,
 				);
 
-			if (!parseResult.success) {
-				console.error(
-					"❌ Enhanced Idea Synthesis JSON parsing failed:",
-					parseResult.error,
-				);
-				debugLogger.debug(
-					"📝 Original response:",
-					parseResult.originalText?.substring(0, 500),
-				);
-				if (parseResult.cleanedText) {
-					debugLogger.debug(
-						"🧹 Cleaned response:",
-						parseResult.cleanedText.substring(0, 500),
+				if (enhancedResult.success) {
+					synthesizedIdea = enhancedResult.data as SynthesizedIdea;
+				} else {
+					console.error(
+						"❌ Both JSON parsing methods failed:",
+						enhancedResult.error,
 					);
+					synthesizedIdea = dynamicFallback;
 				}
 			}
 
-			const synthesizedIdea = parseResult.data as SynthesizedIdea;
+			// Validate and correct the synthesized idea
+			if (synthesizedIdea && context.problemGaps?.problems) {
+				const validation = await SynthesisValidator.validateAndCorrectIdea(
+					synthesizedIdea,
+					context.problemGaps.problems,
+					context.trends
+				);
+
+				if (!validation.isValid && validation.correctedIdea) {
+					debugLogger.debug("🔧 Applied synthesis corrections:", {
+						issues: validation.issues,
+						originalTitle: synthesizedIdea.title,
+						correctedTitle: validation.correctedIdea.title
+					});
+					synthesizedIdea = validation.correctedIdea;
+				} else if (!validation.isValid) {
+					debugLogger.debug("⚠️ Synthesis validation issues (uncorrected):", {
+						issues: validation.issues
+					});
+				}
+			}
 
 			// Add WhatToBuild data if available in context
 			if (context.whatToBuild) {
@@ -294,12 +332,19 @@ ${
 				title: synthesizedIdea.title,
 				confidenceScore: synthesizedIdea.confidenceScore,
 				urgencyLevel: synthesizedIdea.urgencyLevel,
-				totalScore: synthesizedIdea.scoring.totalScore,
+				totalScore: synthesizedIdea.scoring?.totalScore || 0,
 			});
 
 			return synthesizedIdea;
 		} catch (error) {
 			console.error("Enhanced IdeaSynthesisAgent error:", error);
+			debugLogger.logError("Enhanced IdeaSynthesisAgent", error as Error, {
+				context: {
+					hasTrends: !!context.trends,
+					hasProblems: !!context.problemGaps?.problems,
+					hasCompetitive: !!context.competitive
+				}
+			});
 
 			debugLogger.debug("🔄 Using enhanced fallback synthesis data");
 			return IdeaSynthesisAgent.createDynamicFallback(context);

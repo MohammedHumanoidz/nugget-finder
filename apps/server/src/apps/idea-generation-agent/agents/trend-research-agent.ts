@@ -56,16 +56,6 @@ ${
 4. **Global Applicability**: Focus on trends that affect people everywhere, not just specific countries
 5. **Buildable Solutions**: Ensure the trend opens paths to simple, affordable software solutions
 
-**Consumer-First Trend Focus:**
-- Personal lifestyle changes and daily habit shifts
-- Individual productivity and time management challenges
-- Family coordination and household management needs
-- Personal finance and money management behaviors
-- Learning, creativity, and hobby-related activities
-- Health, wellness, and self-improvement movements
-- Social connection and community building patterns
-- Entertainment, content consumption, and leisure activities
-
 **Validation Framework:**
 - Social Media Signals: Active discussions in consumer communities, lifestyle forums
 - Behavioral Shifts: Changes in how people live, shop, learn, communicate, spend time
@@ -105,16 +95,6 @@ Research approach: ${researchDirection.researchApproach}
     : "Conduct broad global consumer lifestyle and technology trend research"
 }
 
-**Consumer Trend Categories to Explore:**
-- Personal productivity and life organization
-- Family coordination and household management
-- Individual finance and money management
-- Learning, skills, and personal development
-- Health, wellness, and self-care
-- Creative hobbies and personal projects
-- Social connection and community building
-- Entertainment and leisure activities
-
 **Diversity Requirements - MUST AVOID:**
 ${
   context.previousIdeas && context.previousIdeas.length > 0
@@ -142,16 +122,6 @@ Research approach: ${researchDirection.researchApproach}
 `
           : "Conduct broad global consumer lifestyle and technology trend research"
       }
-
-**Consumer Trend Categories to Explore:**
-- Personal productivity and life organization
-- Family coordination and household management
-- Individual finance and money management
-- Learning, skills, and personal development
-- Health, wellness, and self-care
-- Creative hobbies and personal projects
-- Social connection and community building
-- Entertainment and leisure activities
 
 **Diversity Requirements - MUST AVOID:**
 ${
@@ -230,7 +200,7 @@ ${
         contentPreview: response?.choices?.[0]?.message?.content?.substring(0, 100)
       });
 
-      if (!response?.choices?.[0]?.message?.content) {
+      if (!response?.choices?.[0]?.message?.content || response.choices[0].message.content.trim() === "" || response.choices[0].message.content === "NO CONTENT") {
         debugLogger.logError(
           "EnhancedTrendResearchAgent",
           new Error("No response from Perplexity"),
@@ -238,10 +208,29 @@ ${
             response,
             responseKeys: response ? Object.keys(response) : null,
             choicesType: typeof response?.choices,
-            firstChoiceType: typeof response?.choices?.[0]
+            firstChoiceType: typeof response?.choices?.[0],
+            contentLength: response?.choices?.[0]?.message?.content?.length || 0
           }
         );
-        throw new Error("No response from Perplexity");
+        
+        // Instead of throwing, use fallback directly
+        console.log("🔄 Perplexity returned no content, using enhanced fallback trend data");
+        return {
+          title: researchDirection
+            ? `${researchDirection.industryRotation} Innovation in ${researchDirection.globalMarketFocus}`
+            : "Personal Organization Tools for Busy Individuals",
+          description: researchDirection
+            ? `Emerging trend in ${researchDirection.globalMarketFocus} focused on ${researchDirection.industryRotation} solutions that help people manage their daily lives.`
+            : "Busy individuals worldwide are looking for simple tools to help them stay organized, manage their time better, and coordinate their daily activities more effectively, driven by increasingly complex modern life demands.",
+          trendStrength: 8,
+          catalystType: "SOCIAL_TREND" as const,
+          timingUrgency: 7,
+          supportingData: [
+            "Active discussions in global lifestyle and productivity communities",
+            "Growing adoption of personal organization and time management apps", 
+            "Increasing consumer demand for simple daily life management tools"
+          ]
+        };
       }
 
       const content = response.choices[0].message.content;
