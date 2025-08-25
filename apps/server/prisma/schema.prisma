@@ -42,6 +42,7 @@ model User {
   // Add new relations for admin functionality
   featuredSchedules      FeaturedNuggetsSchedule[]
   promptUpdates          AdminPrompts[]
+  featureVisibilityUpdates FeatureVisibilityDefaults[]
   
   @@unique([email])
   @@map("user")
@@ -577,4 +578,24 @@ model AdminPrompts {
   updater       User     @relation(fields: [updatedBy], references: [id])
   
   @@unique([agentName, promptKey])
-} 
+}
+
+// Feature Visibility Defaults Model
+model FeatureVisibilityDefaults {
+  id                            String   @id @default(uuid())
+  isFreeQuickOverview          Boolean  @default(true)
+  isFreeWhyThisMatters         Boolean  @default(true)
+  isFreeDetailedOverview       Boolean  @default(true)
+  isFreeTheClaimWhyNow         Boolean  @default(false)
+  isFreeWhatToBuild            Boolean  @default(false)
+  isFreeExecutionPlan          Boolean  @default(false)
+  isFreeMarketGap              Boolean  @default(false)
+  isFreeCompetitiveLandscape   Boolean  @default(false)
+  isFreeRevenueModel           Boolean  @default(false)
+  isFreeExecutionValidation    Boolean  @default(false)
+  isFreeChat                   Boolean  @default(false)
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
+  updatedBy                    String
+  updater                      User     @relation(fields: [updatedBy], references: [id])
+}

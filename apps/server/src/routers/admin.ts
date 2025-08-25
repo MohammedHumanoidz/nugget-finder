@@ -177,9 +177,9 @@ export const adminRouter = router({
   // Feature Visibility Management
   getFeatureVisibilityDefaults: adminProcedure.query(async () => {
     try {
-      // Try to get the most recent idea to see current defaults
-      const recentIdea = await prisma.dailyIdea.findFirst({
-        orderBy: { createdAt: 'desc' },
+      // Get the current defaults from the dedicated table
+      const defaults = await prisma.featureVisibilityDefaults.findFirst({
+        orderBy: { updatedAt: 'desc' },
         select: {
           isFreeQuickOverview: true,
           isFreeWhyThisMatters: true,
@@ -195,7 +195,7 @@ export const adminRouter = router({
         }
       });
       
-      return recentIdea || {
+      return defaults || {
         isFreeQuickOverview: true,
         isFreeWhyThisMatters: true,
         isFreeDetailedOverview: true,
@@ -210,7 +210,7 @@ export const adminRouter = router({
       };
     } catch (error: any) {
       // If migration hasn't been run yet, return default values
-      console.warn('Feature visibility fields not yet migrated, using defaults:', error.message);
+      console.warn('Feature visibility table not yet migrated, using defaults:', error.message);
       return {
         isFreeQuickOverview: true,
         isFreeWhyThisMatters: true,
@@ -242,43 +242,45 @@ export const adminRouter = router({
       isFreeChat: z.boolean(),
       applyToAllIdeas: z.boolean().optional().default(false),
     }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       try {
         const { applyToAllIdeas, ...settingsData } = input;
+        
+        // Always create/update the defaults in the dedicated table
+        await prisma.featureVisibilityDefaults.create({
+          data: {
+            ...settingsData,
+            updatedBy: ctx.session.user.id
+          }
+        });
+        
+        let updatedCount = 0;
         
         if (applyToAllIdeas) {
           // Update ALL existing ideas with the new settings
           const result = await prisma.dailyIdea.updateMany({
             data: settingsData
           });
+          updatedCount = result.count;
           
           return { 
             success: true, 
-            updatedCount: result.count,
-            message: `Updated ${result.count} ideas with new feature visibility settings`
+            updatedCount,
+            message: `Updated defaults and applied to ${updatedCount} existing ideas`
           };
         }
         
-        // Update only future ideas (created after now) with new defaults
-        const result = await prisma.dailyIdea.updateMany({
-          where: { 
-            createdAt: { gte: new Date() } 
-          },
-          data: settingsData
-        });
-        
         return { 
           success: true, 
-          updatedCount: result.count,
-          message: `Updated ${result.count} future ideas with new defaults`
+          updatedCount: 0,
+          message: `Updated default feature visibility settings. New ideas will use these defaults.`
         };
       } catch (error: any) {
-        // If migration hasn't been run yet
-        console.warn('Feature visibility fields not yet migrated, cannot update defaults:', error.message);
+        console.error('Failed to update feature visibility defaults:', error);
         return { 
           success: false, 
           updatedCount: 0,
-          message: 'Feature visibility migration not yet run. Please run database migration first.'
+          message: `Failed to update settings: ${error.message}`
         };
       }
     }),

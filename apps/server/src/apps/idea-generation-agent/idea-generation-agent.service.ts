@@ -9,6 +9,55 @@ import type {
 import { prisma } from "../../utils/configs/db.config";
 
 export const IdeaGenerationAgentService = {
+	async getFeatureVisibilityDefaults() {
+		try {
+			const defaults = await prisma.featureVisibilityDefaults.findFirst({
+				orderBy: { updatedAt: 'desc' },
+				select: {
+					isFreeQuickOverview: true,
+					isFreeWhyThisMatters: true,
+					isFreeDetailedOverview: true,
+					isFreeTheClaimWhyNow: true,
+					isFreeWhatToBuild: true,
+					isFreeExecutionPlan: true,
+					isFreeMarketGap: true,
+					isFreeCompetitiveLandscape: true,
+					isFreeRevenueModel: true,
+					isFreeExecutionValidation: true,
+					isFreeChat: true,
+				}
+			});
+			
+			return defaults || {
+				isFreeQuickOverview: true,
+				isFreeWhyThisMatters: true,
+				isFreeDetailedOverview: true,
+				isFreeTheClaimWhyNow: false,
+				isFreeWhatToBuild: false,
+				isFreeExecutionPlan: false,
+				isFreeMarketGap: false,
+				isFreeCompetitiveLandscape: false,
+				isFreeRevenueModel: false,
+				isFreeExecutionValidation: false,
+				isFreeChat: false,
+			};
+		} catch (error) {
+			console.warn('Could not fetch feature visibility defaults, using hardcoded defaults:', error);
+			return {
+				isFreeQuickOverview: true,
+				isFreeWhyThisMatters: true,
+				isFreeDetailedOverview: true,
+				isFreeTheClaimWhyNow: false,
+				isFreeWhatToBuild: false,
+				isFreeExecutionPlan: false,
+				isFreeMarketGap: false,
+				isFreeCompetitiveLandscape: false,
+				isFreeRevenueModel: false,
+				isFreeExecutionValidation: false,
+				isFreeChat: false,
+			};
+		}
+	},
 	async getDailyIdeas() {
 		const dailyIdeas = await prisma.dailyIdea.findMany({
 			where: {
@@ -223,55 +272,8 @@ export const IdeaGenerationAgentService = {
 		monetizationStrategyId: string,
 		whatToBuildId?: string,
 	) {
-		// Get current feature visibility defaults from the most recent idea
-		let featureDefaults;
-		try {
-			const recentIdea = await prisma.dailyIdea.findFirst({
-				orderBy: { createdAt: 'desc' },
-				select: {
-					isFreeQuickOverview: true,
-					isFreeWhyThisMatters: true,
-					isFreeDetailedOverview: true,
-					isFreeTheClaimWhyNow: true,
-					isFreeWhatToBuild: true,
-					isFreeExecutionPlan: true,
-					isFreeMarketGap: true,
-					isFreeCompetitiveLandscape: true,
-					isFreeRevenueModel: true,
-					isFreeExecutionValidation: true,
-					isFreeChat: true,
-				}
-			});
-			
-			featureDefaults = recentIdea || {
-				isFreeQuickOverview: true,
-				isFreeWhyThisMatters: true,
-				isFreeDetailedOverview: true,
-				isFreeTheClaimWhyNow: false,
-				isFreeWhatToBuild: false,
-				isFreeExecutionPlan: false,
-				isFreeMarketGap: false,
-				isFreeCompetitiveLandscape: false,
-				isFreeRevenueModel: false,
-				isFreeExecutionValidation: false,
-				isFreeChat: false,
-			};
-		} catch (error) {
-			// If there's an error fetching defaults, use the schema defaults
-			featureDefaults = {
-				isFreeQuickOverview: true,
-				isFreeWhyThisMatters: true,
-				isFreeDetailedOverview: true,
-				isFreeTheClaimWhyNow: false,
-				isFreeWhatToBuild: false,
-				isFreeExecutionPlan: false,
-				isFreeMarketGap: false,
-				isFreeCompetitiveLandscape: false,
-				isFreeRevenueModel: false,
-				isFreeExecutionValidation: false,
-				isFreeChat: false,
-			};
-		}
+		// Get current feature visibility defaults
+		const featureDefaults = await this.getFeatureVisibilityDefaults();
 
 		const createData: any = {
 			title: ideaData.title,

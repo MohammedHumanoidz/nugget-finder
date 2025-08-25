@@ -538,9 +538,12 @@ const IdeaGenerationAgentController = {
 			let dailyIdea: any;
 
 			if (whatToBuild) {
+				// Get feature visibility defaults first
+				const featureDefaults = await IdeaGenerationAgentService.getFeatureVisibilityDefaults();
+				
 				// Use a transaction to handle the circular dependency
 				dailyIdea = await prisma.$transaction(async (tx) => {
-					// First create DailyIdea without whatToBuildId
+					// First create DailyIdea without whatToBuildId but with feature visibility
 					const createdIdea = await tx.dailyIdea.create({
 						data: {
 							title: idea.title,
@@ -559,6 +562,8 @@ const IdeaGenerationAgentController = {
 							whyNowId: whyNow.id,
 							ideaScoreId: ideaScore.id,
 							monetizationStrategyId: monetizationStrategy.id,
+							// Apply feature visibility defaults
+							...featureDefaults,
 						},
 					});
 
@@ -699,9 +704,12 @@ const IdeaGenerationAgentController = {
 			let dailyIdea: any;
 
 			if (whatToBuild) {
+				// Get feature visibility defaults first
+				const featureDefaults = await IdeaGenerationAgentService.getFeatureVisibilityDefaults();
+				
 				// Use a transaction to handle the circular dependency
 				dailyIdea = await prisma.$transaction(async (tx) => {
-					// First create DailyIdea without whatToBuildId
+					// First create DailyIdea without whatToBuildId but with feature visibility
 					const createdIdea = await tx.dailyIdea.create({
 						data: {
 							title: idea.title,
@@ -720,6 +728,8 @@ const IdeaGenerationAgentController = {
 							whyNowId: whyNow.id,
 							ideaScoreId: ideaScore.id,
 							monetizationStrategyId: monetizationStrategy.id,
+							// Apply feature visibility defaults
+							...featureDefaults,
 						},
 					});
 
